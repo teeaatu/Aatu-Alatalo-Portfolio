@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Aatu Alatalo</title>
+    <style>
+        body { margin: 0; background-color: white; color: black; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 60px 10% 0 10%; animation: slideUp 0.8s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        header { display: flex; flex-direction: column; align-items: center; margin-bottom: 80px; }
+        .logo { font-size: 32px; text-transform: uppercase; letter-spacing: 6px; text-decoration: none; color: black; margin-bottom: 30px; font-weight: 300; }
+        nav { display: flex; gap: 30px; justify-content: center; }
+        nav a { text-decoration: none; color: black; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; transition: all 0.3s ease; cursor: pointer; }
+        nav a:hover { opacity: 1; color: #ff0000; }
+        .about-content { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: row; align-items: flex-start; gap: 60px; }
+        .about-text { flex: 1.2; max-width: 600px; }
+        .about-image { flex: 1; width: 100%; max-width: 500px; height: auto; display: block; object-fit: cover; }
+        .about-text h1 { font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; margin-top: 0; }
+        .about-text p { font-size: 14px; line-height: 1.8; color: #333; margin-bottom: 20px; }
+        .ig-link { position: absolute; top: 40px; right: 5%; z-index: 1000; opacity: 0.4; transition: all 0.3s ease; color: black; line-height: 0; }
+        .ig-link:hover { opacity: 1; color: #ff0000; transform: scale(1.1); }
+        .ig-link svg { width: 26px; height: 26px; }
+        @media (max-width: 850px) { body { padding: 40px 5% 0 5%; } .logo { font-size: 24px; } .about-content { flex-direction: column; gap: 40px; align-items: center; } .about-text { max-width: 100%; text-align: center; } .about-image { max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+    </a>
+    <header>
+        <a href="index.html" class="logo">Aatu Alatalo</a>
+        <nav>
+            <a href="about.html">About</a>
+            <a href="index.html">Still Image</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+    <main class="about-content">
+        <div class="about-text">
+            <h1>Aatu Alatalo</h1>
+            <p>Olen 21-vuotias valokuvaaja. Aloitin kuvaamisen kymmenvuotiaana. Kamera on kulkenut mukanani yhdentoista vuoden ajan. Valokuvaus on opettanut minulle tavan tarkkailla ihmisiä ja ympäristöä. Se on muovannut persoonaani ja tapaani kohdata maailma. Etsin kuvissani aitoja tilanteita ja rehellistä tunnelmaa. Käytän valoa tavoittaakseni hetken luonteen. Haluan että kuvani pysäyttävät sinut ja herättävät ajatuksia. Pyrin siihen että jokainen otos välittää tunteen katsojalle. Tässä portfoliossa on valittuja teoksia matkani varrelta.</p>
+        </div>
+        <img src="_DSC4004.jpg" alt="Aatu Alatalo" class="about-image">
+    </main>
+</body>
+</html>

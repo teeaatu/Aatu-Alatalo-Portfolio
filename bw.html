@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black and White - Aatu Alatalo</title>
+<style>
+body {
+margin: 0;
+background-color: #ffffff;
+color: #000000;
+font-family: Arial, Helvetica, sans-serif;
+}
+header {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 30px 10%;
+background-color: rgba(255, 255, 255, 0.95);
+z-index: 1000;
+}
+.logo {
+text-decoration: none;
+color: #000;
+font-size: 32px;
+font-style: italic;
+letter-spacing: 1px;
+}
+nav a {
+text-decoration: none;
+color: #000000;
+margin-left: 40px;
+font-size: 18px;
+transition: opacity 0.3s;
+}
+nav a:hover {
+opacity: 0.4;
+}
+.content {
+padding: 150px 10% 100px 10%;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 60px;
+max-width: 1000px;
+margin: 0 auto;
+}
+.image-placeholder {
+width: 100%;
+background-color: #f0f0f0;
+}
+.landscape {
+aspect-ratio: 3 / 2;
+}
+.portrait {
+aspect-ratio: 2 / 3;
+width: 70%;
+}
+img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+</style>
+</head>
+<body>
+<header>
+<a href="index.html" class="logo">Aatu Alatalo</a>
+<nav>
+<a href="index.html#work">Work</a>
+<a href="contact.html">Contact</a>
+</nav>
+</header>
+<main class="content">
+<div class="image-placeholder landscape">
+<img src="_DSC5474 1.jpg" alt="Mustavalko">
+</div>
+<div class="image-placeholder portrait"></div>
+<div class="image-placeholder landscape"></div>
+<div class="image-placeholder portrait"></div>
+</main>
+</body>
+</html>
