@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work - Aatu Alatalo</title>
+<style>
+body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; }
+.stack-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+section {
+position: sticky;
+top: 0;
+height: 100vh;
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+scroll-snap-align: start;
+background-size: cover;
+background-position: center;
+}
+.section-content {
+z-index: 2;
+text-align: center;
+background: rgba(0,0,0,0.2);
+padding: 20px;
+width: 100%;
+}
+h2 { font-size: 3rem; text-transform: uppercase; letter-spacing: 10px; font-weight: 300; }
+/* Määritä kuvat tässä */
+.s1 { background-image: url('kuva1.jpg'); }
+.s2 { background-image: url('kuva2.jpg'); }
+.s3 { background-image: url('kuva3.jpg'); }
+.s4 { background-image: url('kuva4.jpg'); }
+</style>
+</head>
+<body>
+<div class="stack-container">
+<section class="s1"><div class="section-content"><h2>Project I</h2></div></section>
+<section class="s2"><div class="section-content"><h2>Project II</h2></div></section>
+<section class="s3"><div class="section-content"><h2>Project III</h2></div></section>
+<section class="s4"><div class="section-content"><h2>Project IV</h2></div></section>
+</div>
+</body>
+</html>

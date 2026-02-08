@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aatu Alatalo Portfolio</title>
+<style>
+html { scroll-behavior: smooth }
+body { margin: 0; background-color: white; color: black; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 60px 10% 0 10% }
+#loader { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: white; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999; 
+    transition: opacity 0.5s ease 
+}
+.spinner { 
+    width: 40px; 
+    height: 40px; 
+    border: 2px solid rgba(0,0,0,0.1); 
+    border-top: 2px solid #ff0000; 
+    border-radius: 50%; 
+    animation: spin 1s linear infinite 
+}
+@keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
+
+.back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 10%;
+    display: none;
+    background: black;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+.back-to-top:hover {
+    background: #ff0000;
+    transform: scale(1.05);
+}
+
+header { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-bottom: 120px; 
+    position: relative; 
+    width: 100%
+}
+.logo { 
+    font-size: 32px; 
+    text-transform: uppercase; 
+    letter-spacing: 6px; 
+    text-decoration: none; 
+    color: black; 
+    margin-bottom: 30px; 
+    font-weight: 300 
+}
+.ig-link {
+    position: absolute;
+    right: 0;
+    top: 6px;
+    text-decoration: none;
+    color: black;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    line-height: 0
+}
+.ig-link:hover {
+    opacity: 1;
+    color: #ff0000;
+    transform: scale(1.1)
+}
+.ig-link svg {
+    width: 26px;
+    height: 26px
+}
+nav { display: flex; gap: 30px; justify-content: center }
+nav a { 
+    text-decoration: none; 
+    color: black; 
+    font-size: 11px; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    opacity: 0.6; 
+    transition: all 0.3s ease; 
+    cursor: pointer; 
+    display: inline-block 
+}
+nav a:hover { 
+    opacity: 1; 
+    color: #ff0000; 
+    transform: scale(1.05) 
+}
+.grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 100px 60px; 
+    align-items: start; 
+    width: 100% 
+}
+.item { 
+    display: flex; 
+    flex-direction: column 
+}
+.item a {
+    display: block;
+    overflow: hidden; 
+    margin-bottom: 20px 
+}
+.item img { 
+    width: 100%; 
+    aspect-ratio: 1 / 1; 
+    object-fit: cover; 
+    display: block; 
+    transition: transform 0.6s ease; 
+    cursor: pointer 
+}
+.item a:hover img { 
+    transform: scale(1.05) 
+}
+.item span { 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: gray; 
+    transition: color 0.3s ease 
+}
+.item:hover span {
+    color: #ff0000
+}
+.contact-section { margin-top: 150px; padding: 120px 0; text-align: center; border-top: 1px solid rgba(0, 0, 0, 0.1) }
+.contact-title { font-size: 18px; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 40px; font-weight: 300 }
+.contact-info { font-size: 13px; letter-spacing: 1px; line-height: 2 }
+.contact-info a { color: black; text-decoration: none; opacity: 0.6 }
+.contact-info a:hover { opacity: 1 }
+@media (max-width: 1024px) { 
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 80px 40px } 
+}
+@media (max-width: 600px) { 
+    .grid { grid-template-columns: 1fr; gap: 60px } 
+    .grid .item { align-items: center; text-align: center } 
+    body { padding: 40px 5% 0 5% } 
+    .contact-section { padding: 80px 0 }
+    .ig-link { position: relative; top: 0; right: 0; margin-bottom: 20px; order: -1 }
+    header { margin-bottom: 60px }
+    .back-to-top { right: 5%; bottom: 20px }
+}
+</style>
+</head>
+<body>
+<div id="loader"><div class="spinner"></div></div>
+
+<button id="backToTop" class="back-to-top">Top</button>
+
+<header>
+<a href="index.html" class="logo">Aatu Alatalo</a>
+<a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link" title="Instagram">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+<line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+</svg>
+</a>
+<nav>
+<a href="about.html">About</a>
+<a href="index.html">Still Image</a>
+<a onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'})">Contact</a>
+</nav>
+</header>
+<main class="grid">
+<div class="item">
+<a href="kirjaston-ihmeet.html">
+<img src="_DSC5439.jpg" alt="Värit" loading="lazy">
+</a>
+<span>VÄRIT</span>
+</div>
+<div class="item">
+<a href="mustavalkoinen-sarja.html">
+<img src="_DSC5474 1.jpg" alt="Mustavalkoinen sarja" loading="lazy">
+</a>
+<span>MUSTAVALKOINEN SARJA</span>
+</div>
+<div class="item">
+<a href="raw.html">
+<img src="RAW 20260030.jpg" alt="Potretti" loading="lazy">
+</a>
+<span>POTRETTI</span>
+</div>
+<div class="item">
+<a href="sisatilan-valo.html">
+<img src="_DSC5577.jpg" alt="Sisätilan valo" loading="lazy">
+</a>
+<span>SISÄTILAN VALO</span>
+</div>
+<div class="item">
+<a href="luonto-ja-ymparisto.html">
+<img src="_DSC7318.jpg" alt="Luonto ja ympäristö" loading="lazy">
+</a>
+<span>LUONTO JA YMPÄRISTÖ</span>
+</div>
+<div class="item">
+<a href="kiehtovat-rakennukset.html">
+<img src="[Group 0]-563_565-3 images.jpg" alt="Kiehtovat rakennukset" loading="lazy">
+</a>
+<span>KIEHTOVAT RAKENNUKSET</span>
+</div>
+<div class="item">
+<a href="elaimet.html">
+<img src="_DSC5653.jpg" alt="Eläimet" loading="lazy">
+</a>
+<span>ELÄIMET</span>
+</div>
+<div class="item">
+<a href="still-life.html">
+<img src="_DSC4115 1.jpg" alt="Still Life" loading="lazy">
+</a>
+<span>STILL LIFE</span>
+</div>
+</main>
+<footer class="contact-section">
+<div class="contact-title">Contact</div>
+<div class="contact-info">
+<p>Aatu Alatalo</p>
+<p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
+<p>Oulu, Finland</p>
+<p style="margin-top: 60px; opacity: 0.3; font-size: 9px; letter-spacing: 1px">COPYRIGHT 2026 AATU ALATALO</p>
+</div>
+</footer>
+<script>
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    loader.style.opacity = '0';
+    setTimeout(() => { loader.style.display = 'none' }, 500);
+});
+
+const backToTopBtn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopBtn.style.display = 'block';
+    } else {
+        backToTopBtn.style.display = 'none';
+    }
+});
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>

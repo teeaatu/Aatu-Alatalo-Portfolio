@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAW - Aatu Alatalo</title>
+<style>
+html { scroll-behavior: smooth }
+body { margin: 0; background-color: white; color: black; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom: 100px }
+header { display: flex; flex-direction: column; align-items: center; padding: 60px 10% 80px 10%; background: white }
+.logo { font-size: 32px; text-transform: uppercase; letter-spacing: 6px; text-decoration: none; color: black; margin-bottom: 30px; font-weight: 300 }
+nav { display: flex; gap: 30px; justify-content: center }
+nav a { 
+text-decoration: none; 
+color: black; 
+font-size: 11px; 
+text-transform: uppercase; 
+letter-spacing: 2px; 
+opacity: 0.6; 
+transition: all 0.3s ease;
+display: inline-block;
+}
+nav a:hover { 
+opacity: 1; 
+color: #ff0000; 
+transform: scale(1.05) 
+}
+.image-section { display: flex; justify-content: center; align-items: center; padding: 0 10%; margin-bottom: 150px; box-sizing: border-box }
+.image-wrapper { display: flex; flex-direction: column; align-items: flex-start; max-width: 90% }
+.image-wrapper img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain }
+.project-info { margin-top: 15px; font-size: 10px; letter-spacing: 1px; color: gray; text-transform: uppercase; line-height: 1.5 }
+.project-info p { margin: 0 }
+.ig-link { 
+position: fixed; 
+top: 40px; 
+right: 5%; 
+z-index: 1000; 
+opacity: 0.4; 
+transition: all 0.3s ease; 
+color: black;
+line-height: 0;
+}
+.ig-link:hover { 
+opacity: 1; 
+color: #ff0000; 
+transform: scale(1.1) 
+}
+.ig-link svg { width: 26px; height: 26px }
+@media (max-width: 600px) { 
+.logo { font-size: 24px } 
+.image-section { padding: 0 5%; margin-bottom: 80px } 
+.image-wrapper { max-width: 100% } 
+}
+</style>
+</head>
+<body>
+<a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+<line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+</svg>
+</a>
+<header>
+<a href="<!DOCTYPE html>.html" class="logo">Aatu Alatalo</a>
+<nav>
+<a href="about.html">About</a>
+<a href="<!DOCTYPE html>.html">Still Image</a>
+<a href="<!DOCTYPE html>.html#contact">Contact</a>
+</nav>
+</header>
+<main>
+<section class="image-section">
+<div class="image-wrapper">
+<img src="RAW 20260030.jpg" alt="Viljami">
+<div class="project-info">
+<p>VILJAMI</p>
+<p>OULU, FINLAND 2026</p>
+</div>
+</div>
+</section>
+</main>
+</body>
+</html>
