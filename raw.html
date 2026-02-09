@@ -13,16 +13,27 @@
         .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
         @keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
 
-        /* --- Takaisin ylös -nappi --- */
+        /* --- Päivitetty Takaisin ylös -nappi latausympyrällä --- */
         .back-to-top { 
             position: fixed; bottom: 40px; right: 40px; display: none; 
-            background: #ffffff; color: #000000; border: none; 
-            width: 45px; height: 45px; border-radius: 50%; 
-            font-size: 16px; cursor: pointer; z-index: 1000; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; justify-content: center; align-items: center 
+            background: #111; color: #ffffff; border: none; 
+            width: 55px; height: 55px; border-radius: 50%; 
+            font-size: 18px; cursor: pointer; z-index: 1000; 
+            transition: all 0.4s ease;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .back-to-top:hover { background: #ff0000; color: #ffffff; transform: scale(1.1) rotate(360deg) }
+        .back-to-top:hover { transform: scale(1.1); background: #1a1a1a }
+        .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px }
+        .back-to-top circle { fill: none; stroke-width: 3 }
+        .progress-bg { stroke: rgba(255, 255, 255, 0.1) }
+        .progress-bar { 
+            stroke: #ff0000; 
+            stroke-dasharray: 157; 
+            stroke-dashoffset: 157; 
+            transition: stroke-dashoffset 0.1s linear 
+        }
+        .back-to-top span { position: relative; z-index: 10; pointer-events: none }
 
         /* --- Tiivistetty Sivupalkki (Aside) --- */
         aside { 
@@ -91,12 +102,20 @@
             .ig-link { position: absolute; top: 30px; right: 30px; margin: 0 }
             .content-wrapper { padding: 40px 20px }
             .image-section { margin-bottom: 70px }
+            .back-to-top { right: 20px; bottom: 20px }
         }
     </style>
 </head>
 <body>
 <div id="loader"><div class="spinner"></div></div>
-<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">↑</button>
+
+<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">
+    <svg viewBox="0 0 60 60">
+        <circle class="progress-bg" cx="30" cy="30" r="25"></circle>
+        <circle id="progressBar" class="progress-bar" cx="30" cy="30" r="25"></circle>
+    </svg>
+    <span>↑</span>
+</button>
 
 <aside>
     <div>
@@ -171,15 +190,32 @@
         setTimeout(() => { loader.style.display = 'none' }, 500);
     });
 
+    // --- Latausympyrä- ja scroll-logiikka ---
     const backToTopBtn = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 500) { backToTopBtn.style.display = 'flex' }
-        else { backToTopBtn.style.display = 'none' }
-    });
+    const progressBar = document.getElementById('progressBar');
+    const circumference = 157; // 2 * PI * r (r=25)
+
+    const updateProgress = () => {
+        const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPosition = window.pageYOffset;
+        
+        if (scrollPosition > 500) {
+            backToTopBtn.style.display = 'flex';
+        } else {
+            backToTopBtn.style.display = 'none';
+        }
+
+        const scrollPercentage = Math.min(scrollPosition / scrollTotal, 1);
+        const offset = circumference - (scrollPercentage * circumference);
+        progressBar.style.strokeDashoffset = offset;
+    };
+
+    window.addEventListener('scroll', updateProgress);
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     });
 
+    // Scroll Reveal Intersection Observerilla
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if(entry.isIntersecting) {
@@ -190,6 +226,7 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
 
+    // Lightbox -logiikka
     const images = document.querySelectorAll(".gallery-img");
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightbox-img");

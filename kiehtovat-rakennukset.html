@@ -1,181 +1,259 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kiehtovat rakennukset - Aatu Alatalo</title>
-<style>
-html { scroll-behavior: smooth }
-body { margin: 0; background-color: white; color: black; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom: 100px }
-#loader { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: white; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 9999; 
-    transition: opacity 0.5s ease 
-}
-.spinner { 
-    width: 40px; 
-    height: 40px; 
-    border: 2px solid rgba(0,0,0,0.1); 
-    border-top: 2px solid #ff0000; 
-    border-radius: 50%; 
-    animation: spin 1s linear infinite 
-}
-@keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
-.back-to-top {
-    position: fixed;
-    bottom: 40px;
-    right: 10%;
-    display: none;
-    background: black;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
-.back-to-top:hover {
-    background: #ff0000;
-    transform: scale(1.05);
-}
-header { display: flex; flex-direction: column; align-items: center; padding: 60px 10% 80px 10%; background: white }
-.logo { font-size: 32px; text-transform: uppercase; letter-spacing: 6px; text-decoration: none; color: black; margin-bottom: 30px; font-weight: 300 }
-nav { display: flex; gap: 30px; justify-content: center }
-nav a { 
-    text-decoration: none; 
-    color: black; 
-    font-size: 11px; 
-    text-transform: uppercase; 
-    letter-spacing: 2px; 
-    opacity: 0.6; 
-    transition: all 0.3s ease;
-    display: inline-block;
-    cursor: pointer;
-}
-nav a:hover { 
-    opacity: 1; 
-    color: #ff0000; 
-    transform: scale(1.05);
-}
-.image-section { display: flex; justify-content: center; align-items: center; padding: 0 10%; margin-bottom: 150px; box-sizing: border-box }
-.image-wrapper { display: flex; flex-direction: column; align-items: flex-start; max-width: 90% }
-.image-wrapper img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain }
-.project-info { margin-top: 15px; font-size: 10px; letter-spacing: 1px; color: gray; text-transform: uppercase; line-height: 1.5 }
-.project-info p { margin: 0 }
-.contact-section { margin-top: 150px; padding: 120px 0; text-align: center; border-top: 1px solid rgba(0, 0, 0, 0.1) }
-.contact-title { font-size: 18px; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 40px; font-weight: 300 }
-.contact-info { font-size: 13px; letter-spacing: 1px; line-height: 2 }
-.contact-info a { color: black; text-decoration: none; opacity: 0.6 }
-.contact-info a:hover { opacity: 1 }
-.ig-link { 
-    position: absolute; 
-    top: 40px; 
-    right: 5%; 
-    z-index: 1000; 
-    opacity: 0.4; 
-    transition: all 0.3s ease; 
-    color: black;
-    line-height: 0;
-}
-.ig-link:hover { 
-    opacity: 1; 
-    color: #ff0000; 
-    transform: scale(1.1);
-}
-.ig-link svg { width: 26px; height: 26px }
-@media (max-width: 600px) { 
-    .logo { font-size: 24px } 
-    .image-section { padding: 0 5%; margin-bottom: 80px } 
-    .image-wrapper { max-width: 100% } 
-    .back-to-top { right: 5%; bottom: 20px }
-    .contact-section { padding: 80px 0 }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiehtovat rakennukset - Aatu Alatalo</title>
+    <style>
+        html { scroll-behavior: smooth }
+        body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: flex; flex-direction: row; overflow-x: hidden }
+
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease }
+        .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
+        @keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
+
+        .back-to-top { 
+            position: fixed; bottom: 40px; right: 40px; display: none; 
+            background: #111; color: #ffffff; border: none; 
+            width: 55px; height: 55px; border-radius: 50%; 
+            font-size: 18px; cursor: pointer; z-index: 1000; 
+            transition: all 0.4s ease;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .back-to-top:hover { transform: scale(1.1); background: #1a1a1a }
+        .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px }
+        .back-to-top circle { fill: none; stroke-width: 3 }
+        .progress-bg { stroke: rgba(255, 255, 255, 0.1) }
+        .progress-bar { 
+            stroke: #ff0000; 
+            stroke-dasharray: 157; 
+            stroke-dashoffset: 157; 
+            transition: stroke-dashoffset 0.1s linear 
+        }
+        .back-to-top span { position: relative; z-index: 10; pointer-events: none }
+
+        aside { 
+            width: 200px; height: 100vh; position: fixed; left: 0; top: 0; 
+            padding: 50px 25px; box-sizing: border-box; display: flex; 
+            flex-direction: column; justify-content: space-between; 
+            border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a;
+            transition: width 0.4s ease, padding 0.4s ease 
+        }
+        .logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3; transition: all 0.3s ease }
+
+        nav { display: flex; flex-direction: column; gap: 18px; margin-top: 50px }
+        nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease; cursor: pointer; display: inline-block }
+        nav a:hover { color: #ff0000; transform: translateX(6px) }
+
+        .ig-link { color: #ffffff; transition: all 0.3s ease; opacity: 0.7 }
+        .ig-link:hover { color: #ff0000; transform: scale(1.1); opacity: 1 }
+        .ig-link svg { width: 20px; height: 20px }
+
+        main { margin-left: 200px; width: calc(100% - 200px); padding: 0; min-height: 100vh; transition: margin-left 0.4s ease }
+        .content-wrapper { max-width: 750px; margin: 0 auto; padding: 50px }
+
+        .image-section { 
+            margin-bottom: 120px; position: relative; 
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease 
+        }
+        .image-section.is-visible { opacity: 1; transform: translateY(0) }
+
+        .image-wrapper { display: flex; flex-direction: column; width: 100% }
+        .gallery-img { 
+            width: 100%; height: auto; display: block; 
+            border-radius: 2px; cursor: zoom-in;
+            transition: all 0.5s ease 
+        }
+        .gallery-img:hover { transform: scale(1.015); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
+
+        .project-info { margin-top: 20px; font-size: 11px; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; line-height: 1.6; font-weight: 300 }
+        .project-info p:last-child { color: #888; font-size: 10px; margin-top: 4px }
+
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; justify-content: center; align-items: center; background: rgba(0,0,0,0.97); cursor: zoom-out }
+        .lightbox.active { display: flex }
+        .lightbox-img { max-width: 92%; max-height: 88vh; object-fit: contain; box-shadow: 0 10px 50px rgba(0,0,0,0.9) }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; color: white; font-size: 30px; cursor: pointer; padding: 25px; z-index: 2001; opacity: 0.3; transition: all 0.3s }
+        .nav-btn:hover { opacity: 1; color: #ff0000 }
+        .prev-btn { left: 1% }
+        .next-btn { right: 1% }
+
+        .contact-section { padding: 100px 50px; background: #000; text-align: left; border-top: 1px solid #141414 }
+        .contact-title { font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 50px; font-weight: 300 }
+        .contact-info { font-size: 14px; letter-spacing: 1px; line-height: 2.2; color: #888 }
+        .contact-info a { color: #ff0000; text-decoration: none; position: relative }
+        .contact-info a::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background-color: #ff0000; transition: width 0.3s ease }
+        .contact-info a:hover::after { width: 100% }
+
+        @media (max-width: 1024px) {
+            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid #1a1a1a; padding: 30px; display: block }
+            main { margin-left: 0; width: 100% }
+            body { flex-direction: column }
+            nav { flex-direction: row; flex-wrap: wrap; margin-top: 25px; gap: 20px }
+            .ig-link { position: absolute; top: 30px; right: 30px; margin: 0 }
+            .content-wrapper { padding: 40px 20px }
+            .image-section { margin-bottom: 70px }
+            .back-to-top { right: 20px; bottom: 20px }
+        }
+    </style>
 </head>
 <body>
 <div id="loader"><div class="spinner"></div></div>
-<button id="backToTop" class="back-to-top">Top</button>
-<a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-<line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-</svg>
-</a>
-<header>
-<a href="index.html" class="logo">Aatu Alatalo</a>
-<nav>
-<a href="about.html">About</a>
-<a href="index.html">Still Image</a>
-<a onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'})">Contact</a>
-</nav>
-</header>
+
+<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">
+    <svg viewBox="0 0 60 60">
+        <circle class="progress-bg" cx="30" cy="30" r="25"></circle>
+        <circle id="progressBar" class="progress-bar" cx="30" cy="30" r="25"></circle>
+    </svg>
+    <span>↑</span>
+</button>
+
+<aside>
+    <div>
+        <a href="index.html" class="logo">Aatu<br>Alatalo</a>
+        <nav>
+            <a href="about.html">About</a>
+            <a href="index.html">Still Image</a>
+            <a href="#contact" onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'}); return false;">Contact</a>
+        </nav>
+    </div>
+    <a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+    </a>
+</aside>
+
 <main>
-<section class="image-section">
-<div class="image-wrapper">
-<img src="DSC4023.jpg" alt="Lehmien koti" loading="lazy">
-<div class="project-info">
-<p>LEHMIEN KOTI</p>
-<p>SUOMUSSALMI 2026</p>
-</div>
-</div>
-</section>
-<section class="image-section">
-<div class="image-wrapper">
-<img src="rakennukset.jpg" alt="Punainen ja sininen" loading="lazy">
-<div class="project-info">
-<p>PUNAINEN JA SININEN</p>
-<p>KALAJOKI, FINLAND 2026</p>
-</div>
-</div>
-</section>
-<section class="image-section">
-<div class="image-wrapper">
-<img src="DSC2636.jpg" alt="Majakka" loading="lazy">
-<div class="project-info">
-<p>MAJAKKA</p>
-<p>HAILUOTO FINLAND 2025</p>
-</div>
-</div>
-</section>
+    <div class="content-wrapper">
+        <section class="image-section">
+            <div class="image-wrapper">
+                <img src="DSC4023.jpg" alt="Lehmien koti" class="gallery-img" loading="lazy">
+                <div class="project-info">
+                    <p>LEHMIEN KOTI</p>
+                    <p>SUOMUSSALMI 2026</p>
+                </div>
+            </div>
+        </section>
+        <section class="image-section">
+            <div class="image-wrapper">
+                <img src="rakennukset.jpg" alt="Punainen ja sininen" class="gallery-img" loading="lazy">
+                <div class="project-info">
+                    <p>PUNAINEN JA SININEN</p>
+                    <p>KALAJOKI, FINLAND 2026</p>
+                </div>
+            </div>
+        </section>
+        <section class="image-section">
+            <div class="image-wrapper">
+                <img src="DSC2636.jpg" alt="Majakka" class="gallery-img" loading="lazy">
+                <div class="project-info">
+                    <p>MAJAKKA</p>
+                    <p>HAILUOTO FINLAND 2025</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="contact-section" id="contact">
+        <div class="contact-title">Contact</div>
+        <div class="contact-info">
+            <p>Aatu Alatalo</p>
+            <p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
+            <p>Oulu, Finland</p>
+            <p style="margin-top: 50px; font-size: 10px; letter-spacing: 2px; color: #555">COPYRIGHT 2026 AATU ALATALO</p>
+        </div>
+    </footer>
 </main>
-<footer class="contact-section">
-<div class="contact-title">Contact</div>
-<div class="contact-info">
-<p>Aatu Alatalo</p>
-<p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
-<p>Oulu, Finland</p>
-<p style="margin-top: 60px; opacity: 0.3; font-size: 9px; letter-spacing: 1px">COPYRIGHT 2026 AATU ALATALO</p>
+
+<div class="lightbox" id="lightbox">
+    <button class="nav-btn prev-btn" id="prev-btn">&#10094;</button>
+    <img src="" class="lightbox-img" id="lightbox-img">
+    <button class="nav-btn next-btn" id="next-btn">&#10095;</button>
 </div>
-</footer>
+
 <script>
-window.addEventListener('load', () => {
-    const loader = document.getElementById('loader');
-    loader.style.opacity = '0';
-    setTimeout(() => { loader.style.display = 'none' }, 500);
-});
-const backToTopBtn = document.getElementById('backToTop');
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        backToTopBtn.style.display = 'block';
-    } else {
-        backToTopBtn.style.display = 'none';
-    }
-});
-backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        setTimeout(() => { loader.style.display = 'none' }, 500);
+    });
+
+    const backToTopBtn = document.getElementById('backToTop');
+    const progressBar = document.getElementById('progressBar');
+    const circumference = 157;
+
+    const updateProgress = () => {
+        const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPosition = window.pageYOffset;
+        if (scrollPosition > 300) { backToTopBtn.style.display = 'flex' }
+        else { backToTopBtn.style.display = 'none' }
+        const scrollPercentage = Math.min(scrollPosition / scrollTotal, 1);
+        const offset = circumference - (scrollPercentage * circumference);
+        progressBar.style.strokeDashoffset = offset;
+    };
+
+    window.addEventListener('scroll', updateProgress);
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
+
+    const images = document.querySelectorAll(".gallery-img");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    let currentIndex = 0;
+
+    const updateLightbox = () => { lightboxImg.src = images[currentIndex].src };
+
+    images.forEach((img, index) => {
+        img.addEventListener("click", () => {
+            currentIndex = index;
+            updateLightbox();
+            lightbox.classList.add("active");
+            document.body.style.overflow = "hidden";
+        });
+    });
+
+    lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox || e.target === lightboxImg) {
+            lightbox.classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+    });
+
+    prevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updateLightbox();
+    });
+
+    nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % images.length;
+        updateLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("active")) return;
+        if (e.key === "ArrowLeft") prevBtn.click();
+        if (e.key === "ArrowRight") nextBtn.click();
+        if (e.key === "Escape") lightbox.click();
+    });
 </script>
 </body>
 </html>

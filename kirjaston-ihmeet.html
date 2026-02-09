@@ -14,13 +14,24 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
 
 .back-to-top { 
     position: fixed; bottom: 40px; right: 40px; display: none; 
-    background: #ffffff; color: #000000; border: none; 
-    width: 45px; height: 45px; border-radius: 50%; 
-    font-size: 16px; cursor: pointer; z-index: 1000; 
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex; justify-content: center; align-items: center 
+    background: #111; color: #ffffff; border: none; 
+    width: 55px; height: 55px; border-radius: 50%; 
+    font-size: 18px; cursor: pointer; z-index: 1000; 
+    transition: all 0.4s ease;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
-.back-to-top:hover { background: #ff0000; color: #ffffff; transform: scale(1.1) rotate(360deg) }
+.back-to-top:hover { transform: scale(1.1); background: #1a1a1a }
+.back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px }
+.back-to-top circle { fill: none; stroke-width: 3 }
+.progress-bg { stroke: rgba(255, 255, 255, 0.1) }
+.progress-bar { 
+    stroke: #ff0000; 
+    stroke-dasharray: 157; 
+    stroke-dashoffset: 157; 
+    transition: stroke-dashoffset 0.1s linear 
+}
+.back-to-top span { position: relative; z-index: 10; pointer-events: none }
 
 aside { 
     width: 200px; height: 100vh; position: fixed; left: 0; top: 0; 
@@ -58,7 +69,7 @@ main { margin-left: 200px; width: calc(100% - 200px); padding: 0; min-height: 10
 .gallery-img:hover { transform: scale(1.015); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
 .project-info { margin-top: 20px; font-size: 11px; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; line-height: 1.6; font-weight: 300 }
-.project-info p:last-child { color: #888; font-size: 10px; margin-top: 4px } /* Vaalennettu #444 -> #888 */
+.project-info p:last-child { color: #888; font-size: 10px; margin-top: 4px }
 
 .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; justify-content: center; align-items: center; background: rgba(0,0,0,0.97); cursor: zoom-out }
 .lightbox.active { display: flex }
@@ -83,12 +94,20 @@ main { margin-left: 200px; width: calc(100% - 200px); padding: 0; min-height: 10
     .ig-link { position: absolute; top: 30px; right: 30px; margin: 0 }
     .content-wrapper { padding: 40px 20px }
     .image-section { margin-bottom: 70px }
+    .back-to-top { right: 20px; bottom: 20px }
 }
 </style>
 </head>
 <body>
 <div id="loader"><div class="spinner"></div></div>
-<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">↑</button>
+
+<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">
+    <svg viewBox="0 0 60 60">
+        <circle class="progress-bg" cx="30" cy="30" r="25"></circle>
+        <circle id="progressBar" class="progress-bar" cx="30" cy="30" r="25"></circle>
+    </svg>
+    <span>↑</span>
+</button>
 
 <aside>
 <div>
@@ -173,10 +192,20 @@ window.addEventListener('load', () => {
 });
 
 const backToTopBtn = document.getElementById('backToTop');
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 500) { backToTopBtn.style.display = 'flex' }
+const progressBar = document.getElementById('progressBar');
+const circumference = 157;
+
+const updateProgress = () => {
+    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPosition = window.pageYOffset;
+    if (scrollPosition > 300) { backToTopBtn.style.display = 'flex' }
     else { backToTopBtn.style.display = 'none' }
-});
+    const scrollPercentage = scrollPosition / scrollTotal;
+    const offset = circumference - (scrollPercentage * circumference);
+    progressBar.style.strokeDashoffset = offset;
+};
+
+window.addEventListener('scroll', updateProgress);
 backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 });
