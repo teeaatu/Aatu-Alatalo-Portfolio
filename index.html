@@ -12,35 +12,59 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
 .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
 @keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
 
+/* --- Päivitetty Takaisin ylös -nappi edistymispalkilla --- */
 .back-to-top { 
     position: fixed; bottom: 40px; right: 40px; display: none; 
-    background: #ffffff; color: #000000; border: none; 
-    width: 50px; height: 50px; border-radius: 50%; 
+    background: #111; color: #ffffff; border: none; 
+    width: 55px; height: 55px; border-radius: 50%; 
     font-size: 18px; cursor: pointer; z-index: 1000; 
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    transition: all 0.4s ease;
     display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
+
 .back-to-top:hover {
-    background: #ff0000;
-    color: #ffffff; 
-    transform: scale(1.15) rotate(360deg); 
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); 
+    transform: scale(1.1);
+    background: #1a1a1a;
+}
+
+.back-to-top svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg); /* Aloittaa latauksen ylhäältä */
+    width: 55px;
+    height: 55px;
+}
+
+.back-to-top circle {
+    fill: none;
+    stroke-width: 3;
+}
+
+.progress-bg {
+    stroke: rgba(255, 255, 255, 0.1); /* Harmaa pohjaympyrä */
+}
+
+.progress-bar {
+    stroke: #ff0000; /* Punainen latauspalkki */
+    stroke-dasharray: 157; /* Ympyrän kehä (2 * PI * säde 25) */
+    stroke-dashoffset: 157; /* Aluksi nolla täyttöä */
+    transition: stroke-dashoffset 0.1s linear;
+}
+
+.back-to-top span {
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
 }
 
 aside { width: 300px; height: 100vh; position: fixed; left: 0; top: 0; padding: 60px 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #222; z-index: 100; background: #0a0a0a; }
 .logo { font-size: 24px; text-transform: uppercase; letter-spacing: 4px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.2 }
 
 nav { display: flex; flex-direction: column; gap: 20px; margin-top: 60px }
-nav a { 
-    text-decoration: none; color: #888; font-size: 14px; 
-    text-transform: uppercase; letter-spacing: 2px; 
-    transition: all 0.3s ease; cursor: pointer; 
-    display: inline-block; 
-}
-nav a:hover { 
-    color: #ff0000; 
-    transform: translateX(10px); 
-}
+nav a { text-decoration: none; color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease; cursor: pointer; display: inline-block; }
+nav a:hover { color: #ff0000; transform: translateX(10px); }
 
 .ig-link { color: #ffffff; transition: all 0.3s ease }
 .ig-link:hover { color: #ff0000; transform: scale(1.1) rotate(5deg); }
@@ -49,45 +73,17 @@ nav a:hover {
 main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 100vh; }
 .content-wrapper { max-width: 900px; margin: 0 auto; padding: 60px }
 
-.item { 
-    margin-bottom: 150px; position: relative; 
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-.item.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
+.item { margin-bottom: 150px; position: relative; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+.item.is-visible { opacity: 1; transform: translateY(0); }
 
-.item img { 
-    width: 100%; height: auto; display: block; 
-    transition: all 0.6s ease; border-radius: 3px; 
-}
-.item:hover img { 
-    transform: scale(1.03); 
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); 
-}
+.item img { width: 100%; height: auto; display: block; transition: all 0.6s ease; border-radius: 3px; }
+.item:hover img { transform: scale(1.03); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
 
 .item-info { margin-top: 25px; display: flex; justify-content: space-between; align-items: center }
 .item span { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: #ffffff; font-weight: 300 }
 
-.item-link { 
-    font-size: 11px; color: #555; text-decoration: none; 
-    text-transform: uppercase; letter-spacing: 1px; 
-    padding-bottom: 5px; position: relative;
-    transition: color 0.3s ease;
-}
-.item-link::after {
-    content: '';
-    position: absolute;
-    width: 0; 
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #ff0000;
-    transition: width 0.3s ease-in-out; 
-}
+.item-link { font-size: 11px; color: #555; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; position: relative; transition: color 0.3s ease; }
+.item-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: 0; left: 0; background-color: #ff0000; transition: width 0.3s ease-in-out; }
 .item:hover .item-link { color: #ff0000; }
 .item:hover .item-link::after { width: 100%; }
 
@@ -105,9 +101,7 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 10
     main { margin-left: 0; width: 100% }
     body { flex-direction: column }
     nav { flex-direction: row; flex-wrap: wrap; margin-top: 30px; gap: 25px }
-    nav a:hover { transform: translateY(-5px); } 
     .ig-link { position: absolute; top: 40px; right: 40px; margin: 0 }
-    .ig-link svg { width: 28px; height: 28px }
     .content-wrapper { padding: 60px 20px }
     .item { margin-bottom: 100px; }
     .back-to-top { right: 20px; bottom: 20px }
@@ -116,7 +110,14 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 10
 </head>
 <body>
 <div id="loader"><div class="spinner"></div></div>
-<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">↑</button>
+
+<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">
+    <svg viewBox="0 0 60 60">
+        <circle class="progress-bg" cx="30" cy="30" r="25"></circle>
+        <circle id="progressBar" class="progress-bar" cx="30" cy="30" r="25"></circle>
+    </svg>
+    <span>↑</span>
+</button>
 
 <aside>
 <div>
@@ -214,37 +215,43 @@ window.addEventListener('load', () => {
     setTimeout(() => { loader.style.display = 'none' }, 500);
 });
 
+// --- Päivitetty latausympyrä- ja scroll-logiikka ---
 const backToTopBtn = document.getElementById('backToTop');
-const toggleBackToTopBtn = () => {
-    if (window.pageYOffset > 500) {
-        backToTopBtn.style.display = 'flex'; 
+const progressBar = document.getElementById('progressBar');
+const circumference = 157; // 2 * PI * r (r=25)
+
+const updateProgress = () => {
+    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPosition = window.pageYOffset;
+    
+    // Näytä/piilota nappi
+    if (scrollPosition > 300) {
+        backToTopBtn.style.display = 'flex';
     } else {
         backToTopBtn.style.display = 'none';
     }
+
+    // Laske edistyminen ja päivitä ympyrä
+    const scrollPercentage = scrollPosition / scrollTotal;
+    const offset = circumference - (scrollPercentage * circumference);
+    progressBar.style.strokeDashoffset = offset;
 };
-window.addEventListener('scroll', toggleBackToTopBtn);
+
+window.addEventListener('scroll', updateProgress);
 backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-const observerOptions = {
-    root: null, 
-    threshold: 0.15, 
-    rootMargin: "0px 0px -50px 0px" 
-};
-
-const observer = new IntersectionObserver((entries, observer) => {
+const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if(entry.isIntersecting) {
             entry.target.classList.add('is-visible');
             observer.unobserve(entry.target);
         }
     });
-}, observerOptions);
+}, { threshold: 0.15 });
 
-document.querySelectorAll('.item').forEach(item => {
-    observer.observe(item);
-});
+document.querySelectorAll('.item').forEach(item => observer.observe(item));
 </script>
 </body>
 </html>
