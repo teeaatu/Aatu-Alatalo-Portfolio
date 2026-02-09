@@ -12,7 +12,6 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
 .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
 @keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
 
-/* --- Päivitetty Takaisin ylös -nappi edistymispalkilla --- */
 .back-to-top { 
     position: fixed; bottom: 40px; right: 40px; display: none; 
     background: #111; color: #ffffff; border: none; 
@@ -32,7 +31,7 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
     position: absolute;
     top: 0;
     left: 0;
-    transform: rotate(-90deg); /* Aloittaa latauksen ylhäältä */
+    transform: rotate(-90deg);
     width: 55px;
     height: 55px;
 }
@@ -43,13 +42,13 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
 }
 
 .progress-bg {
-    stroke: rgba(255, 255, 255, 0.1); /* Harmaa pohjaympyrä */
+    stroke: rgba(255, 255, 255, 0.1);
 }
 
 .progress-bar {
-    stroke: #ff0000; /* Punainen latauspalkki */
-    stroke-dasharray: 157; /* Ympyrän kehä (2 * PI * säde 25) */
-    stroke-dashoffset: 157; /* Aluksi nolla täyttöä */
+    stroke: #ff0000;
+    stroke-dasharray: 157;
+    stroke-dashoffset: 157;
     transition: stroke-dashoffset 0.1s linear;
 }
 
@@ -182,7 +181,7 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 10
     </div>
     </div>
     <div class="item">
-    <a href="elaimet.html"><img src="DSC5653.jpg" alt="Eläimet" loading="lazy"></a>
+    <a href="elaimet.html"><img src="DSC6236.jpg" alt="Eläimet" loading="lazy"></a>
     <div class="item-info">
     <span>Eläimet</span>
     <a href="elaimet.html" class="item-link">View Project</a>
@@ -215,23 +214,20 @@ window.addEventListener('load', () => {
     setTimeout(() => { loader.style.display = 'none' }, 500);
 });
 
-// --- Päivitetty latausympyrä- ja scroll-logiikka ---
 const backToTopBtn = document.getElementById('backToTop');
 const progressBar = document.getElementById('progressBar');
-const circumference = 157; // 2 * PI * r (r=25)
+const circumference = 157;
 
 const updateProgress = () => {
     const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
     const scrollPosition = window.pageYOffset;
     
-    // Näytä/piilota nappi
     if (scrollPosition > 300) {
         backToTopBtn.style.display = 'flex';
     } else {
         backToTopBtn.style.display = 'none';
     }
 
-    // Laske edistyminen ja päivitä ympyrä
     const scrollPercentage = scrollPosition / scrollTotal;
     const offset = circumference - (scrollPercentage * circumference);
     progressBar.style.strokeDashoffset = offset;
