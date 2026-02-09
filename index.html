@@ -8,9 +8,37 @@
 html { scroll-behavior: smooth }
 body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: flex; flex-direction: row; overflow-x: hidden; }
 
-#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease }
-.spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
-@keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
+#loader { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: #000; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999; 
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#loader h1 {
+    font-size: clamp(30px, 6vw, 80px);
+    font-weight: 200;
+    text-transform: uppercase;
+    letter-spacing: 15px;
+    color: #ffffff;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: introText 0.8s ease forwards;
+}
+
+@keyframes introText {
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
 
 .back-to-top { 
     position: fixed; bottom: 40px; right: 40px; display: none; 
@@ -22,41 +50,12 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-.back-to-top:hover {
-    transform: scale(1.1);
-    background: #1a1a1a;
-}
-
-.back-to-top svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: rotate(-90deg);
-    width: 55px;
-    height: 55px;
-}
-
-.back-to-top circle {
-    fill: none;
-    stroke-width: 3;
-}
-
-.progress-bg {
-    stroke: rgba(255, 255, 255, 0.1);
-}
-
-.progress-bar {
-    stroke: #ff0000;
-    stroke-dasharray: 157;
-    stroke-dashoffset: 157;
-    transition: stroke-dashoffset 0.1s linear;
-}
-
-.back-to-top span {
-    position: relative;
-    z-index: 10;
-    pointer-events: none;
-}
+.back-to-top:hover { transform: scale(1.1); background: #1a1a1a; }
+.back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px; }
+.back-to-top circle { fill: none; stroke-width: 3; }
+.progress-bg { stroke: rgba(255, 255, 255, 0.1); }
+.progress-bar { stroke: #ff0000; stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear; }
+.back-to-top span { position: relative; z-index: 10; pointer-events: none; }
 
 aside { width: 300px; height: 100vh; position: fixed; left: 0; top: 0; padding: 60px 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #222; z-index: 100; background: #0a0a0a; }
 .logo { font-size: 24px; text-transform: uppercase; letter-spacing: 4px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.2 }
@@ -70,27 +69,40 @@ nav a:hover { color: #ff0000; transform: translateX(10px); }
 .ig-link svg { width: 24px; height: 24px }
 
 main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 100vh; }
-.content-wrapper { max-width: 900px; margin: 0 auto; padding: 60px }
 
-.item { margin-bottom: 150px; position: relative; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+.content-wrapper { 
+    max-width: 1100px; 
+    margin: 0 auto; 
+    padding: 80px 40px; 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 80px 50px;
+}
+
+.item { 
+    margin-bottom: 0; 
+    position: relative; 
+    opacity: 0; 
+    transform: translateY(40px); 
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; 
+}
+
 .item.is-visible { opacity: 1; transform: translateY(0); }
-
 .item img { width: 100%; height: auto; display: block; transition: all 0.6s ease; border-radius: 3px; }
 .item:hover img { transform: scale(1.03); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
 
 .item-info { margin-top: 25px; display: flex; justify-content: space-between; align-items: center }
-.item span { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: #ffffff; font-weight: 300 }
+.item span { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: #ffffff; font-weight: 300 }
 
-.item-link { font-size: 11px; color: #555; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; position: relative; transition: color 0.3s ease; }
+.item-link { font-size: 10px; color: #555; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; position: relative; transition: color 0.3s ease; }
 .item-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: 0; left: 0; background-color: #ff0000; transition: width 0.3s ease-in-out; }
 .item:hover .item-link { color: #ff0000; }
 .item:hover .item-link::after { width: 100%; }
 
-.contact-section { padding: 120px 60px; background: #000; text-align: left; border-top: 1px solid #1a1a1a; }
+.contact-section { padding: 120px 60px; background: #000; text-align: left; border-top: 1px solid #1a1a1a; grid-column: span 2; }
 .contact-title { font-size: 32px; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 60px; font-weight: 300 }
 .contact-info { font-size: 16px; letter-spacing: 1px; line-height: 2.5; color: #888; }
 .contact-info a { color: #ff0000; text-decoration: none; position: relative; display: inline-block; }
-.contact-info a::after { content: ''; position: absolute; width: 0; height: 1px; bottom: 0; left: 0; background-color: #ff0000; transition: width 0.3s ease-in-out; }
 .contact-info a:hover::after { width: 100%; }
 
 .copyright { margin-top: 100px; font-size: 10px; color: #444; letter-spacing: 2px; text-transform: uppercase }
@@ -100,15 +112,17 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 10
     main { margin-left: 0; width: 100% }
     body { flex-direction: column }
     nav { flex-direction: row; flex-wrap: wrap; margin-top: 30px; gap: 25px }
+    .content-wrapper { grid-template-columns: 1fr; padding: 60px 20px; gap: 60px; }
+    .contact-section { grid-column: span 1; padding: 80px 40px; }
     .ig-link { position: absolute; top: 40px; right: 40px; margin: 0 }
-    .content-wrapper { padding: 60px 20px }
-    .item { margin-bottom: 100px; }
     .back-to-top { right: 20px; bottom: 20px }
 }
 </style>
 </head>
 <body>
-<div id="loader"><div class="spinner"></div></div>
+<div id="loader">
+    <h1>Aatu Alatalo</h1>
+</div>
 
 <button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">
     <svg viewBox="0 0 60 60">
@@ -194,24 +208,29 @@ main { margin-left: 300px; width: calc(100% - 300px); padding: 0; min-height: 10
     <a href="still-life.html" class="item-link">View Project</a>
     </div>
     </div>
+    
+    <footer class="contact-section" id="contact">
+    <div class="contact-title">Contact</div>
+    <div class="contact-info">
+    <p>Aatu Alatalo</p>
+    <p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
+    <p>Oulu, Finland</p>
+    <p class="copyright">COPYRIGHT 2026 AATU ALATALO</p>
+    </div>
+    </footer>
 </div>
-
-<footer class="contact-section" id="contact">
-<div class="contact-title">Contact</div>
-<div class="contact-info">
-<p>Aatu Alatalo</p>
-<p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
-<p>Oulu, Finland</p>
-<p class="copyright">COPYRIGHT 2026 AATU ALATALO</p>
-</div>
-</footer>
 </main>
 
 <script>
 window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
-    loader.style.opacity = '0';
-    setTimeout(() => { loader.style.display = 'none' }, 500);
+    // Viive ennen häivytystä
+    setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 800);
+    }, 1200);
 });
 
 const backToTopBtn = document.getElementById('backToTop');
@@ -221,14 +240,9 @@ const circumference = 157;
 const updateProgress = () => {
     const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
     const scrollPosition = window.pageYOffset;
-    
-    if (scrollPosition > 300) {
-        backToTopBtn.style.display = 'flex';
-    } else {
-        backToTopBtn.style.display = 'none';
-    }
-
-    const scrollPercentage = scrollPosition / scrollTotal;
+    if (scrollPosition > 300) { backToTopBtn.style.display = 'flex'; }
+    else { backToTopBtn.style.display = 'none'; }
+    const scrollPercentage = Math.min(scrollPosition / scrollTotal, 1);
     const offset = circumference - (scrollPercentage * circumference);
     progressBar.style.strokeDashoffset = offset;
 };
