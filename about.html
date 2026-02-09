@@ -1,50 +1,136 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Aatu Alatalo</title>
-    <style>
-        body { margin: 0; background-color: white; color: black; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 60px 10% 0 10%; animation: slideUp 0.8s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        header { display: flex; flex-direction: column; align-items: center; margin-bottom: 80px; }
-        .logo { font-size: 32px; text-transform: uppercase; letter-spacing: 6px; text-decoration: none; color: black; margin-bottom: 30px; font-weight: 300; }
-        nav { display: flex; gap: 30px; justify-content: center; }
-        nav a { text-decoration: none; color: black; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; transition: all 0.3s ease; cursor: pointer; }
-        nav a:hover { opacity: 1; color: #ff0000; }
-        .about-content { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: row; align-items: flex-start; gap: 60px; }
-        .about-text { flex: 1.2; max-width: 600px; }
-        .about-image { flex: 1; width: 100%; max-width: 500px; height: auto; display: block; object-fit: cover; }
-        .about-text h1 { font-size: 24px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 30px; margin-top: 0; }
-        .about-text p { font-size: 14px; line-height: 1.8; color: #333; margin-bottom: 20px; }
-        .ig-link { position: absolute; top: 40px; right: 5%; z-index: 1000; opacity: 0.4; transition: all 0.3s ease; color: black; line-height: 0; }
-        .ig-link:hover { opacity: 1; color: #ff0000; transform: scale(1.1); }
-        .ig-link svg { width: 26px; height: 26px; }
-        @media (max-width: 850px) { body { padding: 40px 5% 0 5%; } .logo { font-size: 24px; } .about-content { flex-direction: column; gap: 40px; align-items: center; } .about-text { max-width: 100%; text-align: center; } .about-image { max-width: 100%; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - Aatu Alatalo</title>
+<style>
+html { scroll-behavior: smooth }
+body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: flex; flex-direction: row; overflow-x: hidden }
+
+#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease }
+.spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
+@keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
+
+.back-to-top { position: fixed; bottom: 40px; right: 40px; display: none; background: #ffffff; color: #000000; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 16px; cursor: pointer; z-index: 1000; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: center; align-items: center }
+.back-to-top:hover { background: #ff0000; color: #ffffff; transform: scale(1.1) rotate(360deg) }
+
+aside { width: 200px; height: 100vh; position: fixed; left: 0; top: 0; padding: 50px 25px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a; transition: width 0.4s ease, padding 0.4s ease }
+.logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3; transition: all 0.3s ease }
+
+nav { display: flex; flex-direction: column; gap: 18px; margin-top: 50px }
+nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease; cursor: pointer; display: inline-block }
+nav a:hover { color: #ff0000; transform: translateX(6px) }
+
+.ig-link { color: #ffffff; transition: all 0.3s ease; opacity: 0.7 }
+.ig-link:hover { color: #ff0000; transform: scale(1.1); opacity: 1 }
+.ig-link svg { width: 20px; height: 20px }
+
+main { margin-left: 200px; width: calc(100% - 200px); padding: 0; min-height: 100vh; transition: margin-left 0.4s ease }
+.content-wrapper { max-width: 900px; margin: 0 auto; padding: 80px }
+
+.about-section { margin-bottom: 120px; position: relative; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease }
+.about-section.is-visible { opacity: 1; transform: translateY(0) }
+
+.about-container { display: flex; flex-direction: row; gap: 80px; align-items: center; }
+.about-text { flex: 2; }
+.about-text h1 { font-size: 32px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; margin-top: 0; color: #ffffff; }
+.about-text p { font-size: 16px; line-height: 1.8; color: #bbbbbb; margin-bottom: 20px; max-width: 600px; }
+
+.about-image { flex: 1; width: 100%; max-width: 400px; height: auto; display: block; border-radius: 2px; transition: all 0.5s ease; object-fit: cover; }
+.about-image:hover { transform: scale(1.015); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
+
+.contact-section { padding: 100px 50px; background: #000; text-align: left; border-top: 1px solid #141414 }
+.contact-title { font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 50px; font-weight: 300 }
+.contact-info { font-size: 14px; letter-spacing: 1px; line-height: 2.2; color: #888 }
+.contact-info a { color: #ff0000; text-decoration: none; position: relative }
+.contact-info a::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background-color: #ff0000; transition: width 0.3s ease }
+.contact-info a:hover::after { width: 100% }
+
+@media (max-width: 1024px) {
+aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid #1a1a1a; padding: 40px 20px; display: block }
+main { margin-left: 0; width: 100% }
+body { flex-direction: column }
+nav { flex-direction: row; flex-wrap: wrap; margin-top: 25px; gap: 20px }
+.ig-link { position: absolute; top: 40px; right: 20px; margin: 0 }
+.content-wrapper { padding: 40px 20px }
+.about-container { flex-direction: column; gap: 30px; align-items: flex-start }
+.about-image { max-width: 100%; max-height: 400px; }
+.about-text { text-align: left; max-width: 100%; }
+}
+</style>
 </head>
 <body>
-    <a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-        </svg>
-    </a>
-    <header>
-        <a href="index.html" class="logo">Aatu Alatalo</a>
-        <nav>
-            <a href="about.html">About</a>
-            <a href="index.html">Still Image</a>
-            <a href="index.html#contact">Contact</a>
-        </nav>
-    </header>
-    <main class="about-content">
-        <div class="about-text">
-            <h1>Aatu Alatalo</h1>
-            <p>Olen 21-vuotias valokuvaaja. Aloitin kuvaamisen kymmenvuotiaana. Kamera on kulkenut mukanani yhdentoista vuoden ajan. Valokuvaus on opettanut minulle tavan tarkkailla ihmisiä ja ympäristöä. Se on muovannut persoonaani ja tapaani kohdata maailma. Etsin kuvissani aitoja tilanteita ja rehellistä tunnelmaa. Käytän valoa tavoittaakseni hetken luonteen. Haluan että kuvani pysäyttävät sinut ja herättävät ajatuksia. Pyrin siihen että jokainen otos välittää tunteen katsojalle. Tässä portfoliossa on valittuja teoksia matkani varrelta.</p>
-        </div>
-        <img src="DSC4004.jpg" alt="Aatu Alatalo" class="about-image">
-    </main>
+<div id="loader"><div class="spinner"></div></div>
+<button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">↑</button>
+
+<aside>
+<div>
+<a href="index.html" class="logo">Aatu<br>Alatalo</a>
+<nav>
+<a href="about.html">About</a>
+<a href="index.html">Still Image</a>
+<a href="#contact" onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'}); return false;">Contact</a>
+</nav>
+</div>
+<a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link" aria-label="Instagram">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+<line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+</svg>
+</a>
+</aside>
+
+<main>
+<div class="content-wrapper">
+<section class="about-section">
+<div class="about-container">
+<img src="DSC4004.jpg" alt="Aatu Alatalo" class="about-image">
+<div class="about-text">
+<h1>Aatu Alatalo</h1>
+<p>Olen 21-vuotias valokuvaaja. Aloitin kuvaamisen kymmenvuotiaana. Kamera on kulkenut mukanani yhdentoista vuoden ajan. Valokuvaus on opettanut minulle tavan tarkkailla ihmisiä ja ympäristöä. Se on muovannut persoonaani ja tapaani kohdata maailma. Etsin kuvissani aitoja tilanteita ja rehellistä tunnelmaa. Käytän valoa tavoittaakseni hetken luonteen. Haluan että kuvani pysäyttävät sinut ja herättävät ajatuksia. Pyrin siihen että jokainen otos välittää tunteen katsojalle. Tässä portfoliossa on valittuja teoksia matkani varrelta.</p>
+</div>
+</div>
+</section>
+</div>
+
+<footer class="contact-section" id="contact">
+<div class="contact-title">Contact</div>
+<div class="contact-info">
+<p>Aatu Alatalo</p>
+<p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
+<p>Oulu, Finland</p>
+<p style="margin-top: 50px; font-size: 10px; letter-spacing: 2px; color: #222">COPYRIGHT 2026 AATU ALATALO</p>
+</div>
+</footer>
+</main>
+
+<script>
+window.addEventListener('load', () => {
+const loader = document.getElementById('loader');
+loader.style.opacity = '0';
+setTimeout(() => { loader.style.display = 'none' }, 500);
+});
+
+const backToTopBtn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+if (window.pageYOffset > 500) { backToTopBtn.style.display = 'flex' }
+else { backToTopBtn.style.display = 'none' }
+});
+backToTopBtn.addEventListener('click', () => {
+window.scrollTo({ top: 0, behavior: 'smooth' })
+});
+
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if(entry.isIntersecting) {
+entry.target.classList.add('is-visible');
+observer.unobserve(entry.target);
+}
+});
+}, { threshold: 0.1 });
+document.querySelectorAll('.about-section').forEach(section => observer.observe(section));
+</script>
 </body>
 </html>
