@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aatu Alatalo Portfolio</title>
+    
+    <title>Aatu Alatalo | Katuvalokuvaus, Fine Art ja Potretit</title>
+    <meta name="description" content="Aatu Alatalon valokuvaportfolio. Katuvalokuvaus, potretit, still life, fine art ja tietoa kuvaajasta. Oulu, Suomi.">
+    <meta name="keywords" content="Aatu Alatalo, valokuvaus, katuvalokuvaus, potretit, fine art, still life, Oulu, portfolio">
+    <meta name="author" content="Aatu Alatalo">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aatualatalo.com/">
+    <meta property="og:title" content="Aatu Alatalo | Katuvalokuvaus, Fine Art ja Potretit">
+    <meta property="og:description" content="Katuvalokuvaus, potretit, still life ja fine art. Tutustu töihin ja lue lisää kuvaajasta.">
+    <meta property="og:image" content="https://aatualatalo.com/DSC5439.jpg">
+    
     <style>
-        /* 1. MUUTTUJAT JA PERUSASETUKSET */
         :root {
             --bg-color: #0a0a0a;
             --accent-color: #ff0000;
@@ -27,7 +37,6 @@
             overflow-x: hidden; 
         }
 
-        /* 2. LATAUSRUUTU (LOADER) */
         #loader { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; display: flex; justify-content: center; align-items: center; 
@@ -40,7 +49,6 @@
         }
         @keyframes introText { to { opacity: 1; transform: translateY(0); } }
 
-        /* 3. SIVUPALKKI (ASIDE) */
         aside { 
             width: var(--sidebar-width); height: 100vh; position: fixed; 
             left: 0; top: 0; padding: 60px 40px; box-sizing: border-box; 
@@ -62,7 +70,6 @@
         .ig-link:hover { color: var(--accent-color); transform: scale(1.1) rotate(5deg); }
         .ig-link svg { width: 24px; height: 24px; }
 
-        /* 4. PÄÄSISÄLTÖ JA RUUDUKKO */
         main { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); padding: 0; min-height: 100vh; }
         .content-wrapper { 
             max-width: 1200px; margin: 0 auto; padding: 80px 40px; 
@@ -78,7 +85,7 @@
             display: block; transition: all 0.6s ease; border-radius: 3px; 
         }
         .item:hover img { transform: scale(1.03); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
-        .item-info { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
         .item span { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-main); font-weight: 300; }
         .item-link { 
             font-size: 9px; color: #555; text-decoration: none; text-transform: uppercase; 
@@ -91,14 +98,12 @@
         .item:hover .item-link { color: var(--accent-color); }
         .item:hover .item-link::after { width: 100%; }
 
-        /* 5. YHTEYSTIEDOT JA FOOTER */
         .contact-section { padding: 120px 60px; background: #000; text-align: left; border-top: 1px solid #1a1a1a; grid-column: span 3; }
         .contact-title { font-size: 32px; text-transform: uppercase; letter-spacing: 8px; margin-bottom: 60px; font-weight: 300; }
         .contact-info { font-size: 16px; letter-spacing: 1px; line-height: 2.5; color: var(--text-dimmed); }
         .contact-info a { color: var(--accent-color); text-decoration: none; }
         .copyright { margin-top: 100px; font-size: 10px; color: #444; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* 6. TAKAISIN YLÖS -PAINIKE */
         .back-to-top { 
             position: fixed; bottom: 40px; right: 40px; display: none; 
             background: #111; color: var(--text-main); border: none; 
@@ -111,7 +116,6 @@
         .progress-bg { fill: none; stroke: rgba(255, 255, 255, 0.1); stroke-width: 3; }
         .progress-bar { fill: none; stroke: var(--accent-color); stroke-width: 3; stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear; }
 
-        /* 7. RESPONSIIVISUUS */
         @media (max-width: 1200px) {
             .content-wrapper { grid-template-columns: repeat(2, 1fr); }
             .contact-section { grid-column: span 2; }
@@ -125,6 +129,7 @@
             .contact-section { grid-column: span 2; padding: 60px 30px; }
             .ig-link { position: absolute; top: 40px; right: 40px; margin: 0; }
             .back-to-top { right: 20px; bottom: 20px; }
+            .item-info { flex-direction: column; align-items: flex-start; gap: 8px; }
         }
     </style>
 </head>
@@ -206,7 +211,6 @@
 </main>
 
 <script>
-    // 1. LATAUSRUUDUN HALLINTA
     window.addEventListener('load', () => {
         const loader = document.getElementById('loader');
         setTimeout(() => {
@@ -215,7 +219,6 @@
         }, 1200);
     });
 
-    // 2. TAKAISIN YLÖS JA EDISTYMISPALKKI
     const backToTopBtn = document.getElementById('backToTop');
     const progressBar = document.getElementById('progressBar');
     const circumference = 157;
@@ -223,9 +226,7 @@
     const updateProgress = () => {
         const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPosition = window.pageYOffset;
-        
         backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
-        
         const scrollPercentage = Math.min(scrollPosition / scrollTotal, 1);
         const offset = circumference - (scrollPercentage * circumference);
         progressBar.style.strokeDashoffset = offset;
@@ -236,13 +237,11 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // 3. CONTACT-LINKIN SKROLLAUS
     document.getElementById('contactLink').addEventListener('click', (e) => {
         e.preventDefault();
         document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
     });
 
-    // 4. ANIMATION OBSERVER (Elementtien ilmestyminen)
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if(entry.isIntersecting) {
