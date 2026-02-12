@@ -12,87 +12,92 @@ body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helve
 .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
 @keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
 
-.back-to-top { position: fixed; bottom: 40px; right: 40px; display: none; background: #ffffff; color: #000000; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 16px; cursor: pointer; z-index: 1000; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; justify-content: center; align-items: center }
-.back-to-top:hover { background: #ff0000; color: #ffffff; transform: scale(1.1) rotate(360deg) }
+.back-to-top { position: fixed; bottom: 40px; right: 40px; display: none; background: #ffffff; color: #000000; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 1000; justify-content: center; align-items: center }
 
-aside { width: 200px; height: 100vh; position: fixed; left: 0; top: 0; padding: 50px 25px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a; transition: width 0.4s ease, padding 0.4s ease }
-.logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3; transition: all 0.3s ease }
+aside { width: 200px; height: 100vh; position: fixed; left: 0; top: 0; padding: 50px 25px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a }
+.logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3 }
 
 nav { display: flex; flex-direction: column; gap: 18px; margin-top: 50px }
-nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease; cursor: pointer; display: inline-block }
-nav a:hover { color: #ff0000; transform: translateX(6px) }
+nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease }
+nav a:hover { color: #ff0000 }
 
-.ig-link { color: #ffffff; transition: all 0.3s ease; opacity: 0.7 }
-.ig-link:hover { color: #ff0000; transform: scale(1.1); opacity: 1 }
-.ig-link svg { width: 20px; height: 20px }
+main { margin-left: 200px; width: calc(100% - 200px); padding: 0 }
+.content-wrapper { max-width: 1000px; margin: 0 auto; padding: 100px 60px }
 
-main { margin-left: 200px; width: calc(100% - 200px); padding: 0; min-height: 100vh; transition: margin-left 0.4s ease }
-.content-wrapper { max-width: 900px; margin: 0 auto; padding: 80px }
+.about-grid { display: flex; align-items: flex-start; gap: 80px }
 
-.about-section { margin-bottom: 120px; position: relative; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease }
-.about-section.is-visible { opacity: 1; transform: translateY(0) }
+/* Kuvan asetukset */
+.image-container { flex: 0 0 350px; position: sticky; top: 100px; overflow: hidden; border-radius: 2px }
+.parallax-img { width: 100%; height: auto; display: block; transition: transform 0.2s ease-out }
 
-.about-container { display: flex; flex-direction: row; gap: 80px; align-items: center; }
-.about-text { flex: 2; }
-.about-text h1 { font-size: 32px; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; margin-top: 0; color: #ffffff; }
-.about-text p { font-size: 16px; line-height: 1.8; color: #bbbbbb; margin-bottom: 20px; max-width: 600px; }
+/* Tekstin asetukset */
+.about-text { flex: 1; padding-bottom: 200px }
+.about-text h1 { font-size: 32px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 60px; margin-top: 0 }
 
-.about-image { flex: 1; width: 100%; max-width: 400px; height: auto; display: block; border-radius: 2px; transition: all 0.5s ease; object-fit: cover; }
-.about-image:hover { transform: scale(1.015); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
+/* Scroll reveal efekti tekstille */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 1s ease-out; margin-bottom: 150px }
+.reveal.active { opacity: 1; transform: translateY(0) }
+
+.about-text p { font-size: 16px; line-height: 2; color: #bbbbbb; margin: 0 }
 
 .contact-section { padding: 100px 50px; background: #000; text-align: left; border-top: 1px solid #141414 }
 .contact-title { font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 50px; font-weight: 300 }
 .contact-info { font-size: 14px; letter-spacing: 1px; line-height: 2.2; color: #888 }
-.contact-info a { color: #ff0000; text-decoration: none; position: relative }
-.contact-info a::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background-color: #ff0000; transition: width 0.3s ease }
-.contact-info a:hover::after { width: 100% }
+.contact-info a { color: #ff0000; text-decoration: none }
 
 @media (max-width: 1024px) {
-aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid #1a1a1a; padding: 40px 20px; display: block }
+aside { width: 100%; height: auto; position: relative; border-right: none; padding: 40px 20px }
 main { margin-left: 0; width: 100% }
 body { flex-direction: column }
-nav { flex-direction: row; flex-wrap: wrap; margin-top: 25px; gap: 20px }
-.ig-link { position: absolute; top: 40px; right: 20px; margin: 0 }
 .content-wrapper { padding: 40px 20px }
-.about-container { flex-direction: column; gap: 30px; align-items: flex-start }
-.about-image { max-width: 100%; max-height: 400px; }
-.about-text { text-align: left; max-width: 100%; }
+.about-grid { flex-direction: column; gap: 40px; align-items: center }
+.image-container { position: relative; top: 0; flex: 0 0 auto; width: 100%; max-width: 400px }
+.reveal { margin-bottom: 60px }
+.about-text { padding-bottom: 40px }
 }
 </style>
 </head>
 <body>
+
 <div id="loader"><div class="spinner"></div></div>
-<button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+<button id="backToTop" class="back-to-top">↑</button>
 
 <aside>
-<div>
 <a href="index.html" class="logo">Aatu<br>Alatalo</a>
 <nav>
 <a href="about.html">About</a>
 <a href="index.html">Still Image</a>
-<a href="#contact" onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'}); return false;">Contact</a>
+<a href="#contact">Contact</a>
 </nav>
-</div>
-<a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link" aria-label="Instagram">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-<line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-</svg>
-</a>
 </aside>
 
 <main>
 <div class="content-wrapper">
-<section class="about-section">
-<div class="about-container">
-<img src="DSC4004.jpg" alt="Aatu Alatalo" class="about-image">
+<div class="about-grid">
+<div class="image-container">
+<img src="DSC4004.jpg" alt="Aatu Alatalo" class="parallax-img" id="parallaxImg">
+</div>
+
 <div class="about-text">
-<h1>Aatu Alatalo</h1>
-<p>I am a 21-year-old photographer. I started photography at the age of ten and have been doing it almost every day since.</p>
+<h1 class="reveal">Aatu Alatalo</h1>
+
+<div class="reveal">
+<p>Olen 21-vuotias valokuvaaja, joka on varttunut Lakeuden seudulla ja asuu nykyään Oulussa. Valokuvauksen aloitin vuonna 2014, ja sen jälkeen olen tehnyt sitä melkein joka päivä. Kuvaan vähän kaikenlaista, koska niin monesta paikasta voi löytyä kauneutta ja ajattomuutta, jota monesti haen kuvissani.</p>
+</div>
+
+<div class="reveal">
+<p>Kuvani eivät ole ns. täydellisiä moneltakaan osin, mutta mielestäni se juuri tekee niistä omanlaisia ja tunnelmallisia. Minua kiehtovat värit, muodot ja erilaiset mielenkiintoiset hetket, jotka ovat aika nopeasti ohi.</p>
+</div>
+
+<div class="reveal">
+<p>Luonto on yksi sellainen asia, mistä saan paljon inspiraatiota, koska se on mielestäni suuri taideteos, josta löytyy erilaisia värejä, muotoja, ääniä ja hiljaisuutta ihan loputtomasti, kun jaksaa tutkia tarpeeksi.</p>
+</div>
+
+<div class="reveal">
+<p>Portfoliossa näkyy myös hieman potretteja. Potretissa minua kiehtoo välittää sellainen tunne kuvasta, joka ei ehkä heti näy. Pitää hieman tuntea ihmistä ensin.</p>
 </div>
 </div>
-</section>
+</div>
 </div>
 
 <footer class="contact-section" id="contact">
@@ -108,29 +113,42 @@ nav { flex-direction: row; flex-wrap: wrap; margin-top: 25px; gap: 20px }
 
 <script>
 window.addEventListener('load', () => {
-const loader = document.getElementById('loader');
-loader.style.opacity = '0';
-setTimeout(() => { loader.style.display = 'none' }, 500);
+document.getElementById('loader').style.opacity = '0';
+setTimeout(() => { document.getElementById('loader').style.display = 'none' }, 500);
+reveal(); // Tarkistetaan heti latauksessa mitkä osiot näkyvät
 });
 
 const backToTopBtn = document.getElementById('backToTop');
+
+function reveal() {
+const reveals = document.querySelectorAll(".reveal");
+for (let i = 0; i < reveals.length; i++) {
+const windowHeight = window.innerHeight;
+const elementTop = reveals[i].getBoundingClientRect().top;
+const elementVisible = 150;
+if (elementTop < windowHeight - elementVisible) {
+reveals[i].classList.add("active");
+}
+}
+}
+
 window.addEventListener('scroll', () => {
+reveal();
+
 if (window.pageYOffset > 500) { backToTopBtn.style.display = 'flex' }
 else { backToTopBtn.style.display = 'none' }
+
+// Kuvan parallaksi
+if (window.innerWidth > 1024) {
+const scrolled = window.pageYOffset;
+const img = document.getElementById('parallaxImg');
+img.style.transform = 'translateY(' + (scrolled * 0.05) + 'px) scale(' + (1 + scrolled * 0.0001) + ')';
+}
 });
+
 backToTopBtn.addEventListener('click', () => {
 window.scrollTo({ top: 0, behavior: 'smooth' })
 });
-
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(entry => {
-if(entry.isIntersecting) {
-entry.target.classList.add('is-visible');
-observer.unobserve(entry.target);
-}
-});
-}, { threshold: 0.1 });
-document.querySelectorAll('.about-section').forEach(section => observer.observe(section));
 </script>
 </body>
 </html>
