@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,58 +8,54 @@
 html { scroll-behavior: smooth }
 body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: flex; flex-direction: row; overflow-x: hidden }
 
-#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease }
-.spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
-@keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
+#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.3s ease }
 
 .back-to-top { position: fixed; bottom: 40px; right: 40px; display: none; background: #ffffff; color: #000000; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 1000; justify-content: center; align-items: center }
 
-aside { width: 200px; height: 100vh; position: fixed; left: 0; top: 0; padding: 50px 25px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a }
-.logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3 }
+aside { width: 250px; height: 100vh; position: fixed; left: 0; top: 0; padding: 50px 25px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a }
+.logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3; margin-bottom: 40px; display: block }
 
-nav { display: flex; flex-direction: column; gap: 18px; margin-top: 50px }
-nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease }
+nav { display: flex; flex-direction: column; gap: 15px }
+nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s ease; cursor: pointer; display: inline-block }
 nav a:hover { color: #ff0000 }
 
-main { margin-left: 200px; width: calc(100% - 200px); padding: 0 }
-.content-wrapper { max-width: 1000px; margin: 0 auto; padding: 100px 60px }
+main { margin-left: 250px; width: calc(100% - 250px); padding: 0 }
+.content-wrapper { max-width: 1000px; margin: 0 auto; padding: 50px 60px }
 
-.about-grid { display: flex; align-items: flex-start; gap: 80px }
+.about-grid { display: flex; align-items: flex-start; gap: 60px }
 
-/* Kuvan asetukset */
-.image-container { flex: 0 0 350px; position: sticky; top: 100px; overflow: hidden; border-radius: 2px }
-.parallax-img { width: 100%; height: auto; display: block; transition: transform 0.2s ease-out }
+.image-container { flex: 0 0 350px; position: sticky; top: 50px; overflow: hidden; border-radius: 2px }
+.image-container img { width: 100%; height: auto; display: block }
 
-/* Tekstin asetukset */
-.about-text { flex: 1; padding-bottom: 200px }
-.about-text h1 { font-size: 32px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 60px; margin-top: 0 }
+.about-text { flex: 1; padding-bottom: 100px }
+.about-text h1 { font-size: 32px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 40px; margin-top: 0 }
 
-/* Scroll reveal efekti tekstille */
-.reveal { opacity: 0; transform: translateY(40px); transition: all 1s ease-out; margin-bottom: 150px }
-.reveal.active { opacity: 1; transform: translateY(0) }
+.about-section { margin-bottom: 30px }
+.about-text p { font-size: 16px; line-height: 1.8; color: #bbbbbb; margin: 0 }
 
-.about-text p { font-size: 16px; line-height: 2; color: #bbbbbb; margin: 0 }
-
-.contact-section { padding: 100px 50px; background: #000; text-align: left; border-top: 1px solid #141414 }
-.contact-title { font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 50px; font-weight: 300 }
+.contact-section { padding: 80px 50px; background: #000; text-align: left; border-top: 1px solid #141414 }
+.contact-title { font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 40px; font-weight: 300 }
 .contact-info { font-size: 14px; letter-spacing: 1px; line-height: 2.2; color: #888 }
 .contact-info a { color: #ff0000; text-decoration: none }
 
 @media (max-width: 1024px) {
-aside { width: 100%; height: auto; position: relative; border-right: none; padding: 40px 20px }
-main { margin-left: 0; width: 100% }
 body { flex-direction: column }
+aside { width: 100%; height: auto; position: relative; border-right: none; padding: 40px 20px }
+.logo { margin-bottom: 20px }
+nav { flex-direction: row; flex-wrap: wrap; gap: 20px }
+main { margin-left: 0; width: 100% }
 .content-wrapper { padding: 40px 20px }
 .about-grid { flex-direction: column; gap: 40px; align-items: center }
 .image-container { position: relative; top: 0; flex: 0 0 auto; width: 100%; max-width: 400px }
-.reveal { margin-bottom: 60px }
-.about-text { padding-bottom: 40px }
 }
 </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
+<div id="loader">
+    <h1 style="font-weight: 200; text-transform: uppercase; letter-spacing: 10px;">Aatu Alatalo</h1>
+</div>
+
 <button id="backToTop" class="back-to-top">↑</button>
 
 <aside>
@@ -67,7 +63,6 @@ body { flex-direction: column }
 <nav>
 <a href="about.html">About</a>
 <a href="index.html">Series</a>
-<a href="prints.html">Prints</a>
 <a href="#contact">Contact</a>
 </nav>
 </aside>
@@ -76,26 +71,22 @@ body { flex-direction: column }
 <div class="content-wrapper">
 <div class="about-grid">
 <div class="image-container">
-<img src="DSC4004.jpg" alt="Aatu Alatalo" class="parallax-img" id="parallaxImg">
+<img src="DSC4004.jpg" alt="Aatu Alatalo">
 </div>
 
 <div class="about-text">
-<h1 class="reveal">Aatu Alatalo</h1>
+<h1>Aatu Alatalo</h1>
 
-<div class="reveal">
+<div class="about-section">
 <p>Olen 21-vuotias valokuvaaja, joka on varttunut Lakeuden seudulla ja asuu nykyään Oulussa. Valokuvauksen aloitin vuonna 2014, ja sen jälkeen olen tehnyt sitä melkein joka päivä. Kuvaan vähän kaikenlaista, koska niin monesta paikasta voi löytyä kauneutta ja ajattomuutta, jota monesti haen kuvissani.</p>
 </div>
 
-<div class="reveal">
-<p>Kuvani eivät ole ns. täydellisiä moneltakaan osin, mutta mielestäni se juuri tekee niistä omanlaisia ja tunnelmallisia. Minua kiehtovat värit, muodot ja erilaiset mielenkiintoiset hetket, jotka ovat aika nopeasti ohi.</p>
+<div class="about-section">
+<p>Minua kiehtovat värit, muodot ja erilaiset mielenkiintoiset hetket, jotka ovat aika nopeasti ohi, jos niitä ei taltioi.</p>
 </div>
 
-<div class="reveal">
-<p>Luonto on yksi sellainen asia, mistä saan paljon inspiraatiota, koska se on mielestäni suuri taideteos, josta löytyy erilaisia värejä, muotoja, ääniä ja hiljaisuutta ihan loputtomasti, kun jaksaa tutkia tarpeeksi.</p>
-</div>
-
-<div class="reveal">
-<p>Portfoliossa näkyy myös hieman potretteja. Potretissa minua kiehtoo välittää sellainen tunne kuvasta, joka ei ehkä heti näy. Pitää hieman tuntea ihmistä ensin.</p>
+<div class="about-section">
+<p>Luonto on yksi sellainen asia, mistä saan paljon inspiraatiota sen monimuotoisuutensa vuoksi. Se on sellainen suuri taideteos, mistä löytyy vähän kaikkea.</p>
 </div>
 </div>
 </div>
@@ -114,41 +105,20 @@ body { flex-direction: column }
 
 <script>
 window.addEventListener('load', () => {
-document.getElementById('loader').style.opacity = '0';
-setTimeout(() => { document.getElementById('loader').style.display = 'none' }, 500);
-reveal(); // Tarkistetaan heti latauksessa mitkä osiot näkyvät
+    const loader = document.getElementById('loader');
+    loader.style.opacity = '0';
+    setTimeout(() => { loader.style.display = 'none' }, 300);
 });
 
 const backToTopBtn = document.getElementById('backToTop');
 
-function reveal() {
-const reveals = document.querySelectorAll(".reveal");
-for (let i = 0; i < reveals.length; i++) {
-const windowHeight = window.innerHeight;
-const elementTop = reveals[i].getBoundingClientRect().top;
-const elementVisible = 150;
-if (elementTop < windowHeight - elementVisible) {
-reveals[i].classList.add("active");
-}
-}
-}
-
 window.addEventListener('scroll', () => {
-reveal();
-
-if (window.pageYOffset > 500) { backToTopBtn.style.display = 'flex' }
-else { backToTopBtn.style.display = 'none' }
-
-// Kuvan parallaksi
-if (window.innerWidth > 1024) {
-const scrolled = window.pageYOffset;
-const img = document.getElementById('parallaxImg');
-img.style.transform = 'translateY(' + (scrolled * 0.05) + 'px) scale(' + (1 + scrolled * 0.0001) + ')';
-}
+    if (window.pageYOffset > 500) { backToTopBtn.style.display = 'flex' }
+    else { backToTopBtn.style.display = 'none' }
 });
 
 backToTopBtn.addEventListener('click', () => {
-window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 });
 </script>
 </body>
