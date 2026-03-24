@@ -141,14 +141,9 @@
       gap: 40px 30px;
     }
 
+    /* MUOKATTU: Poistettu alkupisteen piilotus ja siirtymä */
     .item {
       position: relative;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-
-    .item.is-visible {
       opacity: 1;
       transform: translateY(0);
     }
@@ -400,6 +395,16 @@
       </div>
 
       <div class="item">
+        <a href="kuvaprojekti-ajasta-v365.html">
+          <img src="Vuosikuvaus2.jpg" alt="Kuvaprojekti ajasta V365" loading="lazy" width="800" height="800">
+        </a>
+        <div class="item-info">
+          <span>Kuvaprojekti ajasta V365</span>
+          <a href="kuvaprojekti-ajasta-v365.html" class="item-link">View Project</a>
+        </div>
+      </div>
+
+      <div class="item">
         <a href="sisatilan-valo.html">
           <img src="DSC5577.jpg" alt="Sisätilan valo" loading="lazy" width="800" height="800">
         </a>
@@ -501,18 +506,7 @@
       });
     });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.15
-    });
-
-    document.querySelectorAll('.item').forEach(item => observer.observe(item));
+    // MUOKATTU: Poistettu IntersectionObserver kokonaan
   </script>
 </body>
 </html>
