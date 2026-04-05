@@ -40,10 +40,10 @@
         .logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3 }
 
         nav { display: flex; flex-direction: column; gap: 18px; margin-top: 50px }
-        nav a { text-decoration: none; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease }
+        nav a { text-decoration: none; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease }
         nav a:hover { color: #ff0000; transform: translateX(6px) }
 
-        /* IG Logo oikeaan yläkulmaan */
+        /* IG Logo */
         .ig-link { 
             position: fixed; top: 50px; right: 50px; 
             color: #ffffff; opacity: 0.7; transition: all 0.3s ease; 
@@ -53,36 +53,45 @@
 
         /* --- Pääsisältö --- */
         main { margin-left: 200px; width: calc(100% - 200px); min-height: 100vh }
-        .content-wrapper { max-width: 750px; margin: 0 auto; padding: 50px }
+        .content-wrapper { max-width: 900px; margin: 0 auto; padding: 100px 50px }
+
+        /* --- Intro Section --- */
+        .intro-section { margin-bottom: 140px; border-bottom: 1px solid #1a1a1a; padding-bottom: 80px }
+        .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
+        .intro-title { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: #ffffff; margin-bottom: 35px; font-weight: 300 }
+        .intro-text { font-size: 17px; line-height: 1.7; color: #bbb; font-weight: 300; text-align: left }
 
         /* --- Kuvat --- */
         .image-section { 
-            margin-bottom: 120px; opacity: 0; transform: translateY(30px);
+            margin-bottom: 150px; opacity: 0; transform: translateY(30px);
             transition: opacity 0.8s ease, transform 0.8s ease 
         }
         .image-section.is-visible { opacity: 1; transform: translateY(0) }
 
         .gallery-img { width: 100%; height: auto; border-radius: 2px; cursor: zoom-in; transition: transform 0.5s ease }
-        .gallery-img:hover { transform: scale(1.01) }
+        .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
-        .project-info { margin-top: 20px; font-size: 11px; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; font-weight: 300 }
-        .project-info p:last-child { color: #888; font-size: 10px; margin-top: 4px }
+        .project-info { margin-top: 25px; font-size: 11px; letter-spacing: 2px; color: #ffffff; text-transform: uppercase; font-weight: 300; line-height: 1.6 }
+        .project-info p:last-child { color: #666; font-size: 10px; margin-top: 6px; letter-spacing: 1.5px }
 
         /* --- Lightbox --- */
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; justify-content: center; align-items: center; background: rgba(0,0,0,0.95); cursor: zoom-out }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; justify-content: center; align-items: center; background: rgba(0,0,0,0.97); cursor: zoom-out }
         .lightbox.active { display: flex }
-        .lightbox-img { max-width: 90%; max-height: 85vh; object-fit: contain }
+        .lightbox-img { max-width: 92%; max-height: 88vh; object-fit: contain; box-shadow: 0 10px 50px rgba(0,0,0,0.9) }
 
         /* --- Footer --- */
-        .contact-section { padding: 100px 50px; background: #000; border-top: 1px solid #141414 }
+        .contact-section { padding: 120px 50px; background: #000; border-top: 1px solid #141414 }
         .contact-title { font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 50px; font-weight: 300 }
+        .contact-info { font-size: 14px; letter-spacing: 1px; line-height: 2.2; color: #888 }
 
         @media (max-width: 1024px) {
             aside { width: 100%; height: auto; position: relative; border-right: none; padding: 30px }
             main { margin-left: 0; width: 100% }
             body { flex-direction: column }
-            nav { flex-direction: row; gap: 20px }
+            nav { flex-direction: row; gap: 20px; flex-wrap: wrap }
             .ig-link { top: 30px; right: 30px }
+            .intro-grid { grid-template-columns: 1fr; gap: 40px }
+            .content-wrapper { padding: 60px 25px }
         }
     </style>
 </head>
@@ -112,34 +121,47 @@
         <nav>
             <a href="about.html">About</a>
             <a href="index.html">Series</a>
-            <a href="#contact">Contact</a>
+            <a href="#contact" onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'}); return false;">Contact</a>
         </nav>
     </div>
 </aside>
 
 <main>
     <div class="content-wrapper">
+        
+        <header class="intro-section">
+            <div class="intro-title">Still Life — Asetelmat</div>
+            <div class="intro-grid">
+                <div class="intro-text" lang="en">
+                    Interesting compositions can likely be found in many places, as long as one is curious enough to focus their gaze and attention upon them.
+                </div>
+                <div class="intro-text" lang="fi">
+                    Mielenkiintoisia asetelmia lienee monessakin paikkaa, kunhan on tarpeeksi kiinnostunut niihin katseensa ja mielenkiintonsa kiinnittämään.
+                </div>
+            </div>
+        </header>
+
         <section class="image-section">
-            <img src="Hedelmat1.jpg" alt="Untitled" class="gallery-img" loading="lazy">
+            <img src="Hedelmat1.jpg" alt="Kitchen Interior" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Kitchen Interior with Fruit — Hedelmiä keittiössä</p>
-                <p>2026</p>
+                <p>KITCHEN INTERIOR WITH FRUIT — HEDELMIÄ KEITTIÖSSÄ</p>
+                <p>OULU, FINLAND 2026</p>
             </div>
         </section>
 
         <section class="image-section">
             <img src="DSC4115-1.jpg" alt="Pitaya" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>First Taste of Pitaya — Pitayan maistaminen</p>
-                <p>2025</p>
+                <p>FIRST TASTE OF PITAYA — PITAYAN MAISTAMINEN</p>
+                <p>OULU, FINLAND 2025</p>
             </div>
         </section>
 
         <section class="image-section">
             <img src="paprika.jpg" alt="Paprika" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Still Life with Pepper and Apple — Paprika ja omena</p>
-                <p>2025</p>
+                <p>STILL LIFE WITH PEPPER AND APPLE — PAPRIKA JA OMENA</p>
+                <p>OULU, FINLAND 2025</p>
             </div>
         </section>
     </div>
@@ -150,21 +172,20 @@
             <p>Aatu Alatalo</p>
             <p><a href="mailto:aatuelias.alatalo@gmail.com" style="color: #ff0000; text-decoration: none;">aatuelias.alatalo@gmail.com</a></p>
             <p>Oulu, Finland</p>
-            <p style="margin-top: 50px; font-size: 10px; color: #222">COPYRIGHT 2026 AATU ALATALO</p>
+            <p style="margin-top: 50px; font-size: 10px; letter-spacing: 2px; color: #444">COPYRIGHT 2026 AATU ALATALO</p>
         </div>
     </footer>
 </main>
 
-<div class="lightbox" id="lightbox"><img src="" class="lightbox-img" id="lightbox-img"></div>
+<div class="lightbox" id="lightbox" tabindex="-1"><img src="" class="lightbox-img" id="lightbox-img"></div>
 
 <script>
-    // Latausanimaatio
     window.addEventListener('load', () => {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => { document.getElementById('loader').style.display = 'none' }, 500);
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        setTimeout(() => { loader.style.display = 'none' }, 500);
     });
 
-    // Edistymispalkki ja rullaus
     const backToTopBtn = document.getElementById('backToTop');
     const progressBar = document.getElementById('progressBar');
     const circumference = 157;
@@ -173,13 +194,13 @@
         const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPosition = window.pageYOffset;
         backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
-        const offset = circumference - (Math.min(scrollPosition / scrollTotal, 1) * circumference);
+        const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
+        const offset = circumference - (scrollPercentage * circumference);
         progressBar.style.strokeDashoffset = offset;
     });
 
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    // Kuvien ilmestyminen rullattaessa
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if(entry.isIntersecting) {
@@ -189,16 +210,27 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
 
-    // Lightbox
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightbox-img");
     document.querySelectorAll(".gallery-img").forEach(img => {
         img.addEventListener("click", () => {
             lightboxImg.src = img.src;
             lightbox.classList.add("active");
+            lightbox.focus();
+            document.body.style.overflow = "hidden";
         });
     });
-    lightbox.addEventListener("click", () => lightbox.classList.remove("active"));
+    lightbox.addEventListener("click", () => {
+        lightbox.classList.remove("active");
+        document.body.style.overflow = "auto";
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && lightbox.classList.contains("active")) {
+            lightbox.classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+    });
 </script>
 </body>
 </html>
