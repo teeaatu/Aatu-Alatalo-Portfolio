@@ -1,294 +1,310 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V365 - Aatu Alatalo</title>
-    <style>
-        html { scroll-behavior: smooth }
-        body { margin: 0; background-color: #0a0a0a; color: #ffffff; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; display: flex; flex-direction: row; overflow-x: hidden }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V365 — Kuvaprojekti ajasta - Aatu Alatalo</title>
+<style>
+:root {
+    --bg-color: #0a0a0a;
+    --accent-color: #ff0000;
+    --text-main: #ffffff;
+    --text-dimmed: #888;
+    --sidebar-width: 300px;
+    --nav-speed: 0.3s;
+}
 
-        /* --- Loader --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease }
-        .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #ff0000; border-radius: 50%; animation: spin 1s linear infinite }
-        @keyframes spin { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
+body { 
+    margin: 0; 
+    background-color: var(--bg-color); 
+    color: var(--text-main); 
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    display: flex; 
+    flex-direction: row; 
+    overflow-x: hidden 
+}
 
-        /* --- Takaisin ylös -nappi --- */
-        .back-to-top { 
-            position: fixed; bottom: 40px; right: 40px; display: none; 
-            background: #111; color: #ffffff; border: none; 
-            width: 55px; height: 55px; border-radius: 50%; 
-            font-size: 18px; cursor: pointer; z-index: 1000; 
-            transition: all 0.4s ease;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px }
-        .progress-bar { stroke: #ff0000; stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear; fill: none; stroke-width: 3; }
+/* --- LOADER: Suuri ja ohut teksti --- */
+#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.8s ease }
+#loader h1 { font-size: clamp(30px, 6vw, 80px); font-weight: 200; text-transform: none; letter-spacing: 12px; text-indent: 12px; opacity: 0; animation: introText 0.8s ease forwards }
+@keyframes introText { to { opacity: 1 } }
 
-        /* --- Sivupalkki (Aside) --- */
-        aside { 
-            width: 200px; height: 100vh; position: fixed; left: 0; top: 0; 
-            padding: 50px 25px; box-sizing: border-box; display: flex; 
-            flex-direction: column; justify-content: space-between; 
-            border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a;
-        }
-        .logo { font-size: 18px; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.3 }
-        nav { display: flex; flex-direction: column; gap: 18px; margin-top: 50px }
-        nav a { text-decoration: none; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s ease }
-        nav a:hover { color: #ff0000; transform: translateX(6px) }
+/* --- TAKAISIN YLÖS --- */
+.back-to-top { 
+    position: fixed; bottom: 40px; right: 40px; display: none; 
+    background: #111; color: #ffffff; border: none; 
+    width: 55px; height: 55px; border-radius: 50%; 
+    font-size: 18px; cursor: pointer; z-index: 1000; 
+    transition: all 0.4s ease; display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+.back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px }
+.back-to-top circle { fill: none; stroke-width: 3 }
+.progress-bg { stroke: rgba(255, 255, 255, 0.1) }
+.progress-bar { stroke: var(--accent-color); stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
 
-        /* --- Pääsisältö --- */
-        main { margin-left: 200px; width: calc(100% - 200px); min-height: 100vh }
-        
-        .content-wrapper { 
-            max-width: 1100px; 
-            margin: 0 auto; 
-            padding: 100px 50px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px 30px;
-        }
+/* --- MOBIILIHAMPPARI --- */
+.menu-toggle {
+    display: none; position: fixed; top: 30px; right: 30px;
+    width: 44px; height: 44px; background: none; border: none; cursor: pointer; z-index: 2000;
+}
+.hamburger { width: 25px; height: 2px; background: #fff; position: relative; transition: all 0.4s ease }
+.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: #fff; position: absolute; left: 0; transition: all 0.4s ease }
+.hamburger::before { top: -8px }
+.hamburger::after { top: 8px }
+.menu-open .hamburger { background: transparent }
+.menu-open .hamburger::before { top: 0; transform: rotate(45deg) }
+.menu-open .hamburger::after { top: 0; transform: rotate(-45deg) }
 
-        .project-header {
-            grid-column: span 2;
-            text-align: center;
-            margin-bottom: 80px;
-        }
-        .project-header h1 {
-            font-size: 42px;
-            font-weight: 200;
-            letter-spacing: 15px;
-            text-transform: uppercase;
-            margin: 0 0 40px 0;
-            color: #ffffff;
-        }
+/* --- SIVUPALKKI --- */
+aside { 
+    width: var(--sidebar-width); height: 100vh; position: fixed; left: 0; top: 0; 
+    padding: 60px 40px; box-sizing: border-box; display: flex; 
+    flex-direction: column; border-right: 1px solid #1a1a1a; z-index: 100; background: #0a0a0a;
+    overflow-y: auto;
+}
+.logo { font-size: 20px; text-transform: none; letter-spacing: 3px; text-decoration: none; color: #ffffff; font-weight: 300; line-height: 1.1; margin-bottom: 60px; display: block }
 
-        /* --- Intro Section --- */
-        .intro-section { grid-column: span 2; margin-bottom: 120px; border-bottom: 1px solid #1a1a1a; padding-bottom: 80px }
-        .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
-        .intro-title { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: #ffffff; margin-bottom: 35px; font-weight: 300; text-align: left; }
-        .intro-text { font-size: 17px; line-height: 1.7; color: #bbb; font-weight: 300; text-align: left }
+nav { display: flex; flex-direction: column; gap: 18px; margin-bottom: 40px }
+nav a { 
+    text-decoration: none; color: var(--text-dimmed); font-size: 13px; 
+    text-transform: none; letter-spacing: 1px; transition: all var(--nav-speed) ease-out; 
+    line-height: 1.4; display: inline-block;
+}
+nav a:hover { color: var(--text-main); transform: translateX(4px) }
+nav a.active { 
+    color: var(--text-main); font-size: 14px; border-left: 2px solid var(--accent-color); 
+    padding-left: 15px; margin-left: -17px; pointer-events: none;
+}
 
-        /* --- Kuvat --- */
-        .image-section { 
-            position: relative; 
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.8s ease, transform 0.8s ease 
-        }
-        .image-section.is-visible { opacity: 1; transform: translateY(0) }
+.info-nav { margin-top: auto; padding-top: 30px; border-top: 1px solid #1a1a1a }
+.ig-link { margin-top: 20px; color: #ffffff; transition: all 0.3s ease; opacity: 0.7 }
+.ig-link:hover { color: var(--accent-color); transform: scale(1.1); opacity: 1 }
 
-        .gallery-img { 
-            width: 100%; height: auto; display: block; 
-            border-radius: 2px; cursor: zoom-in;
-            transition: all 0.5s ease 
-        }
-        .gallery-img:hover { transform: scale(1.02); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6) }
+/* --- PÄÄSISÄLTÖ --- */
+main { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); padding: 0; min-height: 100vh }
+.content-wrapper { max-width: 900px; margin: 0 auto; padding: 100px 50px }
 
-        /* --- Lightbox --- */
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; justify-content: center; align-items: center; background: rgba(0,0,0,0.97); cursor: zoom-out }
-        .lightbox.active { display: flex }
-        .lightbox-img { max-width: 90%; max-height: 85vh; object-fit: contain; cursor: default; }
+.intro-section { margin-bottom: 140px; border-bottom: 1px solid #1a1a1a; padding-bottom: 80px }
+.intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
+.intro-title { font-size: 12px; letter-spacing: 4px; text-transform: none; color: #ffffff; margin-bottom: 35px; font-weight: 300 }
+.intro-text { font-size: 17px; line-height: 1.7; color: #bbb; font-weight: 300; text-align: left }
 
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 30px;
-            box-sizing: border-box;
-            pointer-events: none;
-        }
-        .nav-arrow {
-            pointer-events: auto;
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 40px;
-            cursor: pointer;
-            opacity: 0.4;
-            transition: all 0.3s ease;
-            padding: 20px;
-        }
-        .nav-arrow:hover { opacity: 1; color: #ff0000; transform: scale(1.1); }
+.image-section { 
+    margin-bottom: 160px; position: relative; 
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease 
+}
+.image-section.is-visible { opacity: 1; transform: translateY(0) }
+.gallery-img { width: 100%; height: auto; display: block; border-radius: 2px; cursor: zoom-in; transition: all 0.5s ease }
+.gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
-        /* --- Footer --- */
-        .contact-section { 
-            padding: 250px 50px 100px 50px; 
-            background: #000; 
-            text-align: left; 
-            border-top: 1px solid #141414; 
-            grid-column: span 2; 
-        }
+/* --- LIGHTBOX --- */
+.lightbox { 
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 9999; justify-content: center; align-items: center; 
+    background: rgba(0,0,0,0.98); cursor: pointer;
+}
+.lightbox.active { display: flex; }
+.lightbox-img { max-width: 75vw; max-height: 85vh; object-fit: contain; box-shadow: 0 10px 50px rgba(0,0,0,1); cursor: default; z-index: 10000; }
+.nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.05); border: none; color: white; font-size: 50px; cursor: pointer; padding: 40px 20px; z-index: 10001; opacity: 0.5; transition: all 0.2s; user-select: none; }
+.nav-btn:hover { opacity: 1; color: var(--accent-color); background: rgba(255,255,255,0.1); }
+.prev-btn { left: 0; border-radius: 0 5px 5px 0; }
+.next-btn { right: 0; border-radius: 5px 0 0 5px; }
 
-        /* --- Mobiilisäädöt --- */
-        @media (max-width: 1024px) {
-            aside { 
-                width: 100%; height: auto; position: relative; border-right: none; 
-                padding: 40px 20px; display: flex; flex-direction: column; align-items: flex-start; text-align: left;
-            }
-            nav { flex-direction: row; justify-content: flex-start; flex-wrap: nowrap; margin-top: 25px; gap: 25px; }
-            nav a { font-size: 11px; letter-spacing: 1px; }
-            .ig-link { position: absolute; top: 40px; right: 40px; margin: 0; }
-            main { margin-left: 0; width: 100% }
-            body { flex-direction: column }
-            .content-wrapper { padding: 40px 20px; grid-template-columns: 1fr; }
-            .project-header { grid-column: 1; margin-bottom: 40px; }
-            .project-header h1 { font-size: 30px; letter-spacing: 10px; }
-            .intro-section { grid-column: 1; margin-bottom: 80px; }
-            .intro-grid { grid-template-columns: 1fr; gap: 40px; }
-            .contact-section { grid-column: 1; padding: 150px 20px 80px 20px; }
-        }
-    </style>
+/* --- KONTAKTI --- */
+.contact-section { max-width: 1200px; margin: 100px auto 0 auto; padding: min(100px, 12vh) 40px; background: #000; text-align: left; border-top: 1px solid #1a1a1a; box-sizing: border-box }
+.contact-wrapper { max-width: 900px }
+.contact-title { font-size: clamp(24px, 5vw, 32px); text-transform: none; letter-spacing: 6px; margin-bottom: 40px; font-weight: 300 }
+.contact-info { font-size: clamp(14px, 2vw, 17px); letter-spacing: 0.5px; line-height: 2.2; color: var(--text-dimmed) }
+.contact-info a { color: var(--accent-color); text-decoration: none }
+.copyright { margin-top: 80px; font-size: 10px; color: #333; letter-spacing: 2px; text-transform: uppercase }
+
+/* --- MOBIILI --- */
+@media (max-width: 1024px) {
+    aside { position: fixed; left: -100%; width: 100%; height: 100vh; transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1500; background: rgba(10, 10, 10, 0.98); padding: 120px 40px }
+    body.menu-open aside { left: 0 }
+    .menu-toggle { display: flex; align-items: center; justify-content: center }
+    main { margin-left: 0; width: 100%; padding: 120px 10px 20px }
+    .content-wrapper { padding: 40px 15px }
+    .intro-grid { display: flex; flex-direction: column; gap: 40px }
+    .image-section { display: block; width: 100%; margin-bottom: 80px; }
+    .nav-btn { display: none; }
+    nav { gap: 25px }
+    nav a { font-size: 16px }
+}
+</style>
 </head>
-<body>
-<div id="loader"><div class="spinner"></div></div>
+<body id="body">
+
+<div id="loader"><h1>Aatu Alatalo</h1></div>
+
+<button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
+    <div class="hamburger"></div>
+</button>
 
 <button id="backToTop" class="back-to-top" aria-label="Takaisin ylös">
     <svg viewBox="0 0 60 60">
+        <circle class="progress-bg" cx="30" cy="30" r="25"></circle>
         <circle id="progressBar" class="progress-bar" cx="30" cy="30" r="25"></circle>
     </svg>
     <span>↑</span>
 </button>
 
-<aside>
-    <div>
-        <a href="index.html" class="logo">Aatu<br>Alatalo</a>
-        <nav>
-            <a href="about.html">About</a>
-            <a href="index.html">Series</a>
-            <a href="#contact" onclick="document.querySelector('.contact-section').scrollIntoView({behavior: 'smooth'}); return false;">Contact</a>
+<aside id="sidebar">
+    <a href="index.html" class="logo">Aatu<br>Alatalo</a>
+    <nav>
+        <a href="index.html">Overview / Yleiskuva</a>
+        <a href="raw.html">Portraits / Potretti</a>
+        <a href="mustavalkoinen-sarja.html">Monochrome / Mustavalkoinen sarja</a>
+        <a href="sisatilan-valo.html">Interior Light / Sisätilan valo</a>
+        <a href="kiehtovat-rakennukset.html">Buildings / Kiehtovat rakennukset</a>
+        <a href="luonto-ja-ymparisto.html">Nature / Luonto ja ympäristö</a>
+        <a href="still-life.html">Still Life / Asetelmat</a>
+        <a href="elaimet.html">Animals / Eläimet</a>
+        <a href="kirjaston-ihmeet.html">Colors / Värit</a>
+        <a href="kuvaprojekti-ajasta-v365.html" class="active">V365 / Kuvaprojekti ajasta</a>
+    </nav>
+
+    <div class="info-nav">
+        <nav style="gap: 15px;">
+            <a href="about.html">About / Esittely</a>
+            <a href="#contact" id="contactBtn">Contact / Ota yhteyttä</a>
         </nav>
     </div>
-    <a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link" style="color:white; opacity:0.7;" aria-label="Instagram">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+    
+    <a href="https://www.instagram.com/teeaatu/" target="_blank" class="ig-link">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
     </a>
 </aside>
 
 <main>
-    <div class="content-wrapper">
-        <header class="project-header">
-            <h1>V365</h1>
-        </header>
-
-        <section class="intro-section">
-            <div class="intro-title">V365</div>
-            <div class="intro-grid">
-                <div class="intro-text" lang="en">
-                    The changes of the turn of the year in photographs.
-                </div>
-                <div class="intro-text" lang="fi">
-                    Vuodenvaihdoksen muutokset valokuvina.
-                </div>
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">V365 / Kuvaprojekti ajasta</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                The changes of the turn of the year in photographs.
             </div>
-        </section>
-
-        <section class="image-section"><img src="Vuosikuvaus1 1.jpg" alt="V365 valokuva" class="gallery-img" loading="lazy"></section>
-        <section class="image-section"><img src="Vuosikuvaus1.jpg" alt="V365 valokuva" class="gallery-img" loading="lazy"></section>
-        <section class="image-section"><img src="Vuosikuvaus2.jpg" alt="V365 valokuva" class="gallery-img" loading="lazy"></section>
-        <section class="image-section"><img src="Vuosikuvaus3.jpg" alt="V365 valokuva" class="gallery-img" loading="lazy"></section>
-        <section class="image-section"><img src="Vuosikuvaus4.jpg" alt="V365 valokuva" class="gallery-img" loading="lazy"></section>
-        <section class="image-section"><img src="Vuosikuvaus5.jpg" alt="V365 valokuva" class="gallery-img" loading="lazy"></section>
-
-        <footer class="contact-section" id="contact">
-            <div style="font-size: 28px; text-transform: uppercase; letter-spacing: 6px; margin-bottom: 50px; font-weight: 300">Contact</div>
-            <div style="font-size: 14px; letter-spacing: 1px; line-height: 2.2; color: #888">
-                <p>Aatu Alatalo</p>
-                <p><a href="mailto:aatuelias.alatalo@gmail.com" style="color: #ff0000; text-decoration: none;">aatuelias.alatalo@gmail.com</a></p>
-                <p>Oulu, Finland</p>
-                <p style="margin-top: 50px; font-size: 10px; letter-spacing: 2px; color: #555">COPYRIGHT 2026 AATU ALATALO</p>
+            <div class="intro-text" lang="fi">
+                Vuodenvaihdoksen muutokset valokuvina.
             </div>
-        </footer>
+        </div>
+    </header>
+
+    <section class="image-section"><img src="Vuosikuvaus1 1.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+    <section class="image-section"><img src="Vuosikuvaus1.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+    <section class="image-section"><img src="Vuosikuvaus2.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+    <section class="image-section"><img src="Vuosikuvaus3.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+    <section class="image-section"><img src="Vuosikuvaus4.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+    <section class="image-section"><img src="Vuosikuvaus5.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+</div>
+
+<footer class="contact-section" id="contact">
+    <div class="contact-wrapper">
+        <div class="contact-title">Contact</div>
+        <div class="contact-info">
+            <p>Aatu Alatalo</p>
+            <p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
+            <p>Oulu, Finland</p>
+            <p class="copyright">COPYRIGHT 2026 AATU ALATALO</p>
+        </div>
     </div>
+</footer>
 </main>
 
 <div class="lightbox" id="lightbox">
-    <div class="lightbox-nav">
-        <button class="nav-arrow" id="prevBtn" aria-label="Edellinen">&#10094;</button>
-        <button class="nav-arrow" id="nextBtn" aria-label="Seuraava">&#10095;</button>
-    </div>
-    <img src="" class="lightbox-img" id="lightbox-img">
+    <button class="nav-btn prev-btn" id="prev-btn" aria-label="Edellinen">&#10094;</button>
+    <img src="" class="lightbox-img" id="lightbox-img" alt="Suurennettu kuva">
+    <button class="nav-btn next-btn" id="next-btn" aria-label="Seuraava">&#10095;</button>
 </div>
 
 <script>
-    window.addEventListener('load', () => {
-        const loader = document.getElementById('loader');
-        loader.style.opacity = '0';
-        setTimeout(() => { loader.style.display = 'none' }, 500);
-    });
+const menuToggle = document.getElementById('menuToggle');
+const body = document.getElementById('body');
+if (menuToggle) menuToggle.addEventListener('click', () => body.classList.toggle('menu-open'));
 
-    const backToTopBtn = document.getElementById('backToTop');
-    const progressBar = document.getElementById('progressBar');
-    const circumference = 157;
-
-    window.addEventListener('scroll', () => {
-        const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPosition = window.pageYOffset;
-        backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
-        const scrollPercentage = scrollTotal > 0 ? Math.min(scrollPosition / scrollTotal, 1) : 0;
-        progressBar.style.strokeDashoffset = circumference - (scrollPercentage * circumference);
-    });
-
-    backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }) });
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if (sessionStorage.getItem('loaderSeen')) {
+        if (loader) loader.style.display = 'none';
+    } else {
+        setTimeout(() => {
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; sessionStorage.setItem('loaderSeen', 'true'); }, 800);
             }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
-
-    const images = Array.from(document.querySelectorAll(".gallery-img"));
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImg = document.getElementById("lightbox-img");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    let currentIndex = 0;
-
-    function showImage(index) {
-        if (index < 0) index = images.length - 1;
-        if (index >= images.length) index = 0;
-        currentIndex = index;
-        lightboxImg.src = images[currentIndex].src;
+        }, 600);
     }
+});
 
-    images.forEach((img, index) => {
-        img.addEventListener("click", () => {
-            showImage(index);
-            lightbox.classList.add("active");
-            document.body.style.overflow = "hidden";
-        });
-    });
+const images = document.querySelectorAll(".gallery-img");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
+let currentIndex = 0;
 
-    lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox || e.target === lightboxImg) {
-            lightbox.classList.remove("active");
-            document.body.style.overflow = "auto";
-        }
-    });
+function updateLightbox() { if (images[currentIndex]) lightboxImg.src = images[currentIndex].src; }
+function showNext(e) { if (e) e.stopPropagation(); currentIndex = (currentIndex + 1) % images.length; updateLightbox(); }
+function showPrev(e) { if (e) e.stopPropagation(); currentIndex = (currentIndex - 1 + images.length) % images.length; updateLightbox(); }
 
-    prevBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showImage(currentIndex - 1);
+images.forEach((img, index) => {
+    img.addEventListener("click", () => {
+        currentIndex = index; updateLightbox();
+        lightbox.classList.add("active");
+        document.body.style.overflow = "hidden";
     });
+});
 
-    nextBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showImage(currentIndex + 1);
-    });
+if (lightbox) {
+    lightbox.addEventListener("click", (e) => { if (e.target === lightbox) { lightbox.classList.remove("active"); document.body.style.overflow = "auto"; } });
+    let touchStartX = 0;
+    lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+    lightbox.addEventListener('touchend', e => {
+        let touchEndX = e.changedTouches[0].screenX;
+        let diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) { if (diff > 0) showNext(); else showPrev(); }
+    }, {passive: true});
+}
 
-    document.addEventListener("keydown", (e) => {
-        if (!lightbox.classList.contains("active")) return;
-        if (e.key === "ArrowLeft") showImage(currentIndex - 1);
-        if (e.key === "ArrowRight") showImage(currentIndex + 1);
-        if (e.key === "Escape") {
-            lightbox.classList.remove("active");
-            document.body.style.overflow = "auto";
-        }
-    });
+if (nextBtn) nextBtn.addEventListener("click", showNext);
+if (prevBtn) prevBtn.addEventListener("click", showPrev);
+
+document.addEventListener("keydown", (e) => {
+    if (!lightbox || !lightbox.classList.contains("active")) return;
+    if (e.key === "ArrowLeft") showPrev();
+    if (e.key === "ArrowRight") showNext();
+    if (e.key === "Escape") { lightbox.classList.remove("active"); document.body.style.overflow = "auto"; }
+});
+
+const backToTopBtn = document.getElementById('backToTop');
+const progressBar = document.getElementById('progressBar');
+const circumference = 157;
+window.addEventListener('scroll', () => {
+    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPosition = window.pageYOffset;
+    if (backToTopBtn) {
+        backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
+        const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
+        const offset = circumference - (scrollPercentage * circumference);
+        if (progressBar) progressBar.style.strokeDashoffset = offset;
+    }
+});
+if (backToTopBtn) backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
+
+const contactBtn = document.getElementById('contactBtn');
+if (contactBtn) { contactBtn.addEventListener('click', (e) => { e.preventDefault(); const contactSection = document.getElementById('contact'); if (contactSection) { contactSection.scrollIntoView({ behavior: 'smooth' }); body.classList.remove('menu-open'); } }); }
 </script>
 </body>
 </html>
