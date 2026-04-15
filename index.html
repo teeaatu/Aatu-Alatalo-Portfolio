@@ -21,10 +21,9 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       display: flex;
       overflow-x: hidden;
-      /* Ei enää pakotettua lowercasea tai uppercasea */
     }
 
-    /* --- LATAUSRUUTU: Isompi ja ohut --- */
+    /* --- LATAUSRUUTU --- */
     #loader {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; display: flex; justify-content: center; align-items: center;
@@ -33,9 +32,7 @@
     #loader h1 {
       font-size: clamp(30px, 6vw, 80px);
       font-weight: 200;
-      text-transform: none; /* Normaali kirjoitusasu */
       letter-spacing: 12px;
-      text-indent: 12px;
       opacity: 0;
       animation: introText 0.8s ease forwards;
     }
@@ -59,7 +56,6 @@
 
     .logo {
       font-size: 20px;
-      text-transform: none; /* Palautettu normaaliksi */
       letter-spacing: 3px;
       text-decoration: none;
       color: var(--text-main);
@@ -80,17 +76,13 @@
       text-decoration: none;
       color: var(--text-dimmed);
       font-size: 13px; 
-      text-transform: none; /* Ei enää ALL CAPS */
       letter-spacing: 1px;
       transition: all var(--nav-speed) ease-out;
       line-height: 1.4;
       display: inline-block;
     }
 
-    nav a:hover { 
-      color: var(--text-main); 
-      transform: translateX(4px); 
-    }
+    nav a:hover { color: var(--text-main); transform: translateX(4px); }
 
     nav a.active { 
       color: var(--text-main); 
@@ -102,38 +94,54 @@
       pointer-events: none;
     }
 
+    /* --- MOBIILIOTSIKKO (Pienempi ja hienovaraisempi) --- */
+    .mobile-header {
+      display: none;
+      margin-bottom: 45px;
+      padding-top: 10px;
+    }
+    .mobile-logo {
+      font-size: 17px; /* Hieman pienempi */
+      letter-spacing: 3px;
+      font-weight: 300;
+      margin-bottom: 30px;
+      line-height: 1.2;
+    }
+    .mobile-page-title {
+      font-size: 14px; /* Pienennetty fontti */
+      color: var(--text-main);
+      letter-spacing: 4px; /* Hillitympi välistys */
+      font-weight: 300;
+      text-transform: none;
+    }
+
+    /* --- GRID & MAIN --- */
+    main {
+      margin-left: var(--sidebar-width);
+      width: calc(100% - var(--sidebar-width));
+      padding: 40px;
+      box-sizing: border-box;
+    }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 20px;
+    }
+    .overview-item img { width: 100%; height: auto; display: block; opacity: 0.9; transition: opacity 0.5s ease; }
+
     /* --- KONTAKTI --- */
     .contact-section {
       max-width: 1200px;
       margin: 100px auto 0 auto;
       padding: min(100px, 12vh) 40px;
       background: #000;
-      text-align: left;
       border-top: 1px solid #1a1a1a;
       box-sizing: border-box;
     }
-    .contact-wrapper { max-width: 900px; }
-    .contact-title { 
-        font-size: clamp(24px, 5vw, 32px); 
-        text-transform: none; /* Normaali kirjoitusasu */
-        letter-spacing: 6px; 
-        margin-bottom: 40px; 
-        font-weight: 300; 
-    }
-    .contact-info { 
-        font-size: clamp(14px, 2vw, 17px); 
-        letter-spacing: 0.5px; 
-        line-height: 2.2; 
-        color: var(--text-dimmed); 
-    }
+    .contact-title { font-size: clamp(24px, 5vw, 32px); letter-spacing: 6px; margin-bottom: 40px; font-weight: 300; }
+    .contact-info { font-size: 16px; color: var(--text-dimmed); line-height: 2; }
     .contact-info a { color: var(--accent-color); text-decoration: none; }
-    .copyright { 
-        margin-top: 80px; 
-        font-size: 10px; 
-        color: #333; 
-        letter-spacing: 2px; 
-        text-transform: uppercase; /* Copyright voi pysyä pienenä ja tyylikkäänä isona */
-    }
+    .copyright { margin-top: 80px; font-size: 10px; color: #333; letter-spacing: 2px; }
 
     /* --- HAMPURILAINEN --- */
     .menu-toggle {
@@ -151,31 +159,19 @@
     .menu-open .hamburger::before { top: 0; transform: rotate(45deg); }
     .menu-open .hamburger::after { top: 0; transform: rotate(-45deg); }
 
-    /* --- GRID --- */
-    main {
-      margin-left: var(--sidebar-width);
-      width: calc(100% - var(--sidebar-width));
-      padding: 40px;
-      box-sizing: border-box;
-    }
-    .overview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: 20px;
-    }
-    .overview-item img { width: 100%; height: auto; display: block; opacity: 0.9; transition: opacity 0.5s ease; }
-
+    /* --- RESPONSIVISUUS --- */
     @media (max-width: 1024px) {
       aside {
         position: fixed; left: -100%; width: 100%; height: 100vh;
         transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         z-index: 1500; background: rgba(10, 10, 10, 0.98); padding: 120px 40px;
       }
-      nav { gap: 25px; }
-      nav a { font-size: 16px; }
       body.menu-open aside { left: 0; }
       .menu-toggle { display: flex; align-items: center; justify-content: center; }
-      main { margin-left: 0; width: 100%; padding: 120px 10px 20px; }
+      main { margin-left: 0; width: 100%; padding: 80px 20px 40px; }
+      
+      .mobile-header { display: block; } 
+      
       .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
     }
   </style>
@@ -192,7 +188,7 @@
   <a href="index.html" class="logo">Aatu<br>Alatalo</a>
   <nav>
     <a href="index.html" class="active">Overview / Yleiskuva</a>
-    <a href="raw.html">Portraits / Potretti</a>
+    <a href="raw.html">Portraits / Muotokuvia</a>
     <a href="mustavalkoinen-sarja.html">Monochrome / Mustavalkoinen sarja</a>
     <a href="sisatilan-valo.html">Interior Light / Sisätilan valo</a>
     <a href="kiehtovat-rakennukset.html">Buildings / Kiehtovat rakennukset</a>
@@ -209,13 +205,14 @@
       <a href="#contact" id="contactBtn">Contact / Ota yhteyttä</a>
     </nav>
   </div>
-
-  <a href="https://www.instagram.com/teeaatu/" target="_blank" style="margin-top: 20px; color: #fff;">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-  </a>
 </aside>
 
 <main>
+  <div class="mobile-header">
+    <div class="mobile-logo">Aatu<br>Alatalo</div>
+    <div class="mobile-page-title">Overview / Yleiskuva</div>
+  </div>
+
   <div class="overview-grid">
     <div class="overview-item"><img src="MG_9039.jpg" alt="Portfolio"></div>
     <div class="overview-item"><img src="DSC5474-1.jpg" alt="Portfolio"></div>
