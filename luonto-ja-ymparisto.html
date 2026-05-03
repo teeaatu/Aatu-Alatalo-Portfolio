@@ -140,6 +140,27 @@ main { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width
     nav { gap: 25px }
     nav a { font-size: 16px }
 }
+
+    /* --- MASTERS LISÄYKSET TÄSSÄ --- */
+    nav a.masters-nav-item {
+      color: #fff;
+      border-left: 2px solid #333;
+      padding-left: 15px;
+      margin-left: -17px;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    nav a.masters-nav-item span {
+      display: block;
+      font-size: 10px;
+      color: var(--text-dimmed);
+      margin-top: 5px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    nav a.masters-nav-item:hover {
+      border-left-color: var(--text-main);
+    }
 </style>
 </head>
 <body id="body">
@@ -162,6 +183,13 @@ main { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width
     <a href="index.html" class="logo">Aatu<br>Alatalo</a>
     <nav>
         <a href="index.html">Overview / Yleiskuva</a>
+
+    <!-- MASTERS VALIKKOLINKKI LISÄTTY TÄHÄN -->
+    <a href="masters-2026.html" class="masters-nav-item">
+      Hasselblad Masters 2026
+      <span>Finalist / Project//21</span>
+    </a>
+
         <a href="raw.html">Portraits / Potretti</a>
         <a href="mustavalkoinen-sarja.html">Monochrome / Mustavalkoinen sarja</a>
         <a href="sisatilan-valo.html">Interior Light / Sisätilan valo</a>

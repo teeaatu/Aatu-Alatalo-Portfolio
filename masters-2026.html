@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portraits — Muotokuvia - Aatu Alatalo</title>
+    <title>Hasselblad Masters 2026 - Aatu Alatalo</title>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -76,6 +76,25 @@
             color: var(--text-main); font-size: 14px; border-left: 2px solid var(--accent-color); 
             padding-left: 15px; margin-left: -17px; pointer-events: none;
         }
+        
+        /* --- MASTERS LISÄYKSET TÄSSÄ --- */
+        nav a.masters-nav-item {
+            color: #fff;
+            border-left: 2px solid var(--accent-color);
+            padding-left: 15px;
+            margin-left: -17px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            pointer-events: none;
+        }
+        nav a.masters-nav-item span {
+            display: block;
+            font-size: 10px;
+            color: var(--text-dimmed);
+            margin-top: 5px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
 
         .info-nav { margin-top: auto; padding-top: 30px; border-top: 1px solid #1a1a1a }
         .ig-link { margin-top: 20px; color: #ffffff; transition: all 0.3s ease; opacity: 0.7 }
@@ -87,7 +106,7 @@
 
         .intro-section { margin-bottom: 140px; border-bottom: 1px solid #1a1a1a; padding-bottom: 80px }
         .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
-        .intro-title { font-size: 12px; letter-spacing: 4px; color: #ffffff; margin-bottom: 35px; font-weight: 300 }
+        .intro-title { font-size: 12px; letter-spacing: 4px; color: #ffffff; margin-bottom: 35px; font-weight: 300; text-transform: uppercase; }
         .intro-text { font-size: 17px; line-height: 1.7; color: #bbb; font-weight: 300; text-align: left }
 
         /* --- KUVAT --- */
@@ -97,7 +116,7 @@
             transition: opacity 0.8s ease, transform 0.8s ease 
         }
         .image-section.is-visible { opacity: 1; transform: translateY(0) }
-        .gallery-img { width: 100%; height: auto; display: block; border-radius: 2px; cursor: zoom-in; transition: all 0.5s ease }
+        .gallery-img { width: 100%; height: auto; display: block; border-radius: 2px; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; }
         .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
         .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; line-height: 1.6; font-weight: 300 }
@@ -138,28 +157,7 @@
             nav { gap: 25px }
             nav a { font-size: 16px }
         }
-    
-    /* --- MASTERS LISÄYKSET TÄSSÄ --- */
-    nav a.masters-nav-item {
-      color: #fff;
-      border-left: 2px solid #333;
-      padding-left: 15px;
-      margin-left: -17px;
-      margin-top: 15px;
-      margin-bottom: 10px;
-    }
-    nav a.masters-nav-item span {
-      display: block;
-      font-size: 10px;
-      color: var(--text-dimmed);
-      margin-top: 5px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    nav a.masters-nav-item:hover {
-      border-left-color: var(--text-main);
-    }
-</style>
+    </style>
 </head>
 <body id="body">
 
@@ -181,14 +179,13 @@
     <a href="index.html" class="logo">Aatu<br>Alatalo</a>
     <nav>
         <a href="index.html">Overview / Yleiskuva</a>
+        
+        <a href="masters-2026.html" class="masters-nav-item">
+            Hasselblad Masters 2026
+            <span>Finalist / Project//21</span>
+        </a>
 
-    <!-- MASTERS VALIKKOLINKKI LISÄTTY TÄHÄN -->
-    <a href="masters-2026.html" class="masters-nav-item">
-      Hasselblad Masters 2026
-      <span>Finalist / Project//21</span>
-    </a>
-
-        <a href="raw.html" class="active">Portraits / Potretti</a>
+        <a href="raw.html">Potretti / Portraits</a>
         <a href="mustavalkoinen-sarja.html">Monochrome / Mustavalkoinen sarja</a>
         <a href="sisatilan-valo.html">Interior Light / Sisätilan valo</a>
         <a href="kiehtovat-rakennukset.html">Buildings / Kiehtovat rakennukset</a>
@@ -218,56 +215,47 @@
 <main>
 <div class="content-wrapper">
     <header class="intro-section">
-        <div class="intro-title">Portraits / Muotokuvia</div>
+        <div class="intro-title">Hasselblad Masters 2026<br><span style="color: #888; font-size: 10px; letter-spacing: 2px;">Finalist / Project//21</span></div>
         <div class="intro-grid">
             <div class="intro-text" lang="en">
-                Portrait photography is one of the most demanding areas of the craft. I believe that the most powerful images are born from a connection between the photographer and the subject—a shared trust that allows true authenticity to surface. On the other hand, even if the trust is minimal, the image can still succeed when luck strikes.
+                This project was selected as a finalist in the Hasselblad Masters 2026 competition under the Project//21 category. 
             </div>
             <div class="intro-text" lang="fi">
-                Ihmiskuvaus on yksi valokuvauksen vaativimmista osa-alueista. Mielestäni vaikuttavimmat kuvat syntyvät kuvaajan ja kuvattavan välisestä yhteydestä – luottamuksesta, joka mahdollistaa aidon läsnäolon välittymisen lopullisessa teoksessa. Toisaalta vaikka luottamus olisi vähäistä, kuva voi silti onnistua, kun onni potkaisee.
+                Tämä projekti valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa.
             </div>
         </div>
     </header>
 
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="MG_9039.jpg" alt="Ronja pelloilla" class="gallery-img" loading="lazy">
+            <img src="Hasselblad Masters 2026.jpg" alt="Hasselblad Masters 2026 - Yöllinen maisema jossa näkyy hahmo" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Ronja in the Field / Ronja pellolla</p>
-                <p>Tyrnävä, Finland 2025</p>
+                <p>Series I</p>
+                <p>2025</p>
             </div>
         </div>
     </section>
 
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="potret1.jpg" alt="Viljami" class="gallery-img" loading="lazy">
+            <img src="Hasselblad Masters 2026 1.jpg" alt="Hasselblad Masters 2026 - Yöllinen maisema jossa näkyy punainen rakennus" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Portrait of Viljami / Viljami</p>
-                <p>Ylivieska, Finland 2026</p>
+                <p>Series II</p>
+                <p>2025</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="Hasselblad Masters 2026 2.jpg" alt="Hasselblad Masters 2026 - Yöllinen maisema jossa näkyy sauna ja jouluvalot" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>Series III</p>
+                <p>2025</p>
             </div>
         </div>
     </section>
 
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Leila.jpg" alt="Leila Palmu" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Leila Palmu at the Torikatu Gallery / Leila Palmu Torikadun galleriassa</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC2284.jpg" alt="Ylioppilas" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Graduate Portrait / Ylioppilas</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
 </div>
 
 <footer class="contact-section" id="contact">
@@ -296,16 +284,12 @@ if (menuToggle) menuToggle.addEventListener('click', () => body.classList.toggle
 
 window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
-    if (sessionStorage.getItem('loaderSeen')) {
-        if (loader) loader.style.display = 'none';
-    } else {
-        setTimeout(() => {
-            if (loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => { loader.style.display = 'none'; sessionStorage.setItem('loaderSeen', 'true'); }, 800);
-            }
-        }, 600);
-    }
+    setTimeout(() => {
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 800);
+        }
+    }, 600);
 });
 
 const images = document.querySelectorAll(".gallery-img");
@@ -317,13 +301,15 @@ function updateLightbox() { if(images[currentIndex]) lightboxImg.src = images[cu
 function showNext(e) { if (e) e.stopPropagation(); currentIndex = (currentIndex + 1) % images.length; updateLightbox(); }
 function showPrev(e) { if (e) e.stopPropagation(); currentIndex = (currentIndex - 1 + images.length) % images.length; updateLightbox(); }
 
-images.forEach((img, index) => {
-    img.addEventListener("click", () => {
-        currentIndex = index; updateLightbox();
-        lightbox.classList.add("active");
-        document.body.style.overflow = "hidden";
+if (images.length > 0) {
+    images.forEach((img, index) => {
+        img.addEventListener("click", () => {
+            currentIndex = index; updateLightbox();
+            lightbox.classList.add("active");
+            document.body.style.overflow = "hidden";
+        });
     });
-});
+}
 
 lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox || e.target === lightboxImg) {
@@ -349,11 +335,13 @@ window.addEventListener('scroll', () => {
     const scrollPosition = window.pageYOffset;
     if (backToTopBtn) {
         backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
-        const scrollPercentage = scrollPosition / scrollTotal;
+        const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
         progressBar.style.strokeDashoffset = 157 - (scrollPercentage * 157);
     }
 });
-backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
