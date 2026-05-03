@@ -98,11 +98,7 @@ main { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width
     transition: opacity 0.8s ease, transform 0.8s ease 
 }
 .image-section.is-visible { opacity: 1; transform: translateY(0) }
-.gallery-img { width: 100%; height: auto; display: block; border-radius: 2px; cursor: zoom-in; transition: all 0.5s ease }
 .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
-
-.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; text-transform: none; line-height: 1.6; font-weight: 300 }
-.project-info p:last-child { color: #666; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px }
 
 /* --- LIGHTBOX --- */
 .lightbox { 
@@ -158,6 +154,14 @@ main { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width
     nav a.masters-nav-item:hover {
       border-left-color: var(--text-main);
     }
+
+        .gallery-img { 
+            --border-opacity: 0.02; 
+            width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(255, 255, 255, var(--border-opacity)); box-sizing: border-box; 
+        }
+
+        .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; line-height: 1.6; font-weight: 300; }
+        .project-info p:last-child { color: #cccccc; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 </style>
 </head>
 <body id="body">
