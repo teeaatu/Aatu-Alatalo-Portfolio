@@ -3,7 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aatu Alatalo | Photography Archive</title>
+  
+  <!-- SEO: Otsikko ja Meta-tiedot -->
+  <title>Aatu Alatalo | Valokuvaaja & Hasselblad Masters 2026 Finalist</title>
+  <meta name="description" content="Aatu Alatalo on oululainen valokuvaaja ja Hasselblad Masters 2026 -finalisti. Taiteellinen valokuvaportfolio: potretit, maisemat ja projektit. | Photographer and Hasselblad Masters Finalist.">
+  <meta name="keywords" content="Aatu Alatalo, valokuvaaja Oulu, Hasselblad Masters 2026, Project 21, suomalainen valokuvaus, photography portfolio Finland">
+  
+  <!-- SEO: Open Graph -tagit (Some-jaot, esim. WhatsApp, LinkedIn, Instagram) -->
+  <meta property="og:title" content="Aatu Alatalo | Photography Archive">
+  <meta property="og:description" content="Hasselblad Masters 2026 Finalist - Explore the visual journey and photographic archives of Aatu Alatalo.">
+  <meta property="og:image" content="PROJECT 21 FINALIST.jpg">
+  <meta property="og:url" content="https://aatualatalo.com">
+  <meta property="og:type" content="website">
+
+  <!-- SEO: Strukturoitu data hakukoneille (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Aatu Alatalo",
+    "jobTitle": "Photographer",
+    "url": "https://aatualatalo.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Oulu",
+      "addressRegion": "North Ostrobothnia",
+      "addressCountry": "FI"
+    },
+    "award": "Hasselblad Masters 2026 Finalist (Project//21)",
+    "sameAs": [
+      "https://www.instagram.com/teeaatu/"
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics Consent Mode & Tag -->
+  <script>
+    // Määritetään Consent Mode ennen GA:n lataamista (Estää evästeet oletuksena)
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied'
+    });
+  </script>
+  <!-- VAIHDA ALLA OLEVAAN SRC-URLIIN OMA G-TUNNUKSESI -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_MEASUREMENT_ID_HERE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    // VAIHDA MYÖS TÄHÄN OMA G-TUNNUKSESI
+    gtag('config', 'YOUR_GA_MEASUREMENT_ID_HERE');
+  </script>
+
   <style>
     :root {
       --bg-color: #0a0a0a;
@@ -205,18 +257,83 @@
       box-sizing: border-box;
     }
   
-        .gallery-img { 
-            --border-opacity: 0.02; 
-            width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(255, 255, 255, var(--border-opacity)); box-sizing: border-box; 
-        }
+    .gallery-img { 
+        --border-opacity: 0.02; 
+        width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(255, 255, 255, var(--border-opacity)); box-sizing: border-box; 
+    }
 
-        .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; line-height: 1.6; font-weight: 300; }
-        .project-info p:last-child { color: #cccccc; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
-</style>
+    .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; line-height: 1.6; font-weight: 300; }
+    .project-info p:last-child { color: #cccccc; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
+
+    /* --- EVÄSTEBANNERI --- */
+    #cookie-banner {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      max-width: 400px;
+      background-color: rgba(15, 15, 15, 0.95);
+      border: 1px solid #333;
+      padding: 20px;
+      z-index: 9998; /* Alle latausruudun, mutta yli muun */
+      display: none; /* Piilotettu oletuksena (JS näyttää tarvittaessa) */
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+    #cookie-banner p {
+      font-size: 12px;
+      color: var(--text-dimmed);
+      line-height: 1.6;
+      margin: 0 0 15px 0;
+    }
+    .cookie-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .cookie-btn {
+      background: none;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 8px 15px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .cookie-btn:hover {
+      border-color: #fff;
+    }
+    .cookie-btn.accept {
+      border-color: #4caf50; /* Vihreä väri */
+      color: #4caf50;
+    }
+    .cookie-btn.accept:hover {
+      background-color: #4caf50;
+      color: #fff;
+    }
+    @media (max-width: 768px) {
+      #cookie-banner {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        max-width: 100%;
+        border-width: 1px 0 0 0;
+      }
+    }
+  </style>
 </head>
 <body id="body">
 
 <div id="loader"><h1>Aatu Alatalo</h1></div>
+
+<!-- EVÄSTEBANNERIN HTML -->
+<div id="cookie-banner">
+  <p>Käytän sivustolla Google Analyticsia kävijämäärien seurantaan. Hyväksymällä autat minua ymmärtämään, mistä päin maailmaa portfoliotani katsotaan. <br><br>I use Google Analytics to measure traffic. By accepting, you help me understand where my audience comes from.</p>
+  <div class="cookie-buttons">
+    <button class="cookie-btn accept" id="accept-cookies">Hyväksy / Accept</button>
+    <button class="cookie-btn" id="decline-cookies">Hylkää / Decline</button>
+  </div>
+</div>
 
 <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
   <div class="hamburger"></div>
@@ -264,15 +381,16 @@
       <img src="PROJECT 21 FINALIST.jpg" alt="Hasselblad Masters 2026 Finalist - Project//21">
     </div>
 
-    <div class="overview-item"><img src="MG_9039.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="DSC5474-1.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="DSC8177.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="bilbao.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="Vuosikuvaus1 1.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="paprika.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="DSC6236.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="potret1.jpg" alt="Portfolio"></div>
-    <div class="overview-item"><img src="Leila.jpg" alt="Portfolio"></div>
+    <!-- PÄIVITETYT ALT-TEKSTIT HAKUKONEITA VARTEN -->
+    <div class="overview-item"><img src="MG_9039.jpg" alt="Aatu Alatalo Valokuvaportfolio - Miljöö ja luonto"></div>
+    <div class="overview-item"><img src="DSC5474-1.jpg" alt="Aatu Alatalo Valokuvaportfolio - Taiteellinen valokuva 1"></div>
+    <div class="overview-item"><img src="DSC8177.jpg" alt="Aatu Alatalo Valokuvaportfolio - Taiteellinen valokuva 2"></div>
+    <div class="overview-item"><img src="bilbao.jpg" alt="Aatu Alatalo Valokuvaportfolio - Arkkitehtuuri Bilbao"></div>
+    <div class="overview-item"><img src="Vuosikuvaus1 1.jpg" alt="Aatu Alatalo Valokuvaportfolio - Vuosikuvaus ja dokumentaarinen kuva"></div>
+    <div class="overview-item"><img src="paprika.jpg" alt="Aatu Alatalo Valokuvaportfolio - Asetelma Paprika"></div>
+    <div class="overview-item"><img src="DSC6236.jpg" alt="Aatu Alatalo Valokuvaportfolio - Tunnelmakuva"></div>
+    <div class="overview-item"><img src="potret1.jpg" alt="Aatu Alatalo Valokuvaportfolio - Muotokuva ja potretti"></div>
+    <div class="overview-item"><img src="Leila.jpg" alt="Aatu Alatalo Valokuvaportfolio - Muotokuva Leila"></div>
   </div>
 
   <footer class="contact-section" id="contact">
@@ -289,6 +407,42 @@
 </main>
 
 <script>
+  // Evästebannerin logiikka
+  document.addEventListener("DOMContentLoaded", function() {
+    const banner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('accept-cookies');
+    const declineBtn = document.getElementById('decline-cookies');
+    
+    // Tarkista onko valinta jo tehty
+    const cookieChoice = localStorage.getItem('cookieChoice');
+    
+    if (cookieChoice === 'accepted') {
+      // Jos jo hyväksytty, päivitetään Consent Mode myöntäväksi
+      gtag('consent', 'update', {
+        'analytics_storage': 'granted'
+      });
+    } else if (!cookieChoice) {
+      // Jos valintaa ei ole tehty, näytetään banneri viiveellä, jotta latausruutu ehtii mennä ohi
+      setTimeout(() => {
+        banner.style.display = 'block';
+      }, 1500);
+    }
+
+    acceptBtn.addEventListener('click', function() {
+      localStorage.setItem('cookieChoice', 'accepted');
+      gtag('consent', 'update', {
+        'analytics_storage': 'granted'
+      });
+      banner.style.display = 'none';
+    });
+
+    declineBtn.addEventListener('click', function() {
+      localStorage.setItem('cookieChoice', 'declined');
+      // Pidetään Consent Mode evättynä
+      banner.style.display = 'none';
+    });
+  });
+
   const menuToggle = document.getElementById('menuToggle');
   const body = document.getElementById('body');
   menuToggle.addEventListener('click', () => body.classList.toggle('menu-open'));
