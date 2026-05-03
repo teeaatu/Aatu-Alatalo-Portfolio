@@ -61,8 +61,6 @@
         .image-section { display: flex; justify-content: center; align-items: center; padding: 0 10%; margin-bottom: 150px; box-sizing: border-box }
         .image-wrapper { display: flex; flex-direction: column; align-items: flex-start; max-width: 90% }
         .image-wrapper img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain }
-        .project-info { margin-top: 15px; font-size: 10px; letter-spacing: 1px; color: gray; text-transform: uppercase; line-height: 1.5 }
-        .project-info p { margin: 0 }
 
         .contact-section { margin-top: 150px; padding: 120px 0; text-align: center; border-top: 1px solid rgba(0, 0, 0, 0.1) }
         .contact-title { font-size: 18px; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 40px; font-weight: 300 }
@@ -81,7 +79,15 @@
             .back-to-top { right: 5%; bottom: 20px }
             .contact-section { padding: 80px 0 }
         }
-    </style>
+    
+        .gallery-img { 
+            --border-opacity: 0.02; 
+            width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(255, 255, 255, var(--border-opacity)); box-sizing: border-box; 
+        }
+
+        .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; line-height: 1.6; font-weight: 300; }
+        .project-info p:last-child { color: #cccccc; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
+</style>
 </head>
 <body>
 <div id="loader"><div class="spinner"></div></div>
