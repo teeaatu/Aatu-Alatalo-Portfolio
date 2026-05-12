@@ -1,0 +1,9 @@
+name: Aatu Alatalo Portfolio
+url: "https://aatualatalo.com"
+baseurl: ""
+exclude:
+  - README.md
+  - .gitignore
+  - vendor
+  - Gemfile
+  - Gemfile.lock
