@@ -13,7 +13,7 @@
   <meta property="og:title" content="V365 — Kuvaprojekti ajasta - Aatu Alatalo">
   <meta property="og:description" content="Vuodenvaihdoksen muutokset valokuvina. The changes of the turn of the year in photographs.">
   <meta property="og:image" content="/PROJECT%2021%20FINALIST.jpg">
-  <meta property="og:url" content="http://localhost:4000/kuvaprojekti-ajasta-v365.html">
+  <meta property="og:url" content="https://aatualatalo.com/kuvaprojekti-ajasta-v365.html">
   <meta property="og:type" content="website">
 
   
@@ -40,6 +40,11 @@
 <body id="body">
 
 <div id="loader"><h1>Aatu Alatalo</h1></div>
+<script>
+  if (sessionStorage.getItem('visited')) {
+    document.getElementById('loader').style.display = 'none';
+  }
+</script>
 
 <!-- EVÄSTEBANNERIN HTML -->
 <div id="cookie-banner">
@@ -125,10 +130,7 @@
 
 <!-- Lightbox (Näytetään vain jos sivulla on gallery-img kuvia) -->
 <div class="lightbox" id="lightbox">
-    <button class="close-btn" id="closeBtn" aria-label="Sulje">&times;</button>
-    <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
     <img src="" alt="Enlarged image" class="lightbox-img" id="lightboxImg">
-    <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
 </div>
 
 <!-- Back to Top (Näytetään dynaamisesti skrollatessa) -->
@@ -219,26 +221,11 @@
   const images = document.querySelectorAll(".gallery-img");
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const closeBtn = document.getElementById("closeBtn");
   let currentIndex = 0;
 
   if (images.length > 0 && lightbox && lightboxImg) {
       function updateLightbox() {
           lightboxImg.src = images[currentIndex].src;
-      }
-
-      function showNext(e) {
-          if (e) e.stopPropagation();
-          currentIndex = (currentIndex + 1) % images.length;
-          updateLightbox();
-      }
-
-      function showPrev(e) {
-          if (e) e.stopPropagation();
-          currentIndex = (currentIndex - 1 + images.length) % images.length;
-          updateLightbox();
       }
 
       images.forEach((img, index) => {
@@ -251,44 +238,7 @@
       });
 
       lightbox.addEventListener("click", (e) => {
-          if (e.target === lightbox) {
-              lightbox.classList.remove("active");
-              document.body.style.overflow = "auto";
-          }
-      });
-      
-      if (closeBtn) {
-          closeBtn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              lightbox.classList.remove("active");
-              document.body.style.overflow = "auto";
-          });
-      }
-
-      // Swipe mobiilille
-      let touchStartX = 0;
-      lightbox.addEventListener('touchstart', e => {
-          touchStartX = e.changedTouches[0].screenX;
-      }, {passive: true});
-
-      lightbox.addEventListener('touchend', e => {
-          let touchEndX = e.changedTouches[0].screenX;
-          let diff = touchStartX - touchEndX;
-          if (Math.abs(diff) > 50) {
-              if (diff > 0) showNext();
-              else showPrev();
-          }
-      }, {passive: true});
-
-      if (nextBtn) nextBtn.addEventListener("click", showNext);
-      if (prevBtn) prevBtn.addEventListener("click", showPrev);
-
-      // Näppäimistöhallinta
-      document.addEventListener("keydown", (e) => {
-          if (!lightbox.classList.contains("active")) return;
-          if (e.key === "ArrowLeft") showPrev();
-          if (e.key === "ArrowRight") showNext();
-          if (e.key === "Escape") {
+          if (e.target === lightbox || e.target === lightboxImg) {
               lightbox.classList.remove("active");
               document.body.style.overflow = "auto";
           }
@@ -325,16 +275,6 @@
       });
   }, { threshold: 0.1 });
   document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
-</script>
-</body>
-</html>Each(section => observer.observe(section));
-</script>
-</body>
-</html>old: 0.1 });
-  document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
-</script>
-</body>
-</html>Each(section => observer.observe(section));
 </script>
 </body>
 </html>

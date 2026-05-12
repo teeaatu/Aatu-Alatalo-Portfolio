@@ -61,6 +61,11 @@
 <body id="body">
 
 <div id="loader"><h1>Aatu Alatalo</h1></div>
+<script>
+  if (sessionStorage.getItem('visited')) {
+    document.getElementById('loader').style.display = 'none';
+  }
+</script>
 
 <!-- EVÄSTEBANNERIN HTML -->
 <div id="cookie-banner">
@@ -271,16 +276,6 @@
       });
   }, { threshold: 0.1 });
   document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
-</script>
-</body>
-</html>Each(section => observer.observe(section));
-</script>
-</body>
-</html>old: 0.1 });
-  document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
-</script>
-</body>
-</html>Each(section => observer.observe(section));
 </script>
 </body>
 </html>
