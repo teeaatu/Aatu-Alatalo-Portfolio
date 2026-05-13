@@ -6,14 +6,14 @@
   
   <!-- SEO: Otsikko ja Meta-tiedot -->
   <title>About - Aatu Alatalo</title>
-  <meta name="description" content="Aatu Alatalo on oululainen valokuvaaja. Tutustu portfolioon ja tarinaan kuvien takana.">
+  <meta name="description" content="Aatu Alatalo on oululainen valokuvaaja ja Hasselblad Masters 2026 -finalisti. Taiteellinen valokuvaportfolio: potretit, maisemat ja projektit. | Photographer and Hasselblad Masters Finalist.">
   <meta name="keywords" content="Aatu Alatalo, valokuvaaja Oulu, Hasselblad Masters 2026, Project 21, suomalainen valokuvaus, photography portfolio Finland">
   
   <!-- SEO: Open Graph -tagit (Some-jaot, esim. WhatsApp, LinkedIn, Instagram) -->
   <meta property="og:title" content="About - Aatu Alatalo">
-  <meta property="og:description" content="Aatu Alatalo on oululainen valokuvaaja. Tutustu portfolioon ja tarinaan kuvien takana.">
+  <meta property="og:description" content="Hasselblad Masters 2026 Finalist - Explore the visual journey and photographic archives of Aatu Alatalo.">
   <meta property="og:image" content="/PROJECT%2021%20FINALIST.jpg">
-  <meta property="og:url" content="https://aatualatalo.com/about.html">
+  <meta property="og:url" content="http://localhost:4010/about.html">
   <meta property="og:type" content="website">
 
   
@@ -114,28 +114,154 @@
     <div class="mobile-logo">Aatu<br>Alatalo</div>
   </div>
 
-  <div class="content-wrapper">
-<div class="about-grid">
-<div class="image-container">
-<img src="DSC4004.jpg" alt="Aatu Alatalo">
-</div>
+  <style>
+  .about-premium-wrapper {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 8rem 2rem;
+    color: #bbb;
+    line-height: 1.8;
+  }
 
-<div class="about-text">
-<h1>Aatu Alatalo</h1>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: start;
+  }
 
-<div class="about-section">
-<p>Olen 21-vuotias valokuvaaja, joka on varttunut Lakeuden seudulla ja asuu nykyään Oulussa. Valokuvauksen aloitin vuonna 2014, ja sen jälkeen olen tehnyt sitä melkein joka päivä. Kuvaan vähän kaikenlaista, koska niin monesta paikasta voi löytyä kauneutta ja ajattomuutta, jota monesti haen kuvissani.</p>
-</div>
+  .image-container {
+    position: sticky;
+    top: 4rem;
+  }
 
-<div class="about-section">
-<p>Minua kiehtovat värit, muodot ja erilaiset mielenkiintoiset hetket, jotka ovat aika nopeasti ohi, jos niitä ei taltioi.</p>
-</div>
+  .image-container img {
+    width: 100%;
+    height: auto;
+    filter: grayscale(15%);
+    transition: filter 0.4s ease;
+  }
 
-<div class="about-section">
-<p>Luonto on yksi sellainen asia, mistä saan paljon inspiraatiota sen monimuotoisuutensa vuoksi. Se on sellainen suuri taideteos, mistä löytyy vähän kaikkea.</p>
-</div>
-</div>
-</div>
+  .image-container img:hover {
+    filter: grayscale(0%);
+  }
+
+  .about-text h1 {
+    font-size: 2.8rem;
+    font-weight: 200;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .about-subtitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #777;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    display: block;
+  }
+
+  .about-bio {
+    font-size: 1.1rem;
+    margin-bottom: 4rem;
+    color: #ccc;
+  }
+
+  .about-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .about-section h2 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+
+  .about-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .about-list li {
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .about-list li::before {
+    content: "—";
+    color: #444;
+    flex-shrink: 0;
+  }
+
+  .about-list strong {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+    .about-premium-wrapper { padding: 4rem 1.5rem; }
+    .image-container { position: relative; top: 0; }
+    .about-text h1 { font-size: 2.2rem; }
+  }
+</style>
+
+<div class="about-premium-wrapper">
+  <div class="about-grid">
+    <div class="image-container">
+      <img src="DSC4004.jpg" alt="Aatu Alatalo">
+    </div>
+
+    <div class="about-text">
+      <header>
+        <h1>Aatu Alatalo</h1>
+        <span class="about-subtitle">Valokuvaaja Oulu & Hasselblad Masters Finalist</span>
+      </header>
+      
+      <div class="about-bio">
+        <p>
+          Olen 21-vuotias valokuvaaja, joka on varttunut Tyrnävän Lakeuden seudulla ja asuu nykyään Oulussa. 
+          Opiskelen tällä hetkellä medianomiksi Oulun ammattikorkeakoulussa. 
+          Aloitin valokuvauksen vuonna 2014, ja viimeisen vuosikymmenen aikana kamerasta on tullut erottamaton osa arkeani.
+        </p>
+      </div>
+
+      <div class="about-section">
+        <h2>Meriitit</h2>
+        <ul class="about-list">
+          <li>
+            <span><strong>Hasselblad Masters 2026</strong>: Finalistipaikka Project//21 -kategoriassa.</span>
+          </li>
+          <li>
+            <span><strong>SAKUstars 2023</strong>: Kunniamaininta "Valokuvataidetta päivässä" -sarjassa.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="about-section">
+        <h2>Projektit</h2>
+        <ul class="about-list">
+          <li>
+            <span><strong>Outshine</strong>: Digimainonnan projekti Oulun bussipysäkeistä 2025 ja 2026.</span>
+          </li>
+          <li>
+            <span><strong>Näyttelyt</strong>: Teoksiani on ollut esillä Piippolan Könkkölässä sekä Kestilän kirjastossa vuosina 2023 ja 2024.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
   <footer class="contact-section" id="contact">
