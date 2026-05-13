@@ -1,8 +1,7 @@
-name: Aatu Alatalo Portfolio
+title: Aatu Alatalo Portfolio
 url: "https://aatualatalo.com"
 baseurl: ""
 
-# Tämä osio kertoo Jekyllille, mitä lisäosia se käyttää
 plugins:
   - jekyll-sitemap
 
@@ -12,3 +11,6 @@ exclude:
   - vendor
   - Gemfile
   - Gemfile.lock
+  - "._*"
+  - "**/._*"
+  - ".DS_Store"
