@@ -56,6 +56,9 @@
     gtag('config', 'G-XNF1FLBJH6');
   </script>
 
+  <!-- PhotoSwipe v5 CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
+
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 </head>
 <body id="body">
@@ -218,33 +221,33 @@
     });
   }
 
-  // Lightbox logiikka
-  const images = document.querySelectorAll(".gallery-img");
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImg = document.getElementById("lightboxImg");
-  let currentIndex = 0;
+  // PhotoSwipe v5 Lightbox logic
+  import('https://unpkg.com/photoswipe@5.4.3/dist/photoswipe-lightbox.esm.js').then((module) => {
+    const PhotoSwipeLightbox = module.default;
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: 'main',
+      children: '.gallery-img',
+      pswpModule: () => import('https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.esm.js'),
+      bgOpacity: 0.95,
+      showHideAnimationType: 'zoom',
+      zoomAnimationDuration: 400,
+      counter: false, // minimalist UI
+      zoom: false,    // rely on pinch/double-click
+    });
 
-  if (images.length > 0 && lightbox && lightboxImg) {
-      function updateLightbox() {
-          lightboxImg.src = images[currentIndex].src;
+    lightbox.addFilter('itemData', (itemData, index) => {
+      const img = itemData.element;
+      if (img) {
+        itemData.src = img.src;
+        itemData.w = img.naturalWidth || img.clientWidth || 1920;
+        itemData.h = img.naturalHeight || img.clientHeight || 1080;
+        itemData.msrc = img.src;
       }
+      return itemData;
+    });
 
-      images.forEach((img, index) => {
-          img.addEventListener("click", () => {
-              currentIndex = index;
-              updateLightbox();
-              lightbox.classList.add("active");
-              document.body.style.overflow = "hidden";
-          });
-      });
-
-      lightbox.addEventListener("click", (e) => {
-          if (e.target === lightbox || e.target === lightboxImg) {
-              lightbox.classList.remove("active");
-              document.body.style.overflow = "auto";
-          }
-      });
-  }
+    lightbox.init();
+  });
 
   // Back to top logiikka
   const backToTopBtn = document.getElementById('backToTop');
@@ -266,16 +269,23 @@
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
-  // Intersection Observer (Animaatio kuville)
+  // Intersection Observer (Animaatio kuville) - Staggered Load
   const observer = new IntersectionObserver((entries) => {
+      let delay = 0;
       entries.forEach(entry => {
           if(entry.isIntersecting) {
-              entry.target.classList.add('is-visible');
+              setTimeout(() => {
+                  entry.target.classList.add('is-visible');
+              }, delay);
+              delay += 150; // 150ms stagger
               observer.unobserve(entry.target);
           }
       });
   }, { threshold: 0.1 });
-  document.querySelectorAll('.image-section').forEach(section => observer.observe(section));
+  document.querySelectorAll('.image-section, .overview-item').forEach(section => {
+      section.classList.add('stagger-item');
+      observer.observe(section);
+  });
 </script>
 </body>
 </html>

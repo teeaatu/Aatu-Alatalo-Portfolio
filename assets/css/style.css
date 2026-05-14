@@ -111,7 +111,7 @@ nav a.active {
 /* --- MASTERS LISÄYKSET TÄSSÄ --- */
 nav a.masters-nav-item {
   color: #fff;
-  border-left: 2px solid #333; /* Hienovarainen erottelu muista */
+  border-left: 2px solid transparent;
   padding-left: 15px;
   margin-left: -17px;
   margin-top: 15px;
@@ -124,9 +124,6 @@ nav a.masters-nav-item span {
   margin-top: 5px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-}
-nav a.masters-nav-item:hover {
-  border-left-color: var(--text-main);
 }
 nav a.masters-nav-item.active {
   border-left: 2px solid var(--accent-color);
@@ -193,10 +190,27 @@ main {
 
 .image-section { 
     margin-bottom: 160px; position: relative; 
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease 
 }
-.image-section.is-visible { opacity: 1; transform: translateY(0) }
+
+/* --- VIEW TRANSITIONS API --- */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+}
+
+/* --- STAGGERED LOAD ANIMATION --- */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.stagger-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 .gallery-img { 
     --border-opacity: 0.02; 
     width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(255, 255, 255, var(--border-opacity)); box-sizing: border-box; 
@@ -215,66 +229,7 @@ main {
 .about-section { margin-bottom: 30px }
 .about-text p { font-size: 16px; line-height: 1.8; color: #bbbbbb; margin: 0 }
 
-/* --- LIGHTBOX --- */
-.lightbox { 
-    display: none; 
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%; 
-    z-index: 9999; 
-    justify-content: center; 
-    align-items: center; 
-    background: rgba(0,0,0,0.98); 
-    cursor: pointer;
-}
 
-.lightbox.active { display: flex; }
-
-.lightbox-img { 
-    max-width: 75vw; 
-    max-height: 85vh; 
-    object-fit: contain; 
-    box-shadow: 0 10px 50px rgba(0,0,0,1);
-    cursor: default;
-    z-index: 10000;
-}
-
-.nav-btn { 
-    position: absolute; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    background: transparent; 
-    border: none; 
-    color: rgba(255,255,255,0.7); 
-    font-size: 35px; 
-    cursor: pointer; 
-    padding: 20px; 
-    z-index: 10001; 
-    transition: all 0.2s;
-    user-select: none;
-}
-
-.nav-btn:hover { color: #fff; transform: translateY(-50%) scale(1.1); }
-.prev-btn { left: 2vw; }
-.next-btn { right: 2vw; }
-
-.close-btn {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.7);
-    font-size: 45px;
-    font-weight: 200;
-    cursor: pointer;
-    z-index: 10001;
-    transition: all 0.2s;
-    user-select: none;
-    line-height: 1;
-}
-
-.close-btn:hover { color: #fff; transform: scale(1.1); }
 
 
 /* --- KONTAKTI --- */
@@ -317,13 +272,13 @@ main {
     z-index: 1500; background: rgba(10, 10, 10, 0.98); padding: 120px 40px;
   }
   body.menu-open aside { left: 0; }
-  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; right: 20px; }
   main { margin-left: 0; width: 100%; padding: 80px 20px 40px; }
   
   .mobile-header { display: block; } 
   
   .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .content-wrapper { padding: 40px 20px }
+  .content-wrapper { padding: 40px 0; }
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
   
   .about-grid { flex-direction: column; gap: 40px; align-items: center }
