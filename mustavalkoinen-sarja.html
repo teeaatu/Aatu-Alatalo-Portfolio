@@ -20,103 +20,15 @@ mobile_title: "Monochrome / Mustavalkoinen sarja"
         </div>
     </header>
 
+        {% for item in site.data['mustavalkoinen-sarja'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="Mysteeri.jpg" alt="mysteeri Töölö helsinki" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Mystery / Mysteeri</p>
-                <p>Töölö, Helsinki, Finland 2026</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="suutelu.jpg" alt="Suutelu" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>The Kiss / Suutelu</p>
-                <p>Helsinki, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Yhteiselo.webp" alt="Yhteiselo" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Coexistence / Yhteiselo</p>
-                <p>Helsinki, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC5474-1.jpg" alt="Flyygelitorvensoittaja" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Flugelhorn Player / Flyygelitorvensoittaja</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC0283-1.jpg" alt="Lyseon lukio" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Lyceum High School / Lyseon lukio</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC7503.jpg" alt="Hailuoto" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Hailuoto Island / Hailuoto</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC7425.jpg" alt="Penkki ja puut" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Bench and Trees / Penkki ja puut</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC6350.jpg" alt="Heinäsorsat" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Mallards / Heinäsorsat</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-    
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC6482.jpg" alt="Farkut" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Jeans / Farkut</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC7145-2.jpg" alt="Oulu" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Uleåborg / Oulu</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>

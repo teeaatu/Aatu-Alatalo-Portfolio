@@ -19,23 +19,15 @@ mobile_title: "Interior Light / Sisätilan valo"
         </div>
     </header>
 
+        {% for item in site.data['sisatilan-valo'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="DSC5577.jpg" alt="Sisätilan valo" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Interior Light / Sisätilan valo</p>
-                <p>Oulu, Finland 2026</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC8177.jpg" alt="Olohuone Karjasillalla" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Living Room at Karjasilta / Olohuone Karjasillalla</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>

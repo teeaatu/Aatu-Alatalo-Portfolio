@@ -20,33 +20,15 @@ mobile_title: "Still Life / Asetelmat"
         </div>
     </header>
 
+    {% for item in site.data['still-life'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="Hedelmat1.jpg" alt="Hedelmiä keittiössä" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Kitchen Interior with Fruit / Hedelmiä keittiössä</p>
-                <p>Oulu, Finland 2026</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC4115-1.jpg" alt="Pitayan maistaminen" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>First Taste of Pitaya / Pitayan maistaminen</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="paprika.jpg" alt="Paprika ja omena" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Still Life with Pepper and Apple / Paprika ja omena</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>

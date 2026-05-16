@@ -20,10 +20,7 @@ mobile_title: "V365 / Kuvaprojekti ajasta"
         </div>
     </header>
 
-    <section class="image-section"><img src="Vuosikuvaus1 1.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
-    <section class="image-section"><img src="Vuosikuvaus1.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
-    <section class="image-section"><img src="Vuosikuvaus2.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
-    <section class="image-section"><img src="Vuosikuvaus3.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
-    <section class="image-section"><img src="Vuosikuvaus4.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
-    <section class="image-section"><img src="Vuosikuvaus5.jpg" alt="V365" class="gallery-img" loading="lazy"></section>
+    {% for item in site.data.kuvaprojekti_ajasta_v365 %}
+    <section class="image-section"><img src="/assets/images/{{ item.kuva }}" alt="V365" class="gallery-img" loading="lazy"></section>
+    {% endfor %}
 </div>

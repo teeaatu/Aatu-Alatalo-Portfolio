@@ -20,113 +20,15 @@ mobile_title: "Colors / Värit"
         </div>
     </header>
 
+    {% for item in site.data['kirjaston-ihmeet'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="bilbao.jpg" alt="Sadepäivä" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Rainy Day / Sadepäivä</p>
-                <p>Bilbao, España 2024</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Bussinikkuna.jpg" alt="Katse onnikasta" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Bus Window / Katse onnikasta</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Aallot.jpg" alt="Yksin" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Alone / Yksin</p>
-                <p>Bilbao, España 2024</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="bilbaorak.jpg" alt="Betoni-ihme" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Concrete Wonder / Betoni-ihme</p>
-                <p>Bilbao, España 2024</p> 
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC5439.jpg" alt="Kirjaston ihmeet" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Library Wonders / Kirjaston ihmeet</p>
-                <p>Oulu, Finland 2026</p> 
-            </div>
-        </div>
-    </section>
-    
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC5481-2.jpg" alt="Lautaset" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Plates / Lautaset</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC8162.jpg" alt="Ainolanpuisto" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Ainola Park / Ainolanpuisto</p>
-                <p>Oulu, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-    
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Prisma.jpg" alt="Prisma" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Raksila Markets Prisma / Raksilan marketit Prisma</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="MG_9620.jpg" alt="Lauttasaari" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Lauttasaari Metro Station / Lauttasaaren metroasema</p>
-                <p>Helsinki, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC7455.jpg" alt="Kansallismaisema" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>National Landscape Kylmälänkylä / Kansallismaisema Kylmälänkylä</p>
-                <p>Muhos, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC9492.jpg" alt="Punainen lehti" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Red Leaf / Punainen lehti</p>
-                <p>Tyrnävä, Finland 2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>

@@ -20,33 +20,15 @@ mobile_title: "Nature / Luonto ja ympäristö"
         </div>
     </header>
 
+        {% for item in site.data['luonto-ja-ymparisto'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="DSC3900_Panorama.jpg" alt="Hossa" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Hossa National Park / Hossan kansallispuisto</p>
-                <p>Suomussalmi, Finland 2025</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="pr1.jpg" alt="Kevättalvi" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Early Spring / Kevättalvi</p>
-                <p>Muhos, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC7318.jpg" alt="Alikulku" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Underpass / Alikulku</p>
-                <p>Ylivieska, Finland 2026</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>
