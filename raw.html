@@ -19,43 +19,15 @@ mobile_title: "Portraits / Muotokuvia"
         </div>
     </header>
 
+        {% for item in site.data['raw'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="MG_9039.jpg" alt="Ronja pelloilla" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Ronja in the Field / Ronja pellolla</p>
-                <p>Tyrnävä, Finland 2025</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="potret1.jpg" alt="Viljami" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Portrait of Viljami / Viljami</p>
-                <p>Ylivieska, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Leila.jpg" alt="Leila Palmu" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Leila Palmu at the Torikatu Gallery / Leila Palmu Torikadun galleriassa</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC2284.jpg" alt="Ylioppilas" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Graduate Portrait / Ylioppilas</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>

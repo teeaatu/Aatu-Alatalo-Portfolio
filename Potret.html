@@ -1,3 +1,6 @@
+---
+layout: null
+---
 <!DOCTYPE html>
 <html lang="fi">
 <head>
@@ -111,33 +114,17 @@
 </header>
 
 <main>
+        {% for item in site.data['Potret'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="MG_9039.jpg" alt="Ronja" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Ronja</p>
-                <p>Tyrnävä Finland 2025</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="RAW-20260030.jpg" alt="Viljami" loading="lazy">
-            <div class="project-info">
-                <p>Potretti</p>
-                <p>OULU, FINLAND 2026</p>
-            </div>
-        </div>
-    </section>
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC2284.jpg" alt="Ylioppilas" loading="lazy">
-            <div class="project-info">
-                <p>YLIOPPILAS</p>
-                <p>2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </main>
 
 <footer class="contact-section">

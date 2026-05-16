@@ -1,0 +1,54 @@
+import os
+import re
+
+html_to_yml = {
+    'luonto-ja-ymparisto.html': 'luonto-ja-ymparisto',
+    'masters-2026.html': 'masters-2026',
+    'mustavalkoinen-sarja.html': 'mustavalkoinen-sarja',
+    'raw.html': 'raw',
+    'sisatilan-valo.html': 'sisatilan-valo',
+    'Potret.html': 'Potret'
+}
+
+loop_template = """    {{% for item in site.data['{dataset}'] %}}
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="/assets/images/{{{{ item.kuva }}}}" alt="{{{{ item.otsikko | split: ' / ' | last }}}}" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>{{{{ item.otsikko }}}}</p>
+                <p>{{{{ item.paikka }}}}</p>
+            </div>
+        </div>
+    </section>
+    {{% endfor %}}"""
+
+for html_file, dataset in html_to_yml.items():
+    if not os.path.exists(html_file):
+        print(f"Skipping {html_file}, not found.")
+        continue
+    
+    with open(html_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # We want to replace all <section class="image-section">...</section> that are adjacent or separated by whitespace.
+    # Wait, some pages have other <section>s? Only image-section.
+    
+    # Find all <section class="image-section"> blocks
+    pattern = re.compile(r'(<section class="image-section">.*?</section>\s*)+', re.DOTALL)
+    
+    def replacer(match):
+        return loop_template.format(dataset=dataset) + '\n'
+    
+    new_content, num_subs = pattern.subn(replacer, content)
+    
+    # Check if Potret.html needs front matter
+    if html_file == 'Potret.html' and not new_content.startswith('---'):
+        new_content = "---\nlayout: null\n---\n" + new_content
+
+    if num_subs > 0:
+        with open(html_file, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+        print(f"Updated {html_file}")
+    else:
+        print(f"No match found in {html_file}")
+

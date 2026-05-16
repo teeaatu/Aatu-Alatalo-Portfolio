@@ -20,33 +20,15 @@ mobile_title: "Buildings / Kiehtovat rakennukset"
         </div>
     </header>
 
+    {% for item in site.data['kiehtovat-rakennukset'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="DSC4023.jpg" alt="Lehmien koti" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Cows' Home / Lehmien koti</p>
-                <p>Suomussalmi, Finland 2026</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="rakennukset.jpg" alt="Punainen ja sininen" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Red and Blue / Punainen ja sininen</p>
-                <p>Kalajoki, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC2636.jpg" alt="Majakka" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Lighthouse / Majakka</p>
-                <p>Hailuoto, Finland 2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>

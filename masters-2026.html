@@ -19,34 +19,15 @@ mobile_title: "Hasselblad Masters 2026"
         </div>
     </header>
 
+        {% for item in site.data['masters-2026'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="Hasselblad Masters 2026.jpg" alt="Hasselblad Masters 2026 - Yöllinen maisema jossa näkyy lintujen pelätin" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Series I</p>
-                <p>2025</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Hasselblad Masters 2026 1.jpg" alt="Hasselblad Masters 2026 - Yöllinen maisema jossa näkyy punainen rakennus" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Series II</p>
-                <p>2025</p>
-            </div>
-        </div>
-    </section>
-    
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="Hasselblad Masters 2026 2.jpg" alt="Hasselblad Masters 2026 - Yöllinen maisema jossa näkyy sauna ja jouluvalot" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Series III</p>
-                <p>2025</p>
-            </div>
-        </div>
-    </section>
-
+    {% endfor %}
 </div>

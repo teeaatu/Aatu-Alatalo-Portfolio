@@ -20,63 +20,15 @@ mobile_title: "Animals / Eläimet"
         </div>
     </header>
 
+    {% for item in site.data.elaimet %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="Kissakahvila.jpeg" alt="Kissakahvila" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ item.otsikko | split: ' / ' | last }}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>Cat Café / Kissakahvila</p>
-                <p>Kamppi, Helsinki 2026</p>
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC6236.jpg" alt="Maisema" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Landscape / Maisema</p>
-                <p>Lofoten, Norway 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC5653.jpg" alt="Pallo" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Ball / Pallo</p>
-                <p>Muhos, Finland 2026</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC4276.jpg" alt="Kylmälänkylä" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Kylmälänkylä</p>
-                <p>Muhos, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC0325.jpg" alt="Koirat" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Dogs / Koirat</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="image-section">
-        <div class="image-wrapper">
-            <img src="DSC0336.jpg" alt="Kissat" class="gallery-img" loading="lazy">
-            <div class="project-info">
-                <p>Cats / Kissat</p>
-                <p>Oulu, Finland 2025</p>
-            </div>
-        </div>
-    </section>
+    {% endfor %}
 </div>
