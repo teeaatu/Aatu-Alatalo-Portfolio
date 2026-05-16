@@ -79,9 +79,12 @@
   </div>
 </div>
 
-<button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
-  <div class="hamburger"></div>
-</button>
+<header class="mobile-header" id="mobileHeader">
+  <div class="mobile-logo">Aatu<br>Alatalo</div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
+    <div class="hamburger"></div>
+  </button>
+</header>
 
 <aside id="sidebar">
   <a href="{{ '/' | relative_url }}" class="logo">Aatu<br>Alatalo</a>
@@ -113,10 +116,6 @@
 </aside>
 
 <main>
-  <div class="mobile-header">
-    <div class="mobile-logo">Aatu<br>Alatalo</div>
-  </div>
-
   {{ content }}
 
   <footer class="contact-section" id="contact">
@@ -283,6 +282,33 @@
       section.classList.add('stagger-item');
       observer.observe(section);
   });
+
+  // Mobile Smart Sticky Header Logic
+  const mobileHeader = document.getElementById('mobileHeader');
+  if (mobileHeader) {
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Blur effect activated if scrolled down from top
+      if (scrollTop > 0) {
+        mobileHeader.classList.add('is-scrolled');
+      } else {
+        mobileHeader.classList.remove('is-scrolled');
+      }
+      
+      // Hide on scroll down past a small threshold
+      if (scrollTop > lastScrollTop && scrollTop > 50) {
+        mobileHeader.classList.add('header--hidden');
+      } 
+      // Show on scroll up
+      else if (scrollTop < lastScrollTop) {
+        mobileHeader.classList.remove('header--hidden');
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    }, { passive: true });
+  }
 </script>
 </body>
 </html>
