@@ -283,7 +283,7 @@ main {
     top: 0; left: 0; width: 100%;
     padding: 20px 30px; 
     box-sizing: border-box;
-    z-index: 1000;
+    z-index: 2000;
     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
   }
   .mobile-header.header--hidden {
