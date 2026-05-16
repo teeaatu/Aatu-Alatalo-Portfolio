@@ -272,10 +272,31 @@ main {
     z-index: 1500; background: rgba(10, 10, 10, 0.98); padding: 120px 40px;
   }
   body.menu-open aside { left: 0; }
-  .menu-toggle { display: flex; align-items: center; justify-content: center; right: 20px; }
-  main { margin-left: 0; width: 100%; padding: 80px 20px 40px; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; position: relative; top: auto; right: auto; }
+  main { margin-left: 0; width: 100%; padding: 120px 20px 40px; }
   
-  .mobile-header { display: block; } 
+  .mobile-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    position: fixed; 
+    top: 0; left: 0; width: 100%;
+    padding: 20px 30px; 
+    box-sizing: border-box;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+  }
+  .mobile-header.header--hidden {
+    transform: translateY(-100%);
+  }
+  .mobile-header.is-scrolled {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .mobile-logo {
+    margin-bottom: 0;
+  } 
   
   .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
   .content-wrapper { padding: 40px 0; }
