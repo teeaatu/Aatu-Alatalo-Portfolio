@@ -21,6 +21,6 @@ mobile_title: "V365 / Kuvaprojekti ajasta"
     </header>
 
     {% for item in site.data.kuvaprojekti_ajasta_v365 %}
-    <section class="image-section"><img src="/assets/images/{{ item.kuva }}" alt="V365" class="gallery-img" loading="lazy"></section>
+    <section class="image-section"><img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}V365{% endif %}" class="gallery-img" loading="lazy"></section>
     {% endfor %}
 </div>
