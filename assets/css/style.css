@@ -1,17 +1,35 @@
 :root {
   --bg-color: #0a0a0a;
   --accent-color: #ff0000;
-  --text-main: #ffffff;
+  --text-main: #fcf8e3;
   --text-dimmed: #888;
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
+}
+
+html, body {
+  font-family: 'Lora', serif !important;
+  background-color: #050505 !important; /* Lähes musta */
+  color: #fcf8e3 !important;            /* Kellertävä valkoinen */
+}
+
+h1, h2, h3, h4 {
+  color: #fcf8e3 !important;            /* Sama kellertävä valkoinen otsikoille */
+}
+
+a {
+  color: #fcf8e3 !important;            /* Sama kellertävä valkoinen linkeille */
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #fcf8e3 !important;
 }
 
 body {
   margin: 0;
   background-color: var(--bg-color);
   color: var(--text-main);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   display: flex;
   flex-direction: row;
   overflow-x: hidden;
@@ -37,17 +55,21 @@ body {
 
 /* --- TAKAISIN YLÖS --- */
 .back-to-top { 
-    position: fixed; bottom: 40px; right: 40px; display: none; 
-    background: #111; color: #ffffff; border: none; 
-    width: 55px; height: 55px; border-radius: 50%; 
-    font-size: 18px; cursor: pointer; z-index: 1000; 
+    position: fixed; bottom: 30px; right: 30px; display: none; 
+    background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #fcf8e3; border: 1px solid rgba(252, 248, 227, 0.1); 
+    width: 44px; height: 44px; border-radius: 50%; 
+    font-size: 14px; cursor: pointer; z-index: 1000; 
     transition: all 0.4s ease; display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
-.back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 55px; height: 55px }
-.back-to-top circle { fill: none; stroke-width: 3 }
-.progress-bg { stroke: rgba(255, 255, 255, 0.1) }
-.progress-bar { stroke: var(--accent-color); stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
+.back-to-top:hover {
+    background: rgba(30, 30, 30, 0.9);
+    transform: translateY(-3px);
+}
+.back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 44px; height: 44px }
+.back-to-top circle { fill: none; stroke-width: 2.5 }
+.progress-bg { stroke: rgba(252, 248, 227, 0.05) }
+.progress-bar { stroke: #fcf8e3; stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
 
 
 /* --- SIVUPALKKI --- */
@@ -110,7 +132,7 @@ nav a.active {
 
 /* --- MASTERS LISÄYKSET TÄSSÄ --- */
 nav a.masters-nav-item {
-  color: #fff;
+  color: #fcf8e3;
   border-left: 2px solid transparent;
   padding-left: 15px;
   margin-left: -17px;
@@ -131,7 +153,7 @@ nav a.masters-nav-item.active {
 
 
 .info-nav { margin-top: auto; padding-top: 30px; border-top: 1px solid #1a1a1a }
-.ig-link { margin-top: 20px; color: #ffffff; transition: all 0.3s ease; opacity: 0.7 }
+.ig-link { margin-top: 20px; color: #fcf8e3; transition: all 0.3s ease; opacity: 0.7 }
 .ig-link:hover { color: var(--accent-color); transform: scale(1.1); opacity: 1 }
 
 
@@ -185,7 +207,7 @@ main {
 
 .intro-section { margin-bottom: 140px; border-bottom: 1px solid #1a1a1a; padding-bottom: 80px }
 .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
-.intro-title { font-size: 12px; letter-spacing: 4px; text-transform: none; color: #ffffff; margin-bottom: 35px; font-weight: 300 }
+.intro-title { font-size: 12px; letter-spacing: 4px; text-transform: none; color: #fcf8e3; margin-bottom: 35px; font-weight: 300 }
 .intro-text { font-size: 17px; line-height: 1.7; color: #bbb; font-weight: 300; text-align: left }
 
 .image-section { 
@@ -213,11 +235,11 @@ main {
 }
 .gallery-img { 
     --border-opacity: 0.02; 
-    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(255, 255, 255, var(--border-opacity)); box-sizing: border-box; 
+    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(252, 248, 227, var(--border-opacity)); box-sizing: border-box; 
 }
 .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
-.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #ffffff; line-height: 1.6; font-weight: 300; }
+.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #fcf8e3; line-height: 1.6; font-weight: 300; }
 .project-info p:last-child { color: #cccccc; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 
 /* --- ABOUT SIVU --- */
@@ -256,8 +278,8 @@ main {
   background: none; border: none; cursor: pointer;
   z-index: 2000;
 }
-.hamburger { width: 25px; height: 2px; background: #fff; position: relative; transition: all 0.4s ease; }
-.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: #fff; position: absolute; left: 0; transition: all 0.4s ease; }
+.hamburger { width: 25px; height: 2px; background: #fcf8e3; position: relative; transition: all 0.4s ease; }
+.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: #fcf8e3; position: absolute; left: 0; transition: all 0.4s ease; }
 .hamburger::before { top: -8px; }
 .hamburger::after { top: 8px; }
 .menu-open .hamburger { background: transparent; }
@@ -272,12 +294,12 @@ main {
     z-index: 1500; background: rgba(10, 10, 10, 0.98); padding: 120px 40px;
   }
   body.menu-open aside { left: 0; }
-  .menu-toggle { display: flex; align-items: center; justify-content: center; position: relative; top: auto; right: auto; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 30px; top: 50%; transform: translateY(-50%); }
   main { margin-left: 0; width: 100%; padding: 120px 20px 40px; }
   
   .mobile-header { 
     display: flex; 
-    justify-content: space-between; 
+    justify-content: center; 
     align-items: center;
     position: fixed; 
     top: 0; left: 0; width: 100%;
@@ -298,7 +320,8 @@ main {
     margin-bottom: 0;
   } 
   
-  .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .overview-grid { column-count: 2; column-gap: 10px; display: block; }
+  .overview-item { margin-bottom: 10px; }
   .content-wrapper { padding: 40px 0; }
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
   
@@ -334,7 +357,7 @@ main {
 .cookie-btn {
   background: none;
   border: 1px solid #333;
-  color: #fff;
+  color: #fcf8e3;
   padding: 8px 15px;
   font-size: 11px;
   letter-spacing: 1px;
@@ -343,7 +366,7 @@ main {
   transition: all 0.3s ease;
 }
 .cookie-btn:hover {
-  border-color: #fff;
+  border-color: #fcf8e3;
 }
 .cookie-btn.accept {
   border-color: #4caf50; /* Vihreä väri */
@@ -351,7 +374,7 @@ main {
 }
 .cookie-btn.accept:hover {
   background-color: #4caf50;
-  color: #fff;
+  color: #fcf8e3;
 }
 @media (max-width: 768px) {
   #cookie-banner {
@@ -360,5 +383,12 @@ main {
     left: 0;
     max-width: 100%;
     border-width: 1px 0 0 0;
+  }
+  .overview-grid {
+    column-count: 1;
+    column-gap: 0;
+  }
+  .overview-item {
+    margin-bottom: 20px;
   }
 }
