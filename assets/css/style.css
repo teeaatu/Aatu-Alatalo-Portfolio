@@ -252,8 +252,6 @@ main {
 .about-text p { font-size: 16px; line-height: 1.8; color: #bbbbbb; margin: 0 }
 
 
-
-
 /* --- KONTAKTI --- */
 .contact-section {
   max-width: 1200px;
@@ -286,7 +284,7 @@ main {
 .menu-open .hamburger::before { top: 0; transform: rotate(45deg); }
 .menu-open .hamburger::after { top: 0; transform: rotate(-45deg); }
 
-/* --- RESPONSIVISUUS --- */
+/* --- RESPONSIVISUUS PERUS --- */
 @media (max-width: 1024px) {
   aside {
     position: fixed; left: -100%; width: 100%; height: 100vh;
@@ -339,8 +337,8 @@ main {
   background-color: rgba(15, 15, 15, 0.95);
   border: 1px solid #333;
   padding: 20px;
-  z-index: 9998; /* Alle latausruudun, mutta yli muun */
-  display: none; /* Piilotettu oletuksena (JS näyttää tarvittaessa) */
+  z-index: 9998;
+  display: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
 }
@@ -369,7 +367,7 @@ main {
   border-color: #fcf8e3;
 }
 .cookie-btn.accept {
-  border-color: #4caf50; /* Vihreä väri */
+  border-color: #4caf50;
   color: #4caf50;
 }
 .cookie-btn.accept:hover {
@@ -390,5 +388,92 @@ main {
   }
   .overview-item {
     margin-bottom: 20px;
+  }
+}
+
+/* ==========================================================================
+   DAN WINTERS -TYYLINEN GALLERIA (Lopullinen matemaattinen asettelu)
+   ========================================================================= */
+
+/* Estetään sivun liikkuminen ja piilotetaan nuoli */
+body.index-page {
+  overflow: hidden !important;
+}
+
+body.index-page .back-to-top {
+  display: none !important;
+}
+
+/* Tyhjennetään perusmarginaalit, jotta voimme laskea ne itse tarkasti */
+body.index-page main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 !important; 
+  box-sizing: border-box;
+}
+
+.dan-winters-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  opacity: 1;
+}
+
+@keyframes revealGallery {
+  to { opacity: 1; }
+}
+
+/* Kehyksen asettelu */
+.gallery-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* KUVAN MATEMAATTINEN RAJOITUS (Estää ylivuotamisen täydellisesti) */
+.slider-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* Työpöytä: Näytön leveys - sivuvalikko (300px) - reilu turvaväli sivuille (160px) */
+  max-width: calc(100vw - var(--sidebar-width) - 160px); 
+  /* Työpöytä: Näytön korkeus - turvaväli ylös/alas - raamien paksuus (40px) */
+  max-height: calc(85vh - 40px);
+  
+  width: auto;
+  height: auto;
+  opacity: 0;
+  background-color: #111;
+  border: 20px solid rgba(252, 248, 227, 0.02);
+  box-sizing: content-box; /* Pakottaa selaimen tottelemaan raamien mittoja */
+  transition: opacity 1.2s ease-in-out;
+  z-index: 1;
+}
+
+.slider-image.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* --- MOBIILIOPTIMOINTI --- */
+@media (max-width: 1024px) {
+  body.index-page main {
+    height: 100dvh; 
+  }
+
+  .slider-image {
+    /* Mobiili: Näytön leveys - turvaväli - raamien paksuus (20px) */
+    max-width: calc(100vw - 60px); 
+    /* Mobiili: Jätetään yläpalkille ja logolle reilusti tilaa (70dvh rajoitus) */
+    max-height: calc(70dvh - 20px); 
+    
+    top: 48%; /* Lasketaan kuvaa alemmas, jotta se ei osu yläpalkkiin */
+    border: 10px solid rgba(252, 248, 227, 0.02);
   }
 }
