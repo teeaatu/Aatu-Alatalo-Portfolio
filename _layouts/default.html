@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- SEO: Otsikko ja Meta-tiedot -->
   <title>{{ page.title | default: "Aatu Alatalo | Valokuvaaja & Hasselblad Masters 2026 Finalist" }}</title>
   <meta name="description" content="{{ page.description | default: 'Aatu Alatalo on oululainen valokuvaaja ja Hasselblad Masters 2026 -finalisti. Taiteellinen valokuvaportfolio: potretit, maisemat ja projektit. | Photographer and Hasselblad Masters Finalist.' }}">
   <meta name="keywords" content="Aatu Alatalo, valokuvaaja Oulu, Hasselblad Masters 2026, Project 21, suomalainen valokuvaus, photography portfolio Finland">
   
-  <!-- SEO: Open Graph -tagit (Some-jaot, esim. WhatsApp, LinkedIn, Instagram) -->
   <meta property="og:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
   <meta property="og:description" content="{{ page.description | default: 'Hasselblad Masters 2026 Finalist - Explore the visual journey and photographic archives of Aatu Alatalo.' }}">
   <meta property="og:image" content="{{ '/PROJECT 21 FINALIST.jpg' | relative_url }}">
@@ -17,7 +15,6 @@
   <meta property="og:type" content="website">
 
   {% if page.url == '/' or page.url == '/index.html' or page.url == '/about.html' %}
-  <!-- SEO: Strukturoitu data hakukoneille (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -39,9 +36,7 @@
   </script>
   {% endif %}
 
-  <!-- Google Analytics Consent Mode & Tag -->
   <script>
-    // Määritetään Consent Mode ennen GA:n lataamista (Estää evästeet oletuksena)
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('consent', 'default', {
@@ -60,12 +55,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
-  <!-- PhotoSwipe v5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
   <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
 
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 </head>
-<body id="body">
+<body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}">
 
 <div id="loader"><h1>Aatu Alatalo</h1></div>
 <script>
@@ -74,7 +70,6 @@
   }
 </script>
 
-<!-- EVÄSTEBANNERIN HTML -->
 <div id="cookie-banner">
   <p>Käytän sivustolla Google Analyticsia kävijämäärien seurantaan. Hyväksymällä autat minua ymmärtämään, mistä päin maailmaa portfoliotani katsotaan. <br><br>I use Google Analytics to measure traffic. By accepting, you help me understand where my audience comes from.</p>
   <div class="cookie-buttons">
@@ -135,9 +130,8 @@
   </footer>
 </main>
 
-<!-- PhotoSwipe Lightbox will be dynamically created -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<!-- Back to Top (Näytetään dynaamisesti skrollatessa) -->
 <button class="back-to-top" id="backToTop" aria-label="Takaisin ylös">
     <svg viewBox="0 0 55 55">
         <circle class="progress-bg" cx="27.5" cy="27.5" r="25"></circle>
@@ -147,6 +141,32 @@
 </button>
 
 <script>
+  // Alustetaan Swiper.js vain jos ollaan etusivulla
+  document.addEventListener("DOMContentLoaded", function() {
+    if (document.body.classList.contains('index-page')) {
+      const swiper = new Swiper('.swiper', {
+        loop: true,
+        speed: 1200, // Sulava, hieman pidempi siirtymä
+        effect: 'fade', // Elokuvallinen ristihäivytys
+        fadeEffect: {
+          crossFade: true
+        },
+        autoplay: {
+          delay: 5000, // Kuva vaihtuu 5 sekunnin välein
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      });
+    }
+  });
+
   // Evästebannerin logiikka
   document.addEventListener("DOMContentLoaded", function() {
     const banner = document.getElementById('cookie-banner');
@@ -203,19 +223,36 @@
       });
   }
 
-  // Latausruutu
+  // --- LATAUSRUUTU JA MOBIILIMENU-AUTOMAATIO ---
   const loader = document.getElementById('loader');
+  
+  // Funktio, joka avaa valikon 3 sekunniksi
+  function runMobileMenuSequence() {
+    if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
+      document.body.classList.add('menu-open');
+      setTimeout(() => {
+        document.body.classList.remove('menu-open');
+      }, 3000); // 3 sekuntia (3000 millisekuntia)
+    }
+  }
+
   if (sessionStorage.getItem('visited')) {
     if (loader) {
       loader.style.display = 'none';
     }
+    // Avataan valikko myös silloin, kun sivu on välimuistissa
+    runMobileMenuSequence();
   } else {
     sessionStorage.setItem('visited', 'true');
     window.addEventListener('load', () => {
       setTimeout(() => {
         if(loader) {
             loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 800);
+            setTimeout(() => {
+              loader.style.display = 'none';
+              // Käynnistetään valikko heti, kun latausruutu (Splash screen) on kadonnut
+              runMobileMenuSequence();
+            }, 800);
         }
       }, 600);
     });
@@ -258,7 +295,12 @@
       const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPosition = window.pageYOffset;
       if (backToTopBtn) {
-          backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
+          // Ei näytetä back-to-top -nappia etusivun sliderissa
+          if (document.body.classList.contains('index-page')) {
+            backToTopBtn.style.display = 'none';
+          } else {
+            backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
+          }
           const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
           const offset = circumference - (scrollPercentage * circumference);
           if (progressBar) progressBar.style.strokeDashoffset = offset;
@@ -294,18 +336,15 @@
     window.addEventListener('scroll', () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Blur effect activated if scrolled down from top
       if (scrollTop > 0) {
         mobileHeader.classList.add('is-scrolled');
       } else {
         mobileHeader.classList.remove('is-scrolled');
       }
       
-      // Hide on scroll down past a small threshold
       if (scrollTop > lastScrollTop && scrollTop > 50) {
         mobileHeader.classList.add('header--hidden');
       } 
-      // Show on scroll up
       else if (scrollTop < lastScrollTop) {
         mobileHeader.classList.remove('header--hidden');
       }
