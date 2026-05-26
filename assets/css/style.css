@@ -1,7 +1,7 @@
 :root {
   --bg-color: #0a0a0a;
   --accent-color: #ff0000;
-  --text-main: #fcf8e3;
+  --text-main: rgba(252, 248, 227, 0.85); /* Muutettu: 85% kirkkaus kaikelle perustekstille */
   --text-dimmed: #888;
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
@@ -10,20 +10,20 @@
 html, body {
   font-family: 'Lora', serif !important;
   background-color: #050505 !important; /* Lähes musta */
-  color: #fcf8e3 !important;            /* Kellertävä valkoinen */
+  color: var(--text-main) !important;   /* Käyttää 85% kirkkautta */
 }
 
 h1, h2, h3, h4 {
-  color: #fcf8e3 !important;            /* Sama kellertävä valkoinen otsikoille */
+  color: #fcf8e3 !important;            /* Otsikot pysyvät 100% kirkkaina */
 }
 
 a {
-  color: #fcf8e3 !important;            /* Sama kellertävä valkoinen linkeille */
+  color: var(--text-main) !important;   /* Linkit seuraavat yleistä linjaa */
   text-decoration: underline;
 }
 
 a:hover {
-  color: #fcf8e3 !important;
+  color: #fcf8e3 !important;            /* Hoverissa linkki herää 100% kirkkauteen */
 }
 
 body {
@@ -92,7 +92,7 @@ aside {
   font-size: 20px;
   letter-spacing: 3px;
   text-decoration: none;
-  color: var(--text-main);
+  color: #fcf8e3; /* Logo pysyy puhtaan kirkkaana */
   margin-bottom: 60px;
   display: block;
   line-height: 1.1;
@@ -118,10 +118,10 @@ nav a {
   text-transform: none;
 }
 
-nav a:hover { color: var(--text-main); transform: translateX(4px); }
+nav a:hover { color: #fcf8e3; transform: translateX(4px); }
 
 nav a.active { 
-  color: var(--text-main); 
+  color: #fcf8e3; 
   font-size: 14px;
   font-weight: 400;
   border-left: 2px solid var(--accent-color);
@@ -240,7 +240,7 @@ main {
 .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
 .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #fcf8e3; line-height: 1.6; font-weight: 300; }
-.project-info p:last-child { color: var(--text-main); opacity: 0.75; font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
+.project-info p:last-child { color: rgba(252, 248, 227, 0.75); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 
 /* --- ABOUT SIVU --- */
 .about-grid { display: flex; align-items: flex-start; gap: 60px }
