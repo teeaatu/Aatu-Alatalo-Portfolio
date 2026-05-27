@@ -266,7 +266,7 @@ main {
 .contact-title { font-size: clamp(24px, 5vw, 32px); letter-spacing: 6px; margin-bottom: 40px; font-weight: 300; text-transform: none; }
 .contact-info { font-size: clamp(14px, 2vw, 17px); color: var(--text-dimmed); line-height: 2.2; letter-spacing: 0.5px; }
 .contact-info a { color: var(--accent-color); text-decoration: none; }
-.copyright { margin-top: 80px; font-size: 10px; color: #333; letter-spacing: 2px; }
+.copyright { margin-top: 80px; font-size: 10px; color: var(--text-dimmed); letter-spacing: 2px; }
 
 /* --- HAMPURILAINEN --- */
 .menu-toggle {
