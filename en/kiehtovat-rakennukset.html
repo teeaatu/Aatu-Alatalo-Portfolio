@@ -1,0 +1,35 @@
+---
+lang: fi
+layout: default
+title: "Buildings — Kiehtovat rakennukset - Aatu Alatalo"
+description: "Rakentaminen on muuttunut viime vuosikymmeninä paljon. Minua on aina kiehtonut vanhemmat ykityiskohtaisemmat rakennukset."
+active_nav: "kiehtovat-rakennukset"
+mobile_title: "Buildings / Kiehtovat rakennukset"
+---
+
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">Buildings / Kiehtovat rakennukset</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                Construction has changed a great deal in recent decades. I have always been fascinated by older and more detailed buildings—where one can still find the fine craftsmanship and spirit of the past.
+            </div>
+            <div class="intro-text" lang="fi">
+                Rakentaminen on muuttunut viime vuosikymmeninä paljon. Minua on aina kiehtonut vanhemmat ykityiskohtaisemmat rakennukset.
+            </div>
+        </div>
+    </header>
+
+    {% for item in site.data['kiehtovat-rakennukset'] %}
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>

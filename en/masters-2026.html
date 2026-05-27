@@ -1,0 +1,34 @@
+---
+lang: fi
+layout: default
+title: "Hasselblad Masters 2026 - Aatu Alatalo"
+description: "Tämä projekti valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa."
+active_nav: "masters-2026"
+mobile_title: "Hasselblad Masters 2026"
+---
+
+<div class="content-wrapper">
+    <header class="intro-section">
+        <div class="intro-title">Hasselblad Masters 2026<br><span style="color: #888; font-size: 10px; letter-spacing: 2px;">Finalist / Project//21</span></div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                This project was selected as a finalist in the Hasselblad Masters 2026 competition under the Project//21 category. 
+            </div>
+            <div class="intro-text" lang="fi">
+                Tämä projekti valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa.
+            </div>
+        </div>
+    </header>
+
+        {% for item in site.data['masters-2026'] %}
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>

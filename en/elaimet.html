@@ -1,0 +1,35 @@
+---
+lang: fi
+layout: default
+title: "Animals — Eläimet - Aatu Alatalo"
+description: "Ilmeet, liike, rauhallisuus, villit ja leikit. Expressions, movement, calmness, wildness and playfulness."
+active_nav: "elaimet"
+mobile_title: "Animals / Eläimet"
+---
+
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">Animals / Eläimet</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                Expressions, movement, calmness, wildness and playfulness
+            </div>
+            <div class="intro-text" lang="fi">
+                Ilmeet, liike, rauhallisuus, villit ja leikit
+            </div>
+        </div>
+    </header>
+
+    {% for item in site.data.elaimet %}
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>

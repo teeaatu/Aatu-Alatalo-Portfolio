@@ -1,0 +1,156 @@
+---
+lang: en
+layout: default
+title: "About - Aatu Alatalo"
+active_nav: "about"
+---
+
+<style>
+  .about-premium-wrapper {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 8rem 2rem;
+    color: #bbb;
+    line-height: 1.8;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .image-container {
+    position: sticky;
+    top: 4rem;
+  }
+
+  .image-container img {
+    width: 100%;
+    height: auto;
+    filter: grayscale(15%);
+    transition: filter 0.4s ease;
+  }
+
+  .image-container img:hover {
+    filter: grayscale(0%);
+  }
+
+  .about-text h1 {
+    font-size: 2.8rem;
+    font-weight: 200;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .about-subtitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #777;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    display: block;
+  }
+
+  .about-bio {
+    font-size: 1.1rem;
+    margin-bottom: 4rem;
+    color: #ccc;
+  }
+
+  .about-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .about-section h2 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+
+  .about-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .about-list li {
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .about-list li::before {
+    content: "—";
+    color: #444;
+    flex-shrink: 0;
+  }
+
+  .about-list strong {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+    .about-premium-wrapper { padding: 4rem 1.5rem; }
+    .image-container { position: relative; top: 0; }
+    .about-text h1 { font-size: 2.2rem; }
+  }
+</style>
+
+<div class="about-premium-wrapper">
+  <div class="about-grid">
+    <div class="image-container">
+      <img src="/assets/images/DSC4004.jpg" alt="Aatu Alatalo">
+    </div>
+
+    <div class="about-text">
+      <header>
+        <h1>Aatu Alatalo</h1>
+        <span class="about-subtitle">Photographer Oulu & Hasselblad Masters Finalist</span>
+      </header>
+      
+      <div class="about-bio">
+        <p>
+          I am a 21-year-old photographer who grew up in the Tyrnävä Lakeus region and currently lives in Oulu. 
+          I am studying media at Oulu University of Applied Sciences. 
+          I started photography in 2014, and over the past decade, the camera has become an inseparable part of my daily life.
+        </p>
+      </div>
+
+      <div class="about-section">
+        <h2>Merits</h2>
+        <ul class="about-list">
+          <li>
+            <span><strong>Hasselblad Masters 2026</strong>: Finalist in the Project//21 category.</span>
+          </li>
+          <li>
+            <span><strong>SAKUstars 2023</strong>: Honorable mention in the "Photographic Art in a Day" series.</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="about-section">
+        <h2>Projects</h2>
+        <ul class="about-list">
+          <li>
+            <span><strong>Outshine</strong>: Digital advertising project on Oulu bus stops in 2025 and 2026.</span>
+          </li>
+          <li>
+            <span><strong>Exhibitions</strong>: My works have been exhibited at Piippola Könkkölä and Kestilä Library in 2023 and 2024.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
