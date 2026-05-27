@@ -207,8 +207,12 @@
   function runMobileMenuSequence() {
     if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
       document.body.classList.add('menu-open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.add('trigger-wave');
+
       setTimeout(() => {
         document.body.classList.remove('menu-open');
+        if (sidebar) sidebar.classList.remove('trigger-wave');
       }, 3000); // 3 sekuntia (3000 millisekuntia)
     }
   }
@@ -217,8 +221,7 @@
     if (loader) {
       loader.style.display = 'none';
     }
-    // Avataan valikko myös silloin, kun sivu on välimuistissa
-    runMobileMenuSequence();
+    // Ei avata valikkoa enää automaattisesti myöhemmillä sivunlatauksilla
   } else {
     sessionStorage.setItem('visited', 'true');
     window.addEventListener('load', () => {
