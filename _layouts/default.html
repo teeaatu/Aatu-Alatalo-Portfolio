@@ -156,11 +156,14 @@
       gtag('consent', 'update', {
         'analytics_storage': 'granted'
       });
-    } else if (!cookieChoice) {
-      setTimeout(() => {
-        banner.style.display = 'block';
-      }, 1500);
     }
+    
+    // Funktio evästebannerin näyttämiseen, jota voidaan kutsua muualta
+    window.showCookieBanner = function() {
+      if (!localStorage.getItem('cookieChoice')) {
+        banner.style.display = 'block';
+      }
+    };
     
     if(acceptBtn) {
         acceptBtn.addEventListener('click', function() {
@@ -213,7 +216,17 @@
       setTimeout(() => {
         document.body.classList.remove('menu-open');
         if (sidebar) sidebar.classList.remove('trigger-wave');
+        
+        // Näytetään evästebanneri 2 sekuntia valikon sulkeutumisen jälkeen
+        setTimeout(() => {
+          if(window.showCookieBanner) window.showCookieBanner();
+        }, 2000);
       }, 3000); // 3 sekuntia (3000 millisekuntia)
+    } else {
+       // Jos ei olla mobiilissa etusivulla, näytetään banneri viiveellä normaalisti
+       setTimeout(() => {
+          if(window.showCookieBanner) window.showCookieBanner();
+       }, 2000);
     }
   }
 
@@ -221,6 +234,10 @@
     if (loader) {
       loader.style.display = 'none';
     }
+    // Näytetään banneri heti (tai pienellä viiveellä) jos sivu on jo käyty
+    setTimeout(() => {
+        if(window.showCookieBanner) window.showCookieBanner();
+    }, 1000);
     // Ei avata valikkoa enää automaattisesti myöhemmillä sivunlatauksilla
   } else {
     sessionStorage.setItem('visited', 'true');
