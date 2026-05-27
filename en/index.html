@@ -2,7 +2,7 @@
 lang: en
 layout: default
 title: "Aatu Alatalo | Photographer & Hasselblad Masters 2026 Finalist"
-description: "Aatu Alatalo is an Oulu-based photographer and Hasselblad Masters 2026 finalist. Artistic photography portfolio."
+description: "Aatu Alatalo is an Oulu-based photographer and a Hasselblad Masters 2026 finalist. Artistic photography portfolio."
 active_nav: "index"
 mobile_title: "Overview"
 ---
@@ -27,7 +27,7 @@ mobile_title: "Overview"
 </div>
 
 <script>
-  // Curated images from various parts of the portfolio
+  // Curated images from different sections of your portfolio
   const portfolioImages = [
     "/assets/images/PROJECT 21 FINALIST.jpg",
     "/assets/images/MG_9039.jpg",
@@ -41,7 +41,7 @@ mobile_title: "Overview"
     "/assets/images/Leila.jpg"
   ];
 
-  // Shuffle the array of images immediately
+  // Shuffle image order randomly at the start
   portfolioImages.sort(() => Math.random() - 0.5);
 
   let currentIdx = 0;
@@ -49,7 +49,7 @@ mobile_title: "Overview"
   const imgBack = document.getElementById('gallery-img-back');
   let isFrontActive = true;
 
-  // Initialize the background image
+  // Preload the background image
   imgBack.src = portfolioImages[(currentIdx + 1) % portfolioImages.length];
 
   function crossFadeImage() {
@@ -75,6 +75,6 @@ mobile_title: "Overview"
     isFrontActive = !isFrontActive;
   }
 
-  // Swap images every 4.5 seconds (4500ms)
+  // Change image slower: every 4.5 seconds (4500ms)
   setInterval(crossFadeImage, 4500);
 </script>
