@@ -187,7 +187,14 @@
   const menuToggle = document.getElementById('menuToggle');
   const body = document.getElementById('body');
   if(menuToggle) {
-      menuToggle.addEventListener('click', () => body.classList.toggle('menu-open'));
+      menuToggle.addEventListener('click', () => {
+          body.classList.toggle('menu-open');
+          if (!body.classList.contains('menu-open')) {
+              setTimeout(() => {
+                  if(window.showCookieBanner) window.showCookieBanner();
+              }, 2000);
+          }
+      });
   }
 
   // Skrollaus kontaktiin
@@ -199,6 +206,9 @@
         if(contactSection) {
             contactSection.scrollIntoView({ behavior: 'smooth' });
             body.classList.remove('menu-open');
+            setTimeout(() => {
+                if(window.showCookieBanner) window.showCookieBanner();
+            }, 2000);
         }
       });
   }
@@ -222,8 +232,35 @@
          }, 800);
       }
 
+      let autoCloseTimeout;
+
+      // Keskeytä automaattinen sulkeminen, jos käyttäjä on vuorovaikutuksessa
+      const interruptHandler = () => {
+        if (autoCloseTimeout) {
+          clearTimeout(autoCloseTimeout);
+          autoCloseTimeout = null;
+          // Varmistetaan, että pääsisältö on näkyvissä
+          document.body.classList.remove('hide-main-temp');
+          
+          window.removeEventListener('touchstart', interruptHandler);
+          window.removeEventListener('mousedown', interruptHandler);
+          window.removeEventListener('scroll', interruptHandler);
+        }
+      };
+
+      window.addEventListener('touchstart', interruptHandler, { passive: true });
+      window.addEventListener('mousedown', interruptHandler, { passive: true });
+      window.addEventListener('scroll', interruptHandler, { passive: true });
+
       // 3. Odotetaan 3 sekuntia (menu on auki ja aaltoilee)
-      setTimeout(() => {
+      autoCloseTimeout = setTimeout(() => {
+        autoCloseTimeout = null;
+        
+        // Poistetaan kuuntelijat, jos normaalisti suoritetaan
+        window.removeEventListener('touchstart', interruptHandler);
+        window.removeEventListener('mousedown', interruptHandler);
+        window.removeEventListener('scroll', interruptHandler);
+
         // 4. Palautetaan etusivun sisältö näkyviin
         document.body.classList.remove('hide-main-temp');
         
