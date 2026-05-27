@@ -1,0 +1,27 @@
+---
+lang: fi
+layout: default
+title: "V365 — Kuvaprojekti ajasta - Aatu Alatalo"
+description: "Vuodenvaihdoksen muutokset valokuvina. The changes of the turn of the year in photographs."
+active_nav: "kuvaprojekti-ajasta-v365"
+mobile_title: "V365 / Kuvaprojekti ajasta"
+---
+
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">V365 / Kuvaprojekti ajasta</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                The changes of the turn of the year in photographs.
+            </div>
+            <div class="intro-text" lang="fi">
+                Vuodenvaihdoksen muutokset valokuvina.
+            </div>
+        </div>
+    </header>
+
+    {% for item in site.data.kuvaprojekti_ajasta_v365 %}
+    <section class="image-section"><img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}V365{% endif %}" class="gallery-img" loading="lazy"></section>
+    {% endfor %}
+</div>

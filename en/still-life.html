@@ -1,0 +1,35 @@
+---
+lang: fi
+layout: default
+title: "Still Life — Asetelmat - Aatu Alatalo"
+description: "Mielenkiintoisia asetelmia lienee monessakin paikkaa, kunhan on tarpeeksi kiinnostunut niihin katseensa ja mielenkiintonsa kiinnittämään."
+active_nav: "still-life"
+mobile_title: "Still Life / Asetelmat"
+---
+
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">Still Life / Asetelmat</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                Interesting compositions can likely be found in many places, as long as one is curious enough to focus their gaze and attention upon them.
+            </div>
+            <div class="intro-text" lang="fi">
+                Mielenkiintoisia asetelmia lienee monessakin paikkaa, kunhan on tarpeeksi kiinnostunut niihin katseensa ja mielenkiintonsa kiinnittämään.
+            </div>
+        </div>
+    </header>
+
+    {% for item in site.data['still-life'] %}
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>{{ item.otsikko }}</p>
+                <p>{{ item.paikka }}</p>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
