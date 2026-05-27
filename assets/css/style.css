@@ -271,10 +271,11 @@ main {
 /* --- HAMPURILAINEN --- */
 .menu-toggle {
   display: none;
-  position: fixed; top: 30px; right: 30px;
-  width: 44px; height: 44px;
+  position: fixed; top: 22px; right: 22px; /* Adjusted to keep icon in place while expanding hitbox */
+  width: 60px; height: 60px;
   background: none; border: none; cursor: pointer;
   z-index: 2000;
+  display: flex; justify-content: center; align-items: center;
 }
 .hamburger { width: 25px; height: 2px; background: #fcf8e3; position: relative; transition: all 0.4s ease; }
 .hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: #fcf8e3; position: absolute; left: 0; transition: all 0.4s ease; }
@@ -292,7 +293,7 @@ main {
     z-index: 1500; background: rgba(10, 10, 10, 0.98); padding: 120px 40px;
   }
   body.menu-open aside { left: 0; }
-  .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 30px; top: 50%; transform: translateY(-50%); }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
   main { margin-left: 0; width: 100%; padding: 120px 20px 40px; }
   
   .mobile-header { 
