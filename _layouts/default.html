@@ -10,9 +10,16 @@
   
   <meta property="og:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
   <meta property="og:description" content="{{ page.description | default: 'Hasselblad Masters 2026 Finalist - Explore the visual journey and photographic archives of Aatu Alatalo.' }}">
-  <meta property="og:image" content="{{ '/PROJECT 21 FINALIST.jpg' | relative_url }}">
+  <meta property="og:image" content="{{ site.url }}{{ '/assets/images/PROJECT%2021%20FINALIST.jpg' | relative_url }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
+  <meta name="twitter:description" content="{{ page.description | default: 'Hasselblad Masters 2026 Finalist - Explore the visual journey and photographic archives of Aatu Alatalo.' }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ '/assets/images/PROJECT%2021%20FINALIST.jpg' | relative_url }}">
+
+  <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}">
 
   {% if page.url == '/' or page.url == '/index.html' or page.url == '/about.html' %}
   <script type="application/ld+json">
