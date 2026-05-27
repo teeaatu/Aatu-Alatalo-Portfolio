@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="fi">
+{% assign lang = page.lang | default: 'fi' %}
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,10 +77,10 @@
 </script>
 
 <div id="cookie-banner">
-  <p>Käytän sivustolla Google Analyticsia kävijämäärien seurantaan. Hyväksymällä autat minua ymmärtämään, mistä päin maailmaa portfoliotani katsotaan. <br><br>I use Google Analytics to measure traffic. By accepting, you help me understand where my audience comes from.</p>
+  <p>{{ site.data.t.cookie_text[lang] }}</p>
   <div class="cookie-buttons">
-    <button class="cookie-btn accept" id="accept-cookies">Hyväksy / Accept</button>
-    <button class="cookie-btn" id="decline-cookies">Hylkää / Decline</button>
+    <button class="cookie-btn accept" id="accept-cookies">{{ site.data.t.cookie_accept[lang] }}</button>
+    <button class="cookie-btn" id="decline-cookies">{{ site.data.t.cookie_decline[lang] }}</button>
   </div>
 </div>
 
@@ -93,28 +94,28 @@
 <aside id="sidebar">
   <a href="{{ '/' | relative_url }}" class="logo" style="text-decoration: none;">Aatu<br>Alatalo</a>
   <nav>
-    <a href="{{ '/' | relative_url }}" class="{% if page.active_nav == 'index' %}active{% endif %}">Overview / Yleiskuva</a>
+    <a href="{{ '/' | relative_url }}" class="{% if page.active_nav == 'index' %}active{% endif %}">{{ site.data.t.overview[lang] }}</a>
     
     <a href="{{ '/masters-2026.html' | relative_url }}" class="masters-nav-item {% if page.active_nav == 'masters-2026' %}active{% endif %}">
       Hasselblad Masters 2026
       <span>Finalist / Project//21</span>
     </a>
 
-    <a href="{{ '/raw.html' | relative_url }}" class="{% if page.active_nav == 'raw' %}active{% endif %}">Portraits / Muotokuvia</a>
-    <a href="{{ '/mustavalkoinen-sarja.html' | relative_url }}" class="{% if page.active_nav == 'mustavalkoinen-sarja' %}active{% endif %}">Monochrome / Mustavalkoinen sarja</a>
-    <a href="{{ '/sisatilan-valo.html' | relative_url }}" class="{% if page.active_nav == 'sisatilan-valo' %}active{% endif %}">Interior Light / Sisätilan valo</a>
-    <a href="{{ '/kiehtovat-rakennukset.html' | relative_url }}" class="{% if page.active_nav == 'kiehtovat-rakennukset' %}active{% endif %}">Buildings / Kiehtovat rakennukset</a>
-    <a href="{{ '/luonto-ja-ymparisto.html' | relative_url }}" class="{% if page.active_nav == 'luonto-ja-ymparisto' %}active{% endif %}">Nature / Luonto ja ympäristö</a>
-    <a href="{{ '/still-life.html' | relative_url }}" class="{% if page.active_nav == 'still-life' %}active{% endif %}">Still Life / Asetelmat</a>
-    <a href="{{ '/elaimet.html' | relative_url }}" class="{% if page.active_nav == 'elaimet' %}active{% endif %}">Animals / Eläimet</a>
-    <a href="{{ '/kirjaston-ihmeet.html' | relative_url }}" class="{% if page.active_nav == 'kirjaston-ihmeet' %}active{% endif %}">Colors / Värit</a>
-    <a href="{{ '/kuvaprojekti-ajasta-v365.html' | relative_url }}" class="{% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">V365 / Kuvaprojekti ajasta</a>
+    <a href="{{ '/raw.html' | relative_url }}" class="{% if page.active_nav == 'raw' %}active{% endif %}">{{ site.data.t.portraits[lang] }}</a>
+    <a href="{{ '/mustavalkoinen-sarja.html' | relative_url }}" class="{% if page.active_nav == 'mustavalkoinen-sarja' %}active{% endif %}">{{ site.data.t.monochrome[lang] }}</a>
+    <a href="{{ '/sisatilan-valo.html' | relative_url }}" class="{% if page.active_nav == 'sisatilan-valo' %}active{% endif %}">{{ site.data.t.interior[lang] }}</a>
+    <a href="{{ '/kiehtovat-rakennukset.html' | relative_url }}" class="{% if page.active_nav == 'kiehtovat-rakennukset' %}active{% endif %}">{{ site.data.t.buildings[lang] }}</a>
+    <a href="{{ '/luonto-ja-ymparisto.html' | relative_url }}" class="{% if page.active_nav == 'luonto-ja-ymparisto' %}active{% endif %}">{{ site.data.t.nature[lang] }}</a>
+    <a href="{{ '/still-life.html' | relative_url }}" class="{% if page.active_nav == 'still-life' %}active{% endif %}">{{ site.data.t.still_life[lang] }}</a>
+    <a href="{{ '/elaimet.html' | relative_url }}" class="{% if page.active_nav == 'elaimet' %}active{% endif %}">{{ site.data.t.animals[lang] }}</a>
+    <a href="{{ '/kirjaston-ihmeet.html' | relative_url }}" class="{% if page.active_nav == 'kirjaston-ihmeet' %}active{% endif %}">{{ site.data.t.colors[lang] }}</a>
+    <a href="{{ '/kuvaprojekti-ajasta-v365.html' | relative_url }}" class="{% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">{{ site.data.t.v365[lang] }}</a>
   </nav>
 
   <div class="info-nav">
     <nav style="gap: 15px;">
-      <a href="{{ '/about.html' | relative_url }}" class="{% if page.active_nav == 'about' %}active{% endif %}">About / Esittely</a>
-      <a href="#contact" id="contactBtn">Contact / Ota yhteyttä</a>
+      <a href="{{ '/about.html' | relative_url }}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
+      <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
     </nav>
   </div>
 </aside>
