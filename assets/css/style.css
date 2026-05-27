@@ -289,6 +289,15 @@ main {
 .contact-info a { color: var(--accent-color); text-decoration: none; }
 .copyright { margin-top: 80px; font-size: 10px; color: var(--text-dimmed); letter-spacing: 2px; }
 
+/* --- HIDE MAIN UNTIL MENU SEQUENCE FINISHES --- */
+body.hide-main-temp main {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+body.hide-main-temp .mobile-header {
+  opacity: 0 !important;
+}
+
 /* --- HAMPURILAINEN --- */
 .menu-toggle {
   display: none;

@@ -209,21 +209,42 @@
   // Funktio, joka avaa valikon 3 sekunniksi
   function runMobileMenuSequence() {
     if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
+      // 1. Laitetaan menu auki heti taustalla
       document.body.classList.add('menu-open');
       const sidebar = document.getElementById('sidebar');
       if (sidebar) sidebar.classList.add('trigger-wave');
 
+      // 2. Poistetaan latausruutu pehmeästi (menu on jo valmiiksi auki sen alla)
+      if(loader) {
+         loader.style.opacity = '0';
+         setTimeout(() => {
+           loader.style.display = 'none';
+         }, 800);
+      }
+
+      // 3. Odotetaan 3 sekuntia (menu on auki ja aaltoilee)
       setTimeout(() => {
+        // 4. Palautetaan etusivun sisältö näkyviin
+        document.body.classList.remove('hide-main-temp');
+        
+        // 5. Suljetaan menu ja poistetaan aalto-luokka
         document.body.classList.remove('menu-open');
         if (sidebar) sidebar.classList.remove('trigger-wave');
         
-        // Näytetään evästebanneri 2 sekuntia valikon sulkeutumisen jälkeen
+        // 6. Näytetään evästebanneri 2 sekuntia valikon sulkeutumisen jälkeen
         setTimeout(() => {
           if(window.showCookieBanner) window.showCookieBanner();
         }, 2000);
-      }, 3000); // 3 sekuntia (3000 millisekuntia)
+      }, 3000); // 3 sekuntia auki
     } else {
-       // Jos ei olla mobiilissa etusivulla, näytetään banneri viiveellä normaalisti
+       // Ei mobiilin etusivu: normaali latausruudun poisto
+       if(loader) {
+           loader.style.opacity = '0';
+           setTimeout(() => {
+             loader.style.display = 'none';
+           }, 800);
+       }
+       // Näytetään banneri viiveellä normaalisti
        setTimeout(() => {
           if(window.showCookieBanner) window.showCookieBanner();
        }, 2000);
@@ -240,18 +261,19 @@
     }, 1000);
     // Ei avata valikkoa enää automaattisesti myöhemmillä sivunlatauksilla
   } else {
+    // ENSIMMÄINEN KÄYNTI
     sessionStorage.setItem('visited', 'true');
+    
+    // Piilotetaan etusivun sisältö heti alussa, jos ollaan mobiilissa etusivulla
+    if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
+      document.body.classList.add('hide-main-temp');
+    }
+
     window.addEventListener('load', () => {
       setTimeout(() => {
-        if(loader) {
-            loader.style.opacity = '0';
-            setTimeout(() => {
-              loader.style.display = 'none';
-              // Käynnistetään valikko heti, kun latausruutu (Splash screen) on kadonnut
-              runMobileMenuSequence();
-            }, 800);
-        }
-      }, 600);
+         // Kutsutaan sekvenssiä, joka avaa valikon latausruudun *alle* ja paljastaa sen
+         runMobileMenuSequence();
+      }, 600); // Odotetaan hieman ennen sekvenssin aloitusta, että "Aatu Alatalo" teksti näkyy
     });
   }
 
