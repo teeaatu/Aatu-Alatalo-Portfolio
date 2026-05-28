@@ -90,9 +90,9 @@
     <div class="hamburger"></div>
   </button>
   {% if page.lang == 'en' %}
-  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop" style="margin-left: auto;">FI</a>
+  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-mobile">FI</a>
   {% else %}
-  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
+  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-mobile">EN</a>
   {% endif %}
 </header>
 
