@@ -85,11 +85,10 @@
 </div>
 
 <header class="mobile-header" id="mobileHeader">
-  {% if page.lang == 'en' %}
-  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-mobile">FI</a>
-  {% else %}
-  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-mobile">EN</a>
-  {% endif %}
+  <div class="lang-toggle-pill">
+    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'fi' %}active{% endif %}">FI</a>
+    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'en' %}active{% endif %}">EN</a>
+  </div>
   <a href="{{ '/' | relative_url }}" class="mobile-logo" style="text-decoration: none;">Aatu Alatalo</a>
   <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
     <div class="hamburger"></div>
