@@ -86,6 +86,14 @@
 
 <header class="mobile-header" id="mobileHeader">
   <a href="{{ '/' | relative_url }}" class="mobile-logo" style="text-decoration: none;">Aatu Alatalo</a>
+  {% if lang == 'en' %}
+  {% assign target_url = page.url | remove_first: '/en' %}
+  {% if target_url == '' %}{% assign target_url = '/' %}{% endif %}
+  <a href="{{ target_url | relative_url }}" class="lang-switcher-desktop" style="margin-left: auto;">FI</a>
+  {% else %}
+  {% assign target_url = '/en' | append: page.url %}
+  <a href="{{ target_url | relative_url }}" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
+  {% endif %}
   <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
     <div class="hamburger"></div>
   </button>
@@ -116,14 +124,6 @@
     <nav style="gap: 15px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
       <a href="{{ '/about.html' | relative_url }}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
-      {% if lang == 'en' %}
-      {% assign target_url = page.url | remove_first: '/en' %}
-      {% if target_url == '' %}{% assign target_url = '/' %}{% endif %}
-      <a href="{{ target_url | relative_url }}" class="lang-switcher-desktop" style="margin-left: auto;">FI</a>
-      {% else %}
-      {% assign target_url = '/en' | append: page.url %}
-      <a href="{{ target_url | relative_url }}" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
-      {% endif %}
     </nav>
   </div>
 </aside>
