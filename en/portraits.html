@@ -1,13 +1,13 @@
 ---
-lang: fi
+lang: en
 layout: null
 ---
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAW - Aatu Alatalo</title>
+    <title>Portraits - Aatu Alatalo</title>
     <style>
         html { scroll-behavior: smooth }
         body { margin: 0; background-color: white; color: black; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding-bottom: 100px }
@@ -118,10 +118,10 @@ layout: null
         {% for item in site.data['Potret'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.title | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
             <div class="project-info">
-                <p>{{ item.otsikko }}</p>
-                <p>{{ item.paikka }}</p>
+                <p>{{ item.title }}</p>
+                <p>{{ item.description }}</p>
             </div>
         </div>
     </section>
