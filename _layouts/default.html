@@ -113,9 +113,10 @@
   </nav>
 
   <div class="info-nav">
-    <nav style="gap: 15px;">
+    <nav style="gap: 15px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
       <a href="{{ '/about.html' | relative_url }}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
+      <a href="#" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
     </nav>
   </div>
 </aside>

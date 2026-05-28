@@ -202,6 +202,22 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
   text-transform: none;
 }
 
+.lang-switcher-mobile {
+  display: none;
+}
+
+.lang-switcher-desktop {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--text-dimmed);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all var(--nav-speed) ease-out;
+}
+.lang-switcher-desktop:hover {
+  color: #fcf8e3 !important;
+}
+
 /* --- GRID & MAIN --- */
 main {
   margin-left: var(--sidebar-width);
@@ -351,6 +367,23 @@ body.hide-main-temp .mobile-header {
   .mobile-logo {
     margin-bottom: 0;
   } 
+  
+  .lang-switcher-mobile {
+    display: block;
+    position: absolute;
+    right: 85px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    color: var(--text-dimmed);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all var(--nav-speed) ease-out;
+  }
+  .lang-switcher-mobile:hover {
+    color: #fcf8e3 !important;
+  }
   
   .overview-grid { column-count: 2; column-gap: 10px; display: block; }
   .overview-item { margin-bottom: 10px; }
@@ -508,6 +541,9 @@ body.index-page main {
     max-height: calc(70dvh - 20px); 
     
     top: 48%; /* Lasketaan kuvaa alemmas, jotta se ei osu yläpalkkiin */
+    border: 10px solid rgba(252, 248, 227, 0.02);
+  }
+}otta se ei osu yläpalkkiin */
     border: 10px solid rgba(252, 248, 227, 0.02);
   }
 }
