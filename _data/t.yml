@@ -1,38 +1,38 @@
 overview:
-  fi: "Overview / Yleiskuva"
+  fi: "Yleiskuva"
   en: "Overview"
 portraits:
-  fi: "Portraits / Muotokuvia"
+  fi: "Muotokuvia"
   en: "Portraits"
 monochrome:
-  fi: "Monochrome / Mustavalkoinen sarja"
+  fi: "Mustavalkoinen sarja"
   en: "Monochrome"
 interior:
-  fi: "Interior Light / Sisätilan valo"
+  fi: "Sisätilan valo"
   en: "Interior Light"
 buildings:
-  fi: "Buildings / Kiehtovat rakennukset"
+  fi: "Kiehtovat rakennukset"
   en: "Buildings"
 nature:
-  fi: "Nature / Luonto ja ympäristö"
+  fi: "Luonto ja ympäristö"
   en: "Nature"
 still_life:
-  fi: "Still Life / Asetelmat"
+  fi: "Asetelmat"
   en: "Still Life"
 animals:
-  fi: "Animals / Eläimet"
+  fi: "Eläimet"
   en: "Animals"
 colors:
-  fi: "Colors / Värit"
+  fi: "Värit"
   en: "Colors"
 v365:
-  fi: "V365 / Kuvaprojekti ajasta"
+  fi: "Kuvaprojekti ajasta"
   en: "V365"
 about:
-  fi: "About / Esittely"
+  fi: "Esittely"
   en: "About"
 contact:
-  fi: "Contact / Ota yhteyttä"
+  fi: "Ota yhteyttä"
   en: "Contact"
 cookie_text:
   fi: "Käytän sivustolla Google Analyticsia kävijämäärien seurantaan. Hyväksymällä autat minua ymmärtämään, mistä päin maailmaa portfoliotani katsotaan."
