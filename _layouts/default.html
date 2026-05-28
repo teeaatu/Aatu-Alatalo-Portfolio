@@ -90,9 +90,9 @@
     <div class="hamburger"></div>
   </button>
   {% if page.lang == 'en' %}
-  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}/{% endif %}" class="lang-switcher-desktop" style="margin-left: auto;">FI</a>
+  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop" style="margin-left: auto;">FI</a>
   {% else %}
-  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}/en/{% endif %}" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
+  <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
   {% endif %}
 </header>
 
@@ -121,6 +121,11 @@
     <nav style="gap: 15px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
       <a href="{{ '/about.html' | relative_url }}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
+      {% if page.lang == 'en' %}
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop">FI</a>
+      {% else %}
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop">EN</a>
+      {% endif %}
     </nav>
   </div>
 </aside>
