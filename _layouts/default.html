@@ -86,14 +86,14 @@
 
 <header class="mobile-header" id="mobileHeader">
   <a href="{{ '/' | relative_url }}" class="mobile-logo" style="text-decoration: none;">Aatu Alatalo</a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
+    <div class="hamburger"></div>
+  </button>
   {% if page.lang == 'en' %}
   <a href="{{ page.translation_url }}" class="lang-switcher-desktop" style="margin-left: auto;">FI</a>
   {% else %}
   <a href="{{ page.translation_url }}" class="lang-switcher-desktop" style="margin-left: auto;">EN</a>
   {% endif %}
-  <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
-    <div class="hamburger"></div>
-  </button>
 </header>
 
 <aside id="sidebar">
