@@ -99,27 +99,27 @@
 <aside id="sidebar">
   <a href="{{ '/' | relative_url }}" class="logo" style="text-decoration: none;">Aatu<br>Alatalo</a>
   <nav>
-    <a href="{{ '/' | relative_url }}" class="{% if page.active_nav == 'index' %}active{% endif %}">{{ site.data.t.overview[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/{% else %}/{% endif %}" class="{% if page.active_nav == 'index' %}active{% endif %}">{{ site.data.t.overview[lang] }}</a>
     
-    <a href="{{ '/masters-2026.html' | relative_url }}" class="masters-nav-item {% if page.active_nav == 'masters-2026' %}active{% endif %}">
+    <a href="{% if page.lang == 'en' %}/en/masters-2026.html{% else %}/masters-2026.html{% endif %}" class="masters-nav-item {% if page.active_nav == 'masters-2026' %}active{% endif %}">
       Hasselblad Masters 2026
       <span>Finalist / Project//21</span>
     </a>
 
-    <a href="{{ '/raw.html' | relative_url }}" class="{% if page.active_nav == 'raw' %}active{% endif %}">{{ site.data.t.portraits[lang] }}</a>
-    <a href="{{ '/mustavalkoinen-sarja.html' | relative_url }}" class="{% if page.active_nav == 'mustavalkoinen-sarja' %}active{% endif %}">{{ site.data.t.monochrome[lang] }}</a>
-    <a href="{{ '/sisatilan-valo.html' | relative_url }}" class="{% if page.active_nav == 'sisatilan-valo' %}active{% endif %}">{{ site.data.t.interior[lang] }}</a>
-    <a href="{{ '/kiehtovat-rakennukset.html' | relative_url }}" class="{% if page.active_nav == 'kiehtovat-rakennukset' %}active{% endif %}">{{ site.data.t.buildings[lang] }}</a>
-    <a href="{{ '/luonto-ja-ymparisto.html' | relative_url }}" class="{% if page.active_nav == 'luonto-ja-ymparisto' %}active{% endif %}">{{ site.data.t.nature[lang] }}</a>
-    <a href="{{ '/still-life.html' | relative_url }}" class="{% if page.active_nav == 'still-life' %}active{% endif %}">{{ site.data.t.still_life[lang] }}</a>
-    <a href="{{ '/elaimet.html' | relative_url }}" class="{% if page.active_nav == 'elaimet' %}active{% endif %}">{{ site.data.t.animals[lang] }}</a>
-    <a href="{{ '/kirjaston-ihmeet.html' | relative_url }}" class="{% if page.active_nav == 'kirjaston-ihmeet' %}active{% endif %}">{{ site.data.t.colors[lang] }}</a>
-    <a href="{{ '/kuvaprojekti-ajasta-v365.html' | relative_url }}" class="{% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">{{ site.data.t.v365[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/raw.html{% else %}/raw.html{% endif %}" class="{% if page.active_nav == 'raw' %}active{% endif %}">{{ site.data.t.portraits[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/black-and-white-series.html{% else %}/mustavalkoinen-sarja.html{% endif %}" class="{% if page.active_nav == 'mustavalkoinen-sarja' %}active{% endif %}">{{ site.data.t.monochrome[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/interior-light.html{% else %}/sisatilan-valo.html{% endif %}" class="{% if page.active_nav == 'sisatilan-valo' %}active{% endif %}">{{ site.data.t.interior[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/buildings.html{% else %}/kiehtovat-rakennukset.html{% endif %}" class="{% if page.active_nav == 'kiehtovat-rakennukset' %}active{% endif %}">{{ site.data.t.buildings[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/nature.html{% else %}/luonto-ja-ymparisto.html{% endif %}" class="{% if page.active_nav == 'luonto-ja-ymparisto' %}active{% endif %}">{{ site.data.t.nature[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/still-life.html{% else %}/still-life.html{% endif %}" class="{% if page.active_nav == 'still-life' %}active{% endif %}">{{ site.data.t.still_life[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/animals.html{% else %}/elaimet.html{% endif %}" class="{% if page.active_nav == 'elaimet' %}active{% endif %}">{{ site.data.t.animals[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/library-wonders.html{% else %}/kirjaston-ihmeet.html{% endif %}" class="{% if page.active_nav == 'kirjaston-ihmeet' %}active{% endif %}">{{ site.data.t.colors[lang] }}</a>
+    <a href="{% if page.lang == 'en' %}/en/photo-project-time-v365.html{% else %}/kuvaprojekti-ajasta-v365.html{% endif %}" class="{% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">{{ site.data.t.v365[lang] }}</a>
   </nav>
 
   <div class="info-nav">
     <nav style="gap: 15px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
-      <a href="{{ '/about.html' | relative_url }}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
+      <a href="{% if page.lang == 'en' %}/en/about.html{% else %}/about.html{% endif %}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
       {% if page.lang == 'en' %}
       <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop">FI</a>
