@@ -117,16 +117,16 @@
   </nav>
 
   <div class="info-nav">
-    <nav style="gap: 15px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; flex-wrap: wrap;">
+    <nav class="info-nav-links">
       <a href="{% if page.lang == 'en' %}/en/about.html{% else %}/about.html{% endif %}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
-      {% if page.lang == 'en' %}
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop">FI</a>
-      {% else %}
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-switcher-desktop">EN</a>
-      {% endif %}
     </nav>
+    <div class="lang-toggle-pill desktop-lang-toggle">
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'fi' %}active{% endif %}">FI</a>
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'en' %}active{% endif %}">EN</a>
+    </div>
   </div>
+
 </aside>
 
 <main>
