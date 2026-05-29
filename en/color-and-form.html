@@ -1,0 +1,36 @@
+---
+lang: en
+layout: default
+title: "Color & Form - Aatu Alatalo"
+description: "In the series Color & Form, you can see my observations of the fascinating colors."
+active_nav: "vari-ja-muoto"
+mobile_title: "Color & Form"
+translation_url: /vari-ja-muoto.html
+---
+
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">Color & Form</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="en">
+                In the series *Color & Form*, you can see my observations of the fascinating colors and the shapes they form in our surroundings. Colors have a significant impact on people, and it is a pity that their use has diminished in recent decades.
+            </div>
+            <div class="intro-text" lang="fi">
+                Väri ja muoto -sarjassa näet havaintojani ympäröivistä kiehtovista väreistä ja muodoista, joita ne muodostovat. Väreillä on suuri vaikutus ihmiseen, ja on harmi, että niiden käyttö on hiipunut viime vuosikymmeninä.
+            </div>
+        </div>
+    </header>
+
+    {% for item in site.data['vari-ja-muoto'] %}
+    <section class="image-section">
+        <div class="image-wrapper">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <div class="project-info">
+                <p>{{ item.otsikko | split: ' / ' | first }}</p>
+                <p>{{ item.paikka }}</p>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>

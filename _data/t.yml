@@ -22,9 +22,9 @@ still_life:
 animals:
   fi: "Eläimet"
   en: "Animals"
-colors:
-  fi: "Värit"
-  en: "Colors"
+color_and_form:
+  fi: "Väri ja muoto"
+  en: "Color & Form"
 v365:
   fi: "Kuvaprojekti ajasta"
   en: "V365"
