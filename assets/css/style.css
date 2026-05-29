@@ -467,7 +467,7 @@ body.hide-main-temp .mobile-header {
   }
   body.menu-open aside { left: 0; }
   .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
-  main { margin-left: 0; width: 100%; padding: 120px 20px 40px; }
+  main { margin-left: 0; width: 100%; padding: 120px 8px 40px; box-sizing: border-box; }
   
 .mobile-header {
   display: flex; 
@@ -529,6 +529,7 @@ body.hide-main-temp .mobile-header {
   .overview-grid { column-count: 2; column-gap: 10px; display: block; }
   .overview-item { margin-bottom: 10px; }
   .content-wrapper { padding: 40px 0; }
+  .gallery-img { border-width: 4px !important; }
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
   
   .about-grid { flex-direction: column; gap: 40px; align-items: center }
