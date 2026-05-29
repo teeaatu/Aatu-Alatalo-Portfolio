@@ -95,9 +95,10 @@
 </div>
 
 <header class="mobile-header" id="mobileHeader">
-  <div class="lang-toggle-pill">
-    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'fi' %}active{% endif %}">FI</a>
-    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'en' %}active{% endif %}">EN</a>
+  <div class="lang-switcher-clean">
+    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}">FI</a>
+    <span class="separator">/</span>
+    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
   </div>
   <a href="{{ '/' | relative_url }}" class="mobile-logo" style="text-decoration: none;">Aatu Alatalo</a>
   <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
@@ -131,9 +132,10 @@
       <a href="{% if page.lang == 'en' %}/en/about.html{% else %}/about.html{% endif %}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
     </nav>
-    <div class="lang-toggle-pill desktop-lang-toggle">
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'fi' %}active{% endif %}">FI</a>
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="lang-toggle-link {% if page.lang == 'en' %}active{% endif %}">EN</a>
+    <div class="lang-switcher-clean desktop-lang-switcher">
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}">FI</a>
+      <span class="separator">/</span>
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
     </div>
   </div>
 
