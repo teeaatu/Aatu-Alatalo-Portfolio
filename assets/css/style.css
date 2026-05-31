@@ -460,6 +460,8 @@ body.hide-main-temp .mobile-header {
 
 /* --- RESPONSIVISUUS PERUS --- */
 @media (max-width: 1024px) {
+  aside .logo { display: none !important; }
+  aside .desktop-lang-switcher { display: none !important; }
   aside {
     position: fixed; left: -100%; width: 100%; height: 100vh;
     transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
