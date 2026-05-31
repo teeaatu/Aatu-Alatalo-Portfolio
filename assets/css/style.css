@@ -467,7 +467,8 @@ body.hide-main-temp .mobile-header {
   }
   body.menu-open aside { left: 0; }
   .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
-  main { margin-left: 0; width: 100%; padding: 120px 8px 40px; box-sizing: border-box; }
+  main { margin-left: 0; width: 100%; padding: 120px 11px 40px; box-sizing: border-box; }
+  .intro-section, .project-info { padding-left: 5px; padding-right: 5px; }
   
 .mobile-header {
   display: flex; 
