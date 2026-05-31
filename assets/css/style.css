@@ -689,3 +689,46 @@ body.index-page main {
     border: 10px solid rgba(252, 248, 227, 0.02);
   }
 }
+/* --- SIVUNAVIGOINTI --- */
+.page-navigation {
+  max-width: 900px;
+  margin: 0 auto 100px auto;
+  padding: 40px 50px 0;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #1a1a1a;
+  font-family: 'Lora', serif;
+}
+
+.page-navigation a {
+  text-decoration: none !important;
+  color: var(--text-dimmed) !important;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-navigation a:hover {
+  color: #fcf8e3 !important;
+}
+
+.page-navigation .nav-arrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.page-navigation .empty {
+  visibility: hidden;
+}
+
+@media (max-width: 1024px) {
+  .page-navigation {
+    padding: 30px 20px 0;
+    margin-bottom: 60px;
+    font-size: 12px;
+  }
+}
