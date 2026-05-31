@@ -1,0 +1,18 @@
+# Aatu Alatalo - Photography Portfolio
+
+Aatu Alatalo is a 21-year-old photographer based in Oulu, Finland, and a finalist in the prestigious Hasselblad Masters 2026 (Project//21 category). This website serves as his artistic photography portfolio.
+
+## Main Categories
+- Hasselblad Masters 2026 (Project//21 Finalist)
+- Portraits (Muotokuvia)
+- Nature and Environment (Luonto ja ympäristö)
+- Monochrome / Black and White Series (Mustavalkoinen sarja)
+- Animals (Eläimet)
+- Fascinating Buildings (Kiehtovat rakennukset)
+- Color and Form (Väri ja muoto)
+- Still Life
+- Interior Light (Sisätilan valo)
+- Time Project V365 (Kuvaprojekti ajasta)
+
+## About the Photographer
+Aatu has been doing photography since 2014. He currently studies media at the Oulu University of Applied Sciences. His work focuses on profound connections, artistic light and shadow, and the beauty of both nature and urban environments.
