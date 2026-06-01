@@ -10,34 +10,26 @@
   {% assign prev_index = current_index | minus: 1 %}
   {% assign next_index = current_index | plus: 1 %}
   
-  {% if prev_index >= 0 %}
-    {% assign prev_cat = site.data.categories[prev_index] %}
+  {% assign total_cats = site.data.categories.size %}
+  
+  {% if prev_index < 0 %}
+    {% assign prev_index = total_cats | minus: 1 %}
   {% endif %}
   
-  {% assign total_cats = site.data.categories.size %}
-  {% if next_index < total_cats %}
-    {% assign next_cat = site.data.categories[next_index] %}
+  {% if next_index >= total_cats %}
+    {% assign next_index = 0 %}
   {% endif %}
 
-  <div class="page-navigation">
-    {% if prev_cat %}
-      {% if page.lang == 'en' %}
-        <a href="{{ prev_cat.en_url }}" class="nav-prev"><span class="nav-arrow">&larr;</span> Previous</a>
-      {% else %}
-        <a href="{{ prev_cat.fi_url }}" class="nav-prev"><span class="nav-arrow">&larr;</span> Edellinen</a>
-      {% endif %}
-    {% else %}
-      <span class="nav-prev empty"></span>
-    {% endif %}
+  {% assign prev_cat = site.data.categories[prev_index] %}
+  {% assign next_cat = site.data.categories[next_index] %}
 
-    {% if next_cat %}
-      {% if page.lang == 'en' %}
-        <a href="{{ next_cat.en_url }}" class="nav-next">Next <span class="nav-arrow">&rarr;</span></a>
-      {% else %}
-        <a href="{{ next_cat.fi_url }}" class="nav-next">Seuraava <span class="nav-arrow">&rarr;</span></a>
-      {% endif %}
+  <div class="page-navigation">
+    {% if page.lang == 'en' %}
+      <a href="{{ prev_cat.en_url }}" class="nav-prev"><span class="nav-arrow">&larr;</span> Previous</a>
+      <a href="{{ next_cat.en_url }}" class="nav-next">Next <span class="nav-arrow">&rarr;</span></a>
     {% else %}
-      <span class="nav-next empty"></span>
+      <a href="{{ prev_cat.fi_url }}" class="nav-prev"><span class="nav-arrow">&larr;</span> Edellinen</a>
+      <a href="{{ next_cat.fi_url }}" class="nav-next">Seuraava <span class="nav-arrow">&rarr;</span></a>
     {% endif %}
   </div>
 {% endif %}
