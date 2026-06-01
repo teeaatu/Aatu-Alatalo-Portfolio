@@ -79,7 +79,15 @@
 </head>
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}">
 
-<div id="loader"><h1>Aatu Alatalo</h1></div>
+<div class="page-transition-overlay is-active" id="pageTransitionOverlay"></div>
+
+<div id="loader">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <h1>Aatu Alatalo</h1>
+    <p style="opacity: 0; animation: introSubtitle 1s ease 0.6s forwards; color: #c5a059; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; font-weight: 300; text-align: center;">Hasselblad Masters 2026 Finalist</p>
+  </div>
+</div>
+<style>@keyframes introSubtitle { to { opacity: 0.8; } }</style>
 <script>
   if (sessionStorage.getItem('visited')) {
     document.getElementById('loader').style.display = 'none';
@@ -432,6 +440,45 @@
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }, { passive: true });
   }
+
+  // --- CROSS-BROWSER PAGE TRANSITION ---
+  const transitionOverlay = document.getElementById('pageTransitionOverlay');
+  if (transitionOverlay) {
+    window.addEventListener('pageshow', (e) => {
+      // Small delay to ensure render
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          transitionOverlay.classList.add('is-leaving');
+          transitionOverlay.classList.remove('is-active');
+          setTimeout(() => {
+            transitionOverlay.classList.remove('is-leaving');
+          }, 400);
+        });
+      });
+    });
+
+    document.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        
+        const href = this.getAttribute('href');
+        // Exclude anchors, mailto, tel, target_blank and data-fancybox/photoswipe elements
+        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || this.getAttribute('target') === '_blank' || this.classList.contains('gallery-img')) {
+          return;
+        }
+
+        const isLocal = this.hostname === window.location.hostname;
+        if (isLocal) {
+          e.preventDefault();
+          transitionOverlay.classList.add('is-entering');
+          setTimeout(() => {
+            window.location.href = href;
+          }, 200); // Navigate slightly before animation finishes for smoother feel
+        }
+      });
+    });
+  }
 </script>
 </body>
+
 </html>

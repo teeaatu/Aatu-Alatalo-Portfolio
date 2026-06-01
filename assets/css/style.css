@@ -1,7 +1,7 @@
 :root {
   --bg-color: #0a0a0a;
   --accent-color: #ff0000;
-  --text-main: rgba(252, 248, 227, 0.85); /* Muutettu: 85% kirkkaus kaikelle perustekstille */
+  --text-main: rgba(244, 240, 234, 0.85); /* Muutettu: 85% kirkkaus kaikelle perustekstille */
   --text-dimmed: #888;
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
@@ -14,7 +14,7 @@ html, body {
 }
 
 h1, h2, h3, h4 {
-  color: #fcf8e3 !important;            /* Otsikot pysyvät 100% kirkkaina */
+  color: #f4f0ea !important;            /* Otsikot pysyvät 100% kirkkaina */
 }
 
 a {
@@ -23,7 +23,7 @@ a {
 }
 
 a:hover {
-  color: #fcf8e3 !important;            /* Hoverissa linkki herää 100% kirkkauteen */
+  color: #f4f0ea !important;            /* Hoverissa linkki herää 100% kirkkauteen */
 }
 
 body {
@@ -56,7 +56,7 @@ body {
 /* --- TAKAISIN YLÖS --- */
 .back-to-top { 
     position: fixed; bottom: 30px; right: 30px; display: none; 
-    background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #fcf8e3; border: 1px solid rgba(252, 248, 227, 0.1); 
+    background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #f4f0ea; border: 1px solid rgba(244, 240, 234, 0.1); 
     width: 44px; height: 44px; border-radius: 50%; 
     font-size: 14px; cursor: pointer; z-index: 1000; 
     transition: all 0.4s ease; display: flex; justify-content: center; align-items: center;
@@ -68,8 +68,8 @@ body {
 }
 .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 44px; height: 44px }
 .back-to-top circle { fill: none; stroke-width: 2.5 }
-.progress-bg { stroke: rgba(252, 248, 227, 0.05) }
-.progress-bar { stroke: #fcf8e3; stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
+.progress-bg { stroke: rgba(244, 240, 234, 0.05) }
+.progress-bar { stroke: #f4f0ea; stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
 
 
 /* --- SIVUPALKKI --- */
@@ -92,7 +92,7 @@ aside {
   font-size: 20px;
   letter-spacing: 3px;
   text-decoration: none;
-  color: #fcf8e3; /* Logo pysyy puhtaan kirkkaana */
+  color: #f4f0ea; /* Logo pysyy puhtaan kirkkaana */
   margin-bottom: 60px;
   display: block;
   line-height: 1.1;
@@ -118,10 +118,10 @@ nav a {
   text-transform: none;
 }
 
-nav a:hover { color: #fcf8e3; transform: translateX(4px); }
+nav a:hover { color: #f4f0ea; transform: translateX(4px); }
 
 nav a.active { 
-  color: #fcf8e3; 
+  color: #f4f0ea; 
   font-size: 14px;
   font-weight: 400;
   border-left: 2px solid var(--accent-color);
@@ -132,7 +132,7 @@ nav a.active {
 
 /* --- MASTERS LISÄYKSET TÄSSÄ --- */
 nav a.masters-nav-item {
-  color: #fcf8e3;
+  color: #f4f0ea;
   border-left: 2px solid transparent;
   padding-left: 15px;
   margin-left: -17px;
@@ -154,7 +154,7 @@ nav a.masters-nav-item.active {
 /* --- WAVE ANIMATION FOR INITIAL MOBILE MENU OPEN --- */
 @keyframes waveEffect {
   0% { transform: translateX(0); color: var(--text-dimmed); }
-  30% { transform: translateX(10px); color: #fcf8e3; }
+  30% { transform: translateX(10px); color: #f4f0ea; }
   100% { transform: translateX(0); color: var(--text-dimmed); }
 }
 aside.trigger-wave nav a {
@@ -200,11 +200,11 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 }
 
 .info-nav-links a:hover {
-  color: #fcf8e3;
+  color: #f4f0ea;
 }
 
 .info-nav-links a.active {
-  color: #fcf8e3;
+  color: #f4f0ea;
   font-size: 14px;
   font-weight: 400;
   border-left: 2px solid var(--accent-color);
@@ -230,21 +230,21 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 }
 
 .lang-switcher-clean a:hover {
-  color: #fcf8e3 !important;
+  color: #f4f0ea !important;
 }
 
 .lang-switcher-clean a.active {
-  color: #fcf8e3 !important;
+  color: #f4f0ea !important;
   font-weight: 600;
   pointer-events: none;
 }
 
 .lang-switcher-clean .separator {
-  color: rgba(252, 248, 227, 0.3);
+  color: rgba(244, 240, 234, 0.3);
   font-weight: 300;
 }
 
-.ig-link { margin-top: 20px; color: #fcf8e3; transition: all 0.3s ease; opacity: 0.7 }
+.ig-link { margin-top: 20px; color: #f4f0ea; transition: all 0.3s ease; opacity: 0.7 }
 .ig-link:hover { color: var(--accent-color); transform: scale(1.1); opacity: 1 }
 
 
@@ -285,7 +285,7 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
   transition: all var(--nav-speed) ease-out;
 }
 .lang-switcher-desktop:hover {
-  color: #fcf8e3 !important;
+  color: #f4f0ea !important;
 }
 
 @media (max-width: 1024px) {
@@ -378,14 +378,6 @@ main {
     margin-bottom: 160px; position: relative; 
 }
 
-/* --- VIEW TRANSITIONS API --- */
-@view-transition {
-  navigation: auto;
-}
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-}
 
 /* --- STAGGERED LOAD ANIMATION --- */
 .stagger-item {
@@ -399,12 +391,12 @@ main {
 }
 .gallery-img { 
     --border-opacity: 0.02; 
-    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(252, 248, 227, var(--border-opacity)); box-sizing: border-box; 
+    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: #111; border: 20px solid rgba(244, 240, 234, var(--border-opacity)); box-sizing: border-box; 
 }
 .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) }
 
-.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #fcf8e3; line-height: 1.6; font-weight: 300; }
-.project-info p:last-child { color: rgba(252, 248, 227, 0.75); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
+.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: #f4f0ea; line-height: 1.6; font-weight: 300; }
+.project-info p:last-child { color: rgba(244, 240, 234, 0.75); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 
 /* --- ABOUT SIVU --- */
 .about-grid { display: flex; align-items: flex-start; gap: 60px }
@@ -450,8 +442,8 @@ body.hide-main-temp .mobile-header {
   z-index: 2000;
   display: flex; justify-content: center; align-items: center;
 }
-.hamburger { width: 25px; height: 2px; background: #fcf8e3; position: relative; transition: all 0.4s ease; }
-.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: #fcf8e3; position: absolute; left: 0; transition: all 0.4s ease; }
+.hamburger { width: 25px; height: 2px; background: #f4f0ea; position: relative; transition: all 0.4s ease; }
+.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: #f4f0ea; position: absolute; left: 0; transition: all 0.4s ease; }
 .hamburger::before { top: -8px; }
 .hamburger::after { top: 8px; }
 .menu-open .hamburger { background: transparent; }
@@ -526,7 +518,7 @@ body.hide-main-temp .mobile-header {
     transition: all var(--nav-speed) ease-out;
   }
   .lang-switcher-mobile:hover {
-    color: #fcf8e3 !important;
+    color: #f4f0ea !important;
   }
   
   .overview-grid { column-count: 2; column-gap: 10px; display: block; }
@@ -567,7 +559,7 @@ body.hide-main-temp .mobile-header {
 .cookie-btn {
   background: none;
   border: 1px solid #333;
-  color: #fcf8e3;
+  color: #f4f0ea;
   padding: 8px 15px;
   font-size: 11px;
   letter-spacing: 1px;
@@ -576,7 +568,7 @@ body.hide-main-temp .mobile-header {
   transition: all 0.3s ease;
 }
 .cookie-btn:hover {
-  border-color: #fcf8e3;
+  border-color: #f4f0ea;
 }
 .cookie-btn.accept {
   border-color: #4caf50;
@@ -584,7 +576,7 @@ body.hide-main-temp .mobile-header {
 }
 .cookie-btn.accept:hover {
   background-color: #4caf50;
-  color: #fcf8e3;
+  color: #f4f0ea;
 }
 @media (max-width: 768px) {
   #cookie-banner {
@@ -662,7 +654,7 @@ body.index-page main {
   height: auto;
   opacity: 0;
   background-color: #111;
-  border: 20px solid rgba(252, 248, 227, 0.02);
+  border: 20px solid rgba(244, 240, 234, 0.02);
   box-sizing: content-box; /* Pakottaa selaimen tottelemaan raamien mittoja */
   transition: opacity 1.2s ease-in-out;
   z-index: 1;
@@ -686,7 +678,7 @@ body.index-page main {
     max-height: calc(70dvh - 20px); 
     
     top: 48%; /* Lasketaan kuvaa alemmas, jotta se ei osu yläpalkkiin */
-    border: 10px solid rgba(252, 248, 227, 0.02);
+    border: 10px solid rgba(244, 240, 234, 0.02);
   }
 }
 /* --- SIVUNAVIGOINTI --- */
@@ -713,7 +705,7 @@ body.index-page main {
 }
 
 .page-navigation a:hover {
-  color: #fcf8e3 !important;
+  color: #f4f0ea !important;
 }
 
 .page-navigation .nav-arrow {
@@ -731,4 +723,42 @@ body.index-page main {
     margin-bottom: 60px;
     font-size: 12px;
   }
+}
+
+/* --- CROSS-BROWSER PAGE TRANSITION OVERLAY --- */
+.page-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-color);
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.page-transition-overlay.is-active {
+  opacity: 1;
+}
+
+.page-transition-overlay.is-leaving {
+  opacity: 0;
+  transition: opacity 0.4s ease-in;
+}
+
+/* Base fade for main content */
+main {
+  opacity: 0;
+  animation: contentFadeIn 0.5s ease-out 0.1s forwards;
+}
+
+@keyframes contentFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-transition-overlay.is-entering {
+  opacity: 1;
 }
