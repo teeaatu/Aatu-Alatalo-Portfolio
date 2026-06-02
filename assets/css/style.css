@@ -390,10 +390,23 @@ main {
   transform: translateX(-50%);
 }
 
+.diptych-info {
+  text-align: center;
+  width: calc(100vw - var(--sidebar-width) - 40px);
+  max-width: 2400px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
 @media (max-width: 1024px) {
   .diptych-wrapper {
     grid-template-columns: 1fr;
     gap: 20px; /* Clean mobile spacing */
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+  }
+  .diptych-info {
     width: 100%;
     margin-left: 0;
     transform: none;
