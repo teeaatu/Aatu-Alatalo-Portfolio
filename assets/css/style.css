@@ -378,6 +378,24 @@ main {
     margin-bottom: 160px; position: relative; 
 }
 
+/* --- DIPTYCH --- */
+.diptych-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px; /* Sopiva väli työpöydällä */
+  width: calc(100% + 40px);
+  margin-left: -20px;
+}
+
+@media (max-width: 1024px) {
+  .diptych-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px; /* Clean mobile spacing */
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
 
 /* --- STAGGERED LOAD ANIMATION --- */
 .stagger-item {

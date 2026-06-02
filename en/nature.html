@@ -21,14 +21,30 @@ translation_url: /luonto-ja-ymparisto.html
     </header>
 
         {% for item in site.data['luonto-ja-ymparisto'] %}
+    {% if item.layout == 'diptych' %}
+    <section class="image-section">
+        <div class="diptych-wrapper">
+            {% for img_item in item.images %}
+            <div class="image-wrapper">
+                <img src="/assets/images/{{ img_item.kuva }}" alt="{% if img_item.alt %}{{ img_item.alt }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}" class="gallery-img" loading="lazy">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="project-info">
+            <p>{{ item.otsikko | split: ' / ' | first }}</p>
+            <p>{{ item.paikka }}</p>
+        </div>
+    </section>
+    {% else %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}" class="gallery-img" loading="lazy">
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | first }}</p>
                 <p>{{ item.paikka }}</p>
             </div>
         </div>
     </section>
+    {% endif %}
     {% endfor %}
 </div>
