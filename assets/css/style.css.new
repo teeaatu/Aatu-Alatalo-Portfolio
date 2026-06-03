@@ -1,44 +1,20 @@
 :root {
-  --bg-color: #0a0a0a;
-  --accent-color: #ff0000;
-  --text-main: rgba(244, 240, 234, 0.85); /* Muutettu: 85% kirkkaus kaikelle perustekstille */
-  --text-dimmed: #888;
+  --bg-color: var(--color-1);
+  --accent-color: var(--color-2);
+  --text-main: var(--color-11); /* Muutettu: 85% kirkkaus kaikelle perustekstille */
+  --text-dimmed: var(--color-3);
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
-
-  /* Auto-centralized styles */
-  --color-hex-050505: #050505;
-  --color-hex-f4f0ea: #f4f0ea;
-  --color-hex-000: #000;
-  --color-hex-1a1a1a: #1a1a1a;
-  --color-hex-111: #111;
-  --color-hex-333: #333;
-  --color-hex-4caf50: #4caf50;
-  --color-rgb-7: rgba(15, 15, 15, 0.8);
-  --color-rgb-8: rgba(244, 240, 234, 0.1);
-  --color-rgb-9: rgba(0,0,0,0.4);
-  --color-rgb-10: rgba(30, 30, 30, 0.9);
-  --color-rgb-11: rgba(244, 240, 234, 0.05);
-  --color-rgb-12: rgba(244, 240, 234, 0.3);
-  --color-rgb-13: rgba(244, 240, 234, var(--border-opacity));
-  --color-rgb-14: rgba(0, 0, 0, 0.6);
-  --color-rgb-15: rgba(244, 240, 234, 0.75);
-  --color-rgb-16: rgba(10, 10, 10, 0.98);
-  --color-rgb-17: rgba(0, 0, 0, 0.7);
-  --color-rgb-18: rgba(15, 15, 15, 0.95);
-  --color-rgb-19: rgba(0, 0, 0, 0.5);
-  --color-rgb-20: rgba(244, 240, 234, 0.02);
-  --font-21: 'Lora', serif;
 }
 
 html, body {
-  font-family: var(--font-21)!important;
-  background-color: var(--color-hex-050505) !important; /* Lähes musta */
+  font-family: var(--font-26)!important;
+  background-color: var(--color-4) !important; /* Lähes musta */
   color: var(--text-main) !important;   /* Käyttää 85% kirkkautta */
 }
 
 h1, h2, h3, h4 {
-  color: var(--color-hex-f4f0ea) !important;            /* Otsikot pysyvät 100% kirkkaina */
+  color: var(--color-5) !important;            /* Otsikot pysyvät 100% kirkkaina */
 }
 
 a {
@@ -47,7 +23,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-hex-f4f0ea) !important;            /* Hoverissa linkki herää 100% kirkkauteen */
+  color: var(--color-5) !important;            /* Hoverissa linkki herää 100% kirkkauteen */
 }
 
 body {
@@ -63,7 +39,7 @@ body {
 /* --- LATAUSRUUTU --- */
 #loader {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: var(--color-hex-000); display: flex; justify-content: center; align-items: center;
+  background: var(--color-6); display: flex; justify-content: center; align-items: center;
   z-index: 9999; transition: opacity 0.8s ease;
 }
 #loader h1 {
@@ -80,20 +56,20 @@ body {
 /* --- TAKAISIN YLÖS --- */
 .back-to-top { 
     position: fixed; bottom: 30px; right: 30px; display: none; 
-    background: var(--color-rgb-7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: var(--color-hex-f4f0ea); border: 1px solid var(--color-rgb-8); 
+    background: var(--color-12); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: var(--color-5); border: 1px solid var(--color-13); 
     width: 44px; height: 44px; border-radius: 50%; 
     font-size: 14px; cursor: pointer; z-index: 1000; 
     transition: all 0.4s ease; display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 4px 15px var(--color-rgb-9);
+    box-shadow: 0 4px 15px var(--color-14);
 }
 .back-to-top:hover {
-    background: var(--color-rgb-10);
+    background: var(--color-15);
     transform: translateY(-3px);
 }
 .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 44px; height: 44px }
 .back-to-top circle { fill: none; stroke-width: 2.5 }
-.progress-bg { stroke: var(--color-rgb-11) }
-.progress-bar { stroke: var(--color-hex-f4f0ea); stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
+.progress-bg { stroke: var(--color-16) }
+.progress-bar { stroke: var(--color-5); stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
 
 
 /* --- SIVUPALKKI --- */
@@ -106,7 +82,7 @@ aside {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--color-hex-1a1a1a);
+  border-right: 1px solid var(--color-7);
   background: var(--bg-color);
   overflow-y: auto;
   z-index: 100;
@@ -116,7 +92,7 @@ aside {
   font-size: 20px;
   letter-spacing: 3px;
   text-decoration: none;
-  color: var(--color-hex-f4f0ea); /* Logo pysyy puhtaan kirkkaana */
+  color: var(--color-5); /* Logo pysyy puhtaan kirkkaana */
   margin-bottom: 60px;
   display: block;
   line-height: 1.1;
@@ -142,10 +118,10 @@ nav a {
   text-transform: none;
 }
 
-nav a:hover { color: var(--color-hex-f4f0ea); transform: translateX(4px); }
+nav a:hover { color: var(--color-5); transform: translateX(4px); }
 
 nav a.active { 
-  color: var(--color-hex-f4f0ea); 
+  color: var(--color-5); 
   font-size: 14px;
   font-weight: 400;
   border-left: 2px solid var(--accent-color);
@@ -156,7 +132,7 @@ nav a.active {
 
 /* --- MASTERS LISÄYKSET TÄSSÄ --- */
 nav a.masters-nav-item {
-  color: var(--color-hex-f4f0ea);
+  color: var(--color-5);
   border-left: 2px solid transparent;
   padding-left: 15px;
   margin-left: -17px;
@@ -178,7 +154,7 @@ nav a.masters-nav-item.active {
 /* --- WAVE ANIMATION FOR INITIAL MOBILE MENU OPEN --- */
 @keyframes waveEffect {
   0% { transform: translateX(0); color: var(--text-dimmed); }
-  30% { transform: translateX(10px); color: var(--color-hex-f4f0ea); }
+  30% { transform: translateX(10px); color: var(--color-5); }
   100% { transform: translateX(0); color: var(--text-dimmed); }
 }
 aside.trigger-wave nav a {
@@ -201,7 +177,7 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 .info-nav {
   margin-top: auto;
   padding-top: 30px;
-  border-top: 1px solid var(--color-hex-1a1a1a);
+  border-top: 1px solid var(--color-7);
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -224,11 +200,11 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 }
 
 .info-nav-links a:hover {
-  color: var(--color-hex-f4f0ea);
+  color: var(--color-5);
 }
 
 .info-nav-links a.active {
-  color: var(--color-hex-f4f0ea);
+  color: var(--color-5);
   font-size: 14px;
   font-weight: 400;
   border-left: 2px solid var(--accent-color);
@@ -254,21 +230,21 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 }
 
 .lang-switcher-clean a:hover {
-  color: var(--color-hex-f4f0ea) !important;
+  color: var(--color-5) !important;
 }
 
 .lang-switcher-clean a.active {
-  color: var(--color-hex-f4f0ea) !important;
+  color: var(--color-5) !important;
   font-weight: 600;
   pointer-events: none;
 }
 
 .lang-switcher-clean .separator {
-  color: var(--color-rgb-12);
+  color: var(--color-17);
   font-weight: 300;
 }
 
-.ig-link { margin-top: 20px; color: var(--color-hex-f4f0ea); transition: all 0.3s ease; opacity: 0.7 }
+.ig-link { margin-top: 20px; color: var(--color-5); transition: all 0.3s ease; opacity: 0.7 }
 .ig-link:hover { color: var(--accent-color); transform: scale(1.1); opacity: 1 }
 
 
@@ -309,7 +285,7 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
   transition: all var(--nav-speed) ease-out;
 }
 .lang-switcher-desktop:hover {
-  color: var(--color-hex-f4f0ea) !important;
+  color: var(--color-5) !important;
 }
 
 @media (max-width: 1024px) {
@@ -385,17 +361,17 @@ main {
 .overview-item.badge-item img {
   aspect-ratio: 1 / 1;
   object-fit: contain;
-  background-color: var(--color-hex-050505);
-  border: 1px solid var(--color-hex-1a1a1a);
+  background-color: var(--color-4);
+  border: 1px solid var(--color-7);
   padding: 15%;
   box-sizing: border-box;
 }
 
 .content-wrapper { max-width: 900px; margin: 0 auto; padding: 100px 50px }
 
-.intro-section { margin-bottom: 140px; border-bottom: 1px solid var(--color-hex-1a1a1a); padding-bottom: 80px }
+.intro-section { margin-bottom: 140px; border-bottom: 1px solid var(--color-7); padding-bottom: 80px }
 .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
-.intro-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dimmed); margin-bottom: 35px; font-weight: 300 }
+.intro-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--color-3); margin-bottom: 35px; font-weight: 300 }
 .intro-text { font-size: 17px; line-height: 1.7; color: var(--text-main); font-weight: 300; text-align: left; }
 
 .image-section { 
@@ -450,12 +426,12 @@ main {
 }
 .gallery-img { 
     --border-opacity: 0.02; 
-    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: var(--color-hex-111); border: 20px solid var(--color-rgb-13); box-sizing: border-box; 
+    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: var(--color-8); border: 20px solid var(--color-18); box-sizing: border-box; 
 }
-.gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px var(--color-rgb-14) }
+.gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px var(--color-19) }
 
-.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: var(--color-hex-f4f0ea); line-height: 1.6; font-weight: 300; }
-.project-info p:last-child { color: var(--color-rgb-15); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
+.project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: var(--color-5); line-height: 1.6; font-weight: 300; }
+.project-info p:last-child { color: var(--color-20); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 
 /* --- ABOUT SIVU --- */
 .about-grid { display: flex; align-items: flex-start; gap: 60px }
@@ -472,8 +448,8 @@ main {
   max-width: 1200px;
   margin: 100px auto 0 auto;
   padding: min(100px, 12vh) 40px;
-  background: var(--color-hex-000);
-  border-top: 1px solid var(--color-hex-1a1a1a);
+  background: var(--color-6);
+  border-top: 1px solid var(--color-7);
   box-sizing: border-box;
   text-align: left;
 }
@@ -501,8 +477,8 @@ body.hide-main-temp .mobile-header {
   z-index: 2000;
   display: flex; justify-content: center; align-items: center;
 }
-.hamburger { width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: relative; transition: all 0.4s ease; }
-.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: absolute; left: 0; transition: all 0.4s ease; }
+.hamburger { width: 25px; height: 2px; background: var(--color-5); position: relative; transition: all 0.4s ease; }
+.hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: var(--color-5); position: absolute; left: 0; transition: all 0.4s ease; }
 .hamburger::before { top: -8px; }
 .hamburger::after { top: 8px; }
 .menu-open .hamburger { background: transparent; }
@@ -516,7 +492,7 @@ body.hide-main-temp .mobile-header {
   aside {
     position: fixed; left: -100%; width: 100%; height: 100vh;
     transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-    z-index: 1500; background: var(--color-rgb-16); padding: 120px 40px;
+    z-index: 1500; background: var(--color-21); padding: 120px 40px;
   }
   body.menu-open aside { left: 0; }
   .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
@@ -555,7 +531,7 @@ body.hide-main-temp .mobile-header {
     transform: translateY(-100%);
   }
   .mobile-header.is-scrolled {
-    background-color: var(--color-rgb-17);
+    background-color: var(--color-22);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
@@ -577,7 +553,7 @@ body.hide-main-temp .mobile-header {
     transition: all var(--nav-speed) ease-out;
   }
   .lang-switcher-mobile:hover {
-    color: var(--color-hex-f4f0ea) !important;
+    color: var(--color-5) !important;
   }
   
   .overview-grid { column-count: 2; column-gap: 10px; display: block; }
@@ -597,12 +573,12 @@ body.hide-main-temp .mobile-header {
   bottom: 20px;
   right: 20px;
   max-width: 400px;
-  background-color: var(--color-rgb-18);
-  border: 1px solid var(--color-hex-333);
+  background-color: var(--color-23);
+  border: 1px solid var(--color-9);
   padding: 20px;
   z-index: 9998;
   display: none;
-  box-shadow: 0 10px 30px var(--color-rgb-19);
+  box-shadow: 0 10px 30px var(--color-24);
   backdrop-filter: blur(5px);
 }
 #cookie-banner p {
@@ -617,8 +593,8 @@ body.hide-main-temp .mobile-header {
 }
 .cookie-btn {
   background: none;
-  border: 1px solid var(--color-hex-333);
-  color: var(--color-hex-f4f0ea);
+  border: 1px solid var(--color-9);
+  color: var(--color-5);
   padding: 8px 15px;
   font-size: 11px;
   letter-spacing: 1px;
@@ -627,15 +603,15 @@ body.hide-main-temp .mobile-header {
   transition: all 0.3s ease;
 }
 .cookie-btn:hover {
-  border-color: var(--color-hex-f4f0ea);
+  border-color: var(--color-5);
 }
 .cookie-btn.accept {
-  border-color: var(--color-hex-4caf50);
-  color: var(--color-hex-4caf50);
+  border-color: var(--color-10);
+  color: var(--color-10);
 }
 .cookie-btn.accept:hover {
-  background-color: var(--color-hex-4caf50);
-  color: var(--color-hex-f4f0ea);
+  background-color: var(--color-10);
+  color: var(--color-5);
 }
 @media (max-width: 768px) {
   #cookie-banner {
@@ -712,8 +688,8 @@ body.index-page main {
   width: auto;
   height: auto;
   opacity: 0;
-  background-color: var(--color-hex-111);
-  border: 20px solid var(--color-rgb-20);
+  background-color: var(--color-8);
+  border: 20px solid var(--color-25);
   box-sizing: content-box; /* Pakottaa selaimen tottelemaan raamien mittoja */
   transition: opacity 1.2s ease-in-out;
   z-index: 1;
@@ -737,7 +713,7 @@ body.index-page main {
     max-height: calc(70dvh - 20px); 
     
     top: 48%; /* Lasketaan kuvaa alemmas, jotta se ei osu yläpalkkiin */
-    border: 10px solid var(--color-rgb-20);
+    border: 10px solid var(--color-25);
   }
 }
 /* --- SIVUNAVIGOINTI --- */
@@ -747,8 +723,8 @@ body.index-page main {
   padding: 40px 50px 0;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid var(--color-hex-1a1a1a);
-  font-family: var(--font-21);
+  border-top: 1px solid var(--color-7);
+  font-family: var(--font-26);
 }
 
 .page-navigation a {
@@ -764,7 +740,7 @@ body.index-page main {
 }
 
 .page-navigation a:hover {
-  color: var(--color-hex-f4f0ea) !important;
+  color: var(--color-5) !important;
 }
 
 .page-navigation .nav-arrow {

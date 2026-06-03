@@ -13,3 +13,8 @@ The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loa
 
 ## Future Roadmap
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
+
+## History
+* **[2026-06-03] Style Architecture & AI Safeguards**
+    * Moved all hardcoded colors, fonts, and style values from the main stylesheet into global CSS variables within the :root block to enable easier future theme management.
+    * Created the .cursorrules file in the root directory to enforce strict AI boundaries, banning inline styles (style="...") and mandating the use of centralized CSS variables for all visual adjustments.

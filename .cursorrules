@@ -1,0 +1,6 @@
+# Strict CSS Rules for AI Agents
+
+The AI agent is STRICTLY FORBIDDEN from ever writing inline styles (e.g., `style="..."`) in HTML or Markdown files. 
+You must always use the central CSS variables defined in `assets/css/style.css` (or other global stylesheets) for any layout or visual adjustments. 
+Do not introduce new hardcoded hex, RGB values, or inline fonts in the project files. 
+All visual modifications must be achieved through reusable CSS classes and variables.
