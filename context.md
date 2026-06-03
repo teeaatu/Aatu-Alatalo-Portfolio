@@ -15,6 +15,11 @@ The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loa
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-04] Implemented Session-Gated Cinematic Loader**
+    * Integrated a zero-flicker sessionStorage check at the top of document layout to append a .skip-intro state.
+    * Reduced subpage and gallery navigation delay to 0 seconds, matching instant-loading static portfolio standards.
+    * Preserved the 4.4s typography intro and 2.5s fade sequence exclusively for first-time session arrivals.
+    * Cleaned up and extracted all remaining inline styles into centralized CSS classes inside style.css.
 * **[2026-06-03] Style Architecture & AI Safeguards**
     * Moved all hardcoded colors, fonts, and style values from the main stylesheet into global CSS variables within the :root block to enable easier future theme management.
     * Created the .cursorrules file in the root directory to enforce strict AI boundaries, banning inline styles (style="...") and mandating the use of centralized CSS variables for all visual adjustments.

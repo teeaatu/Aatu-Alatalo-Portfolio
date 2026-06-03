@@ -79,20 +79,20 @@
 </head>
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}">
 
+<script>
+  if (sessionStorage.getItem('introSeen') === 'true') {
+    document.documentElement.classList.add('skip-intro');
+  }
+</script>
+
 <div class="page-transition-overlay is-active" id="pageTransitionOverlay"></div>
 
 <div id="loader">
-  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div class="loader-content">
     <h1>Aatu Alatalo</h1>
-    <p style="opacity: 0; animation: introSubtitle 1s ease 0.6s forwards; color: #c5a059; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; font-weight: 300; text-align: center;">Hasselblad Masters 2026 Finalist</p>
+    <p class="loader-subtitle">Hasselblad Masters 2026 Finalist</p>
   </div>
 </div>
-<style>@keyframes introSubtitle { to { opacity: 0.8; } }</style>
-<script>
-  if (sessionStorage.getItem('visited')) {
-    document.getElementById('loader').style.display = 'none';
-  }
-</script>
 
 <div id="cookie-banner">
   <p>{{ site.data.t.cookie_text[lang] }}</p>
@@ -261,7 +261,7 @@
          loader.style.opacity = '0';
          setTimeout(() => {
            loader.style.display = 'none';
-         }, 800);
+         }, 2500); // Odotetaan 2.5s CSS transitionin verran
       }
 
       let autoCloseTimeout;
@@ -311,7 +311,7 @@
            loader.style.opacity = '0';
            setTimeout(() => {
              loader.style.display = 'none';
-           }, 800);
+           }, 2500); // Odotetaan 2.5s CSS transitionin verran
        }
        // Näytetään banneri viiveellä normaalisti
        setTimeout(() => {
@@ -320,10 +320,8 @@
     }
   }
 
-  if (sessionStorage.getItem('visited')) {
-    if (loader) {
-      loader.style.display = 'none';
-    }
+  if (sessionStorage.getItem('introSeen') === 'true') {
+    // Latausruutu on jo piilotettu .skip-intro luokan avulla
     // Näytetään banneri heti (tai pienellä viiveellä) jos sivu on jo käyty
     setTimeout(() => {
         if(window.showCookieBanner) window.showCookieBanner();
@@ -331,7 +329,7 @@
     // Ei avata valikkoa enää automaattisesti myöhemmillä sivunlatauksilla
   } else {
     // ENSIMMÄINEN KÄYNTI
-    sessionStorage.setItem('visited', 'true');
+    sessionStorage.setItem('introSeen', 'true');
     
     // Piilotetaan etusivun sisältö heti alussa, jos ollaan mobiilissa etusivulla
     if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
@@ -342,7 +340,7 @@
       setTimeout(() => {
          // Kutsutaan sekvenssiä, joka avaa valikon latausruudun *alle* ja paljastaa sen
          runMobileMenuSequence();
-      }, 600); // Odotetaan hieman ennen sekvenssin aloitusta, että "Aatu Alatalo" teksti näkyy
+      }, 4400); // Odotetaan 4.4s jotta animaatio näkyy täysin ennen feidauksen alkamista
     });
   }
 
