@@ -108,14 +108,14 @@
     <span class="separator">/</span>
     <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
   </div>
-  <a href="{{ '/' | relative_url }}" class="mobile-logo" style="text-decoration: none;">Aatu Alatalo</a>
+  <a href="{{ '/' | relative_url }}" class="mobile-logo no-decoration">Aatu Alatalo</a>
   <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
     <div class="hamburger"></div>
   </button>
 </header>
 
 <aside id="sidebar">
-  <a href="{{ '/' | relative_url }}" class="logo" style="text-decoration: none;">Aatu<br>Alatalo</a>
+  <a href="{{ '/' | relative_url }}" class="logo no-decoration">Aatu<br>Alatalo</a>
   <nav>
     <a href="{% if page.lang == 'en' %}/en/{% else %}/{% endif %}" class="{% if page.active_nav == 'index' %}active{% endif %}">{{ site.data.t.overview[lang] }}</a>
     

@@ -26,7 +26,7 @@ translation_url: /en/nature.html
         <div class="diptych-wrapper">
             {% for img_item in item.images %}
             <div class="image-wrapper">
-                <img src="/assets/images/{{ img_item.kuva }}" alt="{% if img_item.alt %}{{ img_item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+                <img src="/assets/images/{{ img_item.kuva }}" alt="{% if img_item.alt %}{{ img_item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.parentloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             </div>
             {% endfor %}
         </div>
@@ -38,7 +38,7 @@ translation_url: /en/nature.html
     {% else %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | last }}</p>
                 <p>{{ item.paikka }}</p>
