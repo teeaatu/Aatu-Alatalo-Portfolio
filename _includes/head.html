@@ -1,0 +1,76 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>{{ page.title | default: "Aatu Alatalo | Valokuvaaja & Hasselblad Masters 2026 Finalist" }}</title>
+  {% if page.lang == 'fi' %}
+    {% assign main_desc = page.description_fi | default: page.description | default: 'Aatu Alatalo on oululainen valokuvaaja ja Hasselblad Masters 2026 -finalisti. Taiteellinen valokuvaportfolio: potretit, maisemat ja projektit. | Photographer and Hasselblad Masters Finalist.' %}
+  {% else %}
+    {% assign main_desc = page.description_en | default: page.description | default: 'Aatu Alatalo is an Oulu-based photographer and a Hasselblad Masters 2026 finalist. Artistic photography portfolio.' %}
+  {% endif %}
+  <meta name="description" content="{{ main_desc }}">
+  <meta name="keywords" content="Aatu Alatalo, valokuvaaja Oulu, Hasselblad Masters 2026, Project 21, suomalainen valokuvaus, photography portfolio Finland">
+  
+  <meta property="og:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
+  {% if page.lang == 'fi' %}
+    {% assign og_desc = page.description_fi | default: page.description | default: 'Hasselblad Masters 2026 -finalisti - Tutustu Aatu Alatalon valokuva-arkistoon ja visuaaliseen matkaan.' %}
+  {% else %}
+    {% assign og_desc = page.description_en | default: page.description | default: 'Hasselblad Masters 2026 Finalist - Explore the visual journey and photographic archives of Aatu Alatalo.' %}
+  {% endif %}
+  <meta property="og:description" content="{{ og_desc }}">
+  <meta property="og:image" content="{{ site.url }}{{ '/assets/images/PROJECT%2021%20FINALIST.jpg' | relative_url }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
+  <meta name="twitter:description" content="{{ og_desc }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ '/assets/images/PROJECT%2021%20FINALIST.jpg' | relative_url }}">
+
+  <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}">
+
+  {% if page.url == '/' or page.url == '/index.html' or page.url == '/about.html' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Aatu Alatalo",
+    "jobTitle": "Photographer",
+    "url": "https://aatualatalo.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Oulu",
+      "addressRegion": "North Ostrobothnia",
+      "addressCountry": "FI"
+    },
+    "award": "Hasselblad Masters 2026 Finalist (Project//21)",
+    "sameAs": [
+      "https://www.instagram.com/teeaatu/"
+    ]
+  }
+  </script>
+  {% endif %}
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied'
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XNF1FLBJH6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XNF1FLBJH6');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
+
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+</head>
