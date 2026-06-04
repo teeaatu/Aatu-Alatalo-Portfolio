@@ -23,7 +23,7 @@ translation_url: /mustavalkoinen-sarja.html
         {% for item in site.data['mustavalkoinen-sarja'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | first }}</p>
                 <p>{{ item.paikka }}</p>

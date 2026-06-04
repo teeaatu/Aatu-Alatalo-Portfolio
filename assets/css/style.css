@@ -847,3 +847,137 @@ main {
 .page-transition-overlay.is-entering {
   opacity: 1;
 }
+
+/* --- UTILITY CLASSES REPLACING INLINE STYLES --- */
+.copyright-text {
+  margin-top: 60px;
+  opacity: 0.3;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.no-decoration {
+  text-decoration: none !important;
+}
+
+.about-cta {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-hex-1a1a1a);
+  text-align: left;
+}
+
+.about-cta a {
+  display: inline-block;
+  color: var(--color-hex-f4f0ea);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.about-cta a span {
+  font-size: 1.2rem;
+  line-height: 1;
+  vertical-align: middle;
+  margin-left: 8px;
+  color: #c5a059;
+}
+
+.masters-subtitle {
+  color: var(--text-dimmed);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+/* --- OVERRIDES FOR ABOUT PAGE FROM INLINE STYLES --- */
+.about-premium-wrapper {
+  font-family: var(--font-21);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8rem 2rem;
+  color: var(--text-main);
+  line-height: 1.8;
+}
+.about-premium-wrapper .about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 6rem;
+  align-items: start;
+}
+.about-premium-wrapper .image-container {
+  position: sticky;
+  top: 4rem;
+  flex: none;
+  width: auto;
+}
+.about-premium-wrapper .image-container img {
+  width: 100%;
+  height: auto;
+  filter: grayscale(15%);
+  transition: filter 0.4s ease;
+}
+.about-premium-wrapper .image-container img:hover {
+  filter: grayscale(0%);
+}
+.about-premium-wrapper .about-text h1 {
+  font-size: 2.8rem;
+  font-weight: 200;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: var(--color-hex-f4f0ea);
+}
+.about-premium-wrapper .about-subtitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dimmed);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 4rem;
+  display: block;
+}
+.about-premium-wrapper .about-bio {
+  font-size: 1.1rem;
+  margin-bottom: 4rem;
+  color: var(--text-main);
+}
+.about-premium-wrapper .about-section {
+  margin-bottom: 3.5rem;
+}
+.about-premium-wrapper .about-section h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-hex-1a1a1a);
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-hex-f4f0ea);
+}
+.about-premium-wrapper .about-list {
+  list-style: none;
+  padding: 0;
+}
+.about-premium-wrapper .about-list li {
+  margin-bottom: 1.2rem;
+  display: flex;
+  gap: 1.5rem;
+}
+.about-premium-wrapper .about-list li::before {
+  content: "—";
+  color: var(--text-dimmed);
+  flex-shrink: 0;
+}
+.about-premium-wrapper .about-list strong {
+  color: var(--color-hex-f4f0ea);
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .about-premium-wrapper .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+  .about-premium-wrapper { padding: 4rem 1.5rem; }
+  .about-premium-wrapper .image-container { position: relative; top: 0; }
+  .about-premium-wrapper .about-text h1 { font-size: 2.2rem; }
+}

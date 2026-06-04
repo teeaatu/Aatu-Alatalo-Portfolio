@@ -77,6 +77,8 @@ translation_url: /en/portraits.html
         .ig-link:hover { opacity: 1; color: #ff0000; transform: scale(1.1) }
         .ig-link svg { width: 26px; height: 26px }
 
+        .copyright-text { margin-top: 60px; opacity: 0.3; font-size: 9px; letter-spacing: 1px; }
+
         @media (max-width: 600px) { 
             .logo { font-size: 24px } 
             .image-section { padding: 0 5%; margin-bottom: 80px } 
@@ -119,7 +121,7 @@ translation_url: /en/portraits.html
         {% for item in site.data['Potret'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko }}</p>
                 <p>{{ item.paikka }}</p>
@@ -135,7 +137,7 @@ translation_url: /en/portraits.html
         <p>Aatu Alatalo</p>
         <p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
         <p>Oulu, Finland</p>
-        <p style="margin-top: 60px; opacity: 0.3; font-size: 9px; letter-spacing: 1px">COPYRIGHT 2026 AATU ALATALO</p>
+        <p class="copyright-text">COPYRIGHT 2026 AATU ALATALO</p>
     </div>
 </footer>
 
