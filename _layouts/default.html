@@ -25,26 +25,10 @@
 
   {% include page_nav.html %}
 
-  <footer class="contact-section" id="contact">
-    <div class="contact-wrapper">
-        <div class="contact-title">Contact</div>
-        <div class="contact-info">
-          <p>Aatu Alatalo</p>
-          <p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
-          <p>Oulu, Finland</p>
-          <p class="copyright">COPYRIGHT 2026 AATU ALATALO</p>
-        </div>
-    </div>
-  </footer>
+  {% include footer.html %}
 </main>
 
-<button class="back-to-top" id="backToTop" aria-label="Takaisin ylös">
-    <svg viewBox="0 0 55 55">
-        <circle class="progress-bg" cx="27.5" cy="27.5" r="25"></circle>
-        <circle class="progress-bar" id="progressBar" cx="27.5" cy="27.5" r="25"></circle>
-    </svg>
-    &uarr;
-</button>
+{% include back-to-top.html %}
 
 <script>
   // Evästebannerin logiikka
@@ -243,30 +227,6 @@
     lightbox.init();
   });
 
-  // Back to top logiikka
-  const backToTopBtn = document.getElementById('backToTop');
-  const progressBar = document.getElementById('progressBar');
-  const circumference = 157;
-
-  window.addEventListener('scroll', () => {
-      const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPosition = window.pageYOffset;
-      if (backToTopBtn) {
-          // Ei näytetä back-to-top -nappia etusivun sliderissa
-          if (document.body.classList.contains('index-page')) {
-            backToTopBtn.style.display = 'none';
-          } else {
-            backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
-          }
-          const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
-          const offset = circumference - (scrollPercentage * circumference);
-          if (progressBar) progressBar.style.strokeDashoffset = offset;
-      }
-  });
-
-  if (backToTopBtn) {
-      backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  }
 
   // Intersection Observer (Animaatio kuville) - Staggered Load
   const observer = new IntersectionObserver((entries) => {

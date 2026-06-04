@@ -1,0 +1,34 @@
+<button class="back-to-top" id="backToTop" aria-label="Takaisin ylös">
+    <svg viewBox="0 0 55 55">
+        <circle class="progress-bg" cx="27.5" cy="27.5" r="25"></circle>
+        <circle class="progress-bar" id="progressBar" cx="27.5" cy="27.5" r="25"></circle>
+    </svg>
+    &uarr;
+</button>
+
+<script>
+  // Back to top logiikka
+  const backToTopBtn = document.getElementById('backToTop');
+  const progressBar = document.getElementById('progressBar');
+  const circumference = 157;
+
+  window.addEventListener('scroll', () => {
+      const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPosition = window.pageYOffset;
+      if (backToTopBtn) {
+          // Ei näytetä back-to-top -nappia etusivun sliderissa
+          if (document.body.classList.contains('index-page')) {
+            backToTopBtn.style.display = 'none';
+          } else {
+            backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
+          }
+          const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
+          const offset = circumference - (scrollPercentage * circumference);
+          if (progressBar) progressBar.style.strokeDashoffset = offset;
+      }
+  });
+
+  if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
+</script>
