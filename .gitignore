@@ -3,3 +3,5 @@ _site/
 .sass-cache/
 .bundle/
 vendor/
+._*
+.DS_Store
