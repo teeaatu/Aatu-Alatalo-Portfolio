@@ -1,0 +1,11 @@
+<header class="mobile-header" id="mobileHeader">
+  <div class="lang-switcher-clean">
+    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}">FI</a>
+    <span class="separator">/</span>
+    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
+  </div>
+  <a href="{{ '/' | relative_url }}" class="mobile-logo no-decoration">Aatu Alatalo</a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
+    <div class="hamburger"></div>
+  </button>
+</header>

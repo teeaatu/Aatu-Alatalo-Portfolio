@@ -16,52 +16,9 @@
 
 {% include cookie-banner.html %}
 
-<header class="mobile-header" id="mobileHeader">
-  <div class="lang-switcher-clean">
-    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}">FI</a>
-    <span class="separator">/</span>
-    <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
-  </div>
-  <a href="{{ '/' | relative_url }}" class="mobile-logo no-decoration">Aatu Alatalo</a>
-  <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
-    <div class="hamburger"></div>
-  </button>
-</header>
+{% include mobile-header.html %}
 
-<aside id="sidebar">
-  <a href="{{ '/' | relative_url }}" class="logo no-decoration">Aatu<br>Alatalo</a>
-  <nav>
-    <a href="{% if page.lang == 'en' %}/en/{% else %}/{% endif %}" class="{% if page.active_nav == 'index' %}active{% endif %}">{{ site.data.t.overview[lang] }}</a>
-    
-    <a href="{% if page.lang == 'en' %}/en/masters-2026.html{% else %}/masters-2026.html{% endif %}" class="masters-nav-item {% if page.active_nav == 'masters-2026' %}active{% endif %}">
-      Hasselblad Masters 2026
-      <span>Finalist / Project//21</span>
-    </a>
-
-    <a href="{% if page.lang == 'en' %}/en/raw.html{% else %}/raw.html{% endif %}" class="{% if page.active_nav == 'raw' %}active{% endif %}">{{ site.data.t.portraits[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/black-and-white-series.html{% else %}/mustavalkoinen-sarja.html{% endif %}" class="{% if page.active_nav == 'mustavalkoinen-sarja' %}active{% endif %}">{{ site.data.t.monochrome[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/interior-light.html{% else %}/sisatilan-valo.html{% endif %}" class="{% if page.active_nav == 'sisatilan-valo' %}active{% endif %}">{{ site.data.t.interior[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/buildings.html{% else %}/kiehtovat-rakennukset.html{% endif %}" class="{% if page.active_nav == 'kiehtovat-rakennukset' %}active{% endif %}">{{ site.data.t.buildings[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/nature.html{% else %}/luonto-ja-ymparisto.html{% endif %}" class="{% if page.active_nav == 'luonto-ja-ymparisto' %}active{% endif %}">{{ site.data.t.nature[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/still-life.html{% else %}/still-life.html{% endif %}" class="{% if page.active_nav == 'still-life' %}active{% endif %}">{{ site.data.t.still_life[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/animals.html{% else %}/elaimet.html{% endif %}" class="{% if page.active_nav == 'elaimet' %}active{% endif %}">{{ site.data.t.animals[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/color-and-form.html{% else %}/vari-ja-muoto.html{% endif %}" class="{% if page.active_nav == 'vari-ja-muoto' %}active{% endif %}">{{ site.data.t.color_and_form[lang] }}</a>
-    <a href="{% if page.lang == 'en' %}/en/photo-project-time-v365.html{% else %}/kuvaprojekti-ajasta-v365.html{% endif %}" class="{% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">{{ site.data.t.v365[lang] }}</a>
-  </nav>
-
-  <div class="info-nav">
-    <nav class="info-nav-links">
-      <a href="{% if page.lang == 'en' %}/en/about.html{% else %}/about.html{% endif %}" class="{% if page.active_nav == 'about' %}active{% endif %}">{{ site.data.t.about[lang] }}</a>
-      <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
-    </nav>
-    <div class="lang-switcher-clean desktop-lang-switcher">
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}">FI</a>
-      <span class="separator">/</span>
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
-    </div>
-  </div>
-
-</aside>
+{% include sidebar.html %}
 
 <main>
   {{ content }}
