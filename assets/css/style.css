@@ -1,7 +1,7 @@
 :root {
   --bg-color: #0a0a0a;
   --accent-color: #ff0000;
-  --text-main: rgba(244, 240, 234, 0.85); /* Muutettu: 85% kirkkaus kaikelle perustekstille */
+  --text-main: rgba(244, 240, 234, 0.85); /* 85% kirkkaus kaikelle perustekstille */
   --text-dimmed: #888;
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
@@ -38,16 +38,16 @@ html, body {
 }
 
 h1, h2, h3, h4 {
-  color: var(--color-hex-f4f0ea) !important;            /* Otsikot pysyvät 100% kirkkaina */
+  color: var(--color-hex-f4f0ea) !important; /* Otsikot pysyvät 100% kirkkaina */
 }
 
 a {
-  color: var(--text-main) !important;   /* Linkit seuraavat yleistä linjaa */
+  color: var(--text-main) !important;
   text-decoration: underline;
 }
 
 a:hover {
-  color: var(--color-hex-f4f0ea) !important;            /* Hoverissa linkki herää 100% kirkkauteen */
+  color: var(--color-hex-f4f0ea) !important;
 }
 
 body {
@@ -121,7 +121,6 @@ html.skip-intro #loader * {
 .progress-bg { stroke: var(--color-rgb-11) }
 .progress-bar { stroke: var(--color-hex-f4f0ea); stroke-dasharray: 157; stroke-dashoffset: 157; transition: stroke-dashoffset 0.1s linear }
 
-
 /* --- SIVUPALKKI --- */
 aside {
   width: var(--sidebar-width);
@@ -142,7 +141,7 @@ aside {
   font-size: 20px;
   letter-spacing: 3px;
   text-decoration: none;
-  color: var(--color-hex-f4f0ea); /* Logo pysyy puhtaan kirkkaana */
+  color: var(--color-hex-f4f0ea);
   margin-bottom: 60px;
   display: block;
   line-height: 1.1;
@@ -222,7 +221,6 @@ aside.trigger-wave nav a:nth-child(9) { animation-delay: 0.5s; }
 aside.trigger-wave nav a:nth-child(10) { animation-delay: 0.55s; }
 aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 
-
 /* --- INFO NAV (DESKTOP) --- */
 .info-nav {
   margin-top: auto;
@@ -297,7 +295,6 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 .ig-link { margin-top: 20px; color: var(--color-hex-f4f0ea); transition: all 0.3s ease; opacity: 0.7 }
 .ig-link:hover { color: var(--accent-color); transform: scale(1.1); opacity: 1 }
 
-
 /* --- MOBIILIOTSIKKO --- */
 .mobile-header {
   display: none;
@@ -352,18 +349,17 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
   }
 
   .mobile-logo {
-    position: static !important; /* Ensure it's part of the flex flow */
-    margin: 0 auto !important;   /* Center the logo */
-    order: 2 !important;         /* Set order to 2 to place it in the middle */
+    position: static !important; 
+    margin: 0 auto !important;   
+    order: 2 !important;         
   }
 
   .menu-toggle {
-    order: 3 !important; /* Set order to 3 to place it on the far right */
-    position: static !important; /* Ensure it's part of the flex flow */
-    transform: none !important; /* Remove any conflicting transforms */
+    order: 3 !important; 
+    position: static !important; 
+    transform: none !important; 
   }
 
-  /* Mobile Clean Language Switcher */
   .lang-switcher-clean {
     display: flex !important;
     align-items: center;
@@ -385,11 +381,9 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
     transform: translateY(0);
   }
 
-  /* Override old lang-switcher-mobile styles */
   .lang-switcher-mobile {
     display: none !important;
   }
-
 }
 
 /* --- GRID & MAIN --- */
@@ -405,7 +399,25 @@ main {
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 20px;
 }
-.overview-item img { width: 100%; height: auto; display: block; opacity: 0.9; transition: opacity 0.5s ease; }
+
+/* Responsiiviset reunat (koskee kaikkia overview- ja galleriakuvia) */
+.overview-item img,
+.gallery-img {
+  width: 100%; 
+  height: auto; 
+  display: block; 
+  opacity: 0.9; 
+  transition: opacity 0.5s ease;
+  border: 10px solid hsl(0, 0%, 10%);
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .overview-item img,
+  .gallery-img {
+    border-width: 15px;
+  }
+}
 
 /* 1x1 Neliö merkkiä varten */
 .overview-item.badge-item img {
@@ -414,15 +426,45 @@ main {
   background-color: var(--color-hex-050505);
   border: 1px solid var(--color-hex-1a1a1a);
   padding: 15%;
-  box-sizing: border-box;
 }
 
 .content-wrapper { max-width: 900px; margin: 0 auto; padding: 100px 50px }
 
+/* --- EDITORIAL JÄTTITYPOGRAFIA & HENGITYSTILA --- */
 .intro-section { margin-bottom: 140px; border-bottom: 1px solid var(--color-hex-1a1a1a); padding-bottom: 80px }
-.intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px }
-.intro-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dimmed); margin-bottom: 35px; font-weight: 300 }
-.intro-text { font-size: 17px; line-height: 1.7; color: var(--text-main); font-weight: 300; text-align: left; }
+.intro-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px; }
+
+.intro-title {
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 300;
+  text-transform: uppercase;
+  color: #c4c4c4; /* Softer premium gray */
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem; /* Reilu tila otsikon ja tekstin väliin */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.intro-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  font-weight: 300;
+  text-align: left;
+  max-width: 600px; /* Rajoittaa leveyttä -> helpompi lukea */
+  margin-bottom: 4rem; /* Reilu tila tekstin ja gallerian väliin */
+}
+
+.masters-subtitle {
+  color: #a0a0a0;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
 
 .image-section { 
     margin-bottom: 160px; position: relative; 
@@ -432,8 +474,7 @@ main {
 .diptych-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px; /* Pienempi väli, jotta kuvat saavat enemmän tilaa */
-  /* Viedään leveys aivan äärimmilleen: koko näytön leveys miinus sivupalkki ja vain 40px turvaväliä sivuille */
+  gap: 20px; 
   width: calc(100vw - var(--sidebar-width) - 40px);
   max-width: 2400px;
   margin-left: 50%;
@@ -451,7 +492,7 @@ main {
 @media (max-width: 1024px) {
   .diptych-wrapper {
     grid-template-columns: 1fr;
-    gap: 20px; /* Clean mobile spacing */
+    gap: 20px;
     width: 100%;
     margin-left: 0;
     transform: none;
@@ -463,8 +504,7 @@ main {
   }
 }
 
-
-/* --- STAGGERED LOAD ANIMATION --- */
+/* --- STAGGERED LOAD ANIMATION & GALLERY IMAGES --- */
 .stagger-item {
   opacity: 0;
   transform: translateY(30px);
@@ -474,9 +514,13 @@ main {
   opacity: 1;
   transform: translateY(0);
 }
+
 .gallery-img { 
     --border-opacity: 0.02; 
-    width: 100%; height: auto; display: block; border-radius: 0; cursor: zoom-in; transition: all 0.5s ease; background-color: var(--color-hex-111); border: 20px solid var(--color-rgb-13); box-sizing: border-box; 
+    border-radius: 0; 
+    cursor: zoom-in; 
+    transition: all 0.5s ease; 
+    background-color: var(--color-hex-111); 
 }
 .gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px var(--color-rgb-14) }
 
@@ -491,7 +535,6 @@ main {
 .about-text h1 { font-size: 32px; font-weight: 300; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 40px; margin-top: 0 }
 .about-section { margin-bottom: 30px }
 .about-text p { font-size: 16px; line-height: 1.8; color: var(--text-main); margin: 0; }
-
 
 /* --- KONTAKTI --- */
 .contact-section {
@@ -521,7 +564,7 @@ body.hide-main-temp .mobile-header {
 /* --- HAMPURILAINEN --- */
 .menu-toggle {
   display: none;
-  position: fixed; top: 22px; right: 22px; /* Adjusted to keep icon in place while expanding hitbox */
+  position: fixed; top: 22px; right: 22px;
   width: 60px; height: 60px;
   background: none; border: none; cursor: pointer;
   z-index: 2000;
@@ -549,34 +592,33 @@ body.hide-main-temp .mobile-header {
   main { margin-left: 0; width: 100%; padding: 120px 11px 40px; box-sizing: border-box; }
   .intro-section, .project-info { padding-left: 5px; padding-right: 5px; }
   
-.mobile-header {
-  display: flex; 
-  justify-content: space-between; /* Space out items */
-  align-items: center;
-  position: fixed; 
-  top: 0; left: 0; width: 100%;
-  padding: 20px 30px; 
-  box-sizing: border-box;
-  z-index: 2000;
-  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
-}
+  .mobile-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    position: fixed; 
+    top: 0; left: 0; width: 100%;
+    padding: 20px 30px; 
+    box-sizing: border-box;
+    z-index: 2000;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+  }
 
-.mobile-logo {
-  /* Remove absolute positioning if it exists, rely on flexbox */
-  position: static; /* Ensure it's part of the flex flow */
-  margin: 0 auto;   /* Center the logo */
-  order: 2;         /* Set order to 2 to place it in the middle */
-}
+  .mobile-logo {
+    position: static; 
+    margin: 0 auto;   
+    order: 2;         
+  }
 
-.menu-toggle {
-  order: 3; /* Set order to 3 to place it on the far right */
-}
+  .menu-toggle {
+    order: 3; 
+  }
 
-.lang-switcher-mobile {
-  position: static; /* Ensure it's part of the flex flow */
-  transform: none;  /* Remove any existing transforms */
-  order: 1;         /* Set order to 1 to place it on the far left */
-}
+  .lang-switcher-mobile {
+    position: static; 
+    transform: none;  
+    order: 1;         
+  }
   .mobile-header.header--hidden {
     transform: translateY(-100%);
   }
@@ -609,7 +651,7 @@ body.hide-main-temp .mobile-header {
   .overview-grid { column-count: 2; column-gap: 10px; display: block; }
   .overview-item { margin-bottom: 10px; }
   .content-wrapper { padding: 40px 20px; }
-  .gallery-img { border-width: 4px !important; }
+  
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
   
   .about-grid { flex-direction: column; gap: 40px; align-items: center }
@@ -681,10 +723,9 @@ body.hide-main-temp .mobile-header {
 }
 
 /* ==========================================================================
-   DAN WINTERS -TYYLINEN GALLERIA (Lopullinen matemaattinen asettelu)
+   DAN WINTERS -TYYLINEN GALLERIA 
    ========================================================================= */
 
-/* Estetään sivun liikkuminen ja piilotetaan nuoli */
 body.index-page {
   overflow: hidden !important;
 }
@@ -693,7 +734,6 @@ body.index-page .back-to-top {
   display: none !important;
 }
 
-/* Tyhjennetään perusmarginaalit, jotta voimme laskea ne itse tarkasti */
 body.index-page main {
   display: flex;
   justify-content: center;
@@ -714,7 +754,6 @@ body.index-page main {
   to { opacity: 1; }
 }
 
-/* Kehyksen asettelu */
 .gallery-frame {
   position: absolute;
   top: 0;
@@ -723,24 +762,19 @@ body.index-page main {
   height: 100%;
 }
 
-/* KUVAN MATEMAATTINEN RAJOITUS (Estää ylivuotamisen täydellisesti) */
 .slider-image {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
-  /* Työpöytä: Näytön leveys - sivuvalikko (300px) - reilu turvaväli sivuille (160px) */
   max-width: calc(100vw - var(--sidebar-width) - 160px); 
-  /* Työpöytä: Näytön korkeus - turvaväli ylös/alas - raamien paksuus (40px) */
   max-height: calc(85vh - 40px);
-  
   width: auto;
   height: auto;
   opacity: 0;
   background-color: var(--color-hex-111);
   border: 20px solid var(--color-rgb-20);
-  box-sizing: content-box; /* Pakottaa selaimen tottelemaan raamien mittoja */
+  box-sizing: content-box; 
   transition: opacity 1.2s ease-in-out;
   z-index: 1;
 }
@@ -750,22 +784,19 @@ body.index-page main {
   z-index: 2;
 }
 
-/* --- MOBIILIOPTIMOINTI --- */
 @media (max-width: 1024px) {
   body.index-page main {
     height: 100dvh; 
   }
 
   .slider-image {
-    /* Mobiili: Näytön leveys - turvaväli - raamien paksuus (20px) */
     max-width: calc(100vw - 60px); 
-    /* Mobiili: Jätetään yläpalkille ja logolle reilusti tilaa (70dvh rajoitus) */
     max-height: calc(70dvh - 20px); 
-    
-    top: 48%; /* Lasketaan kuvaa alemmas, jotta se ei osu yläpalkkiin */
+    top: 48%; 
     border: 10px solid var(--color-rgb-20);
   }
 }
+
 /* --- SIVUNAVIGOINTI --- */
 .page-navigation {
   max-width: 900px;
@@ -833,7 +864,6 @@ body.index-page main {
   transition: opacity 0.4s ease-in;
 }
 
-/* Base fade for main content */
 main {
   opacity: 0;
   animation: contentFadeIn 0.5s ease-out 0.1s forwards;
@@ -974,33 +1004,4 @@ main {
   .about-premium-wrapper { padding: 4rem 1.5rem; }
   .about-premium-wrapper .image-container { position: relative; top: 0; }
   .about-premium-wrapper .about-text h1 { font-size: 2.2rem; }
-}
-
-/* Global CSS for category headers */
-.intro-title {
-  font-size: clamp(2rem, 10vw, 8rem);
-  text-transform: uppercase;
-  color: #c4c4c4; /* softer premium gray */
-  line-height: 0.85;
-  letter-spacing: -0.02em;
-  margin-bottom: 2.5rem;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  max-width: 100%;
-}
-
-.intro-text {
-  font-size: 1rem;
-  line-height: 1.6;
-  max-width: 600px;
-  margin-bottom: 4rem;
-}
-
-/* Adjust subtitle to fit the new larger title */
-.masters-subtitle {
-  color: #a0a0a0;
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
 }
