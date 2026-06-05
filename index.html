@@ -21,62 +21,15 @@ translation_url: /en/index.html
   }
 </style>
 
-<div class="dan-winters-container">
-  <div class="gallery-frame">
-    <img id="gallery-img-back" src="" alt="Aatu Alatalo Portfolio" class="slider-image">
-    <img id="gallery-img-front" src="/assets/images/PROJECT 21 FINALIST.jpg" alt="Aatu Alatalo Portfolio" class="slider-image active">
-  </div>
+<div class="overview-grid">
+  {% for file in site.static_files %}
+    {% if file.path contains '/assets/images/' %}
+      {% assign ext = file.extname | downcase %}
+      {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.webp' %}
+        <div class="overview-item">
+          <img src="{{ file.path | relative_url }}" alt="Portfolio Image">
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
 </div>
-
-<script>
-  // Kuratoidut kuvat portfoliosi eri osioista
-  const portfolioImages = [
-    "/assets/images/PROJECT 21 FINALIST.jpg",
-    "/assets/images/MG_9039.jpg",
-    "/assets/images/DSC5474-1.jpg",
-    "/assets/images/DSC8177.jpg",
-    "/assets/images/bilbao.jpg",
-    "/assets/images/Vuosikuvaus1 1.jpg",
-    "/assets/images/paprika.jpg",
-    "/assets/images/DSC6236.jpg",
-    "/assets/images/potret1.jpg",
-    "/assets/images/Leila.jpg"
-  ];
-
-  // Sekoitetaan kuvien järjestys satunnaisiksi heti alussa
-  portfolioImages.sort(() => Math.random() - 0.5);
-
-  let currentIdx = 0;
-  const imgFront = document.getElementById('gallery-img-front');
-  const imgBack = document.getElementById('gallery-img-back');
-  let isFrontActive = true;
-
-  // Alustetaan taustakuva valmiiksi
-  imgBack.src = portfolioImages[(currentIdx + 1) % portfolioImages.length];
-
-  function crossFadeImage() {
-    currentIdx = (currentIdx + 1) % portfolioImages.length;
-    const nextSrc = portfolioImages[(currentIdx + 1) % portfolioImages.length];
-
-    if (isFrontActive) {
-      imgFront.classList.remove('active');
-      imgBack.classList.add('active');
-      
-      setTimeout(() => {
-        imgFront.src = nextSrc;
-      }, 1200); 
-    } else {
-      imgBack.classList.remove('active');
-      imgFront.classList.add('active');
-      
-      setTimeout(() => {
-        imgBack.src = nextSrc;
-      }, 1200);
-    }
-    
-    isFrontActive = !isFrontActive;
-  }
-
-  // Vaihdetaan kuvaa hitaammin: 4,5 sekunnin välein (4500ms)
-  setInterval(crossFadeImage, 4500);
-</script>
