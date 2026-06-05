@@ -439,7 +439,7 @@ main {
   font-size: clamp(2.5rem, 9vw, 8rem); 
   font-weight: 300;
   text-transform: uppercase;
-  color: #c4c4c4;
+  color: var(--text-dimmed);
   line-height: 0.95; /* Löysä pystysuuntainen tila mobiiliin, jotta Ä-pisteet eivät törmää */
   letter-spacing: -0.02em;
   margin-bottom: 2.5rem; 
