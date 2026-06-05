@@ -886,12 +886,6 @@ main {
   color: #c5a059;
 }
 
-.masters-subtitle {
-  color: var(--text-dimmed);
-  font-size: 10px;
-  letter-spacing: 2px;
-}
-
 /* --- OVERRIDES FOR ABOUT PAGE FROM INLINE STYLES --- */
 .about-premium-wrapper {
   font-family: var(--font-21);
@@ -980,4 +974,24 @@ main {
   .about-premium-wrapper { padding: 4rem 1.5rem; }
   .about-premium-wrapper .image-container { position: relative; top: 0; }
   .about-premium-wrapper .about-text h1 { font-size: 2.2rem; }
+}
+
+/* Global CSS for category headers */
+.intro-title {
+  font-size: 4.5rem;
+  text-transform: uppercase;
+  color: #a0a0a0; /* softer editorial gray */
+  margin-bottom: 1rem;
+}
+
+.intro-text {
+  font-size: 0.9rem; /* slightly smaller for strong contrast */
+}
+
+/* Adjust subtitle to fit the new larger title */
+.masters-subtitle {
+  color: #a0a0a0;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }

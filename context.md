@@ -15,6 +15,10 @@ The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loa
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-04] Repository Cleanup & Architecture Optimization**
+    * Purged 6,534 untracked macOS metadata ghost files (`._*`) that were causing severe performance degradation across development tools.
+    * Updated `.gitignore` to strictly block future system file pollution, specifically targeting `._*` and `.DS_Store` patterns.
+    * Cleaned up the root directory by isolating scattered, single use Python automation scripts into a central `scripts/` folder.
 * **[2026-06-04] Implemented Session-Gated Cinematic Loader**
     * Integrated a zero-flicker sessionStorage check at the top of document layout to append a .skip-intro state.
     * Reduced subpage and gallery navigation delay to 0 seconds, matching instant-loading static portfolio standards.
