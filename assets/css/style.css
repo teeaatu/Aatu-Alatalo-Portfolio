@@ -727,10 +727,10 @@ body.hide-main-temp .mobile-header {
   }
   .overview-grid {
     column-count: 1;
-    column-gap: 0;
+    column-gap: 20px;
   }
   .overview-item {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     break-inside: avoid;
   }
 }
