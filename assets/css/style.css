@@ -411,9 +411,13 @@ main {
   height: auto; 
   display: block; 
   opacity: 0.9; 
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
   border: 10px solid hsl(0, 0%, 10%);
   box-sizing: border-box;
+}
+
+.overview-item img:hover {
+  opacity: 1;
 }
 
 @media (min-width: 1024px) {
@@ -739,10 +743,6 @@ body.hide-main-temp .mobile-header {
    DAN WINTERS -TYYLINEN GALLERIA 
    ========================================================================= */
 
-body.index-page {
-  overflow: hidden !important;
-}
-
 body.index-page .back-to-top {
   display: none !important;
 }
@@ -751,7 +751,6 @@ body.index-page main {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   padding: 0 !important; 
   box-sizing: border-box;
 }
