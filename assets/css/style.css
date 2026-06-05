@@ -391,7 +391,7 @@ aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 main {
   margin-left: var(--sidebar-width);
   width: calc(100% - var(--sidebar-width));
-  padding: 40px;
+  padding: 40px; /* Työpöydän hengitystila ylös, alas ja oikealle */
   box-sizing: border-box;
   min-height: 100vh;
 }
@@ -606,7 +606,12 @@ body.hide-main-temp .mobile-header {
   }
   body.menu-open aside { left: 0; }
   .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
-  main { margin-left: 0; width: 100%; padding: 120px 11px 40px; box-sizing: border-box; }
+  main { 
+    margin-left: 0; 
+    width: 100%; 
+    padding: 100px 20px 40px; /* 100px ylös tilaa kiinteälle otsikolle, 20px tilaa sivuille */
+    box-sizing: border-box; 
+  }
   .intro-section, .project-info { padding-left: 5px; padding-right: 5px; }
   
   .mobile-header {
@@ -741,19 +746,14 @@ body.hide-main-temp .mobile-header {
   }
 }
 
-/* ==========================================================================
-   DAN WINTERS -TYYLINEN GALLERIA 
-   ========================================================================= */
+
 
 body.index-page .back-to-top {
   display: none !important;
 }
 
 body.index-page main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 !important; 
+  display: block; /* Muutettu flexistä blockiksi, jotta ruudukko toimii oikein */
   box-sizing: border-box;
 }
 
