@@ -395,9 +395,13 @@ main {
   min-height: 100vh;
 }
 .overview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 20px;
+  column-count: 3;
+  column-gap: 40px;
+  width: 100%;
+}
+.overview-item {
+  margin-bottom: 40px;
+  break-inside: avoid;
 }
 
 /* Responsiiviset reunat (koskee kaikkia overview- ja galleriakuvia) */
@@ -656,8 +660,8 @@ body.hide-main-temp .mobile-header {
     color: var(--color-hex-f4f0ea) !important;
   }
   
-  .overview-grid { column-count: 2; column-gap: 10px; display: block; }
-  .overview-item { margin-bottom: 10px; }
+  .overview-grid { column-count: 2; column-gap: 30px; display: block; }
+  .overview-item { margin-bottom: 30px; break-inside: avoid; }
   .content-wrapper { padding: 40px 20px; }
   
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
@@ -726,7 +730,8 @@ body.hide-main-temp .mobile-header {
     column-gap: 0;
   }
   .overview-item {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    break-inside: avoid;
   }
 }
 
