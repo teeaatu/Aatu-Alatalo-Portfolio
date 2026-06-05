@@ -608,7 +608,7 @@ body.hide-main-temp .mobile-header {
   
   .overview-grid { column-count: 2; column-gap: 10px; display: block; }
   .overview-item { margin-bottom: 10px; }
-  .content-wrapper { padding: 40px 0; }
+  .content-wrapper { padding: 40px 20px; }
   .gallery-img { border-width: 4px !important; }
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
   
@@ -978,14 +978,23 @@ main {
 
 /* Global CSS for category headers */
 .intro-title {
-  font-size: 4.5rem;
+  font-size: clamp(2rem, 10vw, 8rem);
   text-transform: uppercase;
-  color: #a0a0a0; /* softer editorial gray */
-  margin-bottom: 1rem;
+  color: #c4c4c4; /* softer premium gray */
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 .intro-text {
-  font-size: 0.9rem; /* slightly smaller for strong contrast */
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-bottom: 4rem;
 }
 
 /* Adjust subtitle to fit the new larger title */
