@@ -1,9 +1,11 @@
 title: Aatu Alatalo Portfolio
 url: "https://aatualatalo.com"
 baseurl: ""
+description: "Aatu Alatalo is a 21-year-old photographer based in Oulu, Finland, specializing in fine art, portrait, and street photography. Finalist in Hasselblad Masters 2026."
 
 plugins:
   - jekyll-sitemap
+  - jekyll-seo-tag
 
 exclude:
   - README.md
@@ -14,3 +16,7 @@ exclude:
   - "._*"
   - "**/._*"
   - ".DS_Store"
+  - context.md
+  - llms.txt
+  - llms-full.txt
+  - scripts/
