@@ -435,7 +435,7 @@ main {
   display: block; 
   opacity: 0.9; 
   transition: opacity 0.4s ease;
-  border: 10px solid hsl(0, 0%, 10%);
+  border: 2px solid hsl(0, 0%, 10%); /* Pienennetty reunusta mobiilissa */
   box-sizing: border-box;
 }
 
@@ -639,7 +639,7 @@ body.hide-main-temp .mobile-header {
   main { 
     margin-left: 0; 
     width: 100%; 
-    padding: 100px 20px 40px; /* 100px ylös tilaa kiinteälle otsikolle, 20px tilaa sivuille */
+    padding: 100px 10px 40px; /* Pienennetty reunusta entisestään */
     box-sizing: border-box; 
   }
   .intro-section, .project-info { padding-left: 5px; padding-right: 5px; }
@@ -701,9 +701,9 @@ body.hide-main-temp .mobile-header {
     color: var(--color-hex-f4f0ea) !important;
   }
   
-  .overview-grid { column-count: 2; column-gap: 30px; display: block; }
-  .overview-item { margin-bottom: 30px; break-inside: avoid; }
-  .content-wrapper { padding: 40px 20px; }
+  .overview-grid { column-count: 2; column-gap: 10px; display: block; }
+  .overview-item { margin-bottom: 10px; break-inside: avoid; }
+  .content-wrapper { padding: 40px 10px; }
   
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
   
@@ -767,11 +767,11 @@ body.hide-main-temp .mobile-header {
     border-width: 1px 0 0 0;
   }
   .overview-grid {
-    column-count: 2;
-    column-gap: 20px;
+    column-count: 2; /* Säilytetään kaksi saraketta, mutta pienennetään väliä */
+    column-gap: 10px;
   }
   .overview-item {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     break-inside: avoid;
   }
 }
