@@ -1,18 +1,24 @@
 - kuva: Kinogrilli.jpg
   otsikko: Kinogrill / Kinogrilli
   paikka: Oulu, Finland 2026
+  alt_text: ""
 - layout: diptych
   otsikko: Quarry / Louhos
   paikka: Murto, Tyrnävä 2026
   images:
     - kuva: Louhos_1.jpg
+      alt_text: ""
     - kuva: Louhos_2.jpg
+      alt_text: ""
 - kuva: DSC3900_Panorama.jpg
   otsikko: Hossa National Park / Hossan kansallispuisto
   paikka: Suomussalmi, Finland 2025
+  alt_text: ""
 - kuva: pr1.jpg
   otsikko: Early Spring / Kevättalvi
   paikka: Muhos, Finland 2026
+  alt_text: ""
 - kuva: DSC7318.jpg
   otsikko: Underpass / Alikulku
   paikka: Ylivieska, Finland 2026
+  alt_text: ""
