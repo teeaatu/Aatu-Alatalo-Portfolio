@@ -1,0 +1,27 @@
+{% assign all_images = '' | split: '' %}
+{% assign datasets = 'vari-ja-muoto,luonto-ja-ymparisto,masters-2026,mustavalkoinen-sarja,raw,sisatilan-valo,Potret,elaimet,kiehtovat-rakennukset,still-life,kuvaprojekti_ajasta_v365' | split: ',' %}
+
+{% for dataset_name in datasets %}
+  {% assign dataset = site.data[dataset_name] %}
+  {% if dataset %}
+    {% for item in dataset %}
+      {% if item.layout == 'diptych' %}
+        {% for img_item in item.images %}
+          {% assign all_images = all_images | push: img_item %}
+        {% endfor %}
+      {% else %}
+        {% assign all_images = all_images | push: item %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+<div class="overview-grid randomize-on-load">
+  {% for item in all_images %}
+    <div class="overview-item">
+      <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} 
+           alt="{% if item.otsikko %}{% if page.url contains '/en/' %}{{ item.otsikko | split: ' / ' | first | strip }}{% else %}{{ item.otsikko | split: ' / ' | last | strip }}{% endif %}{% else %}Portfolio Image{% endif %}" 
+           class="gallery-img">
+    </div>
+  {% endfor %}
+</div>
