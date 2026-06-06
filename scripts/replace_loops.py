@@ -12,9 +12,16 @@ html_to_yml = {
 }
 
 loop_template = """    {{% for item in site.data['{dataset}'] %}}
+    {{% if item.alt_text != blank %}}
+      {{% assign alt_content = item.alt_text %}}
+    {{% else %}}
+      {{% comment %}} Fallback: Clean up the filename to use as alt text {{% endcomment %}}
+      {{% assign filename = item.kuva | split: '/' | last | split: '.' | first %}}
+      {{% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}}
+    {{% endif %}}
     <section class="image-section">
         <div class="image-wrapper">
-            <img {% if item.kuva contains 'http://' or item.kuva contains 'https://' %}src="{{{{ item.kuva }}}}"{% else %}src="/assets/images/{{{{ item.kuva }}}}"{% endif %} alt="{{{{ item.otsikko | split: ' / ' | last }}}}" class="gallery-img" loading="lazy">
+            <img {% if item.kuva contains 'http://' or item.kuva contains 'https://' %}src="{{{{ item.kuva }}}}"{% else %}src="/assets/images/{{{{ item.kuva }}}}"{% endif %} alt="{{{{ alt_content }}}}" class="gallery-img" loading="lazy">
             <div class="project-info">
                 <p>{{{{ item.otsikko }}}}</p>
                 <p>{{{{ item.paikka }}}}</p>
