@@ -23,7 +23,7 @@ translation_url: /en/color-and-form.html
     {% for item in site.data['vari-ja-muoto'] %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+            <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | last }}</p>
                 <p>{{ item.paikka }}</p>

@@ -2,18 +2,19 @@ import os
 import re
 
 html_to_yml = {
+    'vari-ja-muoto.html': 'vari-ja-muoto',
     'luonto-ja-ymparisto.html': 'luonto-ja-ymparisto',
     'masters-2026.html': 'masters-2026',
     'mustavalkoinen-sarja.html': 'mustavalkoinen-sarja',
     'raw.html': 'raw',
     'sisatilan-valo.html': 'sisatilan-valo',
-    'Potret.html': 'Potret'
+    'Potret.html': 'Potret',
 }
 
 loop_template = """    {{% for item in site.data['{dataset}'] %}}
     <section class="image-section">
         <div class="image-wrapper">
-            <img src="/assets/images/{{{{ item.kuva }}}}" alt="{{{{ item.otsikko | split: ' / ' | last }}}}" class="gallery-img" loading="lazy">
+            <img {% if item.kuva contains 'http://' or item.kuva contains 'https://' %}src="{{{{ item.kuva }}}}"{% else %}src="/assets/images/{{{{ item.kuva }}}}"{% endif %} alt="{{{{ item.otsikko | split: ' / ' | last }}}}" class="gallery-img" loading="lazy">
             <div class="project-info">
                 <p>{{{{ item.otsikko }}}}</p>
                 <p>{{{{ item.paikka }}}}</p>
@@ -51,4 +52,3 @@ for html_file, dataset in html_to_yml.items():
         print(f"Updated {html_file}")
     else:
         print(f"No match found in {html_file}")
-
