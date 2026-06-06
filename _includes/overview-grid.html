@@ -20,7 +20,7 @@
   {% for item in all_images %}
     <div class="overview-item">
       <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} 
-           alt="{% if item.otsikko %}{% if page.url contains '/en/' %}{{ item.otsikko | split: ' / ' | first | strip }}{% else %}{{ item.otsikko | split: ' / ' | last | strip }}{% endif %}{% else %}Portfolio Image{% endif %}" 
+           alt="{% if item.otsikko %}{% if page.lang == 'en' %}{{ item.otsikko | split: ' / ' | first | strip }}{% else %}{{ item.otsikko | split: ' / ' | last | strip }}{% endif %}{% else %}Portfolio Image{% endif %}" 
            class="gallery-img">
     </div>
   {% endfor %}
