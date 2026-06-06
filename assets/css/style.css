@@ -440,14 +440,8 @@ main {
   width: 100%; 
   height: auto; 
   display: block; 
-  opacity: 0.9; 
-  transition: opacity 0.4s ease;
   border: 2px solid hsl(0, 0%, 10%); /* Pienennetty reunusta mobiilissa */
   box-sizing: border-box;
-}
-
-.overview-item img:hover {
-  opacity: 1;
 }
 
 @media (min-width: 1024px) {
@@ -565,11 +559,17 @@ main {
     --border-opacity: 0.02; 
     border-radius: 0; 
     cursor: zoom-in; 
-    transition: all 0.5s ease; 
+    transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.2s ease-in-out; 
     background-color: var(--color-hex-111); 
 }
-.gallery-img:hover { transform: scale(1.01); box-shadow: 0 20px 40px var(--color-rgb-14) }
 
+@media (hover: hover) {
+  .overview-grid .gallery-img:hover { 
+    transform: scale(1.01); 
+    box-shadow: 0 20px 40px var(--color-rgb-14);
+    opacity: 0.85;
+  }
+}
 .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: var(--color-hex-f4f0ea); line-height: 1.6; font-weight: 300; }
 .project-info p:last-child { color: var(--color-rgb-15); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 
