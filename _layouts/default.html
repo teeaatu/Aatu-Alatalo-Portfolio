@@ -254,22 +254,38 @@
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
-  // Intersection Observer (Animaatio kuville) - Staggered Load
-  const observer = new IntersectionObserver((entries) => {
-      let delay = 0;
-      entries.forEach(entry => {
-          if(entry.isIntersecting) {
-              setTimeout(() => {
-                  entry.target.classList.add('is-visible');
-              }, delay);
-              delay += 150; // 150ms stagger
-              observer.unobserve(entry.target);
-          }
-      });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.image-section, .overview-item').forEach(section => {
-      section.classList.add('stagger-item');
-      observer.observe(section);
+  // Grid Shuffle & Staggered Load Animation
+  document.addEventListener('DOMContentLoaded', () => {
+    // Shuffle grid items on the homepage
+    const grid = document.querySelector('.overview-grid.randomize-on-load');
+    if (grid) {
+        const items = Array.from(grid.children);
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+        const fragment = document.createDocumentFragment();
+        items.forEach(item => fragment.appendChild(item));
+        grid.innerHTML = '';
+        grid.appendChild(fragment);
+        grid.classList.add('is-shuffled');
+    }
+
+    // Initialize Intersection Observer for animations AFTER shuffling
+    const observer = new IntersectionObserver((entries) => {
+        let delay = 0;
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(() => { entry.target.classList.add('is-visible'); }, delay);
+                delay += 150;
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.image-section, .overview-item').forEach(item => {
+        item.classList.add('stagger-item');
+        observer.observe(item);
+    });
   });
 
   // Mobile Smart Sticky Header Logic
