@@ -8,13 +8,13 @@ active_nav: "index"
 mobile_title: "Overview / Yleiskuva"
 translation_url: /index.html
 ---
-<div class="overview-grid">
+<div class="overview-grid randomize-on-load">
   {% for file in site.static_files %}
     {% if file.path contains '/assets/images/' %}
       {% assign ext = file.extname | downcase %}
       {% if ext == '.jpg' or ext == '.jpeg' or ext == '.png' or ext == '.webp' %}
         <div class="overview-item">
-          <img src="{{ file.path | relative_url }}" alt="Portfolio Image">
+          <img src="{{ file.path | relative_url }}" alt="Portfolio Image" class="gallery-img">
         </div>
       {% endif %}
     {% endif %}
