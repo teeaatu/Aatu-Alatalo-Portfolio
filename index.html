@@ -8,19 +8,6 @@ active_nav: "index"
 mobile_title: "Overview / Yleiskuva"
 translation_url: /en/index.html
 ---
-
-<style>
-  .contact-section, 
-  #contact, 
-  footer { 
-    display: none !important; 
-    height: 0 !important; 
-    padding: 0 !important; 
-    margin: 0 !important; 
-    overflow: hidden !important;
-  }
-</style>
-
 <div class="overview-grid">
   {% for file in site.static_files %}
     {% if file.path contains '/assets/images/' %}
