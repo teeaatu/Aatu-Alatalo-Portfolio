@@ -118,7 +118,7 @@
          loader.style.opacity = '0';
          setTimeout(() => {
            loader.style.display = 'none';
-         }, 2500); // Odotetaan 2.5s CSS transitionin verran
+         }, 1200); // Odotetaan 1.2s CSS transitionin verran
       }
 
       let autoCloseTimeout;
@@ -168,7 +168,7 @@
            loader.style.opacity = '0';
            setTimeout(() => {
              loader.style.display = 'none';
-           }, 2500); // Odotetaan 2.5s CSS transitionin verran
+           }, 1200); // Odotetaan 1.2s CSS transitionin verran
        }
        // Näytetään banneri viiveellä normaalisti
        setTimeout(() => {
@@ -197,7 +197,7 @@
       setTimeout(() => {
          // Kutsutaan sekvenssiä, joka avaa valikon latausruudun *alle* ja paljastaa sen
          runMobileMenuSequence();
-      }, 4400); // Odotetaan 4.4s jotta animaatio näkyy täysin ennen feidauksen alkamista
+      }, 2200); // Odotetaan 2.2s jotta animaatio näkyy täysin ennen feidauksen alkamista
     });
   }
 
