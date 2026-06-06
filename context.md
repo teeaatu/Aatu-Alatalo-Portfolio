@@ -15,6 +15,10 @@ The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loa
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-06] Home Page Grid Architecture Refactor**
+    * Replaced the legacy filesystem-based home page grid with a dynamic, data-driven implementation that aggregates images from all category YAML files.
+    * Refactored image path rendering on the home grid to support both local assets and absolute external URLs (e.g., Cloudflare R2).
+    * Ensured the home page is now fully automated and scalable for the new external media hosting strategy.
 * **[2026-06-04] Repository Cleanup & Architecture Optimization**
     * Purged 6,534 untracked macOS metadata ghost files (`._*`) that were causing severe performance degradation across development tools.
     * Updated `.gitignore` to strictly block future system file pollution, specifically targeting `._*` and `.DS_Store` patterns.
