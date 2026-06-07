@@ -611,21 +611,27 @@ main {
 }
 
 .external-link-text {
-  margin-top: 15px;
-  font-size: 11px;
+  position: absolute;
+  bottom: 20px; /* Sijoittuu nätisti badgen padding-tilaan */
+  left: 0;
+  width: 100%;
+  font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  text-align: center;
-}
-.external-link-text a {
-  color: var(--color-hex-f4f0ea) !important;
-  text-decoration: none !important;
-  opacity: 0.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-hex-f4f0ea);
+  opacity: 0.4;
   transition: opacity 0.3s ease;
+  pointer-events: none; /* Ei estä klikkauksia linkkikääreeltä */
 }
-.external-link-text a:hover {
+
+.external-link-wrapper:hover .external-link-text {
   opacity: 1;
 }
+
 .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: var(--color-hex-f4f0ea); line-height: 1.6; font-weight: 300; }
 .project-info p:last-child { color: var(--color-rgb-15); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
 
@@ -771,6 +777,12 @@ body.hide-main-temp .mobile-header {
   .about-grid { flex-direction: column; gap: 40px; align-items: center }
   .image-container { position: relative; top: 0; flex: 0 0 auto; width: 100%; max-width: 250px }
   .about-text { text-align: left; max-width: 100%; padding-bottom: 20px; }
+
+  .external-link-text {
+    bottom: 12px;
+    font-size: 9px;
+    opacity: 0.8; /* Pidetään mobiilissa hieman kirkkaampana, koska hoveria ei ole */
+  }
 }
 
 /* --- EVÄSTEBANNERI --- */
