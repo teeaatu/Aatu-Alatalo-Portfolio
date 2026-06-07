@@ -7,8 +7,6 @@
 </head>
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}">
 
-<div class="page-transition-overlay is-active" id="pageTransitionOverlay"></div>
-
 {% include cookie-banner.html %}
 
 {% include mobile-header.html %}
@@ -185,58 +183,6 @@
       
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }, { passive: true });
-  }
-
-  // --- CROSS-BROWSER PAGE TRANSITION ---
-  const transitionOverlay = document.getElementById('pageTransitionOverlay');
-  if (transitionOverlay) {
-    window.addEventListener('pageshow', (e) => {
-      // Fix for iOS Safari BFCache (swipe back gesture)
-      if (e.persisted) {
-        transitionOverlay.classList.remove('is-active', 'is-entering');
-        
-        // Force reveal grid images that might be stuck in a hidden state
-        document.querySelectorAll('.stagger-item').forEach(item => {
-          item.classList.add('is-visible');
-        });
-
-        // Ensure main content is visible if the fade-in animation didn't finish or re-run
-        const main = document.querySelector('main');
-        if (main) main.classList.add('is-visible');
-      }
-
-      // Small delay to ensure render
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          transitionOverlay.classList.add('is-leaving');
-          transitionOverlay.classList.remove('is-active', 'is-entering');
-          setTimeout(() => {
-            transitionOverlay.classList.remove('is-leaving');
-          }, 400);
-        });
-      });
-    });
-
-    document.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', function(e) {
-        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-        
-        const href = this.getAttribute('href');
-        // Exclude anchors, mailto, tel, target_blank and data-fancybox/photoswipe elements
-        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || this.getAttribute('target') === '_blank' || this.classList.contains('gallery-img')) {
-          return;
-        }
-
-        const isLocal = this.hostname === window.location.hostname;
-        if (isLocal) {
-          e.preventDefault();
-          transitionOverlay.classList.add('is-entering');
-          setTimeout(() => {
-            window.location.href = href;
-          }, 200); // Navigate slightly before animation finishes for smoother feel
-        }
-      });
-    });
   }
 </script>
 </body>
