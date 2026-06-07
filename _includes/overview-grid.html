@@ -10,7 +10,8 @@
         {% for img_item in item.images %}
               {% assign alt_val = img_item.alt_text | default: "EMPTY_ALT" %}
               {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
-              {% assign combined = img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index %}
+              {% assign orientation_val = img_item.orientation | default: 'unknown' %}
+              {% assign combined = img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val %}
               {% if item.pinned == true or item.pinned == 'true' %}
                 {% assign pinned_images = pinned_images | push: combined %}
               {% else %}
@@ -20,7 +21,8 @@
       {% else %}
             {% assign alt_val = item.alt_text | default: "EMPTY_ALT" %}
             {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
-            {% assign combined = item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0' %}
+            {% assign orientation_val = item.orientation | default: 'unknown' %}
+            {% assign combined = item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val %}
             {% if item.pinned == true or item.pinned == 'true' %}
               {% assign pinned_images = pinned_images | push: combined %}
             {% else %}
@@ -43,6 +45,7 @@
     {% assign p_otsikko = parts[2] %}
     {% assign p_type = parts[3] %}
     {% assign p_index = parts[4] %}
+    {% assign p_orientation = parts[5] %}
     
     {% assign final_alt = "Portfolio Image" %}
     {% if p_alt != 'EMPTY_ALT' and p_alt != '' %}
@@ -58,7 +61,14 @@
       {% assign final_alt = title_localized %}
     {% endif %}
 
-    <div class="overview-item">
+    {% assign orientation_class = 'is-standard' %}
+    {% if p_orientation == 'portrait' %}
+      {% assign orientation_class = 'is-portrait' %}
+    {% elsif p_orientation == 'landscape' %}
+      {% assign orientation_class = 'is-landscape' %}
+    {% endif %}
+
+    <div class="overview-item {{ orientation_class }}">
       <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
            alt="{{ final_alt | escape }}" 
            {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
