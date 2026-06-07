@@ -422,13 +422,6 @@ main {
   column-gap: 40px;
   width: 100%;
 }
-.overview-grid.randomize-on-load {
-  opacity: 0;
-  transition: opacity 0.4s ease 0.1s;
-}
-.overview-grid.randomize-on-load.is-shuffled {
-  opacity: 1;
-}
 .overview-item {
   margin-bottom: 40px;
   break-inside: avoid;
