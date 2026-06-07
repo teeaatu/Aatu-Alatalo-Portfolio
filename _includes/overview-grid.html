@@ -14,7 +14,10 @@
               {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
               {% assign orientation_val = img_item.orientation | default: 'unknown' %}
               {% assign item_type_val = item.item_type | default: 'image' %}
-            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val %}
+              {% assign link_url_val = item.link_url | default: 'none' %}
+              {% assign link_text_fi_val = item.link_text_fi | default: 'Siirry sivustolle' %}
+              {% assign link_text_en_val = item.link_text_en | default: 'Visit website' %}
+            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val %}
             {% if pin_priority_val != 999 %}
               {% assign priority_pinned_images = priority_pinned_images | push: combined %}
             {% elsif item.pinned == true or item.pinned == 'true' %}
@@ -29,7 +32,10 @@
             {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
             {% assign orientation_val = item.orientation | default: 'unknown' %}
             {% assign item_type_val = item.item_type | default: 'image' %}
-          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val %}
+            {% assign link_url_val = item.link_url | default: 'none' %}
+            {% assign link_text_fi_val = item.link_text_fi | default: 'Siirry sivustolle' %}
+            {% assign link_text_en_val = item.link_text_en | default: 'Visit website' %}
+          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val %}
           {% if pin_priority_val != 999 %}
             {% assign priority_pinned_images = priority_pinned_images | push: combined %}
           {% elsif item.pinned == true or item.pinned == 'true' %}
@@ -58,6 +64,9 @@
     {% assign p_index = parts[5] %}
     {% assign p_orientation = parts[6] %}
     {% assign p_item_type = parts[7] %}
+    {% assign p_link_url = parts[8] %}
+    {% assign p_link_text_fi = parts[9] %}
+    {% assign p_link_text_en = parts[10] %}
     
     {% assign final_alt = "Portfolio Image" %}
     {% if p_alt != 'EMPTY_ALT' and p_alt != '' %}
@@ -81,11 +90,29 @@
     {% endif %}
 
     <div class="overview-item {{ orientation_class }} {% if p_item_type == 'badge' %}badge-item{% endif %}">
+      {% if p_link_url != 'none' and p_link_url != '' %}
+      <a href="{{ p_link_url }}" target="_blank" rel="noopener noreferrer" class="no-decoration external-link-wrapper">
+        <div class="external-link-overlay">
+          <svg viewBox="0 0 24 24" width="36" height="36" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </div>
+        <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
+             alt="{{ final_alt | escape }}" 
+             {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
+             class="link-img"
+             onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
+      </a>
+      <div class="external-link-text">
+        <a href="{{ p_link_url }}" target="_blank" rel="noopener noreferrer">{% if page.lang == 'en' %}{{ p_link_text_en }}{% else %}{{ p_link_text_fi }}{% endif %} &#8599;</a>
+      </div>
+      {% else %}
       <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
            alt="{{ final_alt | escape }}" 
            {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
            class="gallery-img"
            onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
+      {% endif %}
     </div>
   {% endfor %}
 </div>

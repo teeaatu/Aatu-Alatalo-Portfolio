@@ -558,20 +558,73 @@ main {
   transform: translateY(0);
 }
 
-.gallery-img { 
+.gallery-img,
+.link-img { 
     --border-opacity: 0.02; 
     border-radius: 0; 
-    cursor: zoom-in; 
-    transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.2s ease-in-out; 
+    transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.2s ease-in-out, filter 0.4s ease; 
     background-color: var(--color-hex-111); 
+}
+.gallery-img { cursor: zoom-in; }
+.link-img { cursor: pointer; }
+
+/* Ulkoinen linkki hover-efekti (esim. badge) */
+.external-link-wrapper {
+  display: block;
+  position: relative;
+}
+.external-link-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-hex-f4f0ea);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Laitteet ilman hiirtä (puhelimet ja tabletit): Piilotetaan ikoni, koska käytetään alla olevaa tekstiä */
+@media (hover: none) {
+  .external-link-overlay {
+    display: none;
+  }
 }
 
 @media (hover: hover) {
-  .overview-grid .gallery-img:hover { 
+  .overview-grid .gallery-img:hover,
+  .overview-grid .link-img:hover { 
     transform: scale(1.01); 
     box-shadow: 0 20px 40px var(--color-rgb-14);
+  }
+  .overview-grid .gallery-img:hover {
     opacity: 0.85;
   }
+  .overview-grid .external-link-wrapper:hover .link-img {
+    filter: grayscale(100%) brightness(0.4); /* Harmaantuu ja tummuu */
+  }
+  .overview-grid .external-link-wrapper:hover .external-link-overlay {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1); /* Ikoni kasvaa hieman esiin */
+  }
+}
+
+.external-link-text {
+  margin-top: 15px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.external-link-text a {
+  color: var(--color-hex-f4f0ea) !important;
+  text-decoration: none !important;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+.external-link-text a:hover {
+  opacity: 1;
 }
 .project-info { margin-top: 25px; font-size: 14px; letter-spacing: 2px; color: var(--color-hex-f4f0ea); line-height: 1.6; font-weight: 300; }
 .project-info p:last-child { color: var(--color-rgb-15); font-size: 12px; margin-top: 6px; letter-spacing: 1.5px; }
