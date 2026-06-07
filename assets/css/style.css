@@ -418,14 +418,23 @@ main {
   min-height: 100vh;
 }
 .overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  align-items: start; /* Sallii jokaisen kuvan pitää oman luonnollisen korkeutensa */
+  width: 100%;
+  min-height: 100vh;
+}
+.overview-item {
   position: relative;
   width: 100%;
 }
-.overview-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: left 0.4s ease, top 0.4s ease;
+
+@media (max-width: 1024px) {
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px; /* Hallittu rako mobiilissa sekä pysty- että vaakasuunnassa */
+  }
 }
 
 /* Responsiiviset reunat (koskee kaikkia overview- ja galleriakuvia) */
@@ -542,7 +551,7 @@ main {
 .stagger-item {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease, left 0.4s ease, top 0.4s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .stagger-item.is-visible {
   opacity: 1;
