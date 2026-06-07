@@ -15,6 +15,12 @@ The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loa
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-07] Core Web Vitals & UX Refactor: Pure CSS Grid, Advanced Pinning, and Splash Screen Removal**
+    * **Architecture:** Replaced the JavaScript-driven masonry layout with a pure CSS Grid solution (`display: grid`, `align-items: start`). This completely eliminated Cumulative Layout Shift (CLS=0) by allowing the browser to calculate layout space before images load, while respecting their natural aspect ratios.
+    * **Curation:** Implemented an advanced `pin_priority` system in YAML, allowing specific images to be forced to the absolute top of the grid, overriding the standard `pinned: true` logic for ultimate editorial control.
+    * **UX/Features:** Developed a flexible external link feature. By adding `link_url` to an item's YAML data, it transforms from a standard gallery image into a clickable link to an external site. This was used for the Hasselblad badge, which now includes a custom hover effect (grayscale + SVG icon) and a configurable text overlay.
+    * **Data Isolation:** Created a dedicated `etusivu.yml` data file to house homepage-specific items (like the badge), preventing them from appearing in categorized portfolio galleries.
+    * **Performance:** Completely removed the initial splash screen/intro animation. All related HTML, CSS (`@keyframes`), and JavaScript (`sessionStorage` checks, timed sequences) were purged to eliminate render-blocking resources, significantly improving First Contentful Paint (FCP) and Largest Contentful Paint (LCP).
 * **[2026-06-07] Homepage Grid Layout & Pinning Refactor**
     * Implemented a `pinned: true` flag in YAML data files to allow manual curation of top portfolio images.
     * Updated `_includes/overview-grid.html` to separate images into a `pinned_images` array (stable order) and a `shuffled_pool` array (randomized at build time).

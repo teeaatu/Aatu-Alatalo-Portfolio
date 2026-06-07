@@ -5,7 +5,7 @@
   pinned: true
 - kuva: https://media.aatualatalo.com/Photographs/mersu.jpg
   otsikko: Mercedes-Benz / Mersu
-  paikka: Oulu, Finland 2026
+  paikka: Tyrnävä, Finland 2026
   alt_text: ""
 - kuva: Kinogrilli.jpg
   otsikko: Kinogrill / Kinogrilli
@@ -18,7 +18,7 @@
 - kuva: bilbao.jpg
   otsikko: Rainy Day / Sadepäivä
   paikka: Bilbao, España 2024
-  alt: "Tähän tulee kuvaileva teksti ruudunlukijoille"
+  
   alt_text: ""
   pinned: true
 - kuva: Bussinikkuna.jpg
