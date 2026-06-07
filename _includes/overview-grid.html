@@ -7,20 +7,50 @@
     {% for item in dataset %}
       {% if item.layout == 'diptych' %}
         {% for img_item in item.images %}
-          {% assign all_images = all_images | push: img_item %}
+              {% assign alt_val = img_item.alt_text | default: "EMPTY_ALT" %}
+              {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
+              {% assign combined = img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index %}
+              {% assign all_images = all_images | push: combined %}
         {% endfor %}
       {% else %}
-        {% assign all_images = all_images | push: item %}
+            {% assign alt_val = item.alt_text | default: "EMPTY_ALT" %}
+            {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
+            {% assign combined = item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0' %}
+            {% assign all_images = all_images | push: combined %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}
 
-<div class="overview-grid randomize-on-load">
-  {% for item in all_images %}
+{% assign shuffled_images = all_images | sample: all_images.size %}
+
+<div class="overview-grid">
+  {% for img_str in shuffled_images %}
+    {% assign parts = img_str | split: '|||' %}
+    {% assign p_kuva = parts[0] %}
+    {% assign p_alt = parts[1] %}
+    {% assign p_otsikko = parts[2] %}
+    {% assign p_type = parts[3] %}
+    {% assign p_index = parts[4] %}
+    
+    {% assign final_alt = "Portfolio Image" %}
+    {% if p_alt != 'EMPTY_ALT' and p_alt != '' %}
+      {% assign final_alt = p_alt %}
+    {% elsif p_otsikko != 'EMPTY_OTSIKKO' and p_otsikko != '' %}
+      {% if page.lang == 'en' %}
+        {% assign title_localized = p_otsikko | split: ' / ' | first | strip %}
+        {% if p_type == 'diptych' %}{% assign title_localized = title_localized | append: ' - Part ' | append: p_index | append: '/2' %}{% endif %}
+      {% else %}
+        {% assign title_localized = p_otsikko | split: ' / ' | last | strip %}
+        {% if p_type == 'diptych' %}{% assign title_localized = title_localized | append: ' - Osa ' | append: p_index | append: '/2' %}{% endif %}
+      {% endif %}
+      {% assign final_alt = title_localized %}
+    {% endif %}
+
     <div class="overview-item">
-      <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} 
-           alt="{% if item.otsikko %}{% if page.lang == 'en' %}{{ item.otsikko | split: ' / ' | first | strip }}{% else %}{{ item.otsikko | split: ' / ' | last | strip }}{% endif %}{% else %}Portfolio Image{% endif %}" 
+      <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
+           alt="{{ final_alt | escape }}" 
+           {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
            class="gallery-img">
     </div>
   {% endfor %}
