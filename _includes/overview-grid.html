@@ -35,6 +35,7 @@
 {% assign final_images = pinned_images | concat: random_images %}
 
 <div class="overview-grid">
+  <!-- JS Masonry handles absolute positioning row-by-row -->
   {% for img_str in final_images %}
     {% assign parts = img_str | split: '|||' %}
     {% assign p_kuva = parts[0] %}
