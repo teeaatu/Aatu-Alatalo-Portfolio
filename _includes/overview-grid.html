@@ -102,10 +102,14 @@
              {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
              class="link-img"
              onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
+        <div class="external-link-text">
+          <span>{% if page.lang == 'en' %}{{ p_link_text_en }}{% else %}{{ p_link_text_fi }}{% endif %}</span>
+          <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </div>
       </a>
-      <div class="external-link-text">
-        <a href="{{ p_link_url }}" target="_blank" rel="noopener noreferrer">{% if page.lang == 'en' %}{{ p_link_text_en }}{% else %}{{ p_link_text_fi }}{% endif %} &#8599;</a>
-      </div>
       {% else %}
       <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
            alt="{{ final_alt | escape }}" 
