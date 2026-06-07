@@ -15,6 +15,13 @@ The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loa
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-07] Homepage Grid Layout & Pinning Refactor**
+    * Implemented a `pinned: true` flag in YAML data files to allow manual curation of top portfolio images.
+    * Updated `_includes/overview-grid.html` to separate images into a `pinned_images` array (stable order) and a `shuffled_pool` array (randomized at build time).
+    * Replaced the CSS `column-count` layout, which caused vertical stacking of pinned items, with a custom JavaScript masonry solution.
+    * The new JS logic in `_layouts/default.html` calculates and applies absolute positions, ensuring a natural left-to-right, row-by-row flow for all grid items.
+    * The JS solution is responsive (adapting from 3 to 2 columns) and integrated with BFCache `pageshow` events to prevent layout bugs on iOS back-swipe gestures.
+    * Removed `column-count` and related properties from `assets/css/style.css` to support the new JS-driven layout.
 * **[2026-06-06] Home Page Grid Architecture Refactor**
     * Centralized duplicated homepage grid logic from `index.html` and `en/index.html` into a single reusable `_includes/overview-grid.html` file.
     * The new include aggregates images from all category YAML files, supporting both local assets and absolute external URLs.
