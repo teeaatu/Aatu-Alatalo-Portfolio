@@ -7,15 +7,7 @@
 </head>
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}">
 
-<script>
-  if (sessionStorage.getItem('introSeen') === 'true') {
-    document.documentElement.classList.add('skip-intro');
-  }
-</script>
-
 <div class="page-transition-overlay is-active" id="pageTransitionOverlay"></div>
-
-{% include loader.html %}
 
 {% include cookie-banner.html %}
 
@@ -79,11 +71,6 @@
   if(menuToggle) {
       menuToggle.addEventListener('click', () => {
           body.classList.toggle('menu-open');
-          if (!body.classList.contains('menu-open')) {
-              setTimeout(() => {
-                  if(window.showCookieBanner) window.showCookieBanner();
-              }, 2000);
-          }
       });
   }
 
@@ -96,110 +83,8 @@
         if(contactSection) {
             contactSection.scrollIntoView({ behavior: 'smooth' });
             body.classList.remove('menu-open');
-            setTimeout(() => {
-                if(window.showCookieBanner) window.showCookieBanner();
-            }, 2000);
         }
       });
-  }
-
-  // --- LATAUSRUUTU JA MOBIILIMENU-AUTOMAATIO ---
-  const loader = document.getElementById('loader');
-  
-  // Funktio, joka avaa valikon 3 sekunniksi
-  function runMobileMenuSequence() {
-    if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
-      // 1. Laitetaan menu auki heti taustalla
-      document.body.classList.add('menu-open');
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar) sidebar.classList.add('trigger-wave');
-
-      // 2. Poistetaan latausruutu pehmeästi (menu on jo valmiiksi auki sen alla)
-      if(loader) {
-         loader.style.opacity = '0';
-         setTimeout(() => {
-           loader.style.display = 'none';
-         }, 1200); // Odotetaan 1.2s CSS transitionin verran
-      }
-
-      let autoCloseTimeout;
-
-      // Keskeytä automaattinen sulkeminen, jos käyttäjä on vuorovaikutuksessa
-      const interruptHandler = () => {
-        if (autoCloseTimeout) {
-          clearTimeout(autoCloseTimeout);
-          autoCloseTimeout = null;
-          // Varmistetaan, että pääsisältö on näkyvissä
-          document.body.classList.remove('hide-main-temp');
-          
-          window.removeEventListener('touchstart', interruptHandler);
-          window.removeEventListener('mousedown', interruptHandler);
-          window.removeEventListener('scroll', interruptHandler);
-        }
-      };
-
-      window.addEventListener('touchstart', interruptHandler, { passive: true });
-      window.addEventListener('mousedown', interruptHandler, { passive: true });
-      window.addEventListener('scroll', interruptHandler, { passive: true });
-
-      // 3. Odotetaan 3 sekuntia (menu on auki ja aaltoilee)
-      autoCloseTimeout = setTimeout(() => {
-        autoCloseTimeout = null;
-        
-        // Poistetaan kuuntelijat, jos normaalisti suoritetaan
-        window.removeEventListener('touchstart', interruptHandler);
-        window.removeEventListener('mousedown', interruptHandler);
-        window.removeEventListener('scroll', interruptHandler);
-
-        // 4. Palautetaan etusivun sisältö näkyviin
-        document.body.classList.remove('hide-main-temp');
-        
-        // 5. Suljetaan menu ja poistetaan aalto-luokka
-        document.body.classList.remove('menu-open');
-        if (sidebar) sidebar.classList.remove('trigger-wave');
-        
-        // 6. Näytetään evästebanneri 2 sekuntia valikon sulkeutumisen jälkeen
-        setTimeout(() => {
-          if(window.showCookieBanner) window.showCookieBanner();
-        }, 16000);
-      }, 3000); // 3 sekuntia auki
-    } else {
-       // Ei mobiilin etusivu: normaali latausruudun poisto
-       if(loader) {
-           loader.style.opacity = '0';
-           setTimeout(() => {
-             loader.style.display = 'none';
-           }, 1200); // Odotetaan 1.2s CSS transitionin verran
-       }
-       // Näytetään banneri viiveellä normaalisti
-       setTimeout(() => {
-          if(window.showCookieBanner) window.showCookieBanner();
-       }, 2000);
-    }
-  }
-
-  if (sessionStorage.getItem('introSeen') === 'true') {
-    // Latausruutu on jo piilotettu .skip-intro luokan avulla
-    // Näytetään banneri heti (tai pienellä viiveellä) jos sivu on jo käyty
-    setTimeout(() => {
-        if(window.showCookieBanner) window.showCookieBanner();
-    }, 1000);
-    // Ei avata valikkoa enää automaattisesti myöhemmillä sivunlatauksilla
-  } else {
-    // ENSIMMÄINEN KÄYNTI
-    sessionStorage.setItem('introSeen', 'true');
-    
-    // Piilotetaan etusivun sisältö heti alussa, jos ollaan mobiilissa etusivulla
-    if (document.body.classList.contains('index-page') && window.innerWidth <= 1024) {
-      document.body.classList.add('hide-main-temp');
-    }
-
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-         // Kutsutaan sekvenssiä, joka avaa valikon latausruudun *alle* ja paljastaa sen
-         runMobileMenuSequence();
-      }, 2200); // Odotetaan 2.2s jotta animaatio näkyy täysin ennen feidauksen alkamista
-    });
   }
 
   // PhotoSwipe v5 Lightbox logic

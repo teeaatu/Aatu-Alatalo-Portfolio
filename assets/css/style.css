@@ -60,49 +60,6 @@ body {
   overflow-y: scroll;
 }
 
-/* --- LATAUSRUUTU --- */
-#loader {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #000000; display: flex; justify-content: center; align-items: center;
-  z-index: 999999; transition: opacity 1.2s ease-in-out;
-}
-.loader-content {
-  display: flex; flex-direction: column; align-items: center;
-}
-#loader h1 {
-  font-size: clamp(30px, 6vw, 80px);
-  font-weight: 200;
-  letter-spacing: 12px;
-  text-indent: 12px;
-  opacity: 0;
-  text-transform: none;
-  animation: introText 2.2s ease-out 0.3s forwards;
-}
-.loader-subtitle {
-  opacity: 0;
-  animation: introSubtitle 1s ease 0.6s forwards;
-  color: #c5a059;
-  font-size: 11px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-top: 10px;
-  font-weight: 300;
-  text-align: center;
-}
-@keyframes introText { to { opacity: 1; } }
-@keyframes introSubtitle { to { opacity: 0.8; } }
-
-html.skip-intro #loader {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: none !important;
-  animation: none !important;
-}
-html.skip-intro #loader * {
-  animation: none !important;
-}
-
 /* --- TAKAISIN YLÖS --- */
 .back-to-top { 
     position: fixed; bottom: 30px; right: 30px; display: none; 
@@ -199,27 +156,6 @@ nav a.masters-nav-item span {
 nav a.masters-nav-item.active {
   border-left: 2px solid var(--accent-color);
 }
-
-/* --- WAVE ANIMATION FOR INITIAL MOBILE MENU OPEN --- */
-@keyframes waveEffect {
-  0% { transform: translateX(0); color: var(--text-dimmed); }
-  30% { transform: translateX(10px); color: var(--color-hex-f4f0ea); }
-  100% { transform: translateX(0); color: var(--text-dimmed); }
-}
-aside.trigger-wave nav a {
-  animation: waveEffect 0.8s ease-in-out forwards;
-}
-aside.trigger-wave nav a:nth-child(1) { animation-delay: 0.1s; }
-aside.trigger-wave nav a:nth-child(2) { animation-delay: 0.15s; }
-aside.trigger-wave nav a:nth-child(3) { animation-delay: 0.2s; }
-aside.trigger-wave nav a:nth-child(4) { animation-delay: 0.25s; }
-aside.trigger-wave nav a:nth-child(5) { animation-delay: 0.3s; }
-aside.trigger-wave nav a:nth-child(6) { animation-delay: 0.35s; }
-aside.trigger-wave nav a:nth-child(7) { animation-delay: 0.4s; }
-aside.trigger-wave nav a:nth-child(8) { animation-delay: 0.45s; }
-aside.trigger-wave nav a:nth-child(9) { animation-delay: 0.5s; }
-aside.trigger-wave nav a:nth-child(10) { animation-delay: 0.55s; }
-aside.trigger-wave nav a:nth-child(11) { animation-delay: 0.6s; }
 
 /* --- INFO NAV (DESKTOP) --- */
 .info-nav {
@@ -667,14 +603,6 @@ main {
 }
 .footer-socials .social-icon-link:hover {
   transform: scale(1.1); /* Pieni skaalaus-efekti sopii paremmin ikonille */
-}
-/* --- HIDE MAIN UNTIL MENU SEQUENCE FINISHES --- */
-body.hide-main-temp main {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-body.hide-main-temp .mobile-header {
-  opacity: 0 !important;
 }
 
 /* --- HAMPURILAINEN --- */
