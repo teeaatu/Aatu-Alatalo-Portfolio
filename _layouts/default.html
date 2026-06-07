@@ -8,6 +8,42 @@
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}">
 
 <script>
+  // --- JS MASONRY LOGIC ---
+  function runMasonryLayout() {
+    const grid = document.querySelector('.overview-grid');
+    if (!grid) return;
+    
+    const items = grid.querySelectorAll('.overview-item');
+    if (!items.length) return;
+    
+    const isMobile = window.innerWidth <= 1024;
+    const colCount = isMobile ? 2 : 3;
+    const gap = isMobile ? 10 : 40;
+    
+    const gridWidth = grid.getBoundingClientRect().width;
+    if (gridWidth === 0) return; 
+    
+    const colWidth = (gridWidth - (gap * (colCount - 1))) / colCount;
+    const colHeights = Array(colCount).fill(0);
+    
+    items.forEach(item => {
+      const minHeight = Math.min(...colHeights);
+      const colIndex = colHeights.indexOf(minHeight);
+      
+      const x = colIndex * (colWidth + gap);
+      const y = minHeight;
+      
+      item.style.width = `${colWidth}px`;
+      item.style.left = `${x}px`;
+      item.style.top = `${y}px`;
+      
+      const itemHeight = item.offsetHeight;
+      colHeights[colIndex] += itemHeight + gap;
+    });
+    
+    grid.style.height = `${Math.max(...colHeights)}px`;
+  }
+
   if (sessionStorage.getItem('introSeen') === 'true') {
     document.documentElement.classList.add('skip-intro');
   }
@@ -255,6 +291,18 @@
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
+  // Init Masonry events
+  document.addEventListener('DOMContentLoaded', () => {
+    runMasonryLayout();
+    document.querySelectorAll('.overview-grid img').forEach(img => {
+      if (!img.complete) {
+        img.addEventListener('load', runMasonryLayout);
+        img.addEventListener('error', runMasonryLayout);
+      }
+    });
+  });
+  window.addEventListener('resize', runMasonryLayout);
+
   // Staggered Load Animation
   document.addEventListener('DOMContentLoaded', () => {
     // Initialize Intersection Observer for scroll animations
@@ -306,11 +354,28 @@
   const transitionOverlay = document.getElementById('pageTransitionOverlay');
   if (transitionOverlay) {
     window.addEventListener('pageshow', (e) => {
+      // Fix for iOS Safari BFCache (swipe back gesture)
+      if (e.persisted) {
+        transitionOverlay.classList.remove('is-active', 'is-entering');
+        
+        // Force reveal grid images that might be stuck in a hidden state
+        document.querySelectorAll('.stagger-item').forEach(item => {
+          item.classList.add('is-visible');
+        });
+
+        // Ensure main content is visible if the fade-in animation didn't finish or re-run
+        const main = document.querySelector('main');
+        if (main) main.classList.add('is-visible');
+
+        // Re-calculate layout to fix any absolute position glitches on back-swipe
+        runMasonryLayout();
+      }
+
       // Small delay to ensure render
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           transitionOverlay.classList.add('is-leaving');
-          transitionOverlay.classList.remove('is-active');
+          transitionOverlay.classList.remove('is-active', 'is-entering');
           setTimeout(() => {
             transitionOverlay.classList.remove('is-leaving');
           }, 400);

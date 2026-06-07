@@ -418,13 +418,14 @@ main {
   min-height: 100vh;
 }
 .overview-grid {
-  column-count: 3;
-  column-gap: 40px;
+  position: relative;
   width: 100%;
 }
 .overview-item {
-  margin-bottom: 40px;
-  break-inside: avoid;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: left 0.4s ease, top 0.4s ease;
 }
 
 /* Responsiiviset reunat (koskee kaikkia overview- ja galleriakuvia) */
@@ -541,7 +542,7 @@ main {
 .stagger-item {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease, left 0.4s ease, top 0.4s ease;
 }
 .stagger-item.is-visible {
   opacity: 1;
@@ -701,8 +702,6 @@ body.hide-main-temp .mobile-header {
     color: var(--color-hex-f4f0ea) !important;
   }
   
-  .overview-grid { column-count: 2; column-gap: 10px; display: block; }
-  .overview-item { margin-bottom: 10px; break-inside: avoid; }
   .content-wrapper { padding: 40px 10px; }
   
   .intro-grid { grid-template-columns: 1fr; gap: 30px }
@@ -765,14 +764,6 @@ body.hide-main-temp .mobile-header {
     left: 0;
     max-width: 100%;
     border-width: 1px 0 0 0;
-  }
-  .overview-grid {
-    column-count: 2; /* Säilytetään kaksi saraketta, mutta pienennetään väliä */
-    column-gap: 10px;
-  }
-  .overview-item {
-    margin-bottom: 10px;
-    break-inside: avoid;
   }
 }
 
@@ -911,6 +902,11 @@ body.index-page main {
 main {
   opacity: 0;
   animation: contentFadeIn 0.5s ease-out 0.1s forwards;
+}
+
+main.is-visible {
+  opacity: 1 !important;
+  animation: none !important;
 }
 
 @keyframes contentFadeIn {
