@@ -1,6 +1,7 @@
+{% assign priority_pinned_images = '' | split: '' %}
 {% assign pinned_images = '' | split: '' %}
 {% assign shuffled_pool = '' | split: '' %}
-{% assign datasets = 'vari-ja-muoto,luonto-ja-ymparisto,masters-2026,mustavalkoinen-sarja,raw,sisatilan-valo,Potret,elaimet,kiehtovat-rakennukset,still-life,kuvaprojekti_ajasta_v365' | split: ',' %}
+{% assign datasets = 'etusivu,vari-ja-muoto,luonto-ja-ymparisto,masters-2026,mustavalkoinen-sarja,raw,sisatilan-valo,Potret,elaimet,kiehtovat-rakennukset,still-life,kuvaprojekti_ajasta_v365' | split: ',' %}
 
 {% for dataset_name in datasets %}
   {% assign dataset = site.data[dataset_name] %}
@@ -8,22 +9,30 @@
     {% for item in dataset %}
       {% if item.layout == 'diptych' %}
         {% for img_item in item.images %}
+            {% assign pin_priority_val = item.pin_priority | default: 999 %}
               {% assign alt_val = img_item.alt_text | default: "EMPTY_ALT" %}
               {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
               {% assign orientation_val = img_item.orientation | default: 'unknown' %}
-              {% assign combined = img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val %}
-              {% if item.pinned == true or item.pinned == 'true' %}
+              {% assign item_type_val = item.item_type | default: 'image' %}
+            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val %}
+            {% if pin_priority_val != 999 %}
+              {% assign priority_pinned_images = priority_pinned_images | push: combined %}
+            {% elsif item.pinned == true or item.pinned == 'true' %}
                 {% assign pinned_images = pinned_images | push: combined %}
               {% else %}
                 {% assign shuffled_pool = shuffled_pool | push: combined %}
               {% endif %}
         {% endfor %}
       {% else %}
+          {% assign pin_priority_val = item.pin_priority | default: 999 %}
             {% assign alt_val = item.alt_text | default: "EMPTY_ALT" %}
             {% assign otsikko_val = item.otsikko | default: "EMPTY_OTSIKKO" %}
             {% assign orientation_val = item.orientation | default: 'unknown' %}
-            {% assign combined = item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val %}
-            {% if item.pinned == true or item.pinned == 'true' %}
+            {% assign item_type_val = item.item_type | default: 'image' %}
+          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val %}
+          {% if pin_priority_val != 999 %}
+            {% assign priority_pinned_images = priority_pinned_images | push: combined %}
+          {% elsif item.pinned == true or item.pinned == 'true' %}
               {% assign pinned_images = pinned_images | push: combined %}
             {% else %}
               {% assign shuffled_pool = shuffled_pool | push: combined %}
@@ -34,18 +43,21 @@
 {% endfor %}
 
 {% assign random_images = shuffled_pool | sample: shuffled_pool.size %}
-{% assign final_images = pinned_images | concat: random_images %}
+{% assign sorted_priority_pinned = priority_pinned_images | sort %}
+{% assign final_images = sorted_priority_pinned | concat: pinned_images | concat: random_images %}
 
 <div class="overview-grid">
   <!-- JS Masonry handles absolute positioning row-by-row -->
   {% for img_str in final_images %}
     {% assign parts = img_str | split: '|||' %}
-    {% assign p_kuva = parts[0] %}
-    {% assign p_alt = parts[1] %}
-    {% assign p_otsikko = parts[2] %}
-    {% assign p_type = parts[3] %}
-    {% assign p_index = parts[4] %}
-    {% assign p_orientation = parts[5] %}
+    {% assign p_priority = parts[0] %}
+    {% assign p_kuva = parts[1] %}
+    {% assign p_alt = parts[2] %}
+    {% assign p_otsikko = parts[3] %}
+    {% assign p_type = parts[4] %}
+    {% assign p_index = parts[5] %}
+    {% assign p_orientation = parts[6] %}
+    {% assign p_item_type = parts[7] %}
     
     {% assign final_alt = "Portfolio Image" %}
     {% if p_alt != 'EMPTY_ALT' and p_alt != '' %}
@@ -68,11 +80,12 @@
       {% assign orientation_class = 'is-landscape' %}
     {% endif %}
 
-    <div class="overview-item {{ orientation_class }}">
+    <div class="overview-item {{ orientation_class }} {% if p_item_type == 'badge' %}badge-item{% endif %}">
       <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
            alt="{{ final_alt | escape }}" 
            {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
-           class="gallery-img">
+           class="gallery-img"
+           onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
     </div>
   {% endfor %}
 </div>
