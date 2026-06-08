@@ -20,8 +20,22 @@ translation_url: /en/color-and-form.html
         </div>
     </header>
 
+    <div class="gallery-filter-nav">
+        <span class="breadcrumb-current">Väri ja muoto /</span>
+        <a href="#" class="filter-link active" data-filter="all">[ Kaikki ]</a>
+        <a href="#" class="filter-link" data-filter="utajarvi">[ Utajärvi ]</a>
+        <a href="#" class="filter-link" data-filter="general">[ Muut ]</a>
+    </div>
+
+    <!-- Tyhjä paikkavaraaja Utajärvi-kategorialle -->
+    <section class="image-section empty-placeholder hidden" data-series="utajarvi">
+        <div class="image-wrapper" style="border: 1px dashed var(--color-hex-333); padding: 150px 20px; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 300px;">
+            <p style="color: var(--text-dimmed); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; margin: 0; font-weight: 300;">Odottaa kuvaa / Waiting for pictures</p>
+        </div>
+    </section>
+
     {% for item in site.data['vari-ja-muoto'] %}
-    <section class="image-section">
+    <section class="image-section" data-series="{% if item.series %}{{ item.series }}{% else %}general{% endif %}">
         <div class="image-wrapper">
             <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
@@ -32,3 +46,49 @@ translation_url: /en/color-and-form.html
     </section>
     {% endfor %}
 </div>
+
+<script>
+function initGalleryFilter() {
+    const filterLinks = document.querySelectorAll(".filter-link");
+    const imageSections = document.querySelectorAll(".image-section");
+
+    if (!filterLinks.length || !imageSections.length) return;
+    
+    if (document.body.dataset.filterInit === "true") return;
+    document.body.dataset.filterInit = "true";
+
+    filterLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            
+            filterLinks.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+
+            const filter = link.getAttribute("data-filter");
+
+            imageSections.forEach(section => {
+                const series = section.getAttribute("data-series");
+                const isPlaceholder = section.classList.contains("empty-placeholder");
+                
+                if (filter === "all") {
+                    if (isPlaceholder) {
+                        section.classList.add("hidden");
+                    } else {
+                        section.classList.remove("hidden");
+                    }
+                } else if (series === filter) {
+                    section.classList.remove("hidden");
+                } else {
+                    section.classList.add("hidden");
+                }
+            });
+        });
+    });
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGalleryFilter);
+} else {
+    initGalleryFilter();
+}
+</script>
