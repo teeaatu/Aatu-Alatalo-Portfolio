@@ -148,7 +148,7 @@ footer_block = """<footer class="contact-section" id="contact">
         <div class="contact-title">Contact</div>
         <div class="contact-info">
           <p>Aatu Alatalo</p>
-          <p><a href="mailto:aatuelias.alatalo@gmail.com">aatuelias.alatalo@gmail.com</a></p>
+          <p><a href="mailto:info@aatualatalo.com">info@aatualatalo.com</a></p>
           <p>Oulu, Finland</p>
           <p class="copyright">COPYRIGHT 2026 AATU ALATALO</p>
         </div>
