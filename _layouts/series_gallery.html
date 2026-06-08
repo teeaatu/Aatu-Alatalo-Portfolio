@@ -1,0 +1,41 @@
+---
+layout: default
+---
+{% assign lang = page.lang | default: 'fi' %}
+
+<div class="content-wrapper">
+    <div class="back-link-wrapper" style="margin-bottom: 40px;">
+        <a href="{% if lang == 'fi' %}/vari-ja-muoto.html{% else %}/en/color-and-form.html{% endif %}" class="no-decoration" style="font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dimmed); display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            {% if lang == 'fi' %}Takaisin{% else %}Back{% endif %}
+        </a>
+    </div>
+
+    <header class="intro-section">
+        <div class="intro-title" style="font-size: clamp(2rem, 6vw, 5rem);">{{ page.title }}</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="{{ lang }}">
+                {{ page.description }}
+            </div>
+        </div>
+    </header>
+
+    {% assign dataset = site.data[page.parent_category] %}
+    {% for item in dataset %}
+        {% assign item_series = item.series | default: 'general' %}
+        {% if item_series == page.series_id %}
+            <section class="image-section">
+                <div class="image-wrapper">
+                    <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+                    <div class="project-info">
+                        <p>{% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}</p>
+                        <p>{{ item.paikka }}</p>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endfor %}
+</div>
