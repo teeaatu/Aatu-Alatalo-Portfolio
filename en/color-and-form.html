@@ -20,8 +20,22 @@ translation_url: /vari-ja-muoto.html
         </div>
     </header>
 
+    <div class="gallery-filter-nav">
+        <span class="breadcrumb-current">Color & Form</span>
+        <a href="#" class="filter-link active" data-filter="all">All</a>
+        <span class="filter-separator">/</span> <a href="#" class="filter-link" data-filter="utajarvi">Utajärvi</a>
+        <span class="filter-separator">/</span> <a href="#" class="filter-link" data-filter="general">Selected works</a>
+    </div>
+
+    <!-- Alasarjan esittelyteksti (näytetään vain Utajärvi-filtterillä) -->
+    <div class="sub-series-intro hidden" data-intro-series="utajarvi">
+        <div class="intro-text" lang="en">
+            The series documents the landscape and everyday environment of North Ostrobothnia, where stillness and subtle details meet. The images reflect the traces left by the local way of life and infrastructure over time.
+        </div>
+    </div>
+
     {% for item in site.data['vari-ja-muoto'] %}
-    <section class="image-section">
+    <section class="image-section" data-series="{% if item.series %}{{ item.series }}{% else %}general{% endif %}">
         <div class="image-wrapper">
             <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
@@ -32,3 +46,56 @@ translation_url: /vari-ja-muoto.html
     </section>
     {% endfor %}
 </div>
+
+<script>
+function initGalleryFilter() {
+    const filterLinks = document.querySelectorAll(".filter-link");
+    const imageSections = document.querySelectorAll(".image-section");
+    const subSeriesIntros = document.querySelectorAll(".sub-series-intro");
+
+    if (!filterLinks.length || !imageSections.length) return;
+    
+    if (document.body.dataset.filterInit === "true") return;
+    document.body.dataset.filterInit = "true";
+
+    filterLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            
+            filterLinks.forEach(l => {
+                l.classList.remove("active");
+                l.removeAttribute("aria-current"); // Poista aria-current muista linkeistä
+            });
+            link.classList.add("active");
+            link.setAttribute("aria-current", "page"); // Lisää aria-current aktiiviseen linkkiin
+            const filter = link.getAttribute("data-filter");
+
+            subSeriesIntros.forEach(intro => {
+                if (intro.getAttribute("data-intro-series") === filter) {
+                    intro.classList.remove("hidden");
+                } else {
+                    intro.classList.add("hidden");
+                }
+            });
+
+            imageSections.forEach(section => {
+                const series = section.getAttribute("data-series");
+                
+                if (filter === "all") {
+                    section.classList.remove("hidden");
+                } else if (series === filter) {
+                    section.classList.remove("hidden");
+                } else {
+                    section.classList.add("hidden");
+                }
+            });
+        });
+    });
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGalleryFilter);
+} else {
+    initGalleryFilter();
+}
+</script>
