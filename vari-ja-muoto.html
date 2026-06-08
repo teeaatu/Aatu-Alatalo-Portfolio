@@ -27,12 +27,12 @@ translation_url: /en/color-and-form.html
         <span class="filter-separator">/</span> <a href="#" class="filter-link" data-filter="general">Muut</a>
     </div>
 
-    <!-- Tyhjä paikkavaraaja Utajärvi-kategorialle -->
-    <section class="image-section empty-placeholder hidden" data-series="utajarvi">
-        <div class="image-wrapper empty-placeholder-content">
-            <p>Odottaa kuvaa / Waiting for pictures</p>
+    <!-- Alasarjan esittelyteksti (näytetään vain Utajärvi-filtterillä) -->
+    <div class="sub-series-intro hidden" data-intro-series="utajarvi">
+        <div class="intro-text" lang="fi">
+            Sarja dokumentoi pohjoispohjanmaalaista mielenmaisemaa ja arjen ympäristöä, jossa pysähtyneisyys ja hienovaraiset yksityiskohdat kohtaavat. Kuvissa toistuvat paikallisen elämänmuodon ja infrastruktuurin jättämät jäljet ajassa.
         </div>
-    </section>
+    </div>
 
     {% for item in site.data['vari-ja-muoto'] %}
     <section class="image-section" data-series="{% if item.series %}{{ item.series }}{% else %}general{% endif %}">
@@ -51,6 +51,7 @@ translation_url: /en/color-and-form.html
 function initGalleryFilter() {
     const filterLinks = document.querySelectorAll(".filter-link");
     const imageSections = document.querySelectorAll(".image-section");
+    const subSeriesIntros = document.querySelectorAll(".sub-series-intro");
 
     if (!filterLinks.length || !imageSections.length) return;
     
@@ -69,16 +70,19 @@ function initGalleryFilter() {
             link.setAttribute("aria-current", "page"); // Lisää aria-current aktiiviseen linkkiin
             const filter = link.getAttribute("data-filter");
 
+            subSeriesIntros.forEach(intro => {
+                if (intro.getAttribute("data-intro-series") === filter) {
+                    intro.classList.remove("hidden");
+                } else {
+                    intro.classList.add("hidden");
+                }
+            });
+
             imageSections.forEach(section => {
                 const series = section.getAttribute("data-series");
-                const isPlaceholder = section.classList.contains("empty-placeholder");
                 
                 if (filter === "all") {
-                    if (isPlaceholder) {
-                        section.classList.add("hidden");
-                    } else {
-                        section.classList.remove("hidden");
-                    }
+                    section.classList.remove("hidden");
                 } else if (series === filter) {
                     section.classList.remove("hidden");
                 } else {
