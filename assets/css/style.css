@@ -1102,23 +1102,18 @@ body.index-page main {
   overflow: hidden !important; /* Estää sisällön näkymisen */
 }
 
-/* Paikkavaraajan tyylit */
-.empty-placeholder-content {
-  border: 1px dashed var(--color-hex-333);
-  padding: 150px 20px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
+/* Alasarjan esittelyteksti */
+.sub-series-intro {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
 }
-.empty-placeholder-content p {
-  color: var(--text-dimmed);
-  font-size: 12px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin: 0;
-  font-weight: 300;
+.sub-series-intro.hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: hidden !important;
 }
 
 /* --- GALLERY FILTER NAVIGATION --- */
