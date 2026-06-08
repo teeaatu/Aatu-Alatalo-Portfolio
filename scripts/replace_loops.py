@@ -3,12 +3,19 @@ import re
 
 html_to_yml = {
     'vari-ja-muoto.html': 'vari-ja-muoto',
+    'en/color-and-form.html': 'vari-ja-muoto',
     'luonto-ja-ymparisto.html': 'luonto-ja-ymparisto',
+    'en/nature.html': 'luonto-ja-ymparisto',
     'masters-2026.html': 'masters-2026',
+    'en/masters-2026.html': 'masters-2026',
     'mustavalkoinen-sarja.html': 'mustavalkoinen-sarja',
+    'en/black-and-white-series.html': 'mustavalkoinen-sarja',
     'raw.html': 'raw',
+    'en/raw.html': 'raw',
     'sisatilan-valo.html': 'sisatilan-valo',
+    'en/interior-light.html': 'sisatilan-valo',
     'Potret.html': 'Potret',
+    'en/portraits.html': 'Potret',
 }
 
 loop_template = """    {{% for item in site.data['{dataset}'] %}}
@@ -19,11 +26,11 @@ loop_template = """    {{% for item in site.data['{dataset}'] %}}
       {{% assign filename = item.kuva | split: '/' | last | split: '.' | first %}}
       {{% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}}
     {{% endif %}}
-    <section class="image-section">
+    <section class="image-section" data-series="{{% if item.series %}}{{{{ item.series }}}}{{% else %}}general{{% endif %}}">
         <div class="image-wrapper">
-            <img {% if item.kuva contains 'http://' or item.kuva contains 'https://' %}src="{{{{ item.kuva }}}}"{% else %}src="/assets/images/{{{{ item.kuva }}}}"{% endif %} alt="{{{{ alt_content }}}}" class="gallery-img" loading="lazy">
+            <img {{% if item.kuva contains 'http' %}}src="{{{{ item.kuva }}}}"{{% else %}}src="/assets/images/{{{{ item.kuva }}}}"{{% endif %}} alt="{{{{ alt_content }}}}" class="gallery-img" {{% if forloop.first %}}loading="eager" fetchpriority="high"{{% else %}}loading="lazy"{{% endif %}}>
             <div class="project-info">
-                <p>{{{{ item.otsikko }}}}</p>
+                <p>{{% if page.lang == 'en' %}}{{{{ item.otsikko | split: ' / ' | first }}}}{{% else %}}{{{{ item.otsikko | split: ' / ' | last }}}}{{% endif %}}</p>
                 <p>{{{{ item.paikka }}}}</p>
             </div>
         </div>
@@ -42,7 +49,7 @@ for html_file, dataset in html_to_yml.items():
     # Wait, some pages have other <section>s? Only image-section.
     
     # Find all <section class="image-section"> blocks
-    pattern = re.compile(r'(<section class="image-section">.*?</section>\s*)+', re.DOTALL)
+    pattern = re.compile(r'(<section class="image-section".*?</section>\s*)+', re.DOTALL)
     
     def replacer(match):
         return loop_template.format(dataset=dataset) + '\n'

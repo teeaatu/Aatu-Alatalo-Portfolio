@@ -1134,7 +1134,7 @@ body.index-page main {
   text-decoration: none !important;
   margin: 0 8px; /* Pienempi marginaali linkkien ympärillä */
   transition: color 0.3s ease, opacity 0.3s ease;
-  opacity: 0.6; /* Oletus himmeys */
+  opacity: 0.5; /* Oletus himmeys */
 }
 .gallery-filter-nav .filter-link:hover,
 .gallery-filter-nav .filter-link.active {
