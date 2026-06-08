@@ -1035,11 +1035,29 @@ body.index-page main {
     transform: none !important;
   }
 
-  /* 4. Smooth out the crossfade timing for a more cinematic feel */
+  /* 4. Isolate typography globally for crisp, independent crossfades */
+  .intro-title {
+    view-transition-name: intro-title;
+  }
+  .intro-text {
+    view-transition-name: intro-text;
+  }
+  .mobile-page-title {
+    view-transition-name: mobile-page-title;
+  }
+
+  /* 5. Smooth out the crossfade timing for a more cinematic feel */
   ::view-transition-old(root),
   ::view-transition-new(root),
   ::view-transition-old(main-content),
-  ::view-transition-new(main-content) {
+  ::view-transition-new(main-content),
+  ::view-transition-old(intro-title),
+  ::view-transition-new(intro-title),
+  ::view-transition-old(intro-text),
+  ::view-transition-new(intro-text),
+  ::view-transition-old(mobile-page-title),
+  ::view-transition-new(mobile-page-title) {
     animation-duration: 0.4s;
+    animation-timing-function: ease-in-out;
   }
 }
