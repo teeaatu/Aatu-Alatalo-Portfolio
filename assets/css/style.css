@@ -1014,9 +1014,12 @@ body.index-page main {
   }
 
   /* 1. Isolate static navigation layers to prevent shifting */
-  aside {
-    view-transition-name: site-sidebar;
+  @media (min-width: 1025px) {
+    aside {
+      view-transition-name: site-sidebar;
+    }
   }
+
   .mobile-header {
     view-transition-name: mobile-header;
   }
@@ -1030,5 +1033,13 @@ body.index-page main {
   ::view-transition-new(main-content) .stagger-item {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  /* 4. Smooth out the crossfade timing for a more cinematic feel */
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-old(main-content),
+  ::view-transition-new(main-content) {
+    animation-duration: 0.4s;
   }
 }

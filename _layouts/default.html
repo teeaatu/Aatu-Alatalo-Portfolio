@@ -72,6 +72,42 @@
       });
   }
 
+  // --- MOBILE MENU VIEW TRANSITION FIX (Micro-close) ---
+  // Ensures the menu closes fully before the browser takes a View Transition snapshot
+  document.querySelectorAll('aside a, .mobile-header a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      // Only intercept if the mobile menu is actively open
+      if (body.classList.contains('menu-open')) {
+        // Allow standard browser behavior for modified clicks (e.g. open in new tab)
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        
+        const href = this.getAttribute('href');
+        
+        // Ignore edge cases (external links, mailto, etc.). Just close the menu for hash links.
+        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || this.getAttribute('target') === '_blank') {
+          if (href && href.startsWith('#')) body.classList.remove('menu-open');
+          return;
+        }
+
+        const isLocal = this.hostname === window.location.hostname || !this.hostname;
+        if (isLocal) {
+          e.preventDefault();
+          body.classList.remove('menu-open'); // 1. Trigger native CSS closing animation
+          
+          // 2. Wait briefly for the DOM layout to settle, then navigate
+          setTimeout(() => {
+            window.location.href = href;
+          }, 350); // Allow sidebar to slide out almost fully before snapshot
+        }
+      }
+    });
+  });
+
+  // iOS Safari BFCache safeguard: ensure menu is fully reset on swipe-back
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) body.classList.remove('menu-open');
+  });
+
   // Skrollaus kontaktiin
   const contactBtn = document.getElementById('contactBtn');
   if(contactBtn) {
