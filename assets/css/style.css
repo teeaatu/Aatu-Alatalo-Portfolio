@@ -1084,6 +1084,70 @@ body.index-page main {
 .gallery-filter-nav .filter-link.active {
   color: var(--color-hex-f4f0ea) !important;
 }
+
+/* Sujuvat siirtymät kuvien piilottamiseen/näyttämiseen */
+.image-section {
+  opacity: 1;
+  visibility: visible;
+  /* Lisätty height ja margin-bottom transitiot tilan romahtamiseksi */
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
 .image-section.hidden {
-  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  height: 0 !important; /* Romahtaa elementin korkeuden */
+  margin-bottom: 0 !important; /* Romahtaa alareunan marginaalin */
+  padding-top: 0 !important; /* Varmistaa yläreunan täytteen romahtamisen */
+  padding-bottom: 0 !important; /* Varmistaa alareunan täytteen romahtamisen */
+  overflow: hidden !important; /* Estää sisällön näkymisen */
+}
+
+/* Paikkavaraajan tyylit */
+.empty-placeholder-content {
+  border: 1px dashed var(--color-hex-333);
+  padding: 150px 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+.empty-placeholder-content p {
+  color: var(--text-dimmed);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* --- GALLERY FILTER NAVIGATION --- */
+.gallery-filter-nav {
+  font-family: var(--font-21);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 60px;
+  color: var(--text-dimmed);
+}
+.gallery-filter-nav .breadcrumb-current {
+  margin-right: 15px;
+  color: var(--text-dimmed); /* Varmistetaan, että tämä on aina himmeä */
+}
+.gallery-filter-nav .filter-link {
+  color: var(--text-dimmed); /* Oletuksena himmeä */
+  text-decoration: none !important;
+  margin: 0 8px; /* Pienempi marginaali linkkien ympärillä */
+  transition: color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.6; /* Oletus himmeys */
+}
+.gallery-filter-nav .filter-link:hover,
+.gallery-filter-nav .filter-link.active {
+  color: var(--color-hex-f4f0ea); /* Aktiivinen tai hover kirkas */
+  opacity: 1; /* Aktiivinen tai hover täysin näkyvä */
+}
+.gallery-filter-nav .filter-separator {
+  color: var(--text-dimmed);
+  opacity: 0.4; /* Himmeämpi erotin */
+  margin: 0 5px; /* Pienempi marginaali erottimen ympärillä */
 }
