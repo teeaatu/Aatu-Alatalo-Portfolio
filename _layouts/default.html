@@ -92,12 +92,8 @@
         const isLocal = this.hostname === window.location.hostname || !this.hostname;
         if (isLocal) {
           e.preventDefault();
-          body.classList.remove('menu-open'); // 1. Trigger native CSS closing animation
-          
-          // 2. Wait briefly for the DOM layout to settle, then navigate
-          setTimeout(() => {
-            window.location.href = href;
-          }, 350); // Allow sidebar to slide out almost fully before snapshot
+          // Navigate instantly. The View Transition API will naturally fade the open menu into the new closed page.
+          window.location.href = href;
         }
       }
     });
