@@ -1115,12 +1115,9 @@ body.index-page main {
 .gallery-filter-nav .filter-link {
   color: var(--text-dimmed); /* Oletuksena himmeä */
   text-decoration: none !important;
-  margin: 0 8px; /* Pienempi marginaali linkkien ympärillä */
+  margin: 0; /* Nollataan, jotta rivittyvä linkki asettuu tasan vasemmalle */
   transition: color 0.3s ease, opacity 0.3s ease;
   opacity: 0.5; /* Oletus himmeys */
-}
-.gallery-filter-nav .filter-link:first-child {
-  margin-left: 0; /* Tasaa ensimmäisen linkin täydellisesti vasempaan reunaan */
 }
 .gallery-filter-nav .filter-link:hover,
 .gallery-filter-nav .filter-link.active {
@@ -1130,7 +1127,7 @@ body.index-page main {
 .gallery-filter-nav .filter-separator {
   color: var(--text-dimmed);
   opacity: 0.4; /* Himmeämpi erotin */
-  margin: 0 5px; /* Pienempi marginaali erottimen ympärillä */
+  margin: 0 12px; /* Siirretään tyhjä tila yksinomaan erottimen ympärille */
 }
 
 /* --- MOBILE TYPOGRAPHY FIX FOR FILTER NAV --- */
