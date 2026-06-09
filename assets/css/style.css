@@ -458,6 +458,32 @@ main {
   }
 }
 
+/* Desktop-korjaukset pitkille otsikoille, jotta sanat eivät katkea tai jätä orpoja merkkejä */
+@media (min-width: 1024px) {
+  .intro-title.mustavalkoinen-fix {
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  .intro-title.ajasta-fix {
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  .intro-title.rakennukset-fix {
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  .intro-title.monochrome-fix {
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    display: block !important;
+  }
+}
+
 .intro-text {
   font-size: 1rem;
   line-height: 1.6;

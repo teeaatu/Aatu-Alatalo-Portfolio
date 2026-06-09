@@ -22,8 +22,14 @@ translation_url: /en/still-life.html
 
     {% for item in site.data['still-life'] %}
     <section class="image-section">
+        {% if item.alt_text != blank %}
+          {% assign alt_content = item.alt_text %}
+        {% else %}
+          {% assign filename = item.kuva | split: '/' | last | split: '.' | first %}
+          {% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
+        {% endif %}
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+            <img src="/assets/images/{{ item.kuva }}" alt="{{ alt_content }}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | last }}</p>
                 <p>{{ item.paikka }}</p>
