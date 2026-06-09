@@ -31,7 +31,7 @@ loop_template = """    {{% for item in site.data['{dataset}'] %}}
             <img {{% if item.kuva contains 'http' %}}src="{{{{ item.kuva }}}}"{{% else %}}src="/assets/images/{{{{ item.kuva }}}}"{{% endif %}} alt="{{{{ alt_content }}}}" class="gallery-img" {{% if forloop.first %}}loading="eager" fetchpriority="high"{{% else %}}loading="lazy"{{% endif %}}>
             <div class="project-info">
                 <p>{{% if page.lang == 'en' %}}{{{{ item.otsikko | split: ' / ' | first }}}}{{% else %}}{{{{ item.otsikko | split: ' / ' | last }}}}{{% endif %}}</p>
-                <p>{{{{ item.paikka }}}}</p>
+                <p>{{% if page.lang == 'en' %}}{{{{ item.paikka | split: ' / ' | first }}}}{{% else %}}{{{{ item.paikka | split: ' / ' | last }}}}{{% endif %}}</p>
             </div>
         </div>
     </section>

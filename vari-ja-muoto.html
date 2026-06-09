@@ -30,14 +30,14 @@ translation_url: /en/color-and-form.html
     <!-- Alasarjan esittelyteksti (näytetään vain Utajärvi-filtterillä) -->
     <div class="sub-series-intro hidden" data-intro-series="utajarvi">
         <div class="intro-text" lang="fi">
-            Utajärvi on noin 2 500 asukkaan rauhallinen kunta Pohjois-Pohjanmaalla, Oulujokivarressa. Paikka on tullut tutuksi aina ohi ajettaessa matkalla mummolaan, mutta aurinkoinen kesäpäivä antoi vihdoin syyn pysähtyä ja kierrellä katsomassa pienen kylän touhuja. Sarja dokumentoi tätä päivävisiittiä, kesäisen levollista pikkukyläfiilistä, pysähtyneisyyttä ja arjen ympäristön hienovaraisia yksityiskohtia, joissa toistuvat paikallisen elämänmuodon jättämät jäljet ajassa.
+            Utajärvi on noin 2 500 asukkaan rauhallinen kunta Pohjois-Pohjanmaalla, Oulujokivarressa. Paikka on tullut tutuksi aina ohi ajettaessa matkalla mummolaan, mutta aurinkoinen kesäpäivä antoi vihdoin syyn pysähtyä ja kierrellä katsomassa pienen kylän touhuja. Sarja dokumentoi tätä päivävisiittiä ja kesäisen levollista pikkukyläfiilistä.
         </div>
     </div>
 
     <!-- Yksittäiset teokset esittelyteksti -->
     <div class="sub-series-intro hidden" data-intro-series="general">
         <div class="intro-text" lang="fi">
-            Tähän osioon on kuratoitu itsenäisiä havaintoja ja yksittäisiä teoksia, joita ei sido tietty maantieteellinen paikka tai yhtenäinen tarina. Fokus on puhtaasti hetkellisissä visuaalisissa kohtaamisissa, urbaaneissa muodoissa, valon taittumisessa ja värien välisessä vuoropuhelussa arjen ympäristössä.
+            Tähän osioon olen valinnut yksittäisiä teoksia, joista pidän. Kokonaisuus koostuu erillisistä havainnoista ympäristön väreistä.
         </div>
     </div>
 
@@ -47,7 +47,7 @@ translation_url: /en/color-and-form.html
             <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | last }}</p>
-                <p>{{ item.paikka }}</p>
+                <p>{{ item.paikka | split: ' / ' | last }}</p>
             </div>
         </div>
     </section>

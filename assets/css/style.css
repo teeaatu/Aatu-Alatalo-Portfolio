@@ -1062,29 +1062,6 @@ body.index-page main {
   }
 }
 
-/* --- GALLERY FILTER NAVIGATION --- */
-.gallery-filter-nav {
-  font-family: var(--font-21);
-  font-size: 14px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 60px;
-  color: var(--text-dimmed);
-}
-.gallery-filter-nav .breadcrumb-current {
-  margin-right: 10px;
-}
-.gallery-filter-nav .filter-link {
-  color: var(--text-dimmed) !important;
-  text-decoration: none !important;
-  margin-right: 15px;
-  transition: color 0.3s ease;
-}
-.gallery-filter-nav .filter-link:hover,
-.gallery-filter-nav .filter-link.active {
-  color: var(--color-hex-f4f0ea) !important;
-}
-
 /* Sujuvat siirtymät kuvien piilottamiseen/näyttämiseen */
 .image-section {
   opacity: 1;
