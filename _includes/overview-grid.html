@@ -17,7 +17,8 @@
               {% assign link_url_val = item.link_url | default: 'none' %}
               {% assign link_text_fi_val = item.link_text_fi | default: 'Siirry sivustolle' %}
               {% assign link_text_en_val = item.link_text_en | default: 'Visit website' %}
-            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val %}
+            {% assign is_pinned_val = item.pinned | default: false %}
+            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val | append: '|||' | append: is_pinned_val %}
             {% if pin_priority_val != 999 %}
               {% assign priority_pinned_images = priority_pinned_images | push: combined %}
             {% elsif item.pinned == true or item.pinned == 'true' %}
@@ -35,7 +36,8 @@
             {% assign link_url_val = item.link_url | default: 'none' %}
             {% assign link_text_fi_val = item.link_text_fi | default: 'Siirry sivustolle' %}
             {% assign link_text_en_val = item.link_text_en | default: 'Visit website' %}
-          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val %}
+          {% assign is_pinned_val = item.pinned | default: false %}
+          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val | append: '|||' | append: is_pinned_val %}
           {% if pin_priority_val != 999 %}
             {% assign priority_pinned_images = priority_pinned_images | push: combined %}
           {% elsif item.pinned == true or item.pinned == 'true' %}
@@ -67,6 +69,7 @@
     {% assign p_link_url = parts[8] %}
     {% assign p_link_text_fi = parts[9] %}
     {% assign p_link_text_en = parts[10] %}
+    {% assign p_is_pinned = parts[11] %}
     
     {% assign final_alt = "Portfolio Image" %}
     {% if p_alt != 'EMPTY_ALT' and p_alt != '' %}
@@ -99,7 +102,7 @@
         </div>
         <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
              alt="{{ final_alt | escape }}" 
-             {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
+             {% if p_priority != '999' or p_is_pinned == 'true' %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
              class="link-img"
              onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
         <div class="external-link-text">
@@ -113,7 +116,7 @@
       {% else %}
       <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
            alt="{{ final_alt | escape }}" 
-           {% if forloop.index <= 4 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
+           {% if p_priority != '999' or p_is_pinned == 'true' %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
            class="gallery-img"
            onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
       {% endif %}
