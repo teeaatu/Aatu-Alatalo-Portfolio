@@ -4,7 +4,9 @@
     <span class="separator">/</span>
     <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
   </div>
-  <a href="{{ '/' | relative_url }}" class="mobile-logo no-decoration">Aatu Alatalo</a>
+  <a href="{{ '/' | relative_url }}" class="mobile-logo no-decoration">
+    <img src="{{ '/portfolio_logo.png' | relative_url }}" alt="Aatu Alatalo Logo">
+  </a>
   <button class="menu-toggle" id="menuToggle" aria-label="Avaa valikko">
     <div class="hamburger"></div>
   </button>

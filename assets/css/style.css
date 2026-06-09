@@ -1,6 +1,6 @@
 :root {
   --bg-color: #0a0a0a;
-  --accent-color: #ff0000;
+  --accent-color: #eab848;
   --text-main: rgba(244, 240, 234, 0.85); /* 85% kirkkaus kaikelle perustekstille */
   --text-dimmed: #888;
   --sidebar-width: 300px;
@@ -94,16 +94,21 @@ aside {
   z-index: 100;
 }
 
-.logo {
-  font-size: 20px;
-  letter-spacing: 3px;
-  text-decoration: none;
-  color: var(--color-hex-f4f0ea);
-  margin-bottom: 60px;
+.site-logo-img {
   display: block;
-  line-height: 1.1;
-  font-weight: 300;
-  text-transform: none;
+  margin-bottom: 60px;
+  max-width: 180px; /* Voit säätää logon kokoa tästä muuttamalla arvoa */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.site-logo-img:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+
+.site-logo-img img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 nav { 
@@ -260,13 +265,18 @@ nav a.masters-nav-item.active {
   padding-top: 10px;
 }
 .mobile-logo {
-  font-size: 17px;
-  letter-spacing: 3px;
-  font-weight: 300;
-  margin-bottom: 30px;
-  line-height: 1.2;
-  text-decoration: none !important;
-  color: inherit !important;
+  display: block;
+  max-width: 140px; /* Säädä tätä lukua jos logo tuntuu liian isolta/pieneltä mobiilissa */
+  margin-bottom: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.mobile-logo:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+.mobile-logo img {
+  width: 100%;
+  height: auto;
   display: block;
 }
 .mobile-page-title {
@@ -624,7 +634,7 @@ main {
 
 /* --- RESPONSIVISUUS PERUS --- */
 @media (max-width: 1024px) {
-  aside .logo { display: none !important; }
+  aside .site-logo-img { display: none !important; }
   aside .desktop-lang-switcher { display: none !important; }
   aside {
     position: fixed; left: -100%; width: 100%; height: 100vh;
