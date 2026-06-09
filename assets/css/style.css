@@ -437,6 +437,14 @@ main {
   }
 }
 
+/* Mobile fix specifically for the long word "MUSTAVALKOINEN" to prevent single-letter orphans */
+@media (max-width: 480px) {
+  .intro-title.mustavalkoinen-fix {
+    font-size: clamp(2rem, 8vw, 8rem);
+    letter-spacing: -0.04em;
+  }
+}
+
 .intro-text {
   font-size: 1rem;
   line-height: 1.6;
@@ -1076,31 +1084,24 @@ body.index-page main {
 .image-section {
   opacity: 1;
   visibility: visible;
-  /* Lisätty height ja margin-bottom transitiot tilan romahtamiseksi */
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out, padding 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
 }
 .image-section.hidden {
+  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  height: 0 !important; /* Romahtaa elementin korkeuden */
-  margin-bottom: 0 !important; /* Romahtaa alareunan marginaalin */
-  padding-top: 0 !important; /* Varmistaa yläreunan täytteen romahtamisen */
-  padding-bottom: 0 !important; /* Varmistaa alareunan täytteen romahtamisen */
-  overflow: hidden !important; /* Estää sisällön näkymisen */
 }
 
 /* Alasarjan esittelyteksti */
 .sub-series-intro {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
 }
 .sub-series-intro.hidden {
+  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  height: 0 !important;
-  margin-bottom: 0 !important;
-  overflow: hidden !important;
 }
 
 /* --- GALLERY FILTER NAVIGATION --- */
