@@ -400,6 +400,19 @@ main {
   }
 }
 
+/* Keskitetään koko kuvan ja tekstin kääre, jotta projektiteksti asettuu tarkalleen kuvan vasempaan laitaan */
+.image-wrapper {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* Rajoitetaan pystykuvien korkeutta kategoriasivuilla, jotta ne mahtuvat nätisti ruudulle */
+.image-section .gallery-img {
+  max-height: 85vh;
+  width: auto;
+  max-width: 100%;
+}
+
 /* 1x1 Neliö merkkiä varten */
 .overview-item.badge-item img {
   aspect-ratio: 1 / 1;
