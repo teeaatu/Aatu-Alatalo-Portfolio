@@ -30,14 +30,14 @@ translation_url: /vari-ja-muoto.html
     <!-- Alasarjan esittelyteksti (näytetään vain Utajärvi-filtterillä) -->
     <div class="sub-series-intro hidden" data-intro-series="utajarvi">
         <div class="intro-text" lang="en">
-            Utajärvi is a quiet municipality of about 2,500 inhabitants in North Ostrobothnia, located along the Oulu River. Having always just driven past it on the way to my grandmother's, a sunny summer day finally provided the perfect reason to stop, wander around, and observe the village life. This series documents that day visit, the peaceful summer atmosphere of a small village, the stillness, and the subtle details of the everyday environment that reflect the traces left by the local way of life over time.
+            Utajärvi is a quiet municipality of about 2,500 inhabitants in North Ostrobothnia, located along the Oulu River. Having always just driven past it on the way to my grandmother's, a sunny summer day finally provided the perfect reason to stop, wander around, and observe the village life. This series documents that day visit and the peaceful summer atmosphere of a small village.
         </div>
     </div>
 
     <!-- Selected Works esittelyteksti -->
     <div class="sub-series-intro hidden" data-intro-series="general">
         <div class="intro-text" lang="en">
-            This section features a curated selection of standalone observations and independent works, free from geographical boundaries or a singular narrative. The focus is purely on momentary visual encounters, urban forms, the play of light, and the dialogue between colors within the everyday environment.
+            In this section, I have chosen individual works that I personally like. The collection consists of separate observations of the colors in the environment.
         </div>
     </div>
 
@@ -47,7 +47,7 @@ translation_url: /vari-ja-muoto.html
             <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | first }}</p>
-                <p>{{ item.paikka }}</p>
+                <p>{{ item.paikka | split: ' / ' | first }}</p>
             </div>
         </div>
     </section>
