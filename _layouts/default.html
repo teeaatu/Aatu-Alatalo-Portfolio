@@ -170,6 +170,57 @@
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
+  // --- MASONRY GRID LOGIIKKA ---
+  document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.querySelector('.overview-grid');
+      if (!grid) return;
+
+      // Aktivoidaan Masonry CSS-luokka
+      grid.classList.add('js-masonry-active');
+
+      function layoutMasonry() {
+          const items = Array.from(grid.querySelectorAll('.overview-item'));
+          if (items.length === 0) return;
+
+          const isMobile = window.innerWidth <= 1024;
+          const gap = isMobile ? 15 : 40;
+          const cols = isMobile ? 2 : 3;
+          
+          const gridWidth = grid.getBoundingClientRect().width;
+          const colWidth = (gridWidth - gap * (cols - 1)) / cols;
+
+          let colHeights = new Array(cols).fill(0);
+
+          items.forEach((item, index) => {
+              item.style.width = colWidth + 'px';
+              
+              let targetCol;
+              if (index < cols) {
+                  targetCol = index; // Pakottaa ylärivin kuvat järjestykseen (priority)
+              } else {
+                  targetCol = colHeights.indexOf(Math.min(...colHeights)); // Loput lyhyimpään sarakkeeseen
+              }
+
+              const x = targetCol * (colWidth + gap);
+              const y = colHeights[targetCol];
+
+              item.style.left = x + 'px';
+              item.style.top = y + 'px';
+              
+              colHeights[targetCol] += item.offsetHeight + gap;
+          });
+
+          grid.style.height = Math.max(...colHeights) + 'px';
+      }
+
+      let resizeTimer;
+      window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutMasonry, 100); });
+
+      const images = grid.querySelectorAll('img');
+      images.forEach(img => { if (img.complete) layoutMasonry(); else img.addEventListener('load', layoutMasonry); });
+      layoutMasonry();
+  });
+
   // Staggered Load Animation
   document.addEventListener('DOMContentLoaded', () => {
     // Initialize Intersection Observer for scroll animations
