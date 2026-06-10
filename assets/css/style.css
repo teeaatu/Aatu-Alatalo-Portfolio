@@ -409,6 +409,16 @@ main {
   width: 100%;
 }
 
+/* JS Masonry overrides */
+.overview-grid.js-masonry-active {
+  display: block; /* Poistaa CSS-gridin käytöstä, kun JS aktivoituu */
+  position: relative;
+}
+.overview-grid.js-masonry-active .overview-item {
+  position: absolute;
+  transition: left 0.4s ease-out, top 0.4s ease-out; /* Pehmeä liukuma kuvien latautuessa */
+}
+
 @media (max-width: 1024px) {
   .overview-grid {
     grid-template-columns: repeat(2, 1fr);
