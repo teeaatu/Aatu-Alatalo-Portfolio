@@ -32,7 +32,7 @@ translation_url: /en/nature.html
               {% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
             {% endif %}
             <div class="image-wrapper">
-                <img src="/assets/images/{{ img_item.kuva }}" alt="{{ alt_content }}" class="gallery-img" {% if forloop.parentloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+                <img {% if img_item.kuva contains 'http' %}src="{{ img_item.kuva }}"{% else %}src="/assets/images/{{ img_item.kuva }}"{% endif %} alt="{{ alt_content }}" class="gallery-img" {% if forloop.parentloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             </div>
             {% endfor %}
         </div>
@@ -50,7 +50,7 @@ translation_url: /en/nature.html
           {% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
         {% endif %}
         <div class="image-wrapper">
-            <img src="/assets/images/{{ item.kuva }}" alt="{{ alt_content }}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+            <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{{ alt_content }}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | last }}</p>
                 <p>{{ item.paikka }}</p>
