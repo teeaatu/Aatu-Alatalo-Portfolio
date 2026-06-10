@@ -1,20 +1,37 @@
 # Project Context
+# Projektin muutoshistoria - Kesäkuu 2026
 
 ## Project Overview
 Jekyll-based portfolio website hosted on GitHub Pages with Cloudflare proxy.
+## Tehdyt päivitykset ja korjaukset
 
 ## Current State
 The repository is currently clean at a stable commit (`5bfe70a`). Image lazy-loading optimizations were safely reverted, and the Finnish language gallery titles (e.g., "Väri ja muoto") have been fixed to display only Finnish text.
+### 1. Otsikoiden ylivuoto ja tavutus (Mobile & Desktop)
+- Korjattu "MUSTAVALKOINEN" mobiiliylivuoto (orphans) käyttäen `.mustavalkoinen-fix` luokkaa.
+- Lisätty oikeaoppinen suomen kielen tavutus (`hyphens: auto`) ja estetty orvot kirjaimet pitkissä otsikoissa: "Mustavalkoinen", "Kiehtovat rakennukset" ja "Kuvaprojekti ajasta".
+- Korjattu englanninkielisen "Monochrome"-otsikon tavutus lisäämällä `lang="en"` ja `.monochrome-fix` luokka.
 
 ## Core Development Rules
 - Always keep FI and EN localization logic strictly separated.
 - Always run and verify changes locally via `bundle exec jekyll serve` before any staging.
 - Use atomic, small commits for individual working fixes.
+### 2. Pystykuvien asettelu (Desktop)
+- Rajoitettu pystykuvien maksimikorkeus `85vh` tasoon, jotta ne mahtuvat kerralla ruudulle.
+- Keskitetty koko `.image-wrapper` käyttäen `width: fit-content`, jotta projektitekstit (otsikko ja paikka) kohdistuvat aina täydellisesti kuvan vasempaan reunaan, kuvasuhteesta riippumatta.
 
 ## Future Roadmap
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
+### 3. Gallerian suodattimet
+- Poistettu kuvien "hyppiminen" ja alhaalta liukuminen suodattimia (esim. Utajärvi) käytettäessä. Korvattu marginaalianimaatiot suoralla `display: none !important` -säännöllä.
 
 ## History
+* **[2026-06-09] Mobile Typography, Portrait Optimization, and Alt-Text Automation**
+    * **Typography:** Fixed "MUSTAVALKOINEN" mobile overflow orphans. Implemented language-aware hyphenation (`hyphens: auto`) and word-break controls for long titles ("Kuvaprojekti ajasta", "Kiehtovat rakennukset", "Monochrome") on desktop.
+    * **UX/Layout:** Optimized portrait image display with a `85vh` max-height constraint. Refactored `.image-wrapper` to use `width: fit-content`, ensuring project metadata aligns perfectly with image edges across all aspect ratios.
+    * **Transitions:** Stabilized gallery filtering (e.g., Utajärvi sub-series) by switching to `display: none !important` for hidden elements, eliminating layout jumps.
+    * **Accessibility:** Standardized `alt` text logic across all gallery pages. The system now prioritizes the YAML `alt_text` field and provides an automated fallback that generates readable text from filenames (e.g., `DSC_001.jpg` -> `Dsc 001`).
+    * **Cleanup:** Removed redundant image tags in `raw.html` and fixed YAML syntax errors in data files.
 * **[2026-06-08] Sub-series Filtering Architecture & Utajärvi Integration**
     * **Architecture:** Implemented a scalable sub-series filtering system within the "Väri ja muoto / Color & Form" gallery. This allows a single gallery page to be divided into granular, thematically-linked projects.
     * **Data Model:** Introduced a `series` key in the YAML data files (e.g., `series: "utajarvi"` in `_data/vari-ja-muoto.yml`) to programmatically associate images with a specific sub-series. Images without this key default to a "general" category. Metadata for titles and locations was updated to a bilingual `EN / FI` format.
@@ -52,3 +69,11 @@ Future steps include professional video/media streaming architecture (via Cloudf
 * **[2026-06-03] Style Architecture & AI Safeguards**
     * Moved all hardcoded colors, fonts, and style values from the main stylesheet into global CSS variables within the :root block to enable easier future theme management.
     * Created the .cursorrules file in the root directory to enforce strict AI boundaries, banning inline styles (style="...") and mandating the use of centralized CSS variables for all visual adjustments.
+### 4. Alt-tekstien automaatio
+- Päivitetty Liquid-logiikka kaikkiin galleriasivuihin.
+- Järjestelmä käyttää ensisijaisesti YAML-tiedoston `alt_text`-kenttää.
+- Jos kenttä on tyhjä, järjestelmä luo automaattisen fallback-tekstin siivoamalla kuvan tiedostonimen (esim. `DSC_1234.jpg` -> `Dsc 1234`).
+
+### 5. Tekninen ylläpito
+- Korjattu kielioppi- ja syntaksivirheitä YAML-datassa.
+- Siivottu `raw.html` ylimääräisistä päällekkäisistä kuva-elementeistä.

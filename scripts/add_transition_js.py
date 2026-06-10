@@ -27,25 +27,25 @@ js_code = """
       });
     });
 
-    document.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', function(e) {
-        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-        
-        const href = this.getAttribute('href');
-        // Exclude anchors, mailto, tel, target_blank and data-fancybox/photoswipe elements
-        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || this.getAttribute('target') === '_blank' || this.classList.contains('gallery-img')) {
-          return;
-        }
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a');
+      if (!link) return;
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+      
+      const href = link.getAttribute('href');
+      // Exclude anchors, mailto, tel, target_blank and data-fancybox/photoswipe elements
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.getAttribute('target') === '_blank' || link.classList.contains('gallery-img')) {
+        return;
+      }
 
-        const isLocal = this.hostname === window.location.hostname;
-        if (isLocal) {
-          e.preventDefault();
-          transitionOverlay.classList.add('is-entering');
-          setTimeout(() => {
-            window.location.href = href;
-          }, 500); // Navigate slightly before animation finishes for smoother feel
-        }
-      });
+      const isLocal = link.hostname === window.location.hostname;
+      if (isLocal) {
+        e.preventDefault();
+        transitionOverlay.classList.add('is-entering');
+        setTimeout(() => {
+          window.location.href = href;
+        }, 500); // Navigate slightly before animation finishes for smoother feel
+      }
     });
   }
 </script>

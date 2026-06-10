@@ -61,46 +61,49 @@ translation_url: /en/color-and-form.html
 
 <script>
 function initGalleryFilter() {
-    const filterLinks = document.querySelectorAll(".filter-link");
+    const filterNav = document.querySelector(".gallery-filter-nav");
     const imageSections = document.querySelectorAll(".image-section");
     const subSeriesIntros = document.querySelectorAll(".sub-series-intro");
 
-    if (!filterLinks.length || !imageSections.length) return;
+    if (!filterNav || !imageSections.length) return;
     
     if (document.body.dataset.filterInit === "true") return;
     document.body.dataset.filterInit = "true";
 
-    filterLinks.forEach(link => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
+    filterNav.addEventListener("click", (e) => {
+        const link = e.target.closest(".filter-link");
+        if (!link) return;
+        
+        e.preventDefault();
+        
+        const filterLinks = filterNav.querySelectorAll(".filter-link");
+        filterLinks.forEach(l => {
+            l.classList.remove("active");
+            l.removeAttribute("aria-current"); // Poista aria-current muista linkeistä
+        });
+        
+        link.classList.add("active");
+        link.setAttribute("aria-current", "page"); // Lisää aria-current aktiiviseen linkkiin
+        const filter = link.getAttribute("data-filter");
+
+        subSeriesIntros.forEach(intro => {
+            if (intro.getAttribute("data-intro-series") === filter) {
+                intro.classList.remove("hidden");
+            } else {
+                intro.classList.add("hidden");
+            }
+        });
+
+        imageSections.forEach(section => {
+            const series = section.getAttribute("data-series");
             
-            filterLinks.forEach(l => {
-                l.classList.remove("active");
-                l.removeAttribute("aria-current"); // Poista aria-current muista linkeistä
-            });
-            link.classList.add("active");
-            link.setAttribute("aria-current", "page"); // Lisää aria-current aktiiviseen linkkiin
-            const filter = link.getAttribute("data-filter");
-
-            subSeriesIntros.forEach(intro => {
-                if (intro.getAttribute("data-intro-series") === filter) {
-                    intro.classList.remove("hidden");
-                } else {
-                    intro.classList.add("hidden");
-                }
-            });
-
-            imageSections.forEach(section => {
-                const series = section.getAttribute("data-series");
-                
-                if (filter === "all") {
-                    section.classList.remove("hidden");
-                } else if (series === filter) {
-                    section.classList.remove("hidden");
-                } else {
-                    section.classList.add("hidden");
-                }
-            });
+            if (filter === "all") {
+                section.classList.remove("hidden");
+            } else if (series === filter) {
+                section.classList.remove("hidden");
+            } else {
+                section.classList.add("hidden");
+            }
         });
     });
 }
