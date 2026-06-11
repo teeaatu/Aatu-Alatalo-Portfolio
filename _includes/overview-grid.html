@@ -71,6 +71,16 @@
     {% assign p_link_text_en = parts[10] %}
     {% assign p_is_pinned = parts[11] %}
     
+    {% assign filename_no_ext = p_kuva | split: '/' | last | split: '.' | first %}
+    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
+    {% if p_kuva contains 'http' %}
+      {% assign p_thumb = p_kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
+      {% assign full_img_url = p_kuva %}
+    {% else %}
+      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
+      {% assign full_img_url = '/assets/images/' | append: p_kuva %}
+    {% endif %}
+
     {% assign final_alt = "Portfolio Image" %}
     {% if p_alt != 'EMPTY_ALT' and p_alt != '' %}
       {% assign final_alt = p_alt %}
@@ -100,11 +110,11 @@
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
           </svg>
         </div>
-        <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
+        <img src="{{ p_thumb }}" 
              alt="{{ final_alt | escape }}" 
              {% if p_priority != '999' or p_is_pinned == 'true' or forloop.index <= 6 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
              class="link-img"
-             onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
+             onerror="this.onerror=null;this.src='{{ full_img_url }}';">
         <div class="external-link-text">
           <span>{% if page.lang == 'en' %}{{ p_link_text_en }}{% else %}{{ p_link_text_fi }}{% endif %}</span>
           <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -114,11 +124,12 @@
         </div>
       </a>
       {% else %}
-      <img {% if p_kuva contains 'http' %}src="{{ p_kuva }}"{% else %}src="/assets/images/{{ p_kuva }}"{% endif %} 
+      <img src="{{ p_thumb }}" 
            alt="{{ final_alt | escape }}" 
            {% if p_priority != '999' or p_is_pinned == 'true' or forloop.index <= 6 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
            class="gallery-img"
-           onerror="console.error('Kuvan lataus epäonnistui:', this.src);">
+           data-pswp-src="{{ full_img_url }}"
+           onerror="this.onerror=null;this.src='{{ full_img_url }}';">
       {% endif %}
     </div>
   {% endfor %}

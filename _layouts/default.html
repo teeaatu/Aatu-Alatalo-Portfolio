@@ -134,9 +134,11 @@
     lightbox.addFilter('itemData', (itemData, index) => {
       const img = itemData.element;
       if (img) {
-        itemData.src = img.src;
-        itemData.w = img.naturalWidth || img.clientWidth || 1920;
-        itemData.h = img.naturalHeight || img.clientHeight || 1080;
+        itemData.src = img.getAttribute('data-pswp-src') || img.src;
+        /* Lasketaan kuvasuhteen avulla virtuaalinen iso resoluutio, koska "naturalWidth" on nyt pikkukuvan koko */
+        const aspect = (img.naturalHeight || 1) / (img.naturalWidth || 1);
+        itemData.w = 2500;
+        itemData.h = 2500 * aspect;
         itemData.msrc = img.src;
       }
       return itemData;
@@ -242,6 +244,23 @@
             observer.observe(item);
         }
     });
+  });
+
+  // --- LAZY LOAD SMOOTH FADE-IN ---
+  document.addEventListener('DOMContentLoaded', () => {
+      const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+      lazyImages.forEach(img => {
+          if (!img.complete) {
+              img.classList.add('js-lazy-hidden');
+              img.addEventListener('load', () => {
+                  img.classList.remove('js-lazy-hidden');
+                  img.classList.add('js-lazy-fade-in');
+              });
+              img.addEventListener('error', () => {
+                  img.classList.remove('js-lazy-hidden'); // Varmistetaan ettei rikkoutunut kuva jää ikuisesti piiloon
+              });
+          }
+      });
   });
 
   // Mobile Smart Sticky Header Logic

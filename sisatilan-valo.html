@@ -20,6 +20,15 @@ translation_url: /en/interior-light.html
     </header>
 
         {% for item in site.data['sisatilan-valo'] %}
+    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
+    {% if item.kuva contains 'http' %}
+      {% assign p_thumb = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
+      {% assign full_img_url = item.kuva %}
+    {% else %}
+      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
+      {% assign full_img_url = '/assets/images/' | append: item.kuva %}
+    {% endif %}
     <section class="image-section">
         {% if item.alt_text != blank %}
           {% assign alt_content = item.alt_text %}
