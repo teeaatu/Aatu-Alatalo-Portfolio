@@ -132,10 +132,12 @@
       },
       spacing: 0.15, // Lisää hieman "ilmaa" kuvien väliin, kun niitä pyyhkäisee/vaihtaa
       imageClickAction: 'next', // Kuvaa klikkaamalla se liukuu nyt pehmeästi seuraavaan
+      tapAction: 'next', // Mobiilissa sormella täppääminen vaihtaa myös seuraavaan kuvaan
       showHideAnimationType: 'zoom',
       zoomAnimationDuration: 500, // Hieman rauhallisempi avaus ja sulkeminen
       counter: false, // minimalist UI
       zoom: false,
+      preload: [1, 2], // Lataa 1 edellisen ja 2 seuraavaa isoa kuvaa salaa taustalla valmiiksi!
     });
 
     lightbox.addFilter('itemData', (itemData, index) => {
