@@ -6,3 +6,4 @@ vendor/
 ._*
 .DS_Store
 .env
+*env.txt

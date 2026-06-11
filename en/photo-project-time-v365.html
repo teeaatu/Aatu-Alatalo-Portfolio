@@ -30,6 +30,6 @@ translation_url: /kuvaprojekti-ajasta-v365.html
       {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
       {% assign full_img_url = '/assets/images/' | append: item.kuva %}
     {% endif %}
-    <section class="image-section"><img src="/assets/images/{{ item.kuva }}" alt="{% if item.alt %}{{ item.alt }}{% else %}V365{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}></section>
+    <section class="image-section"><img src="{{ p_thumb }}" data-pswp-src="{{ full_img_url }}" onerror="this.onerror=null;this.src='{{ full_img_url }}';" alt="{% if item.alt %}{{ item.alt }}{% else %}V365{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}></section>
     {% endfor %}
 </div>

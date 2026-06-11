@@ -37,7 +37,7 @@ translation_url: /en/photo-project-time-v365.html
           {% assign filename = item.kuva | split: '/' | last | split: '.' | first %}
           {% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
         {% endif %}
-        <img src="/assets/images/{{ item.kuva }}" alt="{{ alt_content }}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        <img src="{{ p_thumb }}" data-pswp-src="{{ full_img_url }}" onerror="this.onerror=null;this.src='{{ full_img_url }}';" alt="{{ alt_content }}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
     </section>
     {% endfor %}
 </div>

@@ -16,6 +16,12 @@ The repository incorporates a robust Vanilla JS Masonry grid with CSS transition
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-11] Image Loading Fallback Mechanism & Thumbnail Fixes**
+    * **Resilience (UX/Performance):** Added a robust JavaScript fallback (`onerror="this.onerror=null;this.src='{{ full_img_url }}';"`) directly to all image tags. If a dynamically generated thumbnail is missing or fails to load from the cloud, the browser automatically falls back to fetching and rendering the full-resolution original image. This prevents broken image squares and ensures a seamless viewing experience even before thumbnail generation scripts are run.
+    * **Automation:** Updated `scripts/update_gallery_thumbs.py` to natively inject this `onerror` logic across all individual sub-gallery pages.
+    * **Grid Consistency:** Applied the same `onerror` logic to the main homepage Masonry grid within `_includes/overview-grid.html` to ensure the entire site behaves uniformly.
+    * **Data Fixes:** Fixed incorrect URL paths in `elaimet.yml` related to cloud storage integrations.
+
 * **[2026-06-10] Masonry Grid, HTTPS Support, LCP Optimization & Content Curation**
     * **Layout Architecture:** Implemented a robust Vanilla JS Masonry grid (`overview-grid.html` & `default.html`) to dynamically position images without breaking the critical `pin_priority` left-to-right sorting. Added CSS transitions (`transition: left 0.4s, top 0.4s`) for a smooth, flicker-free layout rendering.
     * **Performance (LCP):** Upgraded the image loading logic to force `loading="eager"` on the first 6 items of any gallery grid automatically, ensuring instantaneous rendering of above-the-fold content even on slow connections.
