@@ -20,6 +20,26 @@ translation_url: /kiehtovat-rakennukset.html
         </div>
     </header>
 
+    <div class="gallery-filter-nav">
+        <a href="#" class="filter-link active" data-filter="all">All</a>
+        <span class="filter-separator">/</span> <a href="#" class="filter-link" data-filter="oulun-yliopisto">University of Oulu</a>
+        <span class="filter-separator">/</span> <a href="#" class="filter-link" data-filter="general">Selected works</a>
+    </div>
+
+    <!-- Sub-series intro text (University of Oulu) -->
+    <div class="sub-series-intro hidden" data-intro-series="oulun-yliopisto">
+        <div class="intro-text" lang="en">
+            Photographs of the architecture and details of the University of Oulu.
+        </div>
+    </div>
+
+    <!-- Selected works intro text -->
+    <div class="sub-series-intro hidden" data-intro-series="general">
+        <div class="intro-text" lang="en">
+            In this section, I have chosen individual works that I personally like. The collection consists of separate observations of various buildings.
+        </div>
+    </div>
+
     {% for item in site.data['kiehtovat-rakennukset'] %}
     {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
     {% assign thumb_filename = filename_no_ext | append: '.webp' %}
@@ -30,7 +50,7 @@ translation_url: /kiehtovat-rakennukset.html
       {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
       {% assign full_img_url = '/assets/images/' | append: item.kuva %}
     {% endif %}
-    <section class="image-section">
+    <section class="image-section" data-series="{% if item.series %}{{ item.series }}{% else %}general{% endif %}">
         <div class="image-wrapper">
             <img src="{{ p_thumb }}" data-pswp-src="{{ full_img_url }}" onerror="this.onerror=null;this.src='{{ full_img_url }}';" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
@@ -41,3 +61,59 @@ translation_url: /kiehtovat-rakennukset.html
     </section>
     {% endfor %}
 </div>
+
+<script>
+function initGalleryFilter() {
+    const filterNav = document.querySelector(".gallery-filter-nav");
+    const imageSections = document.querySelectorAll(".image-section");
+    const subSeriesIntros = document.querySelectorAll(".sub-series-intro");
+
+    if (!filterNav || !imageSections.length) return;
+    
+    if (document.body.dataset.filterInit === "true") return;
+    document.body.dataset.filterInit = "true";
+
+    filterNav.addEventListener("click", (e) => {
+        const link = e.target.closest(".filter-link");
+        if (!link) return;
+        
+        e.preventDefault();
+        
+        const filterLinks = filterNav.querySelectorAll(".filter-link");
+        filterLinks.forEach(l => {
+            l.classList.remove("active");
+            l.removeAttribute("aria-current");
+        });
+        
+        link.classList.add("active");
+        link.setAttribute("aria-current", "page");
+        const filter = link.getAttribute("data-filter");
+
+        subSeriesIntros.forEach(intro => {
+            if (intro.getAttribute("data-intro-series") === filter) {
+                intro.classList.remove("hidden");
+            } else {
+                intro.classList.add("hidden");
+            }
+        });
+
+        imageSections.forEach(section => {
+            const series = section.getAttribute("data-series");
+            
+            if (filter === "all") {
+                section.classList.remove("hidden");
+            } else if (series === filter) {
+                section.classList.remove("hidden");
+            } else {
+                section.classList.add("hidden");
+            }
+        });
+    });
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGalleryFilter);
+} else {
+    initGalleryFilter();
+}
+</script>
