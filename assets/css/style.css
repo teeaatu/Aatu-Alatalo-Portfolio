@@ -594,6 +594,19 @@ main {
   transform: translateY(0);
 }
 
+/* Pehmeä fade-in lazy load kuville (Fade-on-load) */
+.js-lazy-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important; /* Estää mahdolliset renderöintivälähdykset */
+}
+.js-lazy-fade-in {
+  animation: lazyImageFadeIn 0.8s ease-out forwards;
+}
+@keyframes lazyImageFadeIn {
+  from { opacity: 0; visibility: visible; }
+  to { opacity: 1; visibility: visible; }
+}
+
 .gallery-img,
 .link-img { 
     --border-opacity: 0.02; 

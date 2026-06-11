@@ -22,6 +22,15 @@ translation_url: /luonto-ja-ymparisto.html
 
         {% for item in site.data['luonto-ja-ymparisto'] %}
     {% if item.layout == 'diptych' %}
+    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
+    {% if item.kuva contains 'http' %}
+      {% assign p_thumb = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
+      {% assign full_img_url = item.kuva %}
+    {% else %}
+      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
+      {% assign full_img_url = '/assets/images/' | append: item.kuva %}
+    {% endif %}
     <section class="image-section">
         <div class="diptych-wrapper">
             {% for img_item in item.images %}
@@ -36,9 +45,18 @@ translation_url: /luonto-ja-ymparisto.html
         </div>
     </section>
     {% else %}
+    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
+    {% if item.kuva contains 'http' %}
+      {% assign p_thumb = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
+      {% assign full_img_url = item.kuva %}
+    {% else %}
+      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
+      {% assign full_img_url = '/assets/images/' | append: item.kuva %}
+    {% endif %}
     <section class="image-section">
         <div class="image-wrapper">
-            <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+            <img src="{{ p_thumb }}" data-pswp-src="{{ full_img_url }}" alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
             <div class="project-info">
                 <p>{{ item.otsikko | split: ' / ' | first }}</p>
                 <p>{{ item.paikka }}</p>
