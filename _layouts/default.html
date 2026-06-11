@@ -124,25 +124,53 @@
       gallery: 'main',
       children: '.gallery-img',
       pswpModule: () => import('https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.esm.js'),
-      bgOpacity: 0.95,
+      bgOpacity: 1, // Asetetaan 1, jotta blur ei katoa. Taustan tummuus hoidetaan CSS:llä!
+      paddingFn: (viewportSize) => {
+        // Reunus: mobiilissa 20px ja työpöydällä 60px, jotta kuva ei osu reunoihin
+        const p = window.innerWidth < 768 ? 20 : 60;
+        return { top: p, bottom: p, left: p, right: p };
+      },
+      spacing: 0.15, // Lisää hieman "ilmaa" kuvien väliin, kun niitä pyyhkäisee/vaihtaa
+      imageClickAction: 'next', // Kuvaa klikkaamalla se liukuu nyt pehmeästi seuraavaan
       showHideAnimationType: 'zoom',
-      zoomAnimationDuration: 400,
+      zoomAnimationDuration: 500, // Hieman rauhallisempi avaus ja sulkeminen
       counter: false, // minimalist UI
-      zoom: false,    // rely on pinch/double-click
+      zoom: false,
     });
 
     lightbox.addFilter('itemData', (itemData, index) => {
       const img = itemData.element;
       if (img) {
         itemData.src = img.getAttribute('data-pswp-src') || img.src;
-        /* Lasketaan kuvasuhteen avulla virtuaalinen iso resoluutio, koska "naturalWidth" on nyt pikkukuvan koko */
-        const aspect = (img.naturalHeight || 1) / (img.naturalWidth || 1);
+            
+            /* Yritetään laskea kuvasuhde ennakkoon pikkukuvasta */
+            let aspect = 1;
+            if (img.naturalWidth && img.naturalHeight) {
+                aspect = img.naturalHeight / img.naturalWidth;
+            } else if (img.width && img.height) {
+                aspect = img.height / img.width;
+            }
+            
         itemData.w = 2500;
         itemData.h = 2500 * aspect;
         itemData.msrc = img.src;
       }
       return itemData;
     });
+
+        // ESTÄÄ LITISTYMISEN: Päivitetään kuvan todelliset mitat, kun iso kuva on latautunut
+        lightbox.on('contentLoad', (e) => {
+            const { content } = e;
+            if (content.type === 'image') {
+                const imageObj = new Image();
+                imageObj.src = content.data.src;
+                imageObj.onload = () => {
+                    content.data.w = imageObj.width;
+                    content.data.h = imageObj.height;
+                    content.update(); // Pakottaa PhotoSwipen piirtämään oikean muodon
+                };
+            }
+        });
 
     lightbox.init();
   });
@@ -263,6 +291,19 @@
       });
   });
 
+  // --- KUVAN NIMI HOVERILLA (TOOLTIP) ---
+  document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.gallery-img').forEach(img => {
+          const info = img.nextElementSibling;
+          if (info && info.classList.contains('project-info')) {
+              const titleP = info.querySelector('p');
+              if (titleP && titleP.innerText) {
+                  img.setAttribute('title', titleP.innerText);
+              }
+          }
+      });
+  });
+
   // Mobile Smart Sticky Header Logic
   const mobileHeader = document.getElementById('mobileHeader');
   if (mobileHeader) {
@@ -286,6 +327,30 @@
       lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }, { passive: true });
   }
+
+  // --- PEHMEÄ SIVUNVAIHTO (GLOBAL FADE OUT) ---
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (!link) return;
+    
+    const href = link.getAttribute('href');
+    
+    // Ohitetaan ankkurit, ulkoiset linkit ja lightbox-toiminnot
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.getAttribute('target') === '_blank') {
+        return;
+    }
+
+    const isLocal = link.hostname === window.location.hostname || !link.hostname;
+    if (isLocal && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+        e.preventDefault();
+        const main = document.querySelector('main');
+        if (main) {
+            main.style.transition = 'opacity 0.4s ease-in-out';
+            main.style.opacity = '0';
+        }
+        setTimeout(() => { window.location.href = href; }, 400);
+    }
+  });
 </script>
 </body>
 

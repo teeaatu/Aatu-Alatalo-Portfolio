@@ -1208,24 +1208,31 @@ body.index-page main {
 .image-section {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+  max-height: 4000px;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, max-height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
 }
 .image-section.hidden {
-  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  max-height: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Alasarjan esittelyteksti */
 .sub-series-intro {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+  max-height: 1000px;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, max-height 0.4s ease-in-out;
 }
 .sub-series-intro.hidden {
-  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  max-height: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
 /* --- GALLERY FILTER NAVIGATION --- */
@@ -1268,4 +1275,28 @@ body.index-page main {
   .gallery-filter-nav .filter-link {
     white-space: nowrap; /* Estää linkin sisäisen tekstin katkeamisen kesken lauseen */
   }
+}
+
+/* --- PHOTOSWIPE V5 KUSTOMOINTI --- */
+.pswp {
+  --pswp-transition-duration: 600ms !important; /* Pehmentää kuvan zoomausta auki ja kiinni */
+}
+
+/* Tekee itse kuvien selauksesta (slide) silkkisen pehmeän ja rauhallisen.
+   ':not(.pswp--dragging)' varmistaa, että mobiilissa sormella vetäminen pysyy silti tarkkana. */
+.pswp:not(.pswp--dragging) .pswp__container {
+  transition-duration: 0.8s !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Lisää tyylikkään blur-efektin taustalle */
+.pswp__bg {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  background: rgba(10, 10, 10, 0.85) !important; /* 85% tummuus, jolloin kuva erottuu mutta 8px blur näkyy tyylikkäästi */
+}
+
+/* Pakottaa kuvan pitämään omat mittasuhteensa aina, estäen kaiken litistymisen */
+.pswp__img {
+  object-fit: contain !important;
 }
