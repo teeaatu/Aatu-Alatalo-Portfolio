@@ -1,41 +1,98 @@
 import os
 import glob
+from PIL import Image, ImageFilter
 
-base_dir = '/Volumes/A26/Portfolio Home'
+# --- ASETUKSET ---
+SOURCE_DIR = 'assets/images'
+THUMB_DIR = 'assets/thumbnails'
 
-# Etsi kaikki HTML-tiedostot juuresta ja en-kansiosta
-html_files = glob.glob(os.path.join(base_dir, '*.html')) + glob.glob(os.path.join(base_dir, 'en', '*.html'))
+# Mobiiliversion parametrit
+MOBILE_WIDTH = 800
+MOBILE_QUALITY = 75
 
-liquid_logic = """    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
-    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
-    {% if item.kuva contains 'http' %}
-      {% assign p_thumb = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
-      {% assign full_img_url = item.kuva %}
-    {% else %}
-      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
-      {% assign full_img_url = '/assets/images/' | append: item.kuva %}
-    {% endif %}
-    <section class="image-section\""""
+# Työpöytäversion parametrit (Crisp Retina)
+DESKTOP_WIDTH = 1600
+DESKTOP_QUALITY = 85
 
-for filepath in html_files:
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
+def process_image(filepath):
+    filename = os.path.basename(filepath)
+    base_name = os.path.splitext(filename)[0]
+    
+    mobile_path = os.path.join(THUMB_DIR, f"{base_name}_mobile.webp")
+    desktop_path = os.path.join(THUMB_DIR, f"{base_name}_desktop.webp")
+    
+    # Jos molemmat pikkukuvat ovat jo olemassa, voidaan ohittaa päivityksen nopeuttamiseksi.
+    # (Poista nämä kaksi riviä, jos haluat pakottaa kaikkien kuvien uudelleengeneroinnin)
+    if os.path.exists(mobile_path) and os.path.exists(desktop_path):
+        print(f"Ohitetaan {filename} - Pikkukuvat on jo luotu.")
+        return
 
-    # Tarkistetaan onko tiedostossa normaali gallerialooppi ja ettei sitä ole vielä päivitetty
-    if '<section class="image-section"' in content and '{% for item in site.data' in content and '{% assign thumb_filename' not in content:
+    try:
+        with Image.open(filepath) as img:
+            # Muunnetaan RGB-muotoon vääristymien estämiseksi WebP-pakkauksessa
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+            
+            # ==========================================
+            # 1. MOBIILIVERSIO (_mobile.webp)
+            # ==========================================
+            if img.width > MOBILE_WIDTH:
+                m_height = int((MOBILE_WIDTH / img.width) * img.height)
+                img_mobile = img.resize((MOBILE_WIDTH, m_height), Image.Resampling.LANCZOS)
+            else:
+                img_mobile = img.copy()
+                
+            img_mobile.save(mobile_path, 'webp', quality=MOBILE_QUALITY, method=6)
+            
+            # ==========================================
+            # 2. TYÖPÖYTÄVERSIO (_desktop.webp)
+            # ==========================================
+            if img.width > DESKTOP_WIDTH:
+                d_height = int((DESKTOP_WIDTH / img.width) * img.height)
+                img_desktop = img.resize((DESKTOP_WIDTH, d_height), Image.Resampling.LANCZOS)
+            else:
+                img_desktop = img.copy()
+                
+            # Kevyt Unsharp Mask -terävöitys isoille näytöille
+            # Takaa "crisp" ulkoasun laimentamatta värejä
+            img_desktop = img_desktop.filter(ImageFilter.UnsharpMask(radius=1.2, percent=70, threshold=3))
+            
+            img_desktop.save(desktop_path, 'webp', quality=DESKTOP_QUALITY, method=6)
+            
+            print(f"✓ Prosessoitu: {filename} -> _mobile ja _desktop")
+            
+            # ==========================================
+            # 3. CLOUDFLARE R2 API SYNKRONOINTI (Valinnainen)
+            # ==========================================
+            # Jos siirrät kuvat suoraan Pythonilla R2-pilveen, voit tehdä sen tässä:
+            # upload_to_r2(mobile_path, f"thumbs/{base_name}_mobile.webp")
+            # upload_to_r2(desktop_path, f"thumbs/{base_name}_desktop.webp")
+
+    except Exception as e:
+        print(f"✗ Virhe prosessoitaessa kuvaa {filename}: {e}")
+
+def main():
+    print("====================================================")
+    print("Aloitetaan Dual-Thumbnail prosessointi (Mobiili & Desktop)...")
+    print("====================================================")
+    
+    os.makedirs(THUMB_DIR, exist_ok=True)
+    
+    # Etsitään alkuperäiset kuvat
+    extensions = ('*.jpg', '*.jpeg', '*.png', '*.webp')
+    files = []
+    for ext in extensions:
+        files.extend(glob.glob(os.path.join(SOURCE_DIR, ext)))
+        files.extend(glob.glob(os.path.join(SOURCE_DIR, ext.upper()))) # Huomioi myös isot tiedostopäätteet
         
-        # Lisätään Liquid-logiikka juuri ennen <section> tagia
-        content = content.replace('    <section class="image-section"', liquid_logic)
+    if not files:
+        print(f"Ei löydetty alkuperäisiä kuvia kansiosta {SOURCE_DIR}.")
+        return
         
-        # Vaihdetaan img-tagi lataamaan pikkukuva, mutta säästetään iso kuva Lightboxille
-        old_img_1 = '<img {% if item.kuva contains \'http\' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %}'
-        old_img_2 = '<img {% if item.kuva contains "http" %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %}'
-        new_img = '<img src="{{ p_thumb }}" data-pswp-src="{{ full_img_url }}" onerror="this.onerror=null;this.src=\'{{ full_img_url }}\';"'
+    for filepath in files:
+        process_image(filepath)
         
-        content = content.replace(old_img_1, new_img).replace(old_img_2, new_img)
-        
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
-        print(f"✅ Päivitetty galleria: {os.path.relpath(filepath, base_dir)}")
+    print("Kaikki kuvat prosessoitu onnistuneesti!")
 
-print("Kaikki yksittäiset galleriasivut tukevat nyt pikkukuvia!")
+if __name__ == "__main__":
+    main()

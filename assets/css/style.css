@@ -403,6 +403,11 @@ main {
   align-items: start; /* Sallii jokaisen kuvan pitää oman luonnollisen korkeutensa */
   width: 100%;
   min-height: 100vh;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+.overview-grid.is-loaded {
+  opacity: 1;
 }
 .overview-item {
   position: relative;
@@ -416,7 +421,9 @@ main {
 }
 .overview-grid.js-masonry-active .overview-item {
   position: absolute;
-  transition: left 0.4s ease-out, top 0.4s ease-out; /* Pehmeä liukuma kuvien latautuessa */
+}
+.overview-grid.js-masonry-active.is-loaded .overview-item {
+  transition: left 0.4s ease-out, top 0.4s ease-out; /* Pehmeä liukuma vain asettelun päivityksissä */
 }
 
 @media (max-width: 1024px) {
@@ -621,6 +628,13 @@ main {
 .external-link-wrapper {
   display: block;
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+.gallery-link-wrapper {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .external-link-overlay {
   position: absolute;

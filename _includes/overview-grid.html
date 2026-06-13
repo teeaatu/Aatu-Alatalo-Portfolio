@@ -1,6 +1,6 @@
 {% assign priority_pinned_images = '' | split: '' %}
 {% assign pinned_images = '' | split: '' %}
-{% assign shuffled_pool = '' | split: '' %}
+{% assign standard_pool = '' | split: '' %}
 {% assign datasets = 'etusivu,vari-ja-muoto,luonto-ja-ymparisto,masters-2026,mustavalkoinen-sarja,raw,sisatilan-valo,Potret,elaimet,kiehtovat-rakennukset,still-life,kuvaprojekti_ajasta_v365' | split: ',' %}
 
 {% for dataset_name in datasets %}
@@ -24,7 +24,7 @@
             {% elsif item.pinned == true or item.pinned == 'true' %}
                 {% assign pinned_images = pinned_images | push: combined %}
               {% else %}
-                {% assign shuffled_pool = shuffled_pool | push: combined %}
+                {% assign standard_pool = standard_pool | push: combined %}
               {% endif %}
         {% endfor %}
       {% else %}
@@ -43,16 +43,15 @@
           {% elsif item.pinned == true or item.pinned == 'true' %}
               {% assign pinned_images = pinned_images | push: combined %}
             {% else %}
-              {% assign shuffled_pool = shuffled_pool | push: combined %}
+              {% assign standard_pool = standard_pool | push: combined %}
             {% endif %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}
 
-{% assign random_images = shuffled_pool | sample: shuffled_pool.size %}
 {% assign sorted_priority_pinned = priority_pinned_images | sort %}
-{% assign final_images = sorted_priority_pinned | concat: pinned_images | concat: random_images %}
+{% assign final_images = sorted_priority_pinned | concat: pinned_images | concat: standard_pool %}
 
 <div class="overview-grid">
   <!-- JS Masonry handles absolute positioning row-by-row -->
@@ -72,12 +71,16 @@
     {% assign p_is_pinned = parts[11] %}
     
     {% assign filename_no_ext = p_kuva | split: '/' | last | split: '.' | first %}
-    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
+    {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
+    {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
     {% if p_kuva contains 'http' %}
-      {% assign p_thumb = p_kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
+      {% assign base_url = p_kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
+      {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
+      {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
       {% assign full_img_url = p_kuva %}
     {% else %}
-      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
+      {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
+      {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
       {% assign full_img_url = '/assets/images/' | append: p_kuva %}
     {% endif %}
 
@@ -110,11 +113,13 @@
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
           </svg>
         </div>
-        <img src="{{ p_thumb }}" 
+        <img src="{{ p_thumb_desktop }}" 
+             srcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w"
+             sizes="(max-width: 1024px) 50vw, 33vw"
              alt="{{ final_alt | escape }}" 
              {% if p_priority != '999' or p_is_pinned == 'true' or forloop.index <= 6 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
              class="link-img"
-             onerror="this.onerror=null;this.src='{{ full_img_url }}';">
+             onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}';">
         <div class="external-link-text">
           <span>{% if page.lang == 'en' %}{{ p_link_text_en }}{% else %}{{ p_link_text_fi }}{% endif %}</span>
           <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -124,12 +129,16 @@
         </div>
       </a>
       {% else %}
-      <img src="{{ p_thumb }}" 
-           alt="{{ final_alt | escape }}" 
-           {% if p_priority != '999' or p_is_pinned == 'true' or forloop.index <= 6 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
-           class="gallery-img"
-           data-pswp-src="{{ full_img_url }}"
-           onerror="this.onerror=null;this.src='{{ full_img_url }}';">
+      <a href="{{ full_img_url }}" class="no-decoration gallery-link-wrapper">
+        <img src="{{ p_thumb_desktop }}" 
+             srcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w"
+             sizes="(max-width: 1024px) 50vw, 33vw"
+             alt="{{ final_alt | escape }}" 
+             {% if p_priority != '999' or p_is_pinned == 'true' or forloop.index <= 6 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
+             class="gallery-img"
+             data-pswp-src="{{ full_img_url }}"
+             onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}';">
+      </a>
       {% endif %}
     </div>
   {% endfor %}
