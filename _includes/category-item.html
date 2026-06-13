@@ -8,14 +8,8 @@
 
 {% comment %} Polun rakennus (R2 Cloudflare vs Paikallinen) {% endcomment %}
 {% if item.kuva contains 'http' %}
-  {% assign path_parts = item.kuva | split: '/' %}
-  {% assign last_index = path_parts.size | minus: 1 %}
-  {% assign base_path = "" %}
-  {% for part in path_parts %}
-    {% if forloop.index0 < last_index %}
-      {% assign base_path = base_path | append: part | append: "/" %}
-    {% endif %}
-  {% endfor %}
+  {% assign filename_with_ext = item.kuva | split: '/' | last %}
+  {% assign base_path = item.kuva | remove: filename_with_ext %}
   {% assign p_mobile = base_path | append: "thumbs/" | append: mobile_thumb %}
   {% assign p_desktop = base_path | append: "thumbs/" | append: desktop_thumb %}
   {% assign full_img_url = item.kuva %}
