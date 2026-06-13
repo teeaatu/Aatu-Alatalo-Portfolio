@@ -117,12 +117,25 @@
       });
   }
 
+      // --- PHOTOSWIPE V5 LATAUKSEN HALLINTA & KLIKKAUKSEN SIEPPAUS ---
+      let isPhotoSwipeReady = false;
+      let bufferedLink = null;
+
+      // Estetään valkoinen välähdys: siepataan klikkaus synkronisesti ennen kuin PhotoSwipe on ehtinyt latautua
+      document.addEventListener('click', (e) => {
+          const link = e.target.closest('a.gallery-link-wrapper');
+          if (link && !isPhotoSwipeReady) {
+              e.preventDefault(); // Estää selaimesi avaamasta "raakaa" kuvatiedostoa koko ruudulle
+              bufferedLink = link; // Puskuroidaan klikkaus odottamaan moduulia
+          }
+      });
+
   // PhotoSwipe v5 Lightbox logic
   import('https://unpkg.com/photoswipe@5.4.3/dist/photoswipe-lightbox.esm.js').then((module) => {
     const PhotoSwipeLightbox = module.default;
     const lightbox = new PhotoSwipeLightbox({
       gallery: 'main',
-      children: '.gallery-img',
+      children: 'a.gallery-link-wrapper',
       pswpModule: () => import('https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.esm.js'),
       bgOpacity: 1, // Asetetaan 1, jotta blur ei katoa. Taustan tummuus hoidetaan CSS:llä!
       paddingFn: (viewportSize) => {
@@ -137,44 +150,40 @@
       zoomAnimationDuration: 500, // Hieman rauhallisempi avaus ja sulkeminen
       counter: false, // minimalist UI
       zoom: false,
+      maxSpreadZoom: 1, // Estää zoomaamisen alkuperäistä isommaksi
+      secondaryZoomLevel: 1, // Estää tuplaklikkauksen syväzoomaamisen
       preload: [1, 2], // Lataa 1 edellisen ja 2 seuraavaa isoa kuvaa salaa taustalla valmiiksi!
     });
 
     lightbox.addFilter('itemData', (itemData, index) => {
-      const img = itemData.element;
-      if (img) {
-        itemData.src = img.getAttribute('data-pswp-src') || img.src;
-            
-            /* Yritetään laskea kuvasuhde ennakkoon pikkukuvasta */
-            let aspect = 1;
-            if (img.naturalWidth && img.naturalHeight) {
-                aspect = img.naturalHeight / img.naturalWidth;
-            } else if (img.width && img.height) {
-                aspect = img.height / img.width;
-            }
-            
-        itemData.w = 2500;
-        itemData.h = 2500 * aspect;
-        itemData.msrc = img.src;
+      const aTag = itemData.element;
+      if (aTag) {
+        const img = aTag.querySelector('img');
+        if (img) {
+          itemData.src = aTag.href; // Haetaan ison kuvan URL suoraan ankkuritagin href:stä
+          
+          // Luetaan todellinen kuvasuhde juuri siitä pikkukuvasta, joka on ladattu ruudulle
+          const aspect = (img.naturalWidth && img.naturalHeight) ? (img.naturalHeight / img.naturalWidth) : 1;
+          
+          // Virtuaaliset maksimimitat, jotta kuvasuhde on matemaattisen tarkka avattaessa
+          itemData.w = 2560;
+          itemData.h = 2560 * aspect;
+          
+          // Siepataan juuri se kuva (mobile tai desktop webp), jonka selain valitsi srcsetistä
+          itemData.msrc = img.currentSrc || img.src;
+        }
       }
       return itemData;
     });
 
-        // ESTÄÄ LITISTYMISEN: Päivitetään kuvan todelliset mitat, kun iso kuva on latautunut
-        lightbox.on('contentLoad', (e) => {
-            const { content } = e;
-            if (content.type === 'image') {
-                const imageObj = new Image();
-                imageObj.src = content.data.src;
-                imageObj.onload = () => {
-                    content.data.w = imageObj.width;
-                    content.data.h = imageObj.height;
-                    content.update(); // Pakottaa PhotoSwipen piirtämään oikean muodon
-                };
-            }
-        });
-
     lightbox.init();
+    isPhotoSwipeReady = true;
+
+    // Jos käyttäjä ehti klikata kuvaa latauksen aikana, avataan se nyt saumattomasti
+    if (bufferedLink) {
+        bufferedLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        bufferedLink = null;
+    }
   });
 
   // Back to top logiikka
@@ -243,14 +252,39 @@
           });
 
           grid.style.height = Math.max(...colHeights) + 'px';
+          
+          if (!grid.classList.contains('is-loaded')) {
+              setTimeout(() => {
+                  grid.classList.add('is-loaded');
+              }, 50);
+          }
       }
 
       let resizeTimer;
       window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutMasonry, 100); });
 
-      const images = grid.querySelectorAll('img');
-      images.forEach(img => { if (img.complete) layoutMasonry(); else img.addEventListener('load', layoutMasonry); });
-      layoutMasonry();
+          // Yhden kerran latausmekanismi - Estää asettelun hyppimisen ja visuaaliset välähdykset
+          const images = Array.from(grid.querySelectorAll('img'));
+          if (images.length === 0) {
+              layoutMasonry();
+          } else {
+              let loadedCount = 0;
+              const checkAllLoaded = () => {
+                  loadedCount++;
+                  if (loadedCount === images.length) {
+                      layoutMasonry();
+                  }
+              };
+
+              images.forEach(img => {
+                  if (img.complete) {
+                      checkAllLoaded();
+                  } else {
+                      img.addEventListener('load', checkAllLoaded);
+                      img.addEventListener('error', checkAllLoaded); // Estää skriptin jäätymisen rikkinäisen kuvan takia
+                  }
+              });
+          }
   });
 
   // Staggered Load Animation
