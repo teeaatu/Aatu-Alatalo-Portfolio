@@ -1,0 +1,56 @@
+{% assign item = include.item %}
+{% assign is_lazy = include.lazy_load | default: true %}
+
+{% comment %} Tiedostonimen eristys {% endcomment %}
+{% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+{% assign mobile_thumb = filename_no_ext | append: '_mobile.webp' %}
+{% assign desktop_thumb = filename_no_ext | append: '_desktop.webp' %}
+
+{% comment %} Polun rakennus (R2 Cloudflare vs Paikallinen) {% endcomment %}
+{% if item.kuva contains 'http' %}
+  {% assign path_parts = item.kuva | split: '/' %}
+  {% assign last_index = path_parts.size | minus: 1 %}
+  {% assign base_path = "" %}
+  {% for part in path_parts %}
+    {% if forloop.index0 < last_index %}
+      {% assign base_path = base_path | append: part | append: "/" %}
+    {% endif %}
+  {% endfor %}
+  {% assign p_mobile = base_path | append: "thumbs/" | append: mobile_thumb %}
+  {% assign p_desktop = base_path | append: "thumbs/" | append: desktop_thumb %}
+  {% assign full_img_url = item.kuva %}
+{% else %}
+  {% assign p_mobile = '/assets/thumbnails/' | append: mobile_thumb %}
+  {% assign p_desktop = '/assets/thumbnails/' | append: desktop_thumb %}
+  {% assign full_img_url = '/assets/images/' | append: item.kuva %}
+{% endif %}
+
+{% comment %} Alt-tekstin priorisointi {% endcomment %}
+{% if item.alt_text != blank %}
+  {% assign alt_content = item.alt_text %}
+{% else %}
+  {% assign alt_content = filename_no_ext | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
+{% endif %}
+
+{% comment %} Kaksikielisyyden erottelu {% endcomment %}
+{% assign otsikko_parts = item.otsikko | split: ' / ' %}
+{% assign paikka_parts = item.paikka | split: ' / ' %}
+{% if page.lang == 'en' %}
+  {% assign display_otsikko = otsikko_parts | first %}
+  {% assign display_paikka = paikka_parts | first %}
+{% else %}
+  {% assign display_otsikko = otsikko_parts | last %}
+  {% assign display_paikka = paikka_parts | last %}
+{% endif %}
+
+<section class="image-section" data-series="{% if item.series %}{{ item.series }}{% else %}general{% endif %}">
+    <div class="image-wrapper">
+        <a href="{{ full_img_url }}" class="gallery-link-wrapper">
+            <img srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" sizes="(max-width: 768px) 100vw, 50vw" src="{{ p_desktop }}" alt="{{ alt_content }}" class="gallery-img" {% if is_lazy %}loading="lazy"{% else %}loading="eager" fetchpriority="high"{% endif %} onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}';">
+        </a>
+        <div class="project-info">
+            <p>{{ display_otsikko }}</p>
+            <p>{{ display_paikka }}</p>
+        </div>
+    </div>
+</section>

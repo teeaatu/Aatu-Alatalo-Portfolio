@@ -372,7 +372,7 @@
     const href = link.getAttribute('href');
     
     // Ohitetaan ankkurit, ulkoiset linkit ja lightbox-toiminnot
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.getAttribute('target') === '_blank') {
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.getAttribute('target') === '_blank' || link.classList.contains('gallery-link-wrapper')) {
         return;
     }
 
