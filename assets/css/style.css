@@ -1256,38 +1256,48 @@ body.index-page main {
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 60px;
-  color: var(--text-dimmed);
+  display: flex;
+  flex-direction: row;
+  gap: 28px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 .gallery-filter-nav .filter-link {
-  color: var(--text-dimmed); /* Oletuksena himmeä */
+  color: rgba(244, 240, 234, 0.45); /* Lämmin ja hienostunut himmennys */
   text-decoration: none !important;
-  margin: 0; /* Nollataan, jotta rivittyvä linkki asettuu tasan vasemmalle */
-  transition: color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
-  opacity: 0.5; /* Oletus himmeys */
+  margin: 0;
+  transition: color 0.3s ease, text-decoration-color 0.3s ease, transform 0.2s ease;
   display: inline-block;
+  padding: 10px 0;
+  text-underline-offset: 8px; /* Antaa kirjaimille reilusti happea */
+  text-decoration-thickness: 1px;
 }
 .gallery-filter-nav .filter-link:active {
-  transform: scale(0.96);
+  transform: scale(0.99) !important;
   transition: transform 0.1s ease;
 }
-.gallery-filter-nav .filter-link:hover,
-.gallery-filter-nav .filter-link.active {
-  color: var(--color-hex-f4f0ea); /* Aktiivinen tai hover kirkas */
-  opacity: 1; /* Aktiivinen tai hover täysin näkyvä */
+.gallery-filter-nav .filter-link:hover {
+  color: var(--color-hex-f4f0ea);
+  transform: none !important; /* Estää periytyvän globaalin vaakaliikkeen */
 }
-.gallery-filter-nav .filter-separator {
-  color: var(--text-dimmed);
-  opacity: 0.4; /* Himmeämpi erotin */
-  margin: 0 12px; /* Siirretään tyhjä tila yksinomaan erottimen ympärille */
+.gallery-filter-nav .filter-link.active {
+  color: var(--color-hex-f4f0ea);
+  text-decoration: underline !important;
+  text-decoration-color: var(--accent-color) !important; /* Kultainen työpöytä-alleviivaus */
+  border-left: none !important; /* Estetään vasen viiva työpöydällä (periytyy globaalista) */
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  transform: none !important;
 }
 
 /* --- MOBILE TYPOGRAPHY FIX FOR FILTER NAV --- */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .gallery-filter-nav {
-    line-height: 2; /* Antaa kunnolla hengitystilaa riveille, jos navigointi jakautuu useammalle riville */
+    flex-direction: column;
+    gap: 12px;
   }
   .gallery-filter-nav .filter-link {
-    white-space: nowrap; /* Estää linkin sisäisen tekstin katkeamisen kesken lauseen */
+    width: 100%;
   }
 }
 
