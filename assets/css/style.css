@@ -403,11 +403,12 @@ main {
   align-items: start; /* Sallii jokaisen kuvan pitää oman luonnollisen korkeutensa */
   width: 100%;
   min-height: 100vh;
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
+  opacity: 1; /* Näkyy heti, ei vaadi selausta ilmestyäkseen */
+  animation: fadeGridIn 0.8s ease-out forwards;
 }
-.overview-grid.is-loaded {
-  opacity: 1;
+@keyframes fadeGridIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .overview-item {
   position: relative;
@@ -416,20 +417,26 @@ main {
 
 /* JS Masonry overrides */
 .overview-grid.js-masonry-active {
-  display: block; /* Poistaa CSS-gridin käytöstä, kun JS aktivoituu */
-  position: relative;
+  display: grid !important; /* Pakotetaan aina CSS Grid, estetään JS Masonryn aiheuttama sekava järjestys */
+  height: auto !important;
 }
 .overview-grid.js-masonry-active .overview-item {
-  position: absolute;
-}
-.overview-grid.js-masonry-active.is-loaded .overview-item {
-  transition: left 0.4s ease-out, top 0.4s ease-out; /* Pehmeä liukuma vain asettelun päivityksissä */
+  position: relative !important; /* Poistetaan JS:n absoluuttinen sijainti */
+  top: auto !important;
+  left: auto !important;
+  width: 100% !important;
 }
 
 @media (max-width: 1024px) {
   .overview-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px; /* Hallittu rako mobiilissa sekä pysty- että vaakasuunnassa */
+  }
+}
+
+@media (max-width: 767px) {
+  .overview-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -603,16 +610,19 @@ main {
 
 /* Pehmeä fade-in lazy load kuville (Fade-on-load) */
 .js-lazy-hidden {
-  opacity: 0 !important;
-  visibility: hidden !important; /* Estää mahdolliset renderöintivälähdykset */
-  filter: brightness(0.5); /* Tummenna kuva latauksen ajaksi */
+  opacity: 0;
+  filter: brightness(0.85); /* Hienovaraisempi ja pehmeämpi tummennus (0.5 sijaan) */
+  transition: opacity 0.8s ease-out, filter 0.8s ease-out;
 }
-.js-lazy-fade-in {
-  animation: lazyImageFadeIn 0.8s ease-out forwards;
+.js-lazy-hidden.is-loaded {
+  opacity: 1;
+  filter: brightness(1);
 }
-@keyframes lazyImageFadeIn {
-  from { opacity: 0; visibility: visible; filter: brightness(0.5); } /* Tummennettu ja näkymätön alussa */
-  to { opacity: 1; visibility: visible; filter: brightness(1); } /* Kirkas ja näkyvä lopussa */
+
+/* Varmistetaan, että sivun ensimmäiset kuvat näkyvät aina välittömästi ilman vieritystä (scroll) */
+.overview-grid .overview-item:nth-child(-n+6) .js-lazy-hidden {
+  opacity: 1 !important;
+  filter: brightness(1) !important;
 }
 
 .gallery-img,
