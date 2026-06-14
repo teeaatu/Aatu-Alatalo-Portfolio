@@ -16,6 +16,13 @@ The repository incorporates a robust Vanilla JS Masonry grid with CSS transition
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-13] Grid & Performance Refactor: Responsive Dual-Thumbnails & PhotoSwipe V5**
+    * **Homepage Grid Design:** Removed random shuffling from `overview-grid.html`. Anchored images within `a.gallery-link-wrapper` to ensure PhotoSwipe V5 compliance without breaking the Vanilla JS Masonry layout.
+    * **Category Modularity (DRY):** Created `_includes/category-item.html` to handle both local assets (`/assets/thumbnails/`) and Cloudflare R2 (`/thumbs/`) endpoints dynamically.
+    * **Dual-Thumbnail Pipeline:** Implemented automation scripts generating `_mobile.webp` (~600px width) and `_desktop.webp` (~1200px-1600px width, 15% mild sharpening, explicit sRGB conversion, WebP quality 82) to maximize visual fidelity while slashing Largest Contentful Paint (LCP).
+    * **LCP Optimization:** Implemented `lazy_load=false` and `fetchpriority="high"` for the first two items in category rendering loops via `scripts/replace_loops.py`.
+    * **PhotoSwipe & Fade-out Interception:** Isolated `gallery-link-wrapper` inside `_layouts/default.html` to prevent conflicts with the global page fade-out script.
+
 * **[2026-06-11] Image Loading Fallback Mechanism & Thumbnail Fixes**
     * **Resilience (UX/Performance):** Added a robust JavaScript fallback (`onerror="this.onerror=null;this.src='{{ full_img_url }}';"`) directly to all image tags. If a dynamically generated thumbnail is missing or fails to load from the cloud, the browser automatically falls back to fetching and rendering the full-resolution original image. This prevents broken image squares and ensures a seamless viewing experience even before thumbnail generation scripts are run.
     * **Automation:** Updated `scripts/update_gallery_thumbs.py` to natively inject this `onerror` logic across all individual sub-gallery pages.
