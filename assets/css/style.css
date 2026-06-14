@@ -757,7 +757,7 @@ main {
   transition: transform 0.2s ease;
 }
 .menu-toggle:active {
-  transform: scale(0.92) !important;
+  transform: scale(0.98) !important; /* Pehmennetty painallusefekti */
 }
 .hamburger { width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: relative; transition: all 0.4s ease; }
 .hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: absolute; left: 0; transition: all 0.4s ease; }
@@ -769,14 +769,35 @@ main {
 
 /* --- RESPONSIVISUUS PERUS --- */
 @media (max-width: 1024px) {
-  aside .site-logo-img { display: none !important; }
+  aside .site-logo-img,
+  aside .logo { display: none !important; } /* Piilotetaan molemmat logot mobiilivalikossa kokonaan */
   aside .desktop-lang-switcher { display: none !important; }
   aside {
-    position: fixed; left: -100%; width: 100%; height: 100vh;
+    position: fixed;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh; /* Mukautuu automaattisesti, kun osoitepalkki ilmestyy/katoaa */
     transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-    z-index: 1500; background: var(--color-rgb-16); padding: 160px 40px;
+    z-index: 1500;
+    background: rgba(10, 10, 10, 0.85); /* Palautettu alkuperäinen läpinäkyvyys */
+    backdrop-filter: blur(8px); /* Sumennus */
+    -webkit-backdrop-filter: blur(8px); /* Webkit-selaimille */
+    justify-content: flex-start; /* Korjaa skrollausbugin: sallii kaiken sisällön vierittämisen */
+    align-items: center; /* Keskittää sisällön vaakasuunnassa */
+    text-align: center; /* Keskittää tekstin linkkien sisällä */
+    padding: 25vh 0 100px 0; /* Aloittaa linkit keskemmältä ja jättää pohjalle reilusti skrollaustilaa */
   }
   body.menu-open aside { left: 0; }
+
+  body {
+    /* Palautetaan mobiilissa natiivi skrollaus, joka piilottaa automaattisesti osoitepalkin */
+    overflow-y: visible !important;
+  }
+  body.menu-open {
+    overflow: hidden !important; /* Estää taustasivun skrollauksen vahingossa */
+  }
+
   .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
   main { 
     margin-left: 0; 
@@ -824,8 +845,69 @@ main {
   }
   .mobile-logo {
     margin-bottom: 0;
-  } 
+  }
   
+  /* Ylänavigaation tila, kun valikko on auki */
+  body.menu-open .mobile-header {
+    transform: translateY(0) !important; /* Estää ylänavia piiloutumasta taustascrollatessa */
+    background-color: transparent !important; /* Sulautuu valikon tummaan taustaan täydellisesti */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  body.menu-open .mobile-logo {
+    opacity: 0 !important; /* Piilotetaan logo valikon ollessa auki */
+    pointer-events: none;
+  }
+  body.menu-open .mobile-header .lang-switcher-clean {
+    opacity: 1 !important;
+    transform: none !important; /* Pakotetaan kielivalitsin paikalleen */
+  }
+  
+  /* Mobiilivalikon sisällön tyylit */
+  aside nav {
+    gap: 20px; /* Suurempi väli linkkien välillä */
+    padding: 0 20px; /* Annetaan sisällölle hieman sivuttaista paddingia */
+    width: 100%; /* Varmistetaan, että ne ottavat koko leveyden keskityksen jälkeen */
+    box-sizing: border-box;
+  }
+  aside nav a {
+    font-size: 20px; /* Suurempi fonttikoko */
+    padding: 10px 0; /* Lisää kosketuspinta-alaa */
+    transform: none !important; /* Estää globaalin translateX-liikkeen */
+  }
+  aside nav a.active {
+    border-left: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    font-size: 20px !important; /* Yhtenäinen koko aktiivisellekin */
+  }
+
+  aside .info-nav {
+    gap: 15px;
+    margin-top: 40px; /* Lisää tilaa päänavigaation ja info-navin väliin */
+    border-top: none; /* Poistetaan työpöydän border-top */
+    padding-top: 0;
+    padding: 0 20px; /* Annetaan sisällölle hieman sivuttaista paddingia */
+    width: 100%; /* Varmistetaan, että ne ottavat koko leveyden keskityksen jälkeen */
+    box-sizing: border-box;
+  }
+  aside .info-nav-links a {
+    font-size: 20px; /* Suurempi fonttikoko */
+    padding: 10px 0; /* Lisää kosketuspinta-alaa */
+    transform: none !important; /* Estää globaalin translateX-liikkeen */
+  }
+  aside .info-nav-links a.active {
+    border-left: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    font-size: 20px !important; /* Yhtenäinen koko aktiivisellekin */
+  }
+  aside .lang-switcher-clean {
+    font-size: 16px !important; /* Suurempi fonttikoko kielenvaihtajalle */
+    margin-top: 30px;
+    justify-content: center; /* Keskittää kielenvaihtajan */
+  }
+
   .lang-switcher-mobile {
     display: block;
     position: absolute;
