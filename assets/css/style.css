@@ -1223,7 +1223,10 @@ body.index-page main {
   opacity: 1;
   visibility: visible;
   max-height: 4000px;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, max-height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+  transform: translateY(0);
+  --stagger-delay: 0s;
+  /* Max-height aukeaa heti, opacity ja transform tulevat porrastetulla viiveellä */
+  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out, opacity 0.8s ease-out var(--stagger-delay), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) var(--stagger-delay), visibility 0s;
 }
 .image-section.hidden {
   opacity: 0 !important;
@@ -1231,6 +1234,9 @@ body.index-page main {
   max-height: 0 !important;
   margin-bottom: 0 !important;
   overflow: hidden !important;
+  transform: translateY(40px) !important;
+  /* Piilotettaessa elementti katoaa nopeasti ilman viivettä */
+  transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s 0.4s !important;
 }
 
 /* Alasarjan esittelyteksti */
@@ -1238,7 +1244,8 @@ body.index-page main {
   opacity: 1;
   visibility: visible;
   max-height: 1000px;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, max-height 0.4s ease-in-out;
+  transform: translateY(0);
+  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out, opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
 }
 .sub-series-intro.hidden {
   opacity: 0 !important;
@@ -1247,6 +1254,8 @@ body.index-page main {
   margin-bottom: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
+  transform: translateY(20px) !important;
+  transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out, padding 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s 0.4s !important;
 }
 
 /* --- GALLERY FILTER NAVIGATION --- */

@@ -20,61 +20,12 @@ translation_url: /en/nature.html
         </div>
     </header>
 
-        {% for item in site.data['luonto-ja-ymparisto'] %}
-    {% if item.layout == 'diptych' %}
-    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
-    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
-    {% if item.kuva contains 'http' %}
-      {% assign p_thumb = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
-      {% assign full_img_url = item.kuva %}
-    {% else %}
-      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
-      {% assign full_img_url = '/assets/images/' | append: item.kuva %}
-    {% endif %}
-    <section class="image-section">
-        <div class="diptych-wrapper">
-            {% for img_item in item.images %}
-            {% if img_item.alt_text != blank %}
-              {% assign alt_content = img_item.alt_text %}
-            {% else %}
-              {% assign filename = img_item.kuva | split: '/' | last | split: '.' | first %}
-              {% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
-            {% endif %}
-            <div class="image-wrapper">
-                <img {% if img_item.kuva contains 'http' %}src="{{ img_item.kuva }}"{% else %}src="/assets/images/{{ img_item.kuva }}"{% endif %} alt="{{ alt_content }}" class="gallery-img" {% if forloop.parentloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
-            </div>
-            {% endfor %}
-        </div>
-        <div class="project-info diptych-info">
-            <p>{{ item.otsikko | split: ' / ' | last }}</p>
-            <p>{{ item.paikka }}</p>
-        </div>
-    </section>
-    {% else %}
-    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
-    {% assign thumb_filename = filename_no_ext | append: '.webp' %}
-    {% if item.kuva contains 'http' %}
-      {% assign p_thumb = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' | append: thumb_filename %}
-      {% assign full_img_url = item.kuva %}
-    {% else %}
-      {% assign p_thumb = '/assets/thumbnails/' | append: thumb_filename %}
-      {% assign full_img_url = '/assets/images/' | append: item.kuva %}
-    {% endif %}
-    <section class="image-section">
-        {% if item.alt_text != blank %}
-          {% assign alt_content = item.alt_text %}
+            {% for item in site.data['luonto-ja-ymparisto'] %}
+        {% if forloop.index <= 2 %}
+            {% assign is_lazy = false %}
         {% else %}
-          {% assign filename = item.kuva | split: '/' | last | split: '.' | first %}
-          {% assign alt_content = filename | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
+            {% assign is_lazy = true %}
         {% endif %}
-        <div class="image-wrapper">
-            <img src="{{ p_thumb }}" data-pswp-src="{{ full_img_url }}" alt="{{ alt_content }}" class="gallery-img" {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
-            <div class="project-info">
-                <p>{{ item.otsikko | split: ' / ' | last }}</p>
-                <p>{{ item.paikka }}</p>
-            </div>
-        </div>
-    </section>
-    {% endif %}
+        {% include category-item.html item=item lazy_load=is_lazy %}
     {% endfor %}
 </div>
