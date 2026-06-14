@@ -605,13 +605,14 @@ main {
 .js-lazy-hidden {
   opacity: 0 !important;
   visibility: hidden !important; /* Estää mahdolliset renderöintivälähdykset */
+  filter: brightness(0.5); /* Tummenna kuva latauksen ajaksi */
 }
 .js-lazy-fade-in {
   animation: lazyImageFadeIn 0.8s ease-out forwards;
 }
 @keyframes lazyImageFadeIn {
-  from { opacity: 0; visibility: visible; }
-  to { opacity: 1; visibility: visible; }
+  from { opacity: 0; visibility: visible; filter: brightness(0.5); } /* Tummennettu ja näkymätön alussa */
+  to { opacity: 1; visibility: visible; filter: brightness(1); } /* Kirkas ja näkyvä lopussa */
 }
 
 .gallery-img,
