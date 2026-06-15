@@ -31,5 +31,6 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./_site/
+          preview-branch-baseurl: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
