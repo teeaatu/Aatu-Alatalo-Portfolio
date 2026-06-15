@@ -12,6 +12,13 @@
   
   <meta property="og:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
   <meta property="og:description" content="{{ main_desc }}">
+  {% if page.lang == 'fi' %}
+  <meta property="og:locale" content="fi_FI">
+  <meta property="og:locale:alternate" content="en_US">
+  {% else %}
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="fi_FI">
+  {% endif %}
   <meta property="og:image" content="{{ site.url }}{{ '/assets/images/PROJECT%2021%20FINALIST.jpg' | relative_url }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">
@@ -22,6 +29,22 @@
   <meta name="twitter:image" content="{{ site.url }}{{ '/assets/images/PROJECT%2021%20FINALIST.jpg' | relative_url }}">
 
   <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}">
+
+  <!-- Multilingual SEO: Language mapping and English x-default priority -->
+  {% if page.translation_url %}
+    {% if page.lang == 'fi' %}
+      <link rel="alternate" hreflang="fi" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+      <link rel="alternate" hreflang="en" href="{{ site.url }}{{ page.translation_url | replace:'index.html','' }}" />
+      <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.translation_url | replace:'index.html','' }}" />
+    {% elsif page.lang == 'en' %}
+      <link rel="alternate" hreflang="en" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+      <link rel="alternate" hreflang="fi" href="{{ site.url }}{{ page.translation_url | replace:'index.html','' }}" />
+      <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+    {% endif %}
+  {% else %}
+    <!-- Self-referencing fallback for any standalone pages -->
+    <link rel="alternate" hreflang="{{ page.lang | default: 'en' }}" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+  {% endif %}
 
   {% if page.url == '/' or page.url == '/index.html' or page.url == '/about.html' %}
   <script type="application/ld+json">
