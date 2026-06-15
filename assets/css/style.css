@@ -873,6 +873,13 @@ main {
     transform: none !important; /* Pakotetaan kielivalitsin paikalleen */
   }
   
+  /* Mobiilivalikon sosiaalisen median kuvakkeiden korjaus */
+  aside .sidebar-socials {
+    justify-content: center; /* Keskittää kuvakkeet vaakasuunnassa */
+    padding: 0 20px; /* Lisää vaakasuuntaista tilaa reunoille */
+    width: 100%; /* Varmistaa, että padding toimii oikein */
+    box-sizing: border-box; /* Sisällyttää paddingin leveyteen */
+  }
   /* Mobiilivalikon sisällön tyylit */
   aside nav {
     gap: 20px; /* Suurempi väli linkkien välillä */
