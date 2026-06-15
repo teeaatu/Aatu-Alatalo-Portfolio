@@ -403,11 +403,12 @@ main {
   align-items: start; /* Sallii jokaisen kuvan pitää oman luonnollisen korkeutensa */
   width: 100%;
   min-height: 100vh;
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
+  opacity: 1; /* Näkyy heti, ei vaadi selausta ilmestyäkseen */
+  animation: fadeGridIn 0.8s ease-out forwards;
 }
-.overview-grid.is-loaded {
-  opacity: 1;
+@keyframes fadeGridIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .overview-item {
   position: relative;
@@ -416,20 +417,26 @@ main {
 
 /* JS Masonry overrides */
 .overview-grid.js-masonry-active {
-  display: block; /* Poistaa CSS-gridin käytöstä, kun JS aktivoituu */
-  position: relative;
+  display: grid !important; /* Pakotetaan aina CSS Grid, estetään JS Masonryn aiheuttama sekava järjestys */
+  height: auto !important;
 }
 .overview-grid.js-masonry-active .overview-item {
-  position: absolute;
-}
-.overview-grid.js-masonry-active.is-loaded .overview-item {
-  transition: left 0.4s ease-out, top 0.4s ease-out; /* Pehmeä liukuma vain asettelun päivityksissä */
+  position: relative !important; /* Poistetaan JS:n absoluuttinen sijainti */
+  top: auto !important;
+  left: auto !important;
+  width: 100% !important;
 }
 
 @media (max-width: 1024px) {
   .overview-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px; /* Hallittu rako mobiilissa sekä pysty- että vaakasuunnassa */
+  }
+}
+
+@media (max-width: 767px) {
+  .overview-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -603,15 +610,19 @@ main {
 
 /* Pehmeä fade-in lazy load kuville (Fade-on-load) */
 .js-lazy-hidden {
-  opacity: 0 !important;
-  visibility: hidden !important; /* Estää mahdolliset renderöintivälähdykset */
+  opacity: 0;
+  filter: brightness(0.85); /* Hienovaraisempi ja pehmeämpi tummennus (0.5 sijaan) */
+  transition: opacity 0.8s ease-out, filter 0.8s ease-out;
 }
-.js-lazy-fade-in {
-  animation: lazyImageFadeIn 0.8s ease-out forwards;
+.js-lazy-hidden.is-loaded {
+  opacity: 1;
+  filter: brightness(1);
 }
-@keyframes lazyImageFadeIn {
-  from { opacity: 0; visibility: visible; }
-  to { opacity: 1; visibility: visible; }
+
+/* Varmistetaan, että sivun ensimmäiset kuvat näkyvät aina välittömästi ilman vieritystä (scroll) */
+.overview-grid .overview-item:nth-child(-n+6) .js-lazy-hidden {
+  opacity: 1 !important;
+  filter: brightness(1) !important;
 }
 
 .gallery-img,
@@ -756,7 +767,7 @@ main {
   transition: transform 0.2s ease;
 }
 .menu-toggle:active {
-  transform: scale(0.92) !important;
+  transform: scale(0.98) !important; /* Pehmennetty painallusefekti */
 }
 .hamburger { width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: relative; transition: all 0.4s ease; }
 .hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: absolute; left: 0; transition: all 0.4s ease; }
@@ -768,14 +779,35 @@ main {
 
 /* --- RESPONSIVISUUS PERUS --- */
 @media (max-width: 1024px) {
-  aside .site-logo-img { display: none !important; }
+  aside .site-logo-img,
+  aside .logo { display: none !important; } /* Piilotetaan molemmat logot mobiilivalikossa kokonaan */
   aside .desktop-lang-switcher { display: none !important; }
   aside {
-    position: fixed; left: -100%; width: 100%; height: 100vh;
+    position: fixed;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh; /* Mukautuu automaattisesti, kun osoitepalkki ilmestyy/katoaa */
     transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-    z-index: 1500; background: var(--color-rgb-16); padding: 160px 40px;
+    z-index: 1500;
+    background: rgba(10, 10, 10, 0.85); /* Palautettu alkuperäinen läpinäkyvyys */
+    backdrop-filter: blur(8px); /* Sumennus */
+    -webkit-backdrop-filter: blur(8px); /* Webkit-selaimille */
+    justify-content: flex-start; /* Korjaa skrollausbugin: sallii kaiken sisällön vierittämisen */
+    align-items: center; /* Keskittää sisällön vaakasuunnassa */
+    text-align: center; /* Keskittää tekstin linkkien sisällä */
+    padding: 25vh 0 100px 0; /* Aloittaa linkit keskemmältä ja jättää pohjalle reilusti skrollaustilaa */
   }
   body.menu-open aside { left: 0; }
+
+  body {
+    /* Palautetaan mobiilissa natiivi skrollaus, joka piilottaa automaattisesti osoitepalkin */
+    overflow-y: visible !important;
+  }
+  body.menu-open {
+    overflow: hidden !important; /* Estää taustasivun skrollauksen vahingossa */
+  }
+
   .menu-toggle { display: flex; align-items: center; justify-content: center; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); }
   main { 
     margin-left: 0; 
@@ -823,8 +855,76 @@ main {
   }
   .mobile-logo {
     margin-bottom: 0;
-  } 
+  }
   
+  /* Ylänavigaation tila, kun valikko on auki */
+  body.menu-open .mobile-header {
+    transform: translateY(0) !important; /* Estää ylänavia piiloutumasta taustascrollatessa */
+    background-color: transparent !important; /* Sulautuu valikon tummaan taustaan täydellisesti */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  body.menu-open .mobile-logo {
+    opacity: 0 !important; /* Piilotetaan logo valikon ollessa auki */
+    pointer-events: none;
+  }
+  body.menu-open .mobile-header .lang-switcher-clean {
+    opacity: 1 !important;
+    transform: none !important; /* Pakotetaan kielivalitsin paikalleen */
+  }
+  
+  /* Mobiilivalikon sosiaalisen median kuvakkeiden korjaus */
+  aside .sidebar-socials {
+    justify-content: center; /* Keskittää kuvakkeet vaakasuunnassa */
+    padding: 0 20px; /* Lisää vaakasuuntaista tilaa reunoille */
+    width: 100%; /* Varmistaa, että padding toimii oikein */
+    box-sizing: border-box; /* Sisällyttää paddingin leveyteen */
+  }
+  /* Mobiilivalikon sisällön tyylit */
+  aside nav {
+    gap: 20px; /* Suurempi väli linkkien välillä */
+    padding: 0 20px; /* Annetaan sisällölle hieman sivuttaista paddingia */
+    width: 100%; /* Varmistetaan, että ne ottavat koko leveyden keskityksen jälkeen */
+    box-sizing: border-box;
+  }
+  aside nav a {
+    font-size: 20px; /* Suurempi fonttikoko */
+    padding: 10px 0; /* Lisää kosketuspinta-alaa */
+    transform: none !important; /* Estää globaalin translateX-liikkeen */
+  }
+  aside nav a.active {
+    border-left: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    font-size: 20px !important; /* Yhtenäinen koko aktiivisellekin */
+  }
+
+  aside .info-nav {
+    gap: 15px;
+    margin-top: 40px; /* Lisää tilaa päänavigaation ja info-navin väliin */
+    border-top: none; /* Poistetaan työpöydän border-top */
+    padding-top: 0;
+    padding: 0 20px; /* Annetaan sisällölle hieman sivuttaista paddingia */
+    width: 100%; /* Varmistetaan, että ne ottavat koko leveyden keskityksen jälkeen */
+    box-sizing: border-box;
+  }
+  aside .info-nav-links a {
+    font-size: 20px; /* Suurempi fonttikoko */
+    padding: 10px 0; /* Lisää kosketuspinta-alaa */
+    transform: none !important; /* Estää globaalin translateX-liikkeen */
+  }
+  aside .info-nav-links a.active {
+    border-left: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    font-size: 20px !important; /* Yhtenäinen koko aktiivisellekin */
+  }
+  aside .lang-switcher-clean {
+    font-size: 16px !important; /* Suurempi fonttikoko kielenvaihtajalle */
+    margin-top: 30px;
+    justify-content: center; /* Keskittää kielenvaihtajan */
+  }
+
   .lang-switcher-mobile {
     display: block;
     position: absolute;
@@ -1223,7 +1323,10 @@ body.index-page main {
   opacity: 1;
   visibility: visible;
   max-height: 4000px;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, max-height 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+  transform: translateY(0);
+  --stagger-delay: 0s;
+  /* Max-height aukeaa heti, opacity ja transform tulevat porrastetulla viiveellä */
+  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out, opacity 0.8s ease-out var(--stagger-delay), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) var(--stagger-delay), visibility 0s;
 }
 .image-section.hidden {
   opacity: 0 !important;
@@ -1231,6 +1334,9 @@ body.index-page main {
   max-height: 0 !important;
   margin-bottom: 0 !important;
   overflow: hidden !important;
+  transform: translateY(40px) !important;
+  /* Piilotettaessa elementti katoaa nopeasti ilman viivettä */
+  transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s 0.4s !important;
 }
 
 /* Alasarjan esittelyteksti */
@@ -1238,7 +1344,8 @@ body.index-page main {
   opacity: 1;
   visibility: visible;
   max-height: 1000px;
-  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, max-height 0.4s ease-in-out;
+  transform: translateY(0);
+  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out, opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
 }
 .sub-series-intro.hidden {
   opacity: 0 !important;
@@ -1247,6 +1354,8 @@ body.index-page main {
   margin-bottom: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
+  transform: translateY(20px) !important;
+  transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out, padding 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s 0.4s !important;
 }
 
 /* --- GALLERY FILTER NAVIGATION --- */
@@ -1256,38 +1365,48 @@ body.index-page main {
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 60px;
-  color: var(--text-dimmed);
+  display: flex;
+  flex-direction: row;
+  gap: 28px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 .gallery-filter-nav .filter-link {
-  color: var(--text-dimmed); /* Oletuksena himmeä */
+  color: rgba(244, 240, 234, 0.45); /* Lämmin ja hienostunut himmennys */
   text-decoration: none !important;
-  margin: 0; /* Nollataan, jotta rivittyvä linkki asettuu tasan vasemmalle */
-  transition: color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
-  opacity: 0.5; /* Oletus himmeys */
+  margin: 0;
+  transition: color 0.3s ease, text-decoration-color 0.3s ease, transform 0.2s ease;
   display: inline-block;
+  padding: 10px 0;
+  text-underline-offset: 8px; /* Antaa kirjaimille reilusti happea */
+  text-decoration-thickness: 1px;
 }
 .gallery-filter-nav .filter-link:active {
-  transform: scale(0.96);
+  transform: scale(0.99) !important;
   transition: transform 0.1s ease;
 }
-.gallery-filter-nav .filter-link:hover,
-.gallery-filter-nav .filter-link.active {
-  color: var(--color-hex-f4f0ea); /* Aktiivinen tai hover kirkas */
-  opacity: 1; /* Aktiivinen tai hover täysin näkyvä */
+.gallery-filter-nav .filter-link:hover {
+  color: var(--color-hex-f4f0ea);
+  transform: none !important; /* Estää periytyvän globaalin vaakaliikkeen */
 }
-.gallery-filter-nav .filter-separator {
-  color: var(--text-dimmed);
-  opacity: 0.4; /* Himmeämpi erotin */
-  margin: 0 12px; /* Siirretään tyhjä tila yksinomaan erottimen ympärille */
+.gallery-filter-nav .filter-link.active {
+  color: var(--color-hex-f4f0ea);
+  text-decoration: underline !important;
+  text-decoration-color: var(--accent-color) !important; /* Kultainen työpöytä-alleviivaus */
+  border-left: none !important; /* Estetään vasen viiva työpöydällä (periytyy globaalista) */
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  transform: none !important;
 }
 
 /* --- MOBILE TYPOGRAPHY FIX FOR FILTER NAV --- */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .gallery-filter-nav {
-    line-height: 2; /* Antaa kunnolla hengitystilaa riveille, jos navigointi jakautuu useammalle riville */
+    flex-direction: column;
+    gap: 12px;
   }
   .gallery-filter-nav .filter-link {
-    white-space: nowrap; /* Estää linkin sisäisen tekstin katkeamisen kesken lauseen */
+    width: 100%;
   }
 }
 
