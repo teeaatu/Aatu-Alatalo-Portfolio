@@ -20,3 +20,6 @@ exclude:
   - llms.txt
   - llms-full.txt
   - scripts/
+  - venv
+  - .github
+  - Node_modules
