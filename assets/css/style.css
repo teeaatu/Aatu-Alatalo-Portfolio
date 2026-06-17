@@ -98,25 +98,41 @@ aside {
   z-index: 100;
 }
 
-.site-logo-img {
-  display: block;
-  margin-bottom: 60px;
-  max-width: 180px; /* Voit säätää logon kokoa tästä muuttamalla arvoa */
+/* New text logo styles for desktop sidebar */
+aside .site-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align left for desktop sidebar */
+  margin-bottom: 2rem;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.site-logo-img:hover {
+aside .site-logo:hover {
   opacity: 0.85;
   transform: scale(1.02);
 }
-.site-logo-img:active {
+aside .site-logo:active {
   transform: scale(0.98);
   transition: transform 0.1s ease, opacity 0.3s ease;
 }
 
-.site-logo-img img {
-  width: 100%;
-  height: auto;
-  display: block;
+aside .site-logo .logo-name {
+  font-family: var(--font-21);
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--color-hex-f4f0ea);
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+
+aside .site-logo .logo-sub {
+  font-family: var(--font-21);
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #c5a059 !important;
+  line-height: 1.1;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: -5px;
 }
 
 nav { 
@@ -302,6 +318,17 @@ nav a.masters-nav-item.active {
   transform: scale(0.98);
   transition: transform 0.1s ease, opacity 0.3s ease;
 }
+.brand-logo-mobile {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.brand-logo-mobile:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+.brand-logo-mobile:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease, opacity 0.3s ease;
+}
 .mobile-logo img {
   width: 100%;
   height: auto;
@@ -350,23 +377,53 @@ nav a.masters-nav-item.active {
     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
   }
 
-  .mobile-logo {
+  /* Target the <a> tag wrapping the .site-logo */
+  .mobile-header > a {
     position: static !important; 
     margin: 0 auto !important;   
     order: 2 !important;         
+    text-align: center;
+    max-width: none; /* Allow the logo to take its natural width */
+  }
+
+  /* Styles for the new text logo in the mobile header */
+  .mobile-header .site-logo {
+    align-items: center; /* Center the text lines within the logo container */
+    margin-bottom: 0; /* No margin below in mobile header */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .mobile-header .site-logo:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+  .mobile-header .site-logo:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease, opacity 0.3s ease;
+  }
+  .mobile-header .site-logo .logo-name {
+    font-size: 1.8rem; /* Adjusted for mobile */
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    color: var(--color-hex-f4f0ea);
+  }
+  .mobile-header .site-logo .logo-sub {
+    font-size: 0.7rem; /* Adjusted for mobile */
+    margin-top: 0px;
+    letter-spacing: 2px;
+    color: #c5a059 !important;
   }
 
   .menu-toggle {
-    order: 3 !important; 
-    position: static !important; 
-    transform: none !important; 
+    order: 3 !important; /* Push to far right */
+    position: static !important;
+    transform: none !important;
   }
 
   .lang-switcher-clean {
     display: flex !important;
     align-items: center;
     gap: 6px;
-    order: 1 !important;
+    order: 1 !important; /* Push to far left */
     z-index: 100 !important;
     font-size: 12px !important;
     letter-spacing: 1.5px !important;
@@ -779,8 +836,7 @@ main {
 
 /* --- RESPONSIVISUUS PERUS --- */
 @media (max-width: 1024px) {
-  aside .site-logo-img,
-  aside .logo { display: none !important; } /* Piilotetaan molemmat logot mobiilivalikossa kokonaan */
+  aside .site-logo { display: none !important; } /* Piilotetaan sidebarin logo mobiilivalikossa kokonaan */
   aside .desktop-lang-switcher { display: none !important; }
   aside {
     position: fixed;
@@ -816,35 +872,7 @@ main {
     box-sizing: border-box; 
   }
   .intro-section, .project-info { padding-left: 5px; padding-right: 5px; }
-  
-  .mobile-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    position: fixed; 
-    top: 0; left: 0; width: 100%;
-    padding: 20px 30px; 
-    box-sizing: border-box;
-    background-color: var(--color-hex-050505);
-    z-index: 2000;
-    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
-  }
 
-  .mobile-logo {
-    position: static; 
-    margin: 0 auto;   
-    order: 2;         
-  }
-
-  .menu-toggle {
-    order: 3; 
-  }
-
-  .lang-switcher-mobile {
-    position: static; 
-    transform: none;  
-    order: 1;         
-  }
   .mobile-header.header--hidden {
     transform: translateY(-100%);
   }
@@ -853,9 +881,6 @@ main {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-  .mobile-logo {
-    margin-bottom: 0;
-  }
   
   /* Ylänavigaation tila, kun valikko on auki */
   body.menu-open .mobile-header {
@@ -863,8 +888,8 @@ main {
     background-color: transparent !important; /* Sulautuu valikon tummaan taustaan täydellisesti */
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-  }
-  body.menu-open .mobile-logo {
+  } /* Hide mobile header logo when menu is open */
+  body.menu-open .mobile-header > a {
     opacity: 0 !important; /* Piilotetaan logo valikon ollessa auki */
     pointer-events: none;
   }
