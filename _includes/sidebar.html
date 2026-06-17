@@ -1,6 +1,7 @@
 <aside id="sidebar">
-  <a href="{{ '/' | relative_url }}" class="site-logo-img no-decoration">
-    <img src="{{ '/portfolio_logo.png' | relative_url }}" alt="Aatu Alatalo Logo">
+  <a href="{{ '/' | relative_url }}" class="site-logo brand-logo no-decoration" style="display: block; margin-bottom: 5rem; font-family: 'Lora', serif;">
+    <span class="logo-name" style="display: block; line-height: 1.2;">Aatu Alatalo</span>
+    <span class="logo-sub" style="display: block; line-height: 1.2; color: yellow;">photographer</span>
   </a>
   <nav>
     <a href="{% if page.lang == 'en' %}/en/{% else %}/{% endif %}" class="{% if page.active_nav == 'index' %}active{% endif %}">{{ site.data.t.overview[lang] }}</a>
