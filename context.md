@@ -16,6 +16,15 @@ The repository incorporates a robust Vanilla JS Masonry grid with CSS transition
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-18] Logo Update & Style Finalization**
+    * **Visual Identity:** Updated the main logo to be text-based instead of image-based.
+    * **Stylesheets:** Finalized general CSS styling and layout refinements across the website.
+
+* **[2026-06-15] SEO, Localization & Accessibility Refinements**
+    * **Multilingual SEO:** Implemented `hreflang` tags across all localized page variants to define bilingual equivalents (FI and EN) and set `x-default` targeting.
+    * **SEO Metadata:** Added birth date and refined meta descriptions for both Finnish and English sites to improve precision and search rankings.
+    * **UX & Content:** Added a new profile picture. Disabled the sticky scroll effect on the About pages to improve reading flow and overall accessibility on mobile and desktop viewports.
+
 * **[2026-06-13] Grid & Performance Refactor: Responsive Dual-Thumbnails & PhotoSwipe V5**
     * **Homepage Grid Design:** Removed random shuffling from `overview-grid.html`. Anchored images within `a.gallery-link-wrapper` to ensure PhotoSwipe V5 compliance without breaking the Vanilla JS Masonry layout.
     * **Category Modularity (DRY):** Created `_includes/category-item.html` to handle both local assets (`/assets/thumbnails/`) and Cloudflare R2 (`/thumbs/`) endpoints dynamically.
