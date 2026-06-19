@@ -16,6 +16,10 @@ The repository incorporates a robust Vanilla JS Masonry grid with CSS transition
 Future steps include professional video/media streaming architecture (via Cloudflare R2 object storage) and gallery scalability planning.
 
 ## History
+* **[2026-06-19] LCP Preloading & Mobile Header Refinements**
+    * **Performance Optimization:** Extracted homepage grid sorting logic into a reusable `_includes/get-sorted-images.html` and implemented `<link rel="preload">` in `<head>` for the first two above-the-fold LCP image thumbnails to eliminate render-blocking network waterfall delay.
+    * **Mobile Layout Styling:** Refined mobile text-logo font sizes (logo-name down to `1.4rem` and logo-sub to `0.55rem`) in `assets/css/style.css` to prevent layout congestion on compact viewports.
+
 * **[2026-06-18] Logo Update & Style Finalization**
     * **Visual Identity:** Updated the main logo to be text-based instead of image-based.
     * **Stylesheets:** Finalized general CSS styling and layout refinements across the website.
