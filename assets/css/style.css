@@ -401,13 +401,13 @@ nav a.masters-nav-item.active {
     transition: transform 0.1s ease, opacity 0.3s ease;
   }
   .mobile-header .site-logo .logo-name {
-    font-size: 1.8rem; /* Adjusted for mobile */
+    font-size: 1.4rem; /* Adjusted for mobile (slightly smaller) */
     line-height: 1.1;
     letter-spacing: 0.5px;
     color: var(--color-hex-f4f0ea);
   }
   .mobile-header .site-logo .logo-sub {
-    font-size: 0.7rem; /* Adjusted for mobile */
+    font-size: 0.55rem; /* Adjusted for mobile (slightly smaller) */
     margin-top: 0px;
     letter-spacing: 2px;
     color: #c5a059 !important;
