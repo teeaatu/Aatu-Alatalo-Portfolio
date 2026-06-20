@@ -103,6 +103,9 @@
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) body.classList.remove('menu-open');
   });
+  window.addEventListener('pagehide', () => {
+    body.classList.remove('menu-open');
+  });
 
   // Skrollaus kontaktiin
   const contactBtn = document.getElementById('contactBtn');
