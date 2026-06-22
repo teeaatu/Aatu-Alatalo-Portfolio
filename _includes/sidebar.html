@@ -33,9 +33,9 @@
       <a href="#contact" id="contactBtn">{{ site.data.t.contact[lang] }}</a>
     </nav>
     <div class="lang-switcher-clean desktop-lang-switcher">
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}">FI</a>
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}" class="{% if page.lang == 'fi' %}active{% endif %}" onclick="localStorage.setItem('langPref','fi')">FI</a>
       <span class="separator">/</span>
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}">EN</a>
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if page.lang == 'en' %}/{% else %}/en/{% endif %}{% endif %}" class="{% if page.lang == 'en' %}active{% endif %}" onclick="localStorage.setItem('langPref','en')">EN</a>
     </div>
   </div>
 
