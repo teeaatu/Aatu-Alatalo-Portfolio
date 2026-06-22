@@ -57,9 +57,10 @@
       {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
       {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
       {% if p_kuva contains 'http' %}
-        {% assign base_url = p_kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
-        {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
-        {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+        {% assign filename_with_ext = p_kuva | split: '/' | last %}
+        {% assign base_path = p_kuva | remove: filename_with_ext %}
+        {% assign p_thumb_mobile = base_path | append: "thumbs/" | append: thumb_mobile %}
+        {% assign p_thumb_desktop = base_path | append: "thumbs/" | append: thumb_desktop %}
       {% else %}
         {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
         {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
@@ -82,9 +83,10 @@
             {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
             {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
             {% if img_item.kuva contains 'http' %}
-              {% assign base_url = img_item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
-              {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
-              {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+              {% assign filename_with_ext = img_item.kuva | split: '/' | last %}
+              {% assign base_path = img_item.kuva | remove: filename_with_ext %}
+              {% assign p_thumb_mobile = base_path | append: "thumbs/" | append: thumb_mobile %}
+              {% assign p_thumb_desktop = base_path | append: "thumbs/" | append: thumb_desktop %}
             {% else %}
               {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
               {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
@@ -96,9 +98,10 @@
           {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
           {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
           {% if item.kuva contains 'http' %}
-            {% assign base_url = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
-            {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
-            {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+            {% assign filename_with_ext = item.kuva | split: '/' | last %}
+            {% assign base_path = item.kuva | remove: filename_with_ext %}
+            {% assign p_thumb_mobile = base_path | append: "thumbs/" | append: thumb_mobile %}
+            {% assign p_thumb_desktop = base_path | append: "thumbs/" | append: thumb_desktop %}
           {% else %}
             {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
             {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
@@ -122,9 +125,10 @@
                 {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
                 {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
                 {% if img_item.kuva contains 'http' %}
-                  {% assign base_url = img_item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
-                  {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
-                  {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+                  {% assign filename_with_ext = img_item.kuva | split: '/' | last %}
+                  {% assign base_path = img_item.kuva | remove: filename_with_ext %}
+                  {% assign p_thumb_mobile = base_path | append: "thumbs/" | append: thumb_mobile %}
+                  {% assign p_thumb_desktop = base_path | append: "thumbs/" | append: thumb_desktop %}
                 {% else %}
                   {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
                   {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
@@ -137,9 +141,10 @@
               {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
               {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
               {% if item.kuva contains 'http' %}
-                {% assign base_url = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
-                {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
-                {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+                {% assign filename_with_ext = item.kuva | split: '/' | last %}
+                {% assign base_path = item.kuva | remove: filename_with_ext %}
+                {% assign p_thumb_mobile = base_path | append: "thumbs/" | append: thumb_mobile %}
+                {% assign p_thumb_desktop = base_path | append: "thumbs/" | append: thumb_desktop %}
               {% else %}
                 {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
                 {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}

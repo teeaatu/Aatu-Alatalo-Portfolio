@@ -58,7 +58,7 @@ def process_image_variant(img, max_size):
     
     # Pakkaus in-memory -puskuriin
     out_io = io.BytesIO()
-    img_variant.save(out_io, format='WEBP', quality=82, method=6)
+    img_variant.save(out_io, format='WEBP', quality=75, method=6)
     out_io.seek(0)
     
     return out_io
