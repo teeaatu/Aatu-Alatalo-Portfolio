@@ -1,6 +1,27 @@
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  {% if page.lang == 'fi' and page.translation_url %}
+  <script>
+    // Automaattinen kieliohjaus: ohjaa ei-suomenkieliset kävijät englanninkieliselle sivulle
+    (function() {
+      var pref = localStorage.getItem('langPref');
+      // Jos käyttäjä on manuaalisesti valinnut suomen, ei ohjata
+      if (pref === 'fi') return;
+      // Jos ei ole vielä valintaa, tarkistetaan selaimen kieli
+      if (!pref) {
+        var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if (lang.indexOf('fi') === 0) {
+          localStorage.setItem('langPref', 'fi');
+          return;
+        }
+      }
+      // Ei-suomenkielinen tai aiemmin valinnut EN → ohjataan
+      window.location.replace('{{ page.translation_url }}');
+    })();
+  </script>
+  {% endif %}
+
   <link rel="preconnect" href="https://media.aatualatalo.com" crossorigin>
   <link rel="dns-prefetch" href="https://media.aatualatalo.com">
   
