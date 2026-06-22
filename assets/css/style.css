@@ -472,22 +472,29 @@ main {
   width: 100%;
 }
 
-/* JS Masonry overrides */
+/* JS Masonry styles on desktop when active */
 .overview-grid.js-masonry-active {
-  display: grid !important; /* Pakotetaan aina CSS Grid, estetään JS Masonryn aiheuttama sekava järjestys */
-  height: auto !important;
+  position: relative;
+  display: block;
 }
 .overview-grid.js-masonry-active .overview-item {
-  position: relative !important; /* Poistetaan JS:n absoluuttinen sijainti */
-  top: auto !important;
-  left: auto !important;
-  width: 100% !important;
+  position: absolute;
 }
 
 @media (max-width: 1024px) {
   .overview-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px; /* Hallittu rako mobiilissa sekä pysty- että vaakasuunnassa */
+  }
+  .overview-grid.js-masonry-active {
+    display: grid !important;
+    height: auto !important;
+  }
+  .overview-grid.js-masonry-active .overview-item {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
   }
 }
 
