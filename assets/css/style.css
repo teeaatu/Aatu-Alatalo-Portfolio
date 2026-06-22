@@ -74,7 +74,7 @@ body {
     transform: translateY(-3px);
 }
 .back-to-top:active {
-    transform: translateY(-1px) scale(0.95);
+    transform: translateY(-1px) scale(0.98);
     transition: transform 0.1s ease, background 0.3s ease;
 }
 .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 44px; height: 44px }
@@ -154,7 +154,7 @@ nav a {
 }
 
 nav a:hover { color: var(--color-hex-f4f0ea); transform: translateX(4px); }
-nav a:active { transform: translateX(4px) scale(0.96); transition: transform 0.1s ease; }
+nav a:active { transform: scale(0.985); transition: transform 0.1s ease; }
 
 nav a.active { 
   color: var(--color-hex-f4f0ea); 
@@ -218,7 +218,7 @@ nav a.masters-nav-item.active {
   color: var(--color-hex-f4f0ea);
 }
 .info-nav-links a:active {
-  transform: scale(0.96);
+  transform: scale(0.985);
   transition: transform 0.1s ease;
 }
 
@@ -246,7 +246,7 @@ nav a.masters-nav-item.active {
   opacity: 1;
 }
 .sidebar-socials .social-icon-link:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
   transition: transform 0.1s ease;
 }
 
@@ -267,7 +267,7 @@ nav a.masters-nav-item.active {
   display: inline-block;
 }
 .lang-switcher-clean a:active {
-  transform: scale(0.92);
+  transform: scale(0.98);
   transition: transform 0.1s ease;
 }
 
@@ -296,7 +296,7 @@ nav a.masters-nav-item.active {
   text-decoration: none !important;
 }
 .social-icon-link:hover { color: var(--accent-color); transform: translateX(5px); opacity: 1 }
-.social-icon-link:active { transform: translateX(5px) scale(0.95); transition: transform 0.1s ease; }
+.social-icon-link:active { transform: scale(0.98); transition: transform 0.1s ease; }
 
 /* --- MOBIILIOTSIKKO --- */
 .mobile-header {
@@ -359,7 +359,7 @@ nav a.masters-nav-item.active {
   color: var(--color-hex-f4f0ea) !important;
 }
 .lang-switcher-desktop:active {
-  transform: scale(0.95);
+  transform: scale(0.985);
   transition: transform 0.1s ease;
 }
 
@@ -809,7 +809,7 @@ main {
   transform: scale(1.1); /* Pieni skaalaus-efekti sopii paremmin ikonille */
 }
 .footer-socials .social-icon-link:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
   transition: transform 0.1s ease;
 }
 
@@ -824,7 +824,7 @@ main {
   transition: transform 0.2s ease;
 }
 .menu-toggle:active {
-  transform: scale(0.98) !important; /* Pehmennetty painallusefekti */
+  transform: scale(0.99) !important; /* Pehmennetty painallusefekti */
 }
 .hamburger { width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: relative; transition: all 0.4s ease; }
 .hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: absolute; left: 0; transition: all 0.4s ease; }
@@ -1021,7 +1021,7 @@ main {
   border-color: var(--color-hex-f4f0ea);
 }
 .cookie-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.985);
   transition: transform 0.1s ease;
 }
 .cookie-btn.accept {
@@ -1134,7 +1134,7 @@ body.index-page main {
   color: var(--color-hex-f4f0ea) !important;
 }
 .page-navigation a:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
   transition: transform 0.1s ease;
 }
 
@@ -1186,7 +1186,7 @@ body.index-page main {
 }
 
 .about-cta a:active {
-  transform: scale(0.96);
+  transform: scale(0.985);
   transition: transform 0.1s ease;
 }
 .about-cta a span {
