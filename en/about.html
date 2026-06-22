@@ -9,7 +9,10 @@ translation_url: /about.html
 <div class="about-premium-wrapper">
   <div class="about-grid">
     <div class="image-container">
-      <img src="{{ '/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg' | relative_url }}" alt="Aatu Alatalo - Photographer based in Oulu and Hasselblad Masters Finalist" title="Aatu Alatalo - Portfolio Portrait" fetchpriority="high" loading="eager">
+      <picture>
+        <source srcset="{{ '/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_mobile.webp' | relative_url }} 600w, {{ '/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp' | relative_url }} 1200w" type="image/webp" sizes="(max-width: 768px) 100vw, 50vw">
+        <img src="{{ '/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg' | relative_url }}" alt="Aatu Alatalo - Photographer based in Oulu and Hasselblad Masters Finalist" title="Aatu Alatalo - Portfolio Portrait" fetchpriority="high" loading="eager" width="1080" height="1440">
+      </picture>
     </div>
 
     <div class="about-text">

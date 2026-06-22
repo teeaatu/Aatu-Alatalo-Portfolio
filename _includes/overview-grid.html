@@ -16,6 +16,8 @@
     {% assign p_link_text_fi = parts[9] %}
     {% assign p_link_text_en = parts[10] %}
     {% assign p_is_pinned = parts[11] %}
+    {% assign p_width = parts[12] %}
+    {% assign p_height = parts[13] %}
     
     {% assign filename_no_ext = p_kuva | split: '/' | last | split: '.' | first %}
     {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
@@ -68,6 +70,7 @@
         <img src="{{ p_thumb_desktop }}" srcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w"
              sizes="(max-width: 1024px) 50vw, 33vw"
              alt="{{ final_alt | escape }}"
+             width="{{ p_width }}" height="{{ p_height }}"
              class="link-img {% if is_lazy_overview %}js-lazy-hidden{% endif %}"
              {% if is_lazy_overview %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %}
              onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
@@ -84,6 +87,7 @@
         <img src="{{ p_thumb_desktop }}" srcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w"
              sizes="(max-width: 1024px) 50vw, 33vw"
              alt="{{ final_alt | escape }}"
+             width="{{ p_width }}" height="{{ p_height }}"
              class="gallery-img {% if is_lazy_overview %}js-lazy-hidden{% endif %}"
              data-pswp-src="{{ full_img_url }}"
              {% if is_lazy_overview %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %}

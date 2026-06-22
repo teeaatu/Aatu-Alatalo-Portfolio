@@ -67,6 +67,90 @@
       
       <link rel="preload" as="image" href="{{ p_thumb_desktop }}" imagesrcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w" imagesizes="(max-width: 1024px) 50vw, 33vw">
     {% endfor %}
+  {% elsif page.active_nav and page.active_nav != 'about' and page.active_nav != 'ajatuksia' %}
+    <!-- LCP Image Preload for Gallery Page -->
+    {% assign dataset_key = page.active_nav %}
+    {% if dataset_key == 'kuvaprojekti-ajasta-v365' %}
+      {% assign dataset_key = 'kuvaprojekti_ajasta_v365' %}
+    {% endif %}
+    {% assign dataset = site.data[dataset_key] %}
+    {% if dataset %}
+      {% for item in dataset limit:1 %}
+        {% if item.layout == 'diptych' %}
+          {% for img_item in item.images limit:1 %}
+            {% assign filename_no_ext = img_item.kuva | split: '/' | last | split: '.' | first %}
+            {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
+            {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
+            {% if img_item.kuva contains 'http' %}
+              {% assign base_url = img_item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
+              {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
+              {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+            {% else %}
+              {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
+              {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
+            {% endif %}
+            <link rel="preload" as="image" href="{{ p_thumb_desktop }}" imagesrcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w" imagesizes="(max-width: 768px) 100vw, 50vw">
+          {% endfor %}
+        {% else %}
+          {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+          {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
+          {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
+          {% if item.kuva contains 'http' %}
+            {% assign base_url = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
+            {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
+            {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+          {% else %}
+            {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
+            {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
+          {% endif %}
+          <link rel="preload" as="image" href="{{ p_thumb_desktop }}" imagesrcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w" imagesizes="(max-width: 768px) 100vw, 50vw">
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% elsif page.parent_category and page.series_id %}
+    <!-- LCP Image Preload for Sub-series Page -->
+    {% assign dataset = site.data[page.parent_category] %}
+    {% if dataset %}
+      {% assign found_first = false %}
+      {% for item in dataset %}
+        {% if found_first == false %}
+          {% assign item_series = item.series | default: 'general' %}
+          {% if item_series == page.series_id %}
+            {% if item.layout == 'diptych' %}
+              {% for img_item in item.images limit:1 %}
+                {% assign filename_no_ext = img_item.kuva | split: '/' | last | split: '.' | first %}
+                {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
+                {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
+                {% if img_item.kuva contains 'http' %}
+                  {% assign base_url = img_item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
+                  {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
+                  {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+                {% else %}
+                  {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
+                  {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
+                {% endif %}
+                <link rel="preload" as="image" href="{{ p_thumb_desktop }}" imagesrcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w" imagesizes="(max-width: 768px) 100vw, 50vw">
+                {% assign found_first = true %}
+              {% endfor %}
+            {% else %}
+              {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+              {% assign thumb_mobile = filename_no_ext | append: '_mobile.webp' %}
+              {% assign thumb_desktop = filename_no_ext | append: '_desktop.webp' %}
+              {% if item.kuva contains 'http' %}
+                {% assign base_url = item.kuva | split: '/' | slice: 0, 3 | join: '/' | append: '/thumbs/' %}
+                {% assign p_thumb_mobile = base_url | append: thumb_mobile %}
+                {% assign p_thumb_desktop = base_url | append: thumb_desktop %}
+              {% else %}
+                {% assign p_thumb_mobile = '/assets/thumbnails/' | append: thumb_mobile %}
+                {% assign p_thumb_desktop = '/assets/thumbnails/' | append: thumb_desktop %}
+              {% endif %}
+              <link rel="preload" as="image" href="{{ p_thumb_desktop }}" imagesrcset="{{ p_thumb_mobile }} 600w, {{ p_thumb_desktop }} 1200w" imagesizes="(max-width: 768px) 100vw, 50vw">
+              {% assign found_first = true %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
   {% endif %}
   {% if page.url == '/' or page.url == '/index.html' or page.url == '/about.html' %}
   <script type="application/ld+json">
@@ -89,7 +173,7 @@
   }
   </script>
   {% endif %}
-
+ 
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -104,11 +188,19 @@
     gtag('js', new Date());
     gtag('config', 'G-XNF1FLBJH6');
   </script>
-
+ 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
-
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap">
+  </noscript>
+ 
+  <link rel="preload" as="style" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
+  <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
+  </noscript>
+ 
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">

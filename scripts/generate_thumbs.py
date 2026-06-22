@@ -156,7 +156,8 @@ def main():
                     Bucket=R2_BUCKET_NAME,
                     Key=variant['key'],
                     Body=webp_io,
-                    ContentType='image/webp'
+                    ContentType='image/webp',
+                    CacheControl='public, max-age=31536000'
                 )
                 created_count += 1
                 

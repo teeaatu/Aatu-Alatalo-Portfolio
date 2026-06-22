@@ -18,7 +18,9 @@
               {% assign link_text_fi_val = item.link_text_fi | default: 'Siirry sivustolle' %}
               {% assign link_text_en_val = item.link_text_en | default: 'Visit website' %}
             {% assign is_pinned_val = item.pinned | default: false %}
-            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val | append: '|||' | append: is_pinned_val %}
+            {% assign width_val = img_item.width | default: '' %}
+            {% assign height_val = img_item.height | default: '' %}
+            {% assign combined = pin_priority_val | append: '|||' | append: img_item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||diptych|||' | append: forloop.index | append: '|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val | append: '|||' | append: is_pinned_val | append: '|||' | append: width_val | append: '|||' | append: height_val %}
             {% if pin_priority_val != 999 %}
               {% assign priority_pinned_images = priority_pinned_images | push: combined %}
             {% elsif item.pinned == true or item.pinned == 'true' %}
@@ -37,7 +39,9 @@
             {% assign link_text_fi_val = item.link_text_fi | default: 'Siirry sivustolle' %}
             {% assign link_text_en_val = item.link_text_en | default: 'Visit website' %}
           {% assign is_pinned_val = item.pinned | default: false %}
-          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val | append: '|||' | append: is_pinned_val %}
+          {% assign width_val = item.width | default: '' %}
+          {% assign height_val = item.height | default: '' %}
+          {% assign combined = pin_priority_val | append: '|||' | append: item.kuva | append: '|||' | append: alt_val | append: '|||' | append: otsikko_val | append: '|||normal|||0|||' | append: orientation_val | append: '|||' | append: item_type_val | append: '|||' | append: link_url_val | append: '|||' | append: link_text_fi_val | append: '|||' | append: link_text_en_val | append: '|||' | append: is_pinned_val | append: '|||' | append: width_val | append: '|||' | append: height_val %}
           {% if pin_priority_val != 999 %}
             {% assign priority_pinned_images = priority_pinned_images | push: combined %}
           {% elsif item.pinned == true or item.pinned == 'true' %}

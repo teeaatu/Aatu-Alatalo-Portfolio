@@ -1,28 +1,40 @@
 - kuva: NeaYO.jpg
+  width: 3000
+  height: 2000
   otsikko: Nea, Graduate / Nea Ylioppilas
   paikka: Oulu, Ainolanpuisto, Finland 2026
   alt_text: "Close-up portrait of a person wearing a traditional Finnish graduation cap (Ylioppilaslakki) and a black outfit, standing outdoors. In the background, the Oulu dam is visible in soft focus, situated near the subject"
   pinned: true
 - kuva: MG_9039.jpg
+  width: 1500
+  height: 1125
   otsikko: Ronja in the Field / Ronja pellolla
   paikka: Tyrnävä, Finland 2025
   alt_text: "A dreamy black and white portrait of a young person outdoors. A prominent light leak or lens flare partially obscures their face, creating a soft, ethereal mood. They look off to the side, standing between an open field and a bare bush."
   pinned: true
 - kuva: https://media.aatualatalo.com/Photographs/unto_valikatto.webp
+  width: 2250
+  height: 3000
   otsikko: Unto Välikatto (Hannu Suorsa)
   paikka: Piippola, Finland 2026
   alt_text: "A black and white portrait photograph of a seated man wearing a bowler hat, looking to his left with a thoughtful expression."
 - kuva: potret1.jpg
+  width: 1500
+  height: 2000
   otsikko: Portrait of Viljami / Viljami
   paikka: Ylivieska, Finland 2026
   alt_text: "A moody black and white studio portrait of a young man with glasses (Viljami) wearing a dark knitted sweater. He looks thoughtfully to his right, illuminated by dramatic side lighting against a completely black background."
   pinned: true
 - kuva: Leila.jpg
+  width: 1500
+  height: 1000
   otsikko: Leila Palmu at the Torikatu Gallery / Leila Palmu Torikadun galleriassa
   paikka: Oulu, Finland 2025
   alt_text: "An environmental portrait of Leila Palmu, the widow of the esteemed Finnish artist Juhani Palmu, sitting on a wooden stool inside the Torikatu art gallery in Oulu, Finland, taken in 2025. Warm, low-angled evening sunlight streams across the wooden floor, illuminating her pink knit sweater and the numerous framed paintings hanging on the dark green walls in the background"
   pinned: true
 - kuva: DSC2284.jpg
+  width: 3024
+  height: 4536
   otsikko: Graduate Portrait / Ylioppilas
   paikka: Oulu, Finland 2025
   alt_text: "A striking black and white full-body portrait of a recent graduate wearing a traditional Finnish graduation cap (ylioppilaslakki) and a dark suit. They stand on a muddy dirt path in a bleak, open landscape with bare trees and overhead power lines under a cloudy sky."
