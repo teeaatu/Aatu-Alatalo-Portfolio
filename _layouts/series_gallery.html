@@ -24,12 +24,51 @@ layout: default
     </header>
 
     {% assign dataset = site.data[page.parent_category] %}
+    {% assign filtered_index = 0 %}
     {% for item in dataset %}
         {% assign item_series = item.series | default: 'general' %}
         {% if item_series == page.series_id %}
-            <section class="image-section">
+            {% assign filtered_index = filtered_index | plus: 1 %}
+            {% if filtered_index <= 2 %}
+                {% assign is_lazy = false %}
+            {% else %}
+                {% assign is_lazy = true %}
+            {% endif %}
+
+            {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+            {% assign mobile_thumb = filename_no_ext | append: '_mobile.webp' %}
+            {% assign desktop_thumb = filename_no_ext | append: '_desktop.webp' %}
+
+            {% if item.kuva contains 'http' %}
+              {% assign filename_with_ext = item.kuva | split: '/' | last %}
+              {% assign base_path = item.kuva | remove: filename_with_ext %}
+              {% assign p_mobile = base_path | append: "thumbs/" | append: mobile_thumb %}
+              {% assign p_desktop = base_path | append: "thumbs/" | append: desktop_thumb %}
+              {% assign full_img_url = item.kuva %}
+            {% else %}
+              {% assign p_mobile = '/assets/thumbnails/' | append: mobile_thumb %}
+              {% assign p_desktop = '/assets/thumbnails/' | append: desktop_thumb %}
+              {% assign full_img_url = '/assets/images/' | append: item.kuva %}
+            {% endif %}
+
+            {% if item.alt_text != blank %}
+              {% assign alt_content = item.alt_text %}
+            {% else %}
+              {% assign alt_content = filename_no_ext | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
+            {% endif %}
+
+            <section class="image-section" data-series="{{ page.series_id }}">
                 <div class="image-wrapper">
-                    <img {% if item.kuva contains 'http' %}src="{{ item.kuva }}"{% else %}src="/assets/images/{{ item.kuva }}"{% endif %} alt="{% if item.alt %}{{ item.alt }}{% else %}{{ item.otsikko | split: ' / ' | last }}{% endif %}" class="gallery-img" loading="lazy">
+                    <a href="{{ full_img_url }}" class="gallery-link-wrapper">
+                        <img src="{{ p_desktop }}" srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" 
+                             sizes="(max-width: 768px) 100vw, 50vw" 
+                             alt="{% if item.alt %}{{ item.alt }}{% else %}{{ alt_content }}{% endif %}" 
+                             width="{{ item.width }}" 
+                             height="{{ item.height }}"
+                             class="gallery-img {% if is_lazy %}js-lazy-hidden{% endif %}" 
+                             {% if is_lazy %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %} 
+                             onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
+                    </a>
                     <div class="project-info">
                         <p>{% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}</p>
                         <p>{{ item.paikka }}</p>

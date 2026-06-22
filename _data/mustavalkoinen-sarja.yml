@@ -1,65 +1,95 @@
 - kuva: https://media.aatualatalo.com/Photographs/minaitse.webp
+  width: 1500
+  height: 1000
   otsikko: Self-portrait / Minä itse
   paikka: Finland 2025 / Suomi 2025
   alt_text: "A complex, high-contrast black and white self-portrait captured through a fragmented, slatted mirror surface. In the reflection, a person holding a camera is visible, their image multiplied and split by the vertical divisions of the mirror. To the right, artistic prints depicting trees and a forest are integrated into the reflection. In the soft-focus foreground, a sheet of paper with text is partially visible, while another scroll of paper lies on the ground below. The composition is layered and introspective, featuring strong vertical lines, deep shadows, and textured paper elements."
 - kuva: https://media.aatualatalo.com/Photographs/kirjastomies.webp
+  width: 2250
+  height: 1500
   otsikko: Man in the Library Staircase / Mies kirjaston portaikossa
   paikka: Oulu, Finland 2026 / Oulu, Suomi 2026
   alt_text: "A black and white architectural photograph showing a man standing on a modern library staircase in Oulu, Finland, framed by geometric lines and contrasting light."
 - kuva: https://media.aatualatalo.com/Photographs/poznan.webp
+  width: 2250
+  height: 1500
   otsikko: Walking / Kävely
   paikka: Poznan, Poland 2023 / Poznan, Puola 2023
   alt_text: "A black and white street photograph of a person's legs and feet walking on a paved sidewalk, taken from a low angle. The person is wearing a dark coat and dark trousers."
 - kuva: https://media.aatualatalo.com/Photographs/rajapintahelsinki.webp
+  width: 2100
+  height: 1500
   otsikko: Untitled / Nimetön
   paikka: Helsinki Central Railway Station 2026 / Helsinki päärautatieasema 2026
   alt_text: "A black and white street photograph of a blonde woman in a dark, high-collared coat looking at her smartphone in Helsinki. She stands against a heavily textured stone wall, with her bright blonde hair perfectly framing the sharp contrast between the light patterned upper wall and the dark solid lower wall."
   pinned: true
 - kuva: https://media.aatualatalo.com/Photographs/nainenkahvilassa.webp
+  width: 2000
+  height: 3000
   otsikko: Woman in a Café / Nainen kahvilassa
   paikka: Huovinen Bakery, Railway Station, Oulu 2026 / Huovisen leipomo rautatieasema, Oulu 2026
   alt_text: "A black and white photograph of a young woman sitting in a cafe with retro decor. She wears a dark winter coat and holds a white mug on a tray, looking directly at the camera. The background features vintage patterned wallpaper, wooden paneling, and white chairs."
   pinned: true
 - kuva: Mysteeri.jpg
+  width: 3000
+  height: 2000
   otsikko: Mystery / Mysteeri
   paikka: Töölö, Helsinki, Finland 2026
   alt_text: "A high-contrast black and white street photograph of a person in a dark winter coat walking down a street in Helsinki. In the foreground, a large puddle on the asphalt perfectly reflects the person and the textured facade of the residential building behind them, framed by melting snow piles."
   pinned: true
 - kuva: suutelu.jpg
+  width: 3173
+  height: 4759
   otsikko: The Kiss / Suutelu
   paikka: Helsinki, Finland 2026
   alt_text: "A romantic black and white night photograph of a couple embracing and kissing on a wet city street. One person holds a bouquet of flowers. In the background, neon signs, including one for 'Bio REX', glow brightly, casting reflections on the shiny, rain-slicked pavement."
   pinned: true
 - kuva: Yhteiselo.webp
+  width: 2000
+  height: 3000
   otsikko: Coexistence / Yhteiselo
   paikka: Helsinki, Finland 2026
   alt_text: "A black and white photograph of the Helsinki Cathedral partially obscured by thick fog on a winter day. The grand white columns contrast with the dark winter clothing of several people walking on the wide, snow-covered stone stairs in the foreground, including a couple sharing an umbrella."
 - kuva: DSC5474-1.jpg
+  width: 1125
+  height: 1500
   otsikko: Flugelhorn Player / Flyygelitorvensoittaja
   paikka: Oulu, Finland 2026
   alt_text: "A black and white photograph of a live musical performance. In the foreground, a bearded man plays a flugelhorn with intense focus. Behind him, slightly out of focus, a woman dances expressively in shiny clothing against a dark background." 
   pinned: true
 - kuva: DSC0283-1.jpg
+  width: 1000
+  height: 1500
   otsikko: Lyceum High School / Lyseon lukio
   paikka: Oulu, Finland 2025
   alt_text: "A black and white street photograph taken at dusk. A person in a long dark coat stands with their back to the camera, looking across a wet, streetlight-illuminated road towards a large, multi-story building with a classic facade."
 - kuva: DSC7503.jpg
+  width: 1500
+  height: 1000
   otsikko: Hailuoto Island / Hailuoto
   paikka: Oulu, Finland 2026
   alt_text: "A high-contrast black and white winter landscape at night. In the foreground, small snow-capped buoys protrude from a frozen, flat surface. In the background, the base of a white lighthouse with a wooden staircase stands on a snow-covered shore against a pitch-black sky."
 - kuva: DSC7425.jpg
+  width: 1500
+  height: 1000
   otsikko: Bench and Trees / Penkki ja puut
   paikka: Oulu, Finland 2026
   alt_text: "A serene black and white winter landscape featuring a snow-covered wooden park bench in the foreground. Behind it stand two large trees with branches heavily laden with thick snow, set against a background of modern buildings and evergreens."
 - kuva: DSC6350.jpg
+  width: 1500
+  height: 1000
   otsikko: Mallards / Heinäsorsat
   paikka: Oulu, Finland 2026
   alt_text: "A high-angle black and white photograph of numerous mallard ducks swimming in a dark, narrow channel of open water, tightly bordered by stark white snow and ice banks."
 - kuva: DSC6482.jpg
+  width: 1500
+  height: 1000
   otsikko: Jeans / Farkut
   paikka: Oulu, Finland 2026
   alt_text: "A close-up black and white still-life photograph of a pair of Levi's denim jeans resting casually on patterned fabric. The image strongly highlights the coarse texture of the denim fabric, the back pockets, and the classic small Levi's tag."
 - kuva: DSC7145-2.jpg
+  width: 1500
+  height: 1000
   otsikko: Uleåborg / Oulu
   paikka: Oulu, Finland 2026
   alt_text: "A black and white photograph showing a close-up of several bicycles parked haphazardly together in a deep snowbank. The bikes, including their seats, handlebars, and baskets, are heavily covered in thick, fresh snow. One bicycle in the foreground is partially tipped over."

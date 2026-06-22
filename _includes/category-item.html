@@ -40,7 +40,7 @@
 
       <div class="image-wrapper">
           <a href="{{ full_img_url }}" class="gallery-link-wrapper">
-              <img src="{{ p_desktop }}" srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" sizes="(max-width: 768px) 100vw, 50vw" alt="{{ alt_content }}" class="gallery-img {% if is_lazy %}js-lazy-hidden{% endif %}" {% if is_lazy %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %} onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
+              <img src="{{ p_desktop }}" srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" sizes="(max-width: 768px) 100vw, 50vw" alt="{{ alt_content }}" width="{{ img_item.width }}" height="{{ img_item.height }}" class="gallery-img {% if is_lazy %}js-lazy-hidden{% endif %}" {% if is_lazy %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %} onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
           </a>
       </div>
     {% endfor %}
@@ -79,7 +79,7 @@
 <section class="image-section" data-series="{% if item.series %}{{ item.series }}{% else %}general{% endif %}">
     <div class="image-wrapper">
         <a href="{{ full_img_url }}" class="gallery-link-wrapper">
-            <img src="{{ p_desktop }}" srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" sizes="(max-width: 768px) 100vw, 50vw" alt="{{ alt_content }}" class="gallery-img {% if is_lazy %}js-lazy-hidden{% endif %}" {% if is_lazy %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %} onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
+            <img src="{{ p_desktop }}" srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" sizes="(max-width: 768px) 100vw, 50vw" alt="{{ alt_content }}" width="{{ item.width }}" height="{{ item.height }}" class="gallery-img {% if is_lazy %}js-lazy-hidden{% endif %}" {% if is_lazy %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %} onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
         </a>
         <div class="project-info">
             <p>{{ display_otsikko }}</p>
