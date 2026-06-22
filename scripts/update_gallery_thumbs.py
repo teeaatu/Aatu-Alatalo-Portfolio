@@ -8,11 +8,11 @@ THUMB_DIR = 'assets/thumbnails'
 
 # Mobiiliversion parametrit
 MOBILE_WIDTH = 800
-MOBILE_QUALITY = 75
+MOBILE_QUALITY = 70
 
 # Työpöytäversion parametrit (Crisp Retina)
 DESKTOP_WIDTH = 1600
-DESKTOP_QUALITY = 85
+DESKTOP_QUALITY = 75
 
 def process_image(filepath):
     filename = os.path.basename(filepath)
