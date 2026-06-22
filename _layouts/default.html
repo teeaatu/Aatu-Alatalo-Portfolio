@@ -266,25 +266,39 @@
       let resizeTimer;
       window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutMasonry, 100); });
 
-          // Yhden kerran latausmekanismi - Estää asettelun hyppimisen ja visuaaliset välähdykset
+          // Above-the-fold first -strategia: Näytetään grid heti kun ylärivin kuvat ovat ladanneet
           const images = Array.from(grid.querySelectorAll('img'));
           if (images.length === 0) {
               layoutMasonry();
           } else {
-              let loadedCount = 0;
-              const checkAllLoaded = () => {
-                  loadedCount++;
-                  if (loadedCount === images.length) {
-                      layoutMasonry();
+              const aboveFoldCount = Math.min(6, images.length);
+              const aboveFoldImages = images.slice(0, aboveFoldCount);
+              const belowFoldImages = images.slice(aboveFoldCount);
+              let aboveFoldLoaded = 0;
+              let initialLayoutDone = false;
+
+              const checkAboveFold = () => {
+                  aboveFoldLoaded++;
+                  if (aboveFoldLoaded >= aboveFoldImages.length && !initialLayoutDone) {
+                      initialLayoutDone = true;
+                      layoutMasonry(); // Näytetään grid heti kun ylärivin kuvat ovat valmiit
                   }
               };
 
-              images.forEach(img => {
+              aboveFoldImages.forEach(img => {
                   if (img.complete) {
-                      checkAllLoaded();
+                      checkAboveFold();
                   } else {
-                      img.addEventListener('load', checkAllLoaded);
-                      img.addEventListener('error', checkAllLoaded); // Estää skriptin jäätymisen rikkinäisen kuvan takia
+                      img.addEventListener('load', checkAboveFold);
+                      img.addEventListener('error', checkAboveFold);
+                  }
+              });
+
+              // Relayout kun below-the-fold kuvat latautuvat (korjaa masonry-sijoittelu)
+              belowFoldImages.forEach(img => {
+                  if (!img.complete) {
+                      img.addEventListener('load', () => { if (initialLayoutDone) layoutMasonry(); });
+                      img.addEventListener('error', () => { if (initialLayoutDone) layoutMasonry(); });
                   }
               });
           }
