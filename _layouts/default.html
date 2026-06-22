@@ -44,6 +44,9 @@
         banner.style.display = 'block';
       }
     };
+
+    // Näytetään banneri automaattisesti ensimmäisillä kävijöillä
+    showCookieBanner();
     
     if(acceptBtn) {
         acceptBtn.addEventListener('click', function() {
@@ -219,12 +222,13 @@
       const grid = document.querySelector('.overview-grid');
       if (!grid) return;
 
-      // Aktivoidaan Masonry CSS-luokka
-      grid.classList.add('js-masonry-active');
 
       function layoutMasonry() {
           const items = Array.from(grid.querySelectorAll('.overview-item'));
           if (items.length === 0) return;
+
+          // Aktivoidaan Masonry CSS-luokka vasta kun positiot lasketaan
+          grid.classList.add('js-masonry-active');
 
           const isMobile = window.innerWidth <= 1024;
           const gap = isMobile ? 15 : 40;
