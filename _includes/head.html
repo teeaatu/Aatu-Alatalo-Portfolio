@@ -1,5 +1,8 @@
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://media.aatualatalo.com" crossorigin>
+  <link rel="dns-prefetch" href="https://media.aatualatalo.com">
   
   <title>{{ page.title | default: "Aatu Alatalo | Valokuvaaja & Hasselblad Masters 2026 Finalist" }}</title>
   {% if page.lang == 'fi' %}
@@ -186,7 +189,7 @@
       'analytics_storage': 'denied'
     });
   </script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XNF1FLBJH6"></script>
+  <script defer src="https://www.googletagmanager.com/gtag/js?id=G-XNF1FLBJH6"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -202,10 +205,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap">
   </noscript>
  
+  {% unless page.active_nav == 'about' or page.active_nav == 'ajatuksia' %}
   <link rel="preload" as="style" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
   <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css" media="print" onload="this.media='all'">
   <noscript>
     <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
   </noscript>
+  {% endunless %}
  
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
