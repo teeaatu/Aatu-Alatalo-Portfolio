@@ -7,8 +7,6 @@
 </head>
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}" ontouchstart="">
 
-{% include cookie-banner.html %}
-
 {% include mobile-header.html %}
 
 {% include sidebar.html %}
@@ -23,50 +21,7 @@
 
 {% include back-to-top.html %}
 
-<script>
-  // Evästebannerin logiikka
-  document.addEventListener("DOMContentLoaded", function() {
-    const banner = document.getElementById('cookie-banner');
-    const acceptBtn = document.getElementById('accept-cookies');
-    const declineBtn = document.getElementById('decline-cookies');
-    
-    const cookieChoice = localStorage.getItem('cookieChoice');
-    
-    if (cookieChoice === 'accepted') {
-      gtag('consent', 'update', {
-        'analytics_storage': 'granted'
-      });
-    }
-    
-    // Funktio evästebannerin näyttämiseen, jota voidaan kutsua muualta
-    window.showCookieBanner = function() {
-      if (!localStorage.getItem('cookieChoice')) {
-        banner.style.display = 'block';
-      }
-    };
-
-    // Näytetään banneri automaattisesti ensimmäisillä kävijöillä
-    showCookieBanner();
-    
-    if(acceptBtn) {
-        acceptBtn.addEventListener('click', function() {
-          localStorage.setItem('cookieChoice', 'accepted');
-          gtag('consent', 'update', {
-            'analytics_storage': 'granted'
-          });
-          banner.style.display = 'none';
-        });
-    }
-
-    if(declineBtn) {
-        declineBtn.addEventListener('click', function() {
-          localStorage.setItem('cookieChoice', 'declined');
-          banner.style.display = 'none';
-        });
-    }
-  });
-
-  // Hampurilaisvalikko
+<script>  // Hampurilaisvalikko
   const menuToggle = document.getElementById('menuToggle');
   const body = document.getElementById('body');
   if(menuToggle) {

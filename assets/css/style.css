@@ -992,66 +992,6 @@ main {
   }
 }
 
-/* --- EVÄSTEBANNERI --- */
-#cookie-banner {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  max-width: 400px;
-  background-color: var(--color-rgb-18);
-  border: 1px solid var(--color-hex-333);
-  padding: 20px;
-  z-index: 9998;
-  display: none;
-  box-shadow: 0 10px 30px var(--color-rgb-19);
-  backdrop-filter: blur(5px);
-}
-#cookie-banner p {
-  font-size: 12px;
-  color: var(--text-dimmed);
-  line-height: 1.6;
-  margin: 0 0 15px 0;
-}
-.cookie-buttons {
-  display: flex;
-  gap: 10px;
-}
-.cookie-btn {
-  background: none;
-  border: 1px solid var(--color-hex-333);
-  color: var(--color-hex-f4f0ea);
-  padding: 8px 15px;
-  font-size: 11px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease, transform 0.2s ease;
-}
-.cookie-btn:hover {
-  border-color: var(--color-hex-f4f0ea);
-}
-.cookie-btn:active {
-  transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
-}
-.cookie-btn.accept {
-  border-color: var(--color-hex-4caf50);
-  color: var(--color-hex-4caf50);
-}
-.cookie-btn.accept:hover {
-  background-color: var(--color-hex-4caf50);
-  color: var(--color-hex-f4f0ea);
-}
-@media (max-width: 768px) {
-  #cookie-banner {
-    bottom: 0;
-    right: 0;
-    left: 0;
-    max-width: 100%;
-    border-width: 1px 0 0 0;
-  }
-}
-
 
 
 body.index-page .back-to-top {
