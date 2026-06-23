@@ -55,4 +55,5 @@
 {% endfor %}
 
 {% assign sorted_priority_pinned = priority_pinned_images | sort %}
-{% assign final_images = sorted_priority_pinned | concat: pinned_images | concat: standard_pool %}
+{% assign shuffled_pool = standard_pool | sample: standard_pool.size %}
+{% assign final_images = sorted_priority_pinned | concat: pinned_images | concat: shuffled_pool %}
