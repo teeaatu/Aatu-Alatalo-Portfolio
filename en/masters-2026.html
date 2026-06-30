@@ -1,9 +1,10 @@
 ---
 lang: en
 layout: default
-title: "Hasselblad Masters 2026 - Aatu Alatalo"
-description_fi: "Tämä projekti valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa."
-description_en: "This project was selected as a finalist in the Hasselblad Masters 2026 competition under the Project//21 category."
+title: "Hasselblad Masters 2026 — Finalist, Project//21 | Aatu Alatalo"
+description_fi: "Aatu Alatalo valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa. Kilpailuun osallistui yli 108 000 valokuvaajaa yli 160 maasta. Yksi kymmenestä kansainvälisestä finalistista kategorian voittajan Panitbhand Paribatra Na Ayudhy'n rinnalla."
+description_en: "Aatu Alatalo was selected as a Hasselblad Masters 2026 finalist in the Project//21 category — open to photographers aged 21 and under. One of ten global finalists, alongside category winner Panitbhand Paribatra Na Ayudhya (Thailand). Official portfolio of the Finnish Project//21 finalist."
+keywords: "Hasselblad Masters 2026, Project//21, Aatu Alatalo, Panitbhand Paribatra Na Ayudhya, Project 21 finalist, young photographer award 2026, Hasselblad Masters finalist Finland, fine art photographer Finland, photography competition 2026"
 active_nav: "masters-2026"
 mobile_title: "Hasselblad Masters 2026"
 translation_url: /masters-2026.html
@@ -14,17 +15,23 @@ translation_url: /masters-2026.html
         <div class="intro-title">Hasselblad Masters 2026<br><span class="masters-subtitle">Finalist / Project//21</span></div>
         <div class="intro-grid">
             <div class="intro-text" lang="en">
-                This project was selected as a finalist in the Hasselblad Masters 2026 competition under the Project//21 category. 
+                <p>In April 2026, this project was selected among the top finalists of the <strong>Hasselblad Masters 2026</strong> — one of the world's most prestigious photography competitions — receiving over <strong>108,000 submissions</strong> from photographers across more than 160 countries.</p>
+
+                <p>The <strong>Project//21</strong> category is open exclusively to photographers aged 21 and younger. With no restrictions on theme or genre, it is an unconstrained platform for young photographers to define their own visual language. Ten finalists were selected globally in this category.</p>
+
+                <p>The Project//21 category winner was <strong>Panitbhand Paribatra Na Ayudhya</strong> (Thailand) for his series <em>Dwellers of the Night</em> — vibrant underwater photographs documenting pelagic marine life in the night waters of the Philippines.</p>
+
+                <p>The series presented here documents the Finnish winter landscape after dark — scenes that move along the edge of reality and dream, photographed in 2025.</p>
             </div>
         </div>
     </header>
 
-            {% for item in site.data['masters-2026'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
+        {% for item in site.data['masters-2026'] %}
+    {% if forloop.index <= 2 %}
+        {% assign is_lazy = false %}
+    {% else %}
+        {% assign is_lazy = true %}
+    {% endif %}
+    {% include category-item.html item=item lazy_load=is_lazy %}
+{% endfor %}
 </div>
