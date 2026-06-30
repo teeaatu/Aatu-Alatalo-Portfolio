@@ -1,9 +1,10 @@
 ---
 lang: fi
 layout: default
-title: "Hasselblad Masters 2026 - Aatu Alatalo"
-description_fi: "Tämä projekti valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa."
-description_en: "This project was selected as a finalist in the Hasselblad Masters 2026 competition under the Project//21 category."
+title: "Hasselblad Masters 2026 – Finalisti, Project//21 | Aatu Alatalo"
+description_fi: "Aatu Alatalo valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa. Kilpailuun osallistui yli 108 000 valokuvaajaa yli 160 maasta. Yksi kymmenestä kansainvälisestä finalistista kategorian voittajan Panitbhand Paribatra Na Ayudhy'n rinnalla."
+description_en: "Aatu Alatalo was selected as a Hasselblad Masters 2026 finalist in the Project//21 category — open to photographers aged 21 and under. One of ten global finalists, alongside category winner Panitbhand Paribatra Na Ayudhya (Thailand)."
+keywords: "Hasselblad Masters 2026, Project//21, Aatu Alatalo, Panitbhand Paribatra Na Ayudhya, valokuvaaja Oulu, nuori valokuvaaja, Project 21 finalist, Hasselblad Masters finalist Finland, fine art photography"
 active_nav: "masters-2026"
 mobile_title: "Hasselblad Masters 2026"
 translation_url: /en/masters-2026.html
@@ -14,17 +15,23 @@ translation_url: /en/masters-2026.html
         <div class="intro-title">Hasselblad Masters 2026<br><span class="masters-subtitle">Finalist / Project//21</span></div>
         <div class="intro-grid">
             <div class="intro-text" lang="fi">
-                Tämä projekti valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa.
+                <p>Huhtikuussa 2026 tämä projekti valittiin <strong>Hasselblad Masters 2026</strong> -kilpailun finalistiksi <strong>Project//21</strong> -kategoriassa — kilpailussa, johon osallistui yli <strong>108&nbsp;000 valokuvaajaa</strong> yli 160 maasta.</p>
+
+                <p>Project//21 on Hasselblad Mastersin nuorimmille tarkoitettu kategoria: osallistujien on oltava enintään 21-vuotiaita. Se on rajoittamaton areena, jossa ainoa yhteinen nimittäjä on ikä — teema ja genre ovat tekijän itse valittavissa. Kategoriasta valittiin kymmenen finalistia koko maailmasta.</p>
+
+                <p>Kategorian voitti thaimaalainen valokuvaaja <strong>Panitbhand Paribatra Na Ayudhya</strong> sarjallaan <em>Dwellers of the Night</em> — unelmamaisen värikäs vedenalaiskuvasarja öisistä merieliöistä Filippiineillä.</p>
+
+                <p>Alla esitelty sarja kuvaa suomalaista talvista maaseutumaisemaa pimeydessä — todellisuuden ja harhakuvan rajamailla liikkuvia yökohtauksia, jotka on kuvattu vuonna 2025.</p>
             </div>
         </div>
     </header>
 
-            {% for item in site.data['masters-2026'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
+        {% for item in site.data['masters-2026'] %}
+    {% if forloop.index <= 2 %}
+        {% assign is_lazy = false %}
+    {% else %}
+        {% assign is_lazy = true %}
+    {% endif %}
+    {% include category-item.html item=item lazy_load=is_lazy %}
+{% endfor %}
 </div>

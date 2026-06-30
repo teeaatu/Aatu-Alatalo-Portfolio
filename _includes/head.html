@@ -32,7 +32,11 @@
     {% assign main_desc = page.description_en | default: page.description | default: 'Aatu Alatalo is a photographer from Tyrnävä, based in Oulu, Finland, and a Hasselblad Masters 2026 finalist. Official portfolio.' %}
   {% endif %}
   <meta name="description" content="{{ main_desc }}">
+  {% if page.keywords %}
+  <meta name="keywords" content="{{ page.keywords }}">
+  {% else %}
   <meta name="keywords" content="Aatu Alatalo, valokuvaaja Oulu, Hasselblad Masters 2026, Project 21, suomalainen valokuvaus, photography portfolio Finland">
+  {% endif %}
   
   <meta property="og:title" content="{{ page.title | default: 'Aatu Alatalo | Photography Archive' }}">
   <meta property="og:description" content="{{ main_desc }}">
@@ -198,6 +202,52 @@
     "award": "Hasselblad Masters 2026 Finalist (Project//21)",
     "sameAs": [
       "https://www.instagram.com/teeaatu/"
+    ]
+  }
+  </script>
+  {% endif %}
+
+  {% if page.active_nav == 'masters-2026' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "name": "Aatu Alatalo",
+        "url": "https://aatualatalo.com",
+        "jobTitle": "Photographer",
+        "nationality": "Finnish",
+        "birthDate": "2005-01-25",
+        "knowsAbout": ["Fine Art Photography", "Portrait Photography", "Street Photography", "Landscape Photography"],
+        "award": "Hasselblad Masters 2026 Finalist – Project//21",
+        "sameAs": ["https://www.instagram.com/teeaatu/"]
+      },
+      {
+        "@type": "Event",
+        "name": "Hasselblad Masters 2026",
+        "description": "Biennial international photography competition. Over 108,000 entries from 160+ countries. 7 categories, 70 finalists. Grand Jury chaired by Kalle Sanner, Executive Director of the Hasselblad Foundation.",
+        "endDate": "2026-06-30",
+        "url": "https://www.hasselblad.com/inspiration/masters/2026/",
+        "organizer": {
+          "@type": "Organization",
+          "name": "Hasselblad",
+          "url": "https://www.hasselblad.com"
+        },
+        "about": {
+          "@type": "Person",
+          "name": "Panitbhand Paribatra Na Ayudhya",
+          "nationality": "Thai",
+          "award": "Hasselblad Masters 2026 Winner – Project//21",
+          "description": "Winner of the Project//21 category for the series Dwellers of the Night"
+        },
+        "performer": {
+          "@type": "Person",
+          "name": "Aatu Alatalo",
+          "url": "https://aatualatalo.com",
+          "description": "Finalist in the Project//21 category, Hasselblad Masters 2026"
+        }
+      }
     ]
   }
   </script>
