@@ -126,7 +126,8 @@ aside .site-logo .logo-sub {
   font-family: var(--font-21);
   font-size: 0.9rem;
   font-weight: 300;
-  color: #c5a059 !important;
+  color: var(--text-color) !important;
+  opacity: 0.45;
   line-height: 1.1;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -406,7 +407,8 @@ nav a.masters-nav-item.active {
     font-size: 0.55rem; /* Adjusted for mobile (slightly smaller) */
     margin-top: 0px;
     letter-spacing: 2px;
-    color: #c5a059 !important;
+    color: var(--text-color) !important;
+    opacity: 0.45;
   }
 
   .menu-toggle {

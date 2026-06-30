@@ -11,8 +11,8 @@ interior:
   fi: "Sisätilan valo"
   en: "Interior Light"
 buildings:
-  fi: "Kiehtovat rakennukset"
-  en: "Buildings"
+  fi: "Arkkitehtuuri"
+  en: "Architecture"
 nature:
   fi: "Luonto ja ympäristö"
   en: "Nature"
