@@ -8,14 +8,14 @@ monochrome:
   fi: "Mustavalkoinen"
   en: "Monochrome"
 interior:
-  fi: "Sisätilan valo"
-  en: "Interior Light"
+  fi: "Valo sisällä"
+  en: "Available Light"
 buildings:
   fi: "Arkkitehtuuri"
   en: "Architecture"
 nature:
-  fi: "Luonto ja ympäristö"
-  en: "Nature"
+  fi: "Maisema"
+  en: "Landscape"
 still_life:
   fi: "Asetelmat"
   en: "Still Life"
@@ -26,7 +26,7 @@ color_and_form:
   fi: "Väri ja muoto"
   en: "Color & Form"
 v365:
-  fi: "Kuvaprojekti ajasta"
+  fi: "V365"
   en: "V365"
 about:
   fi: "Esittely"
