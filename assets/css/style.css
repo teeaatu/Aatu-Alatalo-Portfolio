@@ -233,18 +233,20 @@ nav a.masters-nav-item.active {
 /* --- Sidebar Socials --- */
 .sidebar-socials {
   display: flex;
-  padding-bottom: 15px; /* Matches the gap in info-nav */
+  gap: 14px;
+  padding-bottom: 15px;
 }
 
 .sidebar-socials .social-icon-link {
   opacity: 0.6;
+  transition: opacity 200ms ease;
 }
 .sidebar-socials .social-icon-link:hover {
   opacity: 1;
 }
 .sidebar-socials .social-icon-link:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1), opacity 200ms ease;
 }
 
 /* Clean Text Language Switcher */
@@ -802,16 +804,19 @@ main {
 .copyright { margin-top: 80px; font-size: 10px; color: var(--text-dimmed); letter-spacing: 2px; }
 .footer-socials {
   margin-top: 40px;
+  display: flex;
+  gap: 14px;
 }
 .footer-socials .social-icon-link {
-  gap: 0; /* Ei tarvita väliä, kun on vain ikoni */
+  opacity: 0.6;
+  transition: opacity 200ms ease;
 }
 .footer-socials .social-icon-link:hover {
   opacity: 1;
 }
 .footer-socials .social-icon-link:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1), opacity 200ms ease;
 }
 
 /* --- HAMPURILAINEN --- */
