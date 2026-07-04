@@ -1,6 +1,9 @@
 - id: masters-2026
   fi_url: /masters-2026.html
   en_url: /en/masters-2026.html
+- id: vari-ja-muoto
+  fi_url: /vari-ja-muoto.html
+  en_url: /en/color-and-form.html
 - id: raw
   fi_url: /raw.html
   en_url: /en/raw.html
@@ -22,9 +25,7 @@
 - id: elaimet
   fi_url: /elaimet.html
   en_url: /en/animals.html
-- id: vari-ja-muoto
-  fi_url: /vari-ja-muoto.html
-  en_url: /en/color-and-form.html
+
 - id: kuvaprojekti-ajasta-v365
   fi_url: /kuvaprojekti-ajasta-v365.html
   en_url: /en/photo-project-time-v365.html
