@@ -1001,9 +1001,7 @@ main {
 
 
 
-body.index-page .back-to-top {
-  display: none !important;
-}
+
 
 body.index-page main {
   display: block; /* Muutettu flexistä blockiksi, jotta ruudukko toimii oikein */

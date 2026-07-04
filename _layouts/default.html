@@ -156,12 +156,7 @@
       const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPosition = window.pageYOffset;
       if (backToTopBtn) {
-          // Ei näytetä back-to-top -nappia etusivun sliderissa
-          if (document.body.classList.contains('index-page')) {
-            backToTopBtn.style.display = 'none';
-          } else {
-            backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
-          }
+          backToTopBtn.style.display = scrollPosition > 300 ? 'flex' : 'none';
           const scrollPercentage = scrollTotal > 0 ? scrollPosition / scrollTotal : 0;
           const offset = circumference - (scrollPercentage * circumference);
           if (progressBar) progressBar.style.strokeDashoffset = offset;
