@@ -8,3 +8,4 @@ vendor/
 .env
 *env.txt
 venv2/
+venv/
