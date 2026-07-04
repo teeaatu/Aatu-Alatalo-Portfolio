@@ -3,14 +3,14 @@
   height: 3846
   otsikko: Cows' Home / Lehmien koti
   paikka: Suomussalmi, Finland 2026
-  alt_text: A cinematic, medium shot of a traditional red wooden barn and a cylindrical silo in a snowy Finnish winter landscape. A large, snow-covered ramp leads up to a weathered green wooden door in the center. The composition is graphic and geometric under a pale blue sky.""
+  alt_text: "A red wooden barn and a cylindrical silo in a snowy winter landscape in Suomussalmi. A snow-covered ramp leads up to a weathered green door."
   pinned: true
 - kuva: rakennukset.jpg
   width: 1500
   height: 1125
   otsikko: Red and Blue / Punainen ja sininen
   paikka: Kalajoki, Finland 2026
-  alt_text: "A photograph of a small, bright red wooden shed with a snow-covered roof and light wooden double doors. The shed sits in a flat, snow-covered landscape with frosty grass, contrasting sharply against a clear, pale blue winter sky."
+  alt_text: "A small, bright red wooden shed with a snow-covered roof and light wooden double doors. Flat, snow-covered ground around it and a clear pale blue winter sky behind."
 - kuva: DSC2636.jpg
   width: 4032
   height: 3024
@@ -22,7 +22,7 @@
   height: 2250
   otsikko: Cafeteria / Ruokala
   paikka: Oulu, Finland 2026
-  alt_text: "A bright, airy interior photograph of a modern cafeteria or dining space. The room features multiple round white tables surrounded by matching white chairs on a speckled terrazzo floor. Distinctive pendant lamps—white with a bold turquoise-green center stripe—hang above the tables. Large floor-to-ceiling windows offer a view of an outdoor courtyard with white pillars."
+  alt_text: "A cafeteria with round white tables and matching white chairs on a terrazzo floor. Pendant lamps with a turquoise stripe hang above the tables. Floor-to-ceiling windows look onto an outdoor courtyard with white pillars."
   series: "yliopisto-oamk"
 - kuva: "https://media.aatualatalo.com/Photographs/vaaleat_tilat_1.webp"
   width: 3000
@@ -36,5 +36,5 @@
   height: 2250
   otsikko: Spiral Staircase / Kierreportaat
   paikka: Oulu, Finland 2026
-  alt_text: "A light-filled interior photograph featuring a spiral staircase winding upward around a thick pillar painted with wide, pale blue and white stripes. The surrounding walls are tiled in a matching light blue and white grid pattern. On the left, a wire rack displays various magazines and brochures. A metal utility cart is parked in the empty space underneath the stairs."
+  alt_text: "Inside a university building, a spiral staircase winds upward around a pillar painted in pale blue and white stripes. The walls are tiled in a matching blue and white grid. A wire magazine rack stands on the left, a utility cart underneath the stairs."
   series: "yliopisto-oamk"
