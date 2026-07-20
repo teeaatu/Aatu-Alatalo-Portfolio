@@ -28,6 +28,9 @@ color_and_form:
 v365:
   fi: "V365"
   en: "V365"
+events:
+  fi: "Tapahtumat"
+  en: "Events"
 about:
   fi: "Esittely"
   en: "About"

@@ -1,0 +1,31 @@
+---
+lang: fi
+layout: default
+title: "Events — Tapahtumat - Aatu Alatalo"
+description_fi: "Tapahtumakuvausta — konsertteja, keikkoja ja hetkiä yleisön keskellä."
+description_en: "Event photography — concerts, gigs and moments in the crowd."
+active_nav: "tapahtumat"
+mobile_title: "Events / Tapahtumat"
+translation_url: /en/events.html
+---
+
+<div class="content-wrapper">
+    
+    <header class="intro-section">
+        <div class="intro-title">Tapahtumat</div>
+        <div class="intro-grid">
+            <div class="intro-text" lang="fi">
+                Tapahtumakuvausta — konsertteja, keikkoja ja hetkiä yleisön keskellä.
+            </div>
+        </div>
+    </header>
+
+            {% for item in site.data['tapahtumat'] %}
+        {% if forloop.index <= 2 %}
+            {% assign is_lazy = false %}
+        {% else %}
+            {% assign is_lazy = true %}
+        {% endif %}
+        {% include category-item.html item=item lazy_load=is_lazy %}
+    {% endfor %}
+</div>
