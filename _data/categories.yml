@@ -25,6 +25,9 @@
 - id: elaimet
   fi_url: /elaimet.html
   en_url: /en/animals.html
+- id: tapahtumat
+  fi_url: /tapahtumat.html
+  en_url: /en/events.html
 
 - id: kuvaprojekti-ajasta-v365
   fi_url: /kuvaprojekti-ajasta-v365.html

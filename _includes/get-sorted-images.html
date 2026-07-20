@@ -1,7 +1,7 @@
 {% assign priority_pinned_images = '' | split: '' %}
 {% assign pinned_images = '' | split: '' %}
 {% assign standard_pool = '' | split: '' %}
-{% assign datasets = 'etusivu,vari-ja-muoto,luonto-ja-ymparisto,masters-2026,mustavalkoinen-sarja,raw,sisatilan-valo,Potret,elaimet,kiehtovat-rakennukset,still-life,kuvaprojekti_ajasta_v365' | split: ',' %}
+{% assign datasets = 'etusivu,vari-ja-muoto,luonto-ja-ymparisto,masters-2026,mustavalkoinen-sarja,raw,sisatilan-valo,Potret,elaimet,kiehtovat-rakennukset,still-life,kuvaprojekti_ajasta_v365,tapahtumat' | split: ',' %}
 
 {% for dataset_name in datasets %}
   {% assign dataset = site.data[dataset_name] %}
