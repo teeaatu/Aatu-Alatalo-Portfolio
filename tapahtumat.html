@@ -20,7 +20,19 @@ translation_url: /en/events.html
         </div>
     </header>
 
-            {% for item in site.data['tapahtumat'] %}
+    <nav class="gallery-filter-nav">
+        <a href="#" class="filter-link active" data-filter="all">Kaikki</a>
+        <a href="#" class="filter-link" data-filter="misfortune">Misfortune</a>
+    </nav>
+
+    <!-- Alasarjan esittelyteksti (näytetään vain Misfortune-filtterillä) -->
+    <div class="sub-series-intro hidden" data-intro-series="misfortune">
+        <div class="intro-text" lang="fi">
+            Misfortune tukikohdalla 2026
+        </div>
+    </div>
+
+    {% for item in site.data['tapahtumat'] %}
         {% if forloop.index <= 2 %}
             {% assign is_lazy = false %}
         {% else %}
@@ -29,3 +41,62 @@ translation_url: /en/events.html
         {% include category-item.html item=item lazy_load=is_lazy %}
     {% endfor %}
 </div>
+
+<script>
+function initGalleryFilter() {
+    const filterNav = document.querySelector(".gallery-filter-nav");
+    const imageSections = document.querySelectorAll(".image-section");
+    const subSeriesIntros = document.querySelectorAll(".sub-series-intro");
+
+    if (!filterNav || !imageSections.length) return;
+    
+    if (document.body.dataset.filterInit === "true") return;
+    document.body.dataset.filterInit = "true";
+
+    filterNav.addEventListener("click", (e) => {
+        const link = e.target.closest(".filter-link");
+        if (!link) return;
+        
+        e.preventDefault();
+        
+        const filterLinks = filterNav.querySelectorAll(".filter-link");
+        filterLinks.forEach(l => {
+            l.classList.remove("active");
+            l.removeAttribute("aria-current");
+        });
+        
+        link.classList.add("active");
+        link.setAttribute("aria-current", "page");
+        const filter = link.getAttribute("data-filter");
+
+        subSeriesIntros.forEach(intro => {
+            if (intro.getAttribute("data-intro-series") === filter) {
+                intro.classList.remove("hidden");
+            } else {
+                intro.classList.add("hidden");
+            }
+        });
+
+        let delayIndex = 0;
+        imageSections.forEach(section => {
+            const series = section.getAttribute("data-series");
+            const isVisible = filter === "all" || series === filter;
+            
+            if (isVisible) {
+                section.style.setProperty('--stagger-delay', `${0.1 + (delayIndex * 0.15)}s`);
+                section.classList.remove("hidden");
+                delayIndex++;
+            } else {
+                section.classList.add("hidden");
+                section.style.setProperty('--stagger-delay', '0s');
+            }
+        });
+    });
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGalleryFilter);
+} else {
+    initGalleryFilter();
+}
+</script>
