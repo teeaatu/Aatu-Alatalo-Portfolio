@@ -1,0 +1,320 @@
+---
+layout: jd_default
+---
+{% assign lang = page.lang | default: 'fi' %}
+{% assign dataset = site.data[page.category] %}
+{% assign total_count = dataset | size %}
+{% assign total = dataset | size %}
+
+<style>
+  /* ─── SLIDESHOW ──────────────────────────────────── */
+  #jd-slideshow {
+    width: 100%; height: 100%;
+    position: relative;
+    cursor: none; /* käytämme custom-cursoria */
+    background: #111;
+    -webkit-user-select: none; user-select: none;
+  }
+
+  .jd-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .jd-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .jd-slide img {
+    max-width: 92%;
+    max-height: 88vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Kuvainfo alhaalla vasemmalla */
+  #jd-caption {
+    position: fixed;
+    bottom: 1.6rem;
+    left: 1.8rem;
+    z-index: 100;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: rgba(232,228,222,0.55);
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  #jd-caption span { display: block; }
+
+  /* Kuvalaskuri oikealla alhaalla */
+  #jd-counter {
+    position: fixed;
+    bottom: 1.6rem;
+    right: 1.8rem;
+    z-index: 100;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: rgba(232,228,222,0.4);
+    pointer-events: none;
+  }
+
+  /* Custom cursor (nuoli) */
+  #jd-cursor {
+    position: fixed;
+    width: 48px; height: 48px;
+    pointer-events: none;
+    z-index: 9000;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s;
+    opacity: 0;
+  }
+  #jd-cursor svg {
+    width: 100%; height: 100%;
+    fill: none;
+    stroke: rgba(232,228,222,0.8);
+    stroke-width: 1.5;
+  }
+
+  /* Thumbs-ruudukko */
+  #jd-thumbs-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 6px;
+    padding: 4.5rem 1rem 2rem;
+    background: #111;
+  }
+  @media (max-width: 600px) {
+    #jd-thumbs-panel { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  }
+
+  .jd-thumb {
+    cursor: pointer;
+    overflow: hidden;
+    background: #1a1a1a;
+    aspect-ratio: 3/4;
+  }
+  .jd-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+    display: block;
+  }
+  .jd-thumb:hover img,
+  .jd-thumb.active img { opacity: 1; }
+  .jd-thumb.active { outline: 1px solid rgba(232,228,222,0.5); }
+
+  /* Thumbs-nappi (oikea ylänurkka) */
+  #jd-thumbs-btn {
+    display: block;
+  }
+</style>
+
+<!-- Thumbs-nappi header-right-slottiin -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const right = document.querySelector('.jd-header-right');
+    if (right) {
+      const btn = document.createElement('button');
+      btn.className = 'jd-ui-btn';
+      btn.id = 'jd-thumbs-btn';
+      btn.textContent = 'Thumbs';
+      right.appendChild(btn);
+    }
+  });
+</script>
+
+<!-- Kuvadata JSON-muodossa JS:lle -->
+<script id="jd-data" type="application/json">
+[
+  {% for item in dataset %}
+  {
+    "index": {{ forloop.index0 }},
+    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
+    {% assign mobile_thumb = filename_no_ext | append: '_mobile.webp' %}
+    {% assign desktop_thumb = filename_no_ext | append: '_desktop.webp' %}
+    {% if item.kuva contains 'http' %}
+      {% assign filename_with_ext = item.kuva | split: '/' | last %}
+      {% assign base_path = item.kuva | remove: filename_with_ext %}
+      {% assign p_mobile = base_path | append: "thumbs/" | append: mobile_thumb %}
+      {% assign p_desktop = base_path | append: "thumbs/" | append: desktop_thumb %}
+      {% assign full_url = item.kuva %}
+    {% else %}
+      {% assign p_mobile = '/assets/thumbnails/' | append: mobile_thumb %}
+      {% assign p_desktop = '/assets/thumbnails/' | append: desktop_thumb %}
+      {% assign full_url = '/assets/images/' | append: item.kuva %}
+    {% endif %}
+    "src": "{{ p_desktop }}",
+    "srcset": "{{ p_mobile }} 600w, {{ p_desktop }} 1200w",
+    "thumb": "{{ p_mobile }}",
+    "full": "{{ full_url }}",
+    "alt": {{ item.alt_text | default: item.otsikko | jsonify }},
+    "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | jsonify }}{% endif %},
+    "place": {{ item.paikka | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
+</script>
+
+<!-- Slideshow-kontaineri -->
+<div id="jd-slideshow"></div>
+
+<!-- Kuvainfo + laskuri -->
+<div id="jd-caption">
+  <span id="jd-caption-title"></span>
+  <span id="jd-caption-place"></span>
+</div>
+<div id="jd-counter"><span id="jd-counter-current">1</span> / {{ total_count }}</div>
+
+<!-- Custom cursor -->
+<div id="jd-cursor">
+  <svg id="jd-cursor-svg" viewBox="0 0 48 48">
+    <polyline id="cursor-arrow" points="18,12 30,24 18,36"/>
+  </svg>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const data     = JSON.parse(document.getElementById('jd-data').textContent);
+  const total    = data.length;
+  const slideshow = document.getElementById('jd-slideshow');
+  const thumbsPanel = document.getElementById('jd-thumbs-panel');
+  const captionTitle = document.getElementById('jd-caption-title');
+  const captionPlace = document.getElementById('jd-caption-place');
+  const counterEl = document.getElementById('jd-counter-current');
+  const cursor   = document.getElementById('jd-cursor');
+  const cursorArrow = document.getElementById('cursor-arrow');
+
+  let current = 0;
+  let thumbsOpen = false;
+  const slides = [];
+
+  // ── Luo slidet ───────────────────────────────────
+  data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'jd-slide' + (i === 0 ? ' active' : '');
+
+    const img = document.createElement('img');
+    img.src = item.src;
+    img.srcset = item.srcset;
+    img.sizes = '(max-width: 600px) 100vw, 92vw';
+    img.alt = item.alt || '';
+    img.loading = i < 2 ? 'eager' : 'lazy';
+    img.onerror = () => { img.srcset = ''; img.src = item.full; };
+
+    div.appendChild(img);
+    slideshow.appendChild(div);
+    slides.push(div);
+  });
+
+  // ── Luo thumbnailt ────────────────────────────────
+  data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'jd-thumb' + (i === 0 ? ' active' : '');
+
+    const img = document.createElement('img');
+    img.src = item.thumb;
+    img.alt = item.alt || '';
+    img.loading = 'lazy';
+    img.onerror = () => { img.src = item.full; };
+
+    div.appendChild(img);
+    div.addEventListener('click', () => {
+      goTo(i);
+      closeThumbsView();
+    });
+    thumbsPanel.appendChild(div);
+  });
+
+  function updateCaption(i) {
+    const item = data[i];
+    captionTitle.textContent = item.title || '';
+    captionPlace.textContent = item.place || '';
+    counterEl.textContent = i + 1;
+  }
+
+  function goTo(i) {
+    slides[current].classList.remove('active');
+    document.querySelectorAll('.jd-thumb')[current]?.classList.remove('active');
+    current = ((i % total) + total) % total;
+    slides[current].classList.add('active');
+    document.querySelectorAll('.jd-thumb')[current]?.classList.add('active');
+    updateCaption(current);
+    // Preload seuraava
+    const nextIdx = (current + 1) % total;
+    const nextImg = slides[nextIdx].querySelector('img');
+    if (nextImg && !nextImg.src) nextImg.src = data[nextIdx].src;
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  updateCaption(0);
+
+  // ── Klikkaus: vasen/oikea puoli ──────────────────
+  slideshow.addEventListener('click', (e) => {
+    if (thumbsOpen) return;
+    const half = window.innerWidth / 2;
+    e.clientX > half ? next() : prev();
+  });
+
+  // ── Custom cursor ─────────────────────────────────
+  slideshow.addEventListener('mousemove', (e) => {
+    cursor.style.opacity = '1';
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+    // Oikea puoli = nuoli oikealle, vasen = nuoli vasemmalle
+    if (e.clientX > window.innerWidth / 2) {
+      cursorArrow.setAttribute('points', '18,12 30,24 18,36');
+    } else {
+      cursorArrow.setAttribute('points', '30,12 18,24 30,36');
+    }
+  });
+  slideshow.addEventListener('mouseleave', () => {
+    cursor.style.opacity = '0';
+  });
+
+  // ── Näppäimistönavigointi ────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft')                   { e.preventDefault(); prev(); }
+  });
+
+  // ── Thumbs-näkymä ────────────────────────────────
+  function openThumbsView() {
+    thumbsOpen = true;
+    thumbsPanel.classList.add('is-open');
+    const btn = document.getElementById('jd-thumbs-btn');
+    if (btn) btn.textContent = 'Close';
+  }
+  function closeThumbsView() {
+    thumbsOpen = false;
+    thumbsPanel.classList.remove('is-open');
+    const btn = document.getElementById('jd-thumbs-btn');
+    if (btn) btn.textContent = 'Thumbs';
+  }
+
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'jd-thumbs-btn') {
+      thumbsOpen ? closeThumbsView() : openThumbsView();
+    }
+  });
+
+  // ── Touch/swipe mobiililla ────────────────────────
+  let touchStartX = 0;
+  slideshow.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  slideshow.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
+  }, { passive: true });
+
+}); // DOMContentLoaded
+</script>
