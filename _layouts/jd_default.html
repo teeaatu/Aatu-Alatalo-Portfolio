@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+{% assign lang = page.lang | default: 'fi' %}
+<html lang="{{ lang }}">
+<head>
+  {% include head.html %}
+  {% seo %}
+  <style>
+    /* ─── JD BASE RESET ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --jd-bg:       #111111;
+      --jd-text:     #e8e4de;
+      --jd-dimmed:   #888880;
+      --jd-accent:   #e8e4de;
+      --jd-font:     'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --jd-font-serif: 'Lora', Georgia, serif;
+      --jd-panel-w:  360px;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--jd-bg);
+      color: var(--jd-text);
+      font-family: var(--jd-font);
+      overflow: hidden; /* Slideshow ei skrollaudu */
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── HEADER ──────────────────────────────────────── */
+    #jd-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.4rem 1.8rem;
+      pointer-events: none;
+    }
+
+    .jd-header-left, .jd-header-right {
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .jd-ui-btn {
+      background: none;
+      border: none;
+      color: var(--jd-text);
+      font-family: var(--jd-font);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      mix-blend-mode: normal;
+    }
+    .jd-ui-btn:hover { opacity: 1; }
+    .jd-ui-link {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .jd-ui-link:hover { opacity: 1; }
+
+    /* ─── MAIN CONTENT AREA ─────────────────────────── */
+    #jd-main {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 10;
+    }
+
+    /* ─── INDEX PANEL ────────────────────────────────── */
+    #jd-index-panel {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--jd-panel-w);
+      height: 100%;
+      background: var(--jd-bg);
+      z-index: 500;
+      padding: 4rem 2.5rem 2.5rem;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    #jd-index-panel.is-open {
+      transform: translateX(0);
+    }
+
+    #jd-index-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 490;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #jd-index-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ─── THUMBS VIEW ────────────────────────────────── */
+    #jd-thumbs-panel {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--jd-bg);
+      z-index: 300;
+      overflow-y: auto;
+      padding: 4rem 1.5rem 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    #jd-thumbs-panel.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ─── MOBILE (<768px) ────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --jd-panel-w: 100vw; }
+      #jd-header { padding: 1rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header: Index (vasen) + sivukohtaiset napit (oikea) -->
+  <header id="jd-header">
+    <div class="jd-header-left">
+      <button class="jd-ui-btn" id="jd-index-btn">Index</button>
+    </div>
+    <div class="jd-header-right" id="jd-header-right">
+      <!-- Sivukohtaiset napit lisätään JS:llä -->
+    </div>
+  </header>
+
+  <!-- Pääsisältö (Slideshow tai muu sivu) -->
+  <main id="jd-main">
+    {{ content }}
+  </main>
+
+  <!-- Index-paneeli -->
+  {% include index-panel.html %}
+
+  <!-- Overlay paneelin taustaksi -->
+  <div id="jd-index-overlay"></div>
+
+  <!-- Thumbs-paneeli (alustetaan tyhjänä, sivukohtainen JS täyttää) -->
+  <div id="jd-thumbs-panel"></div>
+
+  <script>
+    // ── Index-paneeli ───────────────────────────────
+    const indexBtn    = document.getElementById('jd-index-btn');
+    const indexPanel  = document.getElementById('jd-index-panel');
+    const indexOverlay = document.getElementById('jd-index-overlay');
+
+    function openIndex() {
+      indexPanel.classList.add('is-open');
+      indexOverlay.classList.add('is-open');
+    }
+    function closeIndex() {
+      indexPanel.classList.remove('is-open');
+      indexOverlay.classList.remove('is-open');
+    }
+
+    indexBtn?.addEventListener('click', () => {
+      indexPanel.classList.contains('is-open') ? closeIndex() : openIndex();
+    });
+    indexOverlay?.addEventListener('click', closeIndex);
+
+    // Sulje Escape-näppäimellä
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeIndex();
+    });
+  </script>
+</body>
+</html>

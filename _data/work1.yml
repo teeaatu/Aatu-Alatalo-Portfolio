@@ -1,0 +1,24 @@
+- kuva: Mysteeri.jpg
+  width: 3000
+  height: 2000
+  otsikko: Mystery / Mysteeri
+  paikka: Töölö, Helsinki, Finland 2026
+  alt_text: "A high-contrast black and white street photograph of a person in a dark winter coat walking down a street in Helsinki."
+- kuva: https://media.aatualatalo.com/Photographs/miesjaolut.webp
+  width: 1500
+  height: 2000
+  otsikko: Man, Newspaper, Cigarettes and Beer / Mies, sanomalehti, savukkeet ja olut
+  paikka: Oulu, Finland 2026
+  alt_text: "A man in a dark suit sits alone at an outdoor table outside Michael Guinness pub in Oulu, reading a newspaper."
+- kuva: DSC3900_Panorama.jpg
+  width: 3064
+  height: 2198
+  otsikko: Hossa National Park / Hossan kansallispuisto
+  paikka: Suomussalmi, Finland 2025
+  alt_text: "A detailed landscape photograph of Hossa National Park in Finland."
+- kuva: Prinsessa.jpg
+  width: 3000
+  height: 2143
+  otsikko: Two Women from Behind / Kaksi naista selin
+  paikka: Oulu, Finland 2026
+  alt_text: "A golden hour street photograph taken from behind two women walking arm-in-arm down a cobblestone sidewalk in Oulu, Finland."
