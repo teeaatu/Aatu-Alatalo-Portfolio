@@ -1,31 +1,10 @@
 ---
 lang: fi
-layout: default
-title: "Monochrome — Mustavalkoinen - Aatu Alatalo"
-description_fi: "Näemme maailman värein, emmekä tule tarkastelleeksi valon ja varjon merkitystä."
-description_en: "We see the world in color and often fail to observe the significance of light and shadow."
-active_nav: "mustavalkoinen-sarja"
-mobile_title: "Monochrome / Mustavalkoinen"
+layout: jd_gallery
+title: "Mustavalkoinen"
+category: mustavalkoinen-sarja
+category_label: Monochrome
+prev_url: /raw.html
+next_url: /sisatilan-valo.html
 translation_url: /en/black-and-white-series.html
 ---
-
-<div class="content-wrapper">
-    
-    <header class="intro-section">
-        <div class="intro-title mustavalkoinen-fix">Mustavalkoinen</div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="fi">
-                Näemme maailman värein, emmekä tule tarkastelleeksi valon ja varjon merkitystä.
-            </div>
-        </div>
-    </header>
-
-            {% for item in site.data['mustavalkoinen-sarja'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
-</div>

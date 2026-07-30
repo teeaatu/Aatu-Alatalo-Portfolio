@@ -1,31 +1,10 @@
 ---
 lang: en
-layout: default
-title: "Landscape - Aatu Alatalo"
-description_fi: "Luonto on yksi tärkeimmistä inspiraation lähteistäni."
-description_en: "Nature remains one of my most vital sources of inspiration."
-active_nav: "luonto-ja-ymparisto"
-mobile_title: "Landscape"
+layout: jd_gallery
+title: "Nature"
+category: luonto-ja-ymparisto
+category_label: "Nature"
+prev_url: /en/buildings.html
+next_url: /en/interior-light.html
 translation_url: /luonto-ja-ymparisto.html
 ---
-
-<div class="content-wrapper">
-    
-    <header class="intro-section">
-        <div class="intro-title">Landscape</div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="en">
-                Whenever I venture near nature, my spirits are lifted. Nature remains one of my most vital sources of inspiration; it is a realm where one finds all manner of harmonious colors, shapes, sounds, and profound silence.
-            </div>
-        </div>
-    </header>
-
-            {% for item in site.data['luonto-ja-ymparisto'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
-</div>

@@ -1,31 +1,10 @@
 ---
 lang: en
-layout: default
-title: "V365 - Aatu Alatalo"
-description_fi: "Vuodenvaihdoksen muutokset valokuvina."
-description_en: "The changes of the turn of the year in photographs."
-active_nav: "kuvaprojekti-ajasta-v365"
-mobile_title: "V365"
+layout: jd_gallery
+title: "Photo Project Time v365"
+category: kuvaprojekti_ajasta_v365
+category_label: "Photo Project Time v365"
+prev_url: /en/events.html
+next_url: /en/masters-2026.html
 translation_url: /kuvaprojekti-ajasta-v365.html
 ---
-
-<div class="content-wrapper">
-    
-    <header class="intro-section">
-        <div class="intro-title">V365</div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="en">
-                The changes of the turn of the year in photographs.
-            </div>
-        </div>
-    </header>
-
-        {% for item in site.data['kuvaprojekti_ajasta_v365'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
-</div>

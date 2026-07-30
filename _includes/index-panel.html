@@ -1,107 +1,186 @@
 <nav id="jd-index-panel">
   {% assign lang = page.lang | default: 'fi' %}
 
-  <!-- Nimi / Logo -->
-  <div style="margin-bottom: 3rem;">
-    <a href="{% if lang == 'en' %}/en/{% else %}/{% endif %}" 
-       style="font-family: 'Lora', serif; font-size: 1.1rem; letter-spacing: 0.04em; opacity: 0.9;">
-      Aatu Alatalo
+  <!-- Top Navigation (vastaa kuvan "Works | Info | Helions" rakennetta) -->
+  <div class="jd-top-nav">
+    <a href="{% if lang == 'en' %}/en/recent.html{% else %}/recent.html{% endif %}" 
+       style="text-decoration: underline; text-underline-offset: 4px;">
+      {% if lang == 'en' %}Works{% else %}Kategoriat{% endif %}
     </a>
-    <div style="font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; 
-                opacity: 0.4; margin-top: 0.3rem;">Photographer</div>
+    <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
+      {% if lang == 'en' %}Info{% else %}Info & Ajatuksia{% endif %}
+    </a>
+    <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener">
+      Instagram
+    </a>
+    <div style="margin-left: auto; display: flex; gap: 1.5rem; align-items: baseline;">
+      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}"
+         onclick="localStorage.setItem('langPref','{% if lang == 'fi' %}en{% else %}fi{% endif %}')">
+        {% if lang == 'fi' %}EN{% else %}FI{% endif %}
+      </a>
+      <a href="#" class="jd-mobile-close" onclick="window.closeIndexPanel(); return false;">
+        {% if lang == 'fi' %}Sulje{% else %}Close{% endif %}
+      </a>
+    </div>
   </div>
 
-  <!-- Kuraatiot -->
-  <ul style="list-style: none; margin-bottom: 2rem;">
-    <li style="margin-bottom: 0.7rem;">
-      <a href="{% if lang == 'en' %}/en/recent.html{% else %}/recent.html{% endif %}"
-         class="jd-index-link {% if page.active_nav == 'recent' %}active{% endif %}">
+  <!-- Kuraatiot (Recent, Work I-III) -->
+  <ul style="list-style: none; margin-bottom: 3rem;">
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/recent.html{% else %}/recent.html{% endif %}" class="jd-index-link {% if page.active_nav == 'recent' %}active{% endif %}">
         <span>Recent</span>
-        <span style="opacity: 0.4; font-size: 0.85em;">{{ site.data.recent | size }}</span>
+        <span class="jd-count">{{ site.data.recent | size }}</span>
       </a>
     </li>
-    <li style="margin-bottom: 0.7rem;">
-      <a href="{% if lang == 'en' %}/en/work1.html{% else %}/work1.html{% endif %}"
-         class="jd-index-link {% if page.active_nav == 'work1' %}active{% endif %}">
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/work1.html{% else %}/work1.html{% endif %}" class="jd-index-link {% if page.active_nav == 'work1' %}active{% endif %}">
         <span>Work I</span>
-        <span style="opacity: 0.4; font-size: 0.85em;">{{ site.data.work1 | size }}</span>
+        <span class="jd-count">{{ site.data.work1 | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/work2.html{% else %}/work2.html{% endif %}" class="jd-index-link {% if page.active_nav == 'work2' %}active{% endif %}">
+        <span>Work II</span>
+        <span class="jd-count">{{ site.data.work2 | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/work3.html{% else %}/work3.html{% endif %}" class="jd-index-link {% if page.active_nav == 'work3' %}active{% endif %}">
+        <span>Work III</span>
+        <span class="jd-count">{{ site.data.work3 | size }}</span>
       </a>
     </li>
   </ul>
 
-  <!-- Divider -->
-  <div style="height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 1.8rem;"></div>
+  <!-- Varsinaiset kategoriat -->
+  <ul style="list-style: none; margin-bottom: 3rem;">
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/events.html{% else %}/tapahtumat.html{% endif %}" class="jd-index-link {% if page.active_nav == 'tapahtumat' %}active{% endif %}">
+        <span>{{ site.data.t.events[lang] }}</span>
+        <span class="jd-count">{{ site.data.tapahtumat | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/color-and-form.html{% else %}/vari-ja-muoto.html{% endif %}" class="jd-index-link {% if page.active_nav == 'vari-ja-muoto' %}active{% endif %}">
+        <span>{{ site.data.t.color_and_form[lang] }}</span>
+        <span class="jd-count">{{ site.data["vari-ja-muoto"] | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/raw.html{% else %}/raw.html{% endif %}" class="jd-index-link {% if page.active_nav == 'raw' %}active{% endif %}">
+        <span>{{ site.data.t.portraits[lang] }}</span>
+        <span class="jd-count">{{ site.data.raw | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/black-and-white-series.html{% else %}/mustavalkoinen-sarja.html{% endif %}" class="jd-index-link {% if page.active_nav == 'mustavalkoinen-sarja' %}active{% endif %}">
+        <span>{{ site.data.t.monochrome[lang] }}</span>
+        <span class="jd-count">{{ site.data["mustavalkoinen-sarja"] | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/interior-light.html{% else %}/sisatilan-valo.html{% endif %}" class="jd-index-link {% if page.active_nav == 'sisatilan-valo' %}active{% endif %}">
+        <span>{{ site.data.t.interior[lang] }}</span>
+        <span class="jd-count">{{ site.data["sisatilan-valo"] | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/buildings.html{% else %}/kiehtovat-rakennukset.html{% endif %}" class="jd-index-link {% if page.active_nav == 'kiehtovat-rakennukset' %}active{% endif %}">
+        <span>{{ site.data.t.buildings[lang] }}</span>
+        <span class="jd-count">{{ site.data["kiehtovat-rakennukset"] | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/nature.html{% else %}/luonto-ja-ymparisto.html{% endif %}" class="jd-index-link {% if page.active_nav == 'luonto-ja-ymparisto' %}active{% endif %}">
+        <span>{{ site.data.t.nature[lang] }}</span>
+        <span class="jd-count">{{ site.data["luonto-ja-ymparisto"] | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/still-life.html{% else %}/still-life.html{% endif %}" class="jd-index-link {% if page.active_nav == 'still-life' %}active{% endif %}">
+        <span>{{ site.data.t.still_life[lang] }}</span>
+        <span class="jd-count">{{ site.data["still-life"] | size }}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/animals.html{% else %}/elaimet.html{% endif %}" class="jd-index-link {% if page.active_nav == 'elaimet' %}active{% endif %}">
+        <span>{{ site.data.t.animals[lang] }}</span>
+        <span class="jd-count">{{ site.data.elaimet | size }}</span>
+      </a>
+    </li>
+  </ul>
 
   <!-- Projektit -->
-  <div style="font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; 
-              opacity: 0.35; margin-bottom: 1rem;">Projektit</div>
-  <ul style="list-style: none; margin-bottom: 2rem;">
-    <li style="margin-bottom: 0.7rem;">
-      <a href="{% if lang == 'en' %}/en/masters-2026.html{% else %}/masters-2026.html{% endif %}"
-         class="jd-index-link {% if page.active_nav == 'masters-2026' %}active{% endif %}">
+  <ul style="list-style: none; margin-bottom: 3rem;">
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/masters-2026.html{% else %}/masters-2026.html{% endif %}" class="jd-index-link {% if page.active_nav == 'masters-2026' %}active{% endif %}">
         <span>Hasselblad Masters 2026</span>
       </a>
     </li>
-    <li style="margin-bottom: 0.7rem;">
-      <a href="{% if lang == 'en' %}/en/photo-project-time-v365.html{% else %}/kuvaprojekti-ajasta-v365.html{% endif %}"
-         class="jd-index-link {% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">
-        <span>Kuvaprojekti V365</span>
-      </a>
-    </li>
-    <li style="margin-bottom: 0.7rem;">
-      <a href="{% if lang == 'en' %}/en/events.html{% else %}/tapahtumat.html{% endif %}"
-         class="jd-index-link {% if page.active_nav == 'tapahtumat' %}active{% endif %}">
-        <span>Misfortune</span>
+    <li style="margin-bottom: 0.6rem;">
+      <a href="{% if lang == 'en' %}/en/photo-project-time-v365.html{% else %}/kuvaprojekti-ajasta-v365.html{% endif %}" class="jd-index-link {% if page.active_nav == 'kuvaprojekti-ajasta-v365' %}active{% endif %}">
+        <span>{{ site.data.t.v365[lang] }}</span>
       </a>
     </li>
   </ul>
-
-  <!-- Divider -->
-  <div style="height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 1.8rem;"></div>
-
-  <!-- Info -->
-  <ul style="list-style: none; margin-bottom: 3rem;">
-    <li style="margin-bottom: 0.7rem;">
-      <a href="{% if lang == 'en' %}/en/about.html{% else %}/about.html{% endif %}"
-         class="jd-index-link {% if page.active_nav == 'about' %}active{% endif %}">
-        <span>Info & Ajatuksia</span>
-      </a>
-    </li>
-  </ul>
-
-  <!-- Kielivalinta + some -->
-  <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06);">
-    <div style="display: flex; gap: 1rem; margin-bottom: 1.2rem; font-size: 0.72rem; letter-spacing: 0.12em;">
-      <a href="{% if page.translation_url %}{{ page.translation_url }}{% else %}{% if lang == 'fi' %}/en/{% else %}/{% endif %}{% endif %}"
-         onclick="localStorage.setItem('langPref','{% if lang == 'fi' %}en{% else %}fi{% endif %}')"
-         style="opacity: {% if lang == 'fi' %}0.4{% else %}1{% endif %};">
-        {% if lang == 'fi' %}EN{% else %}FI{% endif %}
-      </a>
-    </div>
-    <div style="display: flex; gap: 1.5rem;">
-      <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener"
-         style="font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; transition: opacity 0.2s;"
-         onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">Instagram</a>
-    </div>
-  </div>
 </nav>
 
 <style>
+  #jd-index-panel {
+    padding: 3rem 3.5rem 3rem; /* Säädetty hieman kapeammaksi jotta FI ylärivi mahtuu */
+  }
+  @media (min-width: 769px) {
+    #jd-index-panel {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+  }
+  #jd-index-panel a {
+    text-decoration: none;
+    color: var(--jd-text);
+  }
+  .jd-top-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-bottom: 4rem;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+  }
+  .jd-mobile-close { display: none; }
+  
   .jd-index-link {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 0.95rem;
-    letter-spacing: 0.02em;
-    opacity: 0.75;
-    transition: opacity 0.15s;
-    padding: 0.2rem 0;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0;
   }
-  .jd-index-link:hover,
-  .jd-index-link.active {
-    opacity: 1;
-  }
-  .jd-index-link.active {
+  .jd-count {
+    font-size: 0.9em;
+    font-family: 'Lora', Georgia, serif;
     font-style: italic;
+  }
+  .jd-index-link.active span:first-child {
+    font-style: italic;
+  }
+  
+  @media (max-width: 768px) {
+    #jd-index-panel {
+      padding: 3rem 1.5rem 2rem; /* Pienempi padding mobiilissa jotta teksti mahtuu */
+      position: relative;
+    }
+    .jd-top-nav {
+      gap: 0.8rem; /* Pienemmät välit mobiilissa */
+      font-size: 0.85rem; /* Hieman pienempi fontti mobiilissa */
+      margin-bottom: 3rem;
+    }
+    .jd-mobile-close { 
+      display: inline;
+      text-decoration: underline;
+    }
   }
 </style>

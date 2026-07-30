@@ -1,31 +1,10 @@
 ---
 lang: fi
-layout: default
-title: "Landscape — Maisema - Aatu Alatalo"
-description_fi: "Luonto on yksi tärkeimmistä inspiraation lähteistäni."
-description_en: "Nature remains one of my most vital sources of inspiration."
-active_nav: "luonto-ja-ymparisto"
-mobile_title: "Landscape / Maisema"
+layout: jd_gallery
+title: "Luonto ja ympäristö"
+category: luonto-ja-ymparisto
+category_label: Luonto ja ympäristö
+prev_url: /kiehtovat-rakennukset.html
+next_url: /sisatilan-valo.html
 translation_url: /en/nature.html
 ---
-
-<div class="content-wrapper">
-    
-    <header class="intro-section">
-        <div class="intro-title">Maisema</div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="fi">
-                Aina kun menen lähellekään luontoa, mielialani kohoaa. Luonto on yksi tärkeimmistä inspiraation lähteistäni. Sieltähän löytyy vaikka minkälaisia harmonisia värejä ja muotoja, ääniä ja hiljaisuutta.
-            </div>
-        </div>
-    </header>
-
-            {% for item in site.data['luonto-ja-ymparisto'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
-</div>

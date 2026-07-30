@@ -1,35 +1,10 @@
 ---
 lang: fi
-layout: default
-title: "Hasselblad Masters 2026 – Finalisti, Project//21 | Aatu Alatalo"
-description_fi: "Aatu Alatalo valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa. Kilpailuun osallistui yli 108 000 valokuvaajaa yli 160 maasta. Yksi kymmenestä kansainvälisestä finalistista kategorian voittajan Panitbhand Paribatra Na Ayudhy'n rinnalla."
-description_en: "Aatu Alatalo was selected as a Hasselblad Masters 2026 finalist in the Project//21 category — open to photographers aged 21 and under. One of ten global finalists, alongside category winner Panitbhand Paribatra Na Ayudhya (Thailand)."
-keywords: "Hasselblad Masters 2026, Project//21, Aatu Alatalo, Panitbhand Paribatra Na Ayudhya, valokuvaaja Oulu, nuori valokuvaaja, Project 21 finalist, Hasselblad Masters finalist Finland, other finalists, unnamed finalists, anonymous finalists, fine art photography"
-active_nav: "masters-2026"
-mobile_title: "Hasselblad Masters 2026"
+layout: jd_gallery
+title: "Masters 2026"
+category: masters-2026
+category_label: Masters 2026
+prev_url: /kuvaprojekti-ajasta-v365.html
+next_url: /recent.html
 translation_url: /en/masters-2026.html
 ---
-
-<div class="content-wrapper">
-    <header class="intro-section">
-        <div class="intro-title">Hasselblad Masters 2026<br><span class="masters-subtitle">Finalist / Project//21</span></div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="fi">
-                <p>Huhtikuussa 2026 tämä projekti valittiin <strong>Hasselblad Masters 2026</strong> -kilpailun finalistiksi <strong>Project//21</strong> -kategoriassa. Kyseessä on yksi maailman suurimmista valokuvakilpailuista, johon osallistui yli <strong>108&nbsp;000 valokuvaajaa</strong> yli 160 maasta.</p>
-
-                <p>Project//21 on Hasselblad Mastersin nuorimmille kuvaajille tarkoitettu kategoria, jossa osallistujien on oltava enintään 21-vuotiaita. Se on avoin kategoria, jossa ainoa yhteinen nimittäjä on ikä, ja teema sekä genre ovat tekijän vapaasti valittavissa. Kategoriasta valittiin kymmenen finalistia koko maailmasta.</p>
-
-                <p>Alla esitelty sarja kuvaa suomalaista talvista maaseutumaisemaa pimeydessä. Nämä todellisuuden ja harhakuvan rajamailla liikkuvat yökohtaukset on kuvattu vuonna 2025.</p>
-            </div>
-        </div>
-    </header>
-
-        {% for item in site.data['masters-2026'] %}
-    {% if forloop.index <= 2 %}
-        {% assign is_lazy = false %}
-    {% else %}
-        {% assign is_lazy = true %}
-    {% endif %}
-    {% include category-item.html item=item lazy_load=is_lazy %}
-{% endfor %}
-</div>
