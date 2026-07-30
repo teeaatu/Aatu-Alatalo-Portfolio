@@ -1057,7 +1057,6 @@ body.index-page main {
     max-width: calc(100vw - 60px); 
     max-height: calc(70dvh - 20px); 
     top: 48%; 
-    border: 10px solid var(--color-rgb-20);
   }
 }
 
