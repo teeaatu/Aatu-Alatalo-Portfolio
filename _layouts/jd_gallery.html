@@ -291,6 +291,7 @@ layout: jd_default
 
   .jd-thumbs-section {
     margin-bottom: 5rem;
+    scroll-margin-top: 6rem; /* Ensures fixed nav doesn't cover category title when scrolling */
   }
 
   .jd-thumbs-section-title {
@@ -350,6 +351,63 @@ layout: jd_default
     display: none;
   }
 
+  /* ─── HINT ARROWS (DESKTOP) ──────────────────────────── */
+  #jd-hint-arrows {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: none; /* Piilotettu oletuksena (näytetään vain ekalla kerralla) */
+    justify-content: space-between;
+    padding: 0 5vw;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 1;
+  }
+  
+  #jd-hint-arrows.show-hints {
+    display: flex;
+    animation: fadeHintOut 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 10s;
+  }
+
+  .jd-hint-arrow {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: rgba(245, 244, 240, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(26, 26, 24, 0.6);
+    animation: pulseArrow 2.5s infinite ease-in-out;
+  }
+
+  .jd-hint-arrow.left { animation-delay: 0s; }
+  .jd-hint-arrow.right { animation-delay: 1.25s; }
+
+  @keyframes fadeHintOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @keyframes pulseArrow {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+      background: rgba(245, 244, 240, 0.6);
+      color: rgba(26, 26, 24, 0.9);
+    }
+  }
+
+  /* ─── MOBILE MEDIA QUERY ─────────────────────────────── */
   @media (max-width: 800px) {
     body.index-is-open #jd-main {
       right: 0 !important;
@@ -388,6 +446,43 @@ layout: jd_default
       width: 100%;
     }
 
+    /* HINT ARROWS ON MOBILE (BOTTOM) */
+    #jd-hint-arrows {
+      top: auto;
+      bottom: 25px;
+      transform: none;
+      padding: 0 20px;
+    }
+
+    #jd-hint-arrows.show-hints {
+      display: flex;
+      animation: fadeHintOut 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 10s;
+    }
+
+    .jd-hint-arrow {
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      width: auto;
+      height: auto;
+      color: rgba(26, 26, 24, 0.4); /* Hieman vaaleampi mobiilissa */
+      animation: pulseArrowMobile 2.5s infinite ease-in-out;
+    }
+
+    .jd-hint-arrow svg {
+      width: 22px; /* Pienempi SVG mobiilissa */
+      height: 22px;
+    }
+    
+    @keyframes pulseArrowMobile {
+      0%, 100% { transform: scale(1); }
+      50% { 
+        transform: scale(1.15); /* Hillitympi suurennus mobiilissa */
+        color: rgba(26, 26, 24, 0.8); 
+      }
+    }
+
     /* Asetetaan slideshow koko näytölle dynaamisella korkeudella */
     #jd-slideshow {
       top: 0;
@@ -416,73 +511,6 @@ layout: jd_default
     /* Piilotetaan tekstikursori täysin mobiilissa, koska ei ole hiirtä */
     #jd-cursor-custom {
       display: none !important;
-    }
-  }
-
-  /* ─── HINT ARROWS ────────────────────────────────────── */
-  #jd-hint-arrows {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-between;
-    padding: 0 5vw;
-    pointer-events: none; /* Ei estä klikkaamista */
-    z-index: 10000;
-    opacity: 1;
-    animation: fadeHintOut 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: 5s; /* Kuinka kauan nuolet näkyvät (5s) */
-  }
-  
-  /* Piilotetaan nuolet heti, kun käyttäjä on klikannut jotain (js lisää luokan) */
-  body.user-has-interacted #jd-hint-arrows {
-    display: none !important;
-  }
-
-  .jd-hint-arrow {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.05);
-    color: rgba(26, 26, 24, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    animation: pulseArrow 2.5s infinite ease-in-out;
-  }
-
-  .jd-hint-arrow.left { animation-delay: 0s; }
-  .jd-hint-arrow.right { animation-delay: 1.25s; }
-
-  @keyframes fadeHintOut {
-    to {
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-
-  @keyframes pulseArrow {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-      background: rgba(0, 0, 0, 0.08);
-      color: rgba(26, 26, 24, 0.9);
-    }
-  }
-
-  @media (max-width: 800px) {
-    #jd-hint-arrows {
-      padding: 0 3vw;
-    }
-    .jd-hint-arrow {
-      width: 38px;
-      height: 38px;
     }
   }
 </style>
@@ -555,10 +583,10 @@ layout: jd_default
 <!-- Navigointivihje (Nuolet, jotka haalistuvat pois) -->
 <div id="jd-hint-arrows">
   <div class="jd-hint-arrow left">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
   </div>
   <div class="jd-hint-arrow right">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
   </div>
 </div>
 
@@ -888,18 +916,20 @@ layout: jd_default
       document.getElementById('jd-normal-nav').style.display = 'none';
       document.getElementById('jd-thumbs-nav').classList.add('is-open');
 
-      // Scroll to current category section instantly
+      // Scroll to current category section instantly (to the title)
       const currentCatSection = document.getElementById('jd-thumbs-section-{{ page.category }}');
       if (currentCatSection) {
         const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
         if (currentThumb) {
           document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active'));
           currentThumb.classList.add('is-active');
-          currentThumb.scrollIntoView({ block: 'center', behavior: 'auto' });
-        } else {
-          currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
         }
+        currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
       }
+      
+      // Hide hint arrows if they were still visible
+      const hintArrows = document.getElementById('jd-hint-arrows');
+      if (hintArrows) hintArrows.style.opacity = '0';
     }
     function closeThumbsView() {
       thumbsOpen = false;
@@ -934,6 +964,13 @@ layout: jd_default
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         document.body.classList.add('is-entering-ready');
+        
+        // Näytä opastusnuolet vain kerran per vierailu (sessio)
+        if (!sessionStorage.getItem('jd-hints-seen')) {
+          const hintArrows = document.getElementById('jd-hint-arrows');
+          if (hintArrows) hintArrows.classList.add('show-hints');
+          sessionStorage.setItem('jd-hints-seen', 'true');
+        }
       });
     });
 
