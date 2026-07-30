@@ -1,0 +1,223 @@
+<div id="jd-about-panel">
+  <div class="jd-about-content">
+    <div class="jd-about-image">
+      <picture>
+        <source srcset="{{ '/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_mobile.webp' | relative_url }} 600w, {{ '/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp' | relative_url }} 1200w" type="image/webp" sizes="(max-width: 768px) 100vw, 50vw">
+        <img src="{{ '/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg' | relative_url }}" alt="Aatu Alatalo - Photographer" loading="lazy" width="1080" height="1440">
+      </picture>
+    </div>
+    <div class="jd-about-text">
+      <header>
+        <h1>Aatu Alatalo</h1>
+        <div class="jd-about-subtitle">Photographer Oulu & Hasselblad Masters Finalist</div>
+      </header>
+      
+      <div class="jd-about-bio">
+        {% if page.lang == 'en' %}
+        <p>I am a 21-year-old photographer from the Tyrnävä Lakeus region, currently based in Oulu. I study media at Oulu University of Applied Sciences. I started photography in 2014, and over the past decade, my camera has become an inseparable part of my everyday life.</p>
+        {% else %}
+        <p>Olen 21-vuotias valokuvaaja, joka on varttunut Tyrnävän Lakeuden seudulla ja asuu nykyään Oulussa. Opiskelen tällä hetkellä medianomiksi Oulun ammattikorkeakoulussa. Aloitin valokuvauksen vuonna 2014, ja viimeisen vuosikymmenen aikana kamerasta on tullut erottamaton osa arkeani.</p>
+        {% endif %}
+      </div>
+
+      <div class="jd-about-section">
+        {% if page.lang == 'en' %}<h2>Awards and Recognitions</h2>{% else %}<h2>Palkinnot ja tunnustukset</h2>{% endif %}
+        <ul>
+          <li><strong>Hasselblad Masters 2026</strong>: Finalist in Project//21 category.</li>
+          <li><strong>SAKUstars 2023</strong>: Honorable mention in "Photographic Art in a Day".</li>
+        </ul>
+      </div>
+
+      <div class="jd-about-section">
+        {% if page.lang == 'en' %}<h2>Selected Projects</h2>{% else %}<h2>Valikoidut projektit</h2>{% endif %}
+        <ul>
+          <li><strong>Outshine</strong>: Digital advertising project for Oulu bus stops 2025 and 2026.</li>
+          <li>{% if page.lang == 'en' %}<strong>Exhibitions</strong>: Exhibited at Piippolan Könkkölä and Kestilä Library 2023–2024.{% else %}<strong>Näyttelyt</strong>: Teoksiani on ollut esillä Piippolan Könkkölässä sekä Kestilän kirjastossa vuosina 2023 ja 2024.{% endif %}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div id="jd-about-bottom-nav">
+    <div class="jd-about-nav-container">
+      <span class="jd-bottom-btn" style="opacity:0.5;cursor:default;">{% if page.lang == 'en' %}Info & About{% else %}Info & Ajatuksia{% endif %}</span>
+      <span class="jd-nav-divider">—</span>
+      <button class="jd-bottom-btn" onclick="window.closeAboutPanel()">{% if page.lang == 'en' %}Close{% else %}Sulje{% endif %}</button>
+    </div>
+  </div>
+</div>
+
+<style>
+#jd-about-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(245, 244, 240, 0.98);
+  z-index: 350; /* Alle index-paneelin (500), mutta yli thumbs/gallerian (300) */
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+#jd-about-panel.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.jd-about-content {
+  display: flex;
+  flex-direction: row;
+  max-width: 1100px;
+  margin: auto;
+  padding: 6rem 3rem 8rem;
+  gap: 5rem;
+  align-items: center;
+  /* Animaatiota varten valmius */
+  transform: translateY(20px);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+  opacity: 0;
+}
+#jd-about-panel.is-open .jd-about-content {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+.jd-about-image {
+  flex: 1;
+  max-width: 450px;
+}
+.jd-about-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.jd-about-text {
+  flex: 1.2;
+  color: #1a1a1a;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.jd-about-text header {
+  margin-bottom: 2.5rem;
+}
+.jd-about-text h1 {
+  font-family: 'Lora', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.02em;
+}
+.jd-about-subtitle {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.jd-about-bio {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  max-width: 500px;
+}
+
+.jd-about-section {
+  margin-bottom: 2rem;
+}
+.jd-about-section h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+.jd-about-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.jd-about-section li {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+  max-width: 500px;
+}
+
+/* Yhteiset napit ja palkit about paneelin sisällä (vastaa gallery bottom navia) */
+.jd-bottom-btn {
+  background: none;
+  border: none;
+  color: #1a1a1a;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer !important;
+  pointer-events: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 0.5rem 1rem;
+}
+.jd-bottom-btn:hover { opacity: 1; }
+.jd-nav-divider {
+  color: #1a1a1a;
+  opacity: 0.2;
+  font-size: 0.8rem;
+  padding: 0 0.2rem;
+  pointer-events: none;
+  user-select: none;
+}
+
+#jd-about-bottom-nav {
+  position: fixed;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 410;
+}
+
+.jd-about-nav-container {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+#jd-about-panel .jd-bottom-btn {
+  pointer-events: none;
+}
+
+#jd-about-panel.is-open .jd-about-nav-container,
+#jd-about-panel.is-open .jd-bottom-btn {
+  pointer-events: auto;
+}
+
+@media (max-width: 900px) {
+  .jd-about-content {
+    flex-direction: column;
+    padding-top: 5rem;
+    gap: 2.5rem;
+  }
+  .jd-about-text h1 {
+    font-size: 2.2rem;
+  }
+}
+@media (max-width: 800px) {
+  #jd-about-bottom-nav {
+    bottom: auto;
+    top: 0;
+    height: 70px;
+    background: #f5f4f0; /* Vaalea staattinen tausta */
+    width: 100%;
+  }
+}
+</style>

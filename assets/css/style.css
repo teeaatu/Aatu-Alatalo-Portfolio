@@ -126,7 +126,7 @@ aside .site-logo .logo-sub {
   font-family: var(--font-21);
   font-size: 0.9rem;
   font-weight: 300;
-  color: var(--text-color) !important;
+  color: var(--text-dimmed) !important;
   opacity: 0.45;
   line-height: 1.1;
   letter-spacing: 3px;
@@ -407,7 +407,7 @@ nav a.masters-nav-item.active {
     font-size: 0.55rem; /* Adjusted for mobile (slightly smaller) */
     margin-top: 0px;
     letter-spacing: 2px;
-    color: var(--text-color) !important;
+    color: var(--text-dimmed) !important;
     opacity: 0.45;
   }
 
@@ -823,7 +823,6 @@ main {
 
 /* --- HAMPURILAINEN --- */
 .menu-toggle {
-  display: none;
   position: fixed; top: 22px; right: 22px;
   width: 60px; height: 60px;
   background: none; border: none; cursor: pointer;
@@ -1411,4 +1410,19 @@ body.index-page main {
 /* Pakottaa kuvan pitämään omat mittasuhteensa aina, estäen kaiken litistymisen */
 .pswp__img {
   object-fit: contain !important;
+}
+
+/* Estää kuvan valitsemisen (keltainen/sininen tausta) nopeasti klikattaessa / täpättäessä Safarilla */
+.pswp,
+.pswp img,
+.pswp__img,
+.pswp__container,
+.pswp__item,
+.pswp__button {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
 }

@@ -1,30 +1,10 @@
 ---
 lang: fi
-layout: default
-title: "Portraits — Muotokuvia - Aatu Alatalo"
-description_fi: "Muotokuvaus on valokuvauksen osa-alue, joka kiehtoo minua sen ilmaisuvoiman vuoksi."
-description_en: "Portraiture is a branch of photography that fascinates me for its expressive power."
-active_nav: "raw"
-mobile_title: "Portraits / Muotokuvia"
+layout: jd_gallery
+title: "Portraits"
+category: raw
+category_label: Portraits
+prev_url: /work3.html
+next_url: /elaimet.html
 translation_url: /en/raw.html
 ---
-
-<div class="content-wrapper">
-    <header class="intro-section">
-        <div class="intro-title">Muotokuvia</div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="fi">
-                Muotokuvaus on valokuvauksen osa-alue, joka kiehtoo minua erityisesti sen ilmaisuvoiman vuoksi. Pienikin ilmeen muutos voi vaihtaa koko kuvan merkityksen ja tunnelman. Se on alue, jossa riittää aina uutta opittavaa ja oivallettavaa.
-            </div>
-        </div>
-    </header>
-
-            {% for item in site.data['raw'] %}
-        {% if forloop.index <= 2 %}
-            {% assign is_lazy = false %}
-        {% else %}
-            {% assign is_lazy = true %}
-        {% endif %}
-        {% include category-item.html item=item lazy_load=is_lazy %}
-    {% endfor %}
-</div>

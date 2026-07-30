@@ -4,26 +4,61 @@
 <head>
   {% include head.html %}
   {% seo %}
+  <!-- Zoom disable for iOS Safari, and ensure 100vw doesn't overflow -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <!-- Custom fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap" rel="stylesheet">
+  
   <style>
+    /* Prevent sideways scrolling */
+    html, body {
+      touch-action: pan-y;
+      overflow-x: hidden !important;
+      max-width: 100vw;
+    }
+    
+    /* Override style.css sidebar margin for desktop */
+    #jd-main {
+      margin-left: 0 !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+    }
+
     /* ─── JD BASE RESET ─────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --jd-bg:       #111111;
-      --jd-text:     #e8e4de;
+      --jd-bg:       #f5f4f0;
+      --jd-text:     #1a1a18;
       --jd-dimmed:   #888880;
-      --jd-accent:   #e8e4de;
+      --jd-accent:   #1a1a18;
       --jd-font:     'Helvetica Neue', Helvetica, Arial, sans-serif;
       --jd-font-serif: 'Lora', Georgia, serif;
-      --jd-panel-w:  360px;
+      --jd-panel-w:  50vw;    /* Valikko on täsmälleen puolet ruudusta työpöydällä */
     }
 
     html, body {
       width: 100%; height: 100%;
+      overflow-x: hidden;
+      touch-action: pan-y;
       background: var(--jd-bg);
       color: var(--jd-text);
       font-family: var(--jd-font);
       overflow: hidden; /* Slideshow ei skrollaudu */
+    }
+    
+    /* Erittäin hienovarainen kohinatekstuuri koko sivuston yllä (ei häiritse käyttöä) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.03;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -52,63 +87,100 @@
       border: none;
       color: var(--jd-text);
       font-family: var(--jd-font);
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       cursor: pointer;
       padding: 0;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      opacity: 1;
       mix-blend-mode: normal;
     }
-    .jd-ui-btn:hover { opacity: 1; }
     .jd-ui-link {
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
+      color: var(--jd-text);
+      text-decoration: none;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      opacity: 1;
     }
-    .jd-ui-link:hover { opacity: 1; }
+
+    /* ─── TACTILE FEEDBACK (APPLE STYLE) ────────────────────────── */
+    .jd-ui-btn, .jd-ui-link, .jd-bottom-btn, .jd-index-link {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+      will-change: transform, opacity;
+      transform: scale(1);
+    }
+    .jd-bottom-btn, .jd-ui-btn, .jd-ui-link {
+      display: inline-block;
+      transform-origin: center;
+    }
+    .jd-index-link {
+      transform-origin: left center; /* Estää tekstin siirtymisen sivulle skaalattaessa */
+    }
+    .jd-ui-btn:active, 
+    .jd-ui-link:active, 
+    .jd-bottom-btn:active, 
+    .jd-index-link:active {
+      transform: scale(0.985) !important;
+      opacity: 0.6 !important;
+      transition: transform 0.05s ease, opacity 0.05s ease !important;
+    }
 
     /* ─── MAIN CONTENT AREA ─────────────────────────── */
     #jd-main {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      top: 0; left: 0; width: 100%;
+      height: 100vh;
+      height: 100dvh;
       z-index: 10;
     }
 
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-panel {
       position: fixed;
-      top: 0; left: 0;
-      width: var(--jd-panel-w);
+      top: 0; right: 0;
+      width: var(--jd-panel-w, 50vw);
       height: 100%;
       background: var(--jd-bg);
+      color: var(--jd-text);
       z-index: 500;
       padding: 4rem 2.5rem 2.5rem;
       overflow-y: auto;
-      transform: translateX(-100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border-right: 1px solid rgba(255,255,255,0.06);
+      cursor: auto;
+      transform: translateX(100%);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
     #jd-index-panel.is-open {
       transform: translateX(0);
     }
 
+    /* Ylikirjoitetaan paneelin tekstien värit vaaleiksi */
+    #jd-index-panel a, #jd-index-panel div, #jd-index-panel span {
+      color: var(--jd-text) !important;
+    }
+
+    /* Tummentaa gallerian taustaa indeksin alla */
     #jd-index-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       z-index: 490;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s;
+      transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.01s;
     }
     #jd-index-overlay.is-open {
+      background: rgba(0, 0, 0, 0.45);
       opacity: 1;
       pointer-events: auto;
+      cursor: pointer;
+      /* Peittää koko ruudun valikon vasemmalla puolella */
+      width: calc(100vw - var(--jd-panel-w));
     }
+
+
+
+
 
     /* ─── THUMBS VIEW ────────────────────────────────── */
     #jd-thumbs-panel {
@@ -129,22 +201,19 @@
 
     /* ─── MOBILE (<768px) ────────────────────────────── */
     @media (max-width: 768px) {
-      :root { --jd-panel-w: 100vw; }
+      :root { --jd-panel-w: 100%; }
       #jd-header { padding: 1rem 1.2rem; }
+      #jd-index-overlay.is-open { width: 100%; }
+      
+      /* Poistetaan hover/parallax -hyppy puhelimella koskettaessa */
+      #jd-index-panel.is-open.parallax-ready:hover {
+        transform: translateX(0) !important;
+      }
     }
   </style>
 </head>
-<body>
+<body ontouchstart="">
 
-  <!-- Header: Index (vasen) + sivukohtaiset napit (oikea) -->
-  <header id="jd-header">
-    <div class="jd-header-left">
-      <button class="jd-ui-btn" id="jd-index-btn">Index</button>
-    </div>
-    <div class="jd-header-right" id="jd-header-right">
-      <!-- Sivukohtaiset napit lisätään JS:llä -->
-    </div>
-  </header>
 
   <!-- Pääsisältö (Slideshow tai muu sivu) -->
   <main id="jd-main">
@@ -157,33 +226,86 @@
   <!-- Overlay paneelin taustaksi -->
   <div id="jd-index-overlay"></div>
 
-  <!-- Thumbs-paneeli (alustetaan tyhjänä, sivukohtainen JS täyttää) -->
-  <div id="jd-thumbs-panel"></div>
+  <!-- About-paneeli -->
+  {% include about-panel.html %}
 
   <script>
-    // ── Index-paneeli ───────────────────────────────
-    const indexBtn    = document.getElementById('jd-index-btn');
+    // ── Index-paneeli — avaus/sulkeminen ──────────────
     const indexPanel  = document.getElementById('jd-index-panel');
     const indexOverlay = document.getElementById('jd-index-overlay');
+    const jdMain      = document.getElementById('jd-main');
 
-    function openIndex() {
-      indexPanel.classList.add('is-open');
-      indexOverlay.classList.add('is-open');
-    }
-    function closeIndex() {
-      indexPanel.classList.remove('is-open');
-      indexOverlay.classList.remove('is-open');
-    }
 
-    indexBtn?.addEventListener('click', () => {
-      indexPanel.classList.contains('is-open') ? closeIndex() : openIndex();
+
+    window.openIndexPanel = function() {
+      indexPanel?.classList.add('is-open');
+      indexOverlay?.classList.add('is-open');
+      document.body.classList.add('index-is-open');
+    };
+    window.closeIndexPanel = function() {
+      indexPanel?.classList.remove('parallax-ready');
+      indexPanel?.classList.remove('is-open');
+      indexOverlay?.classList.remove('is-open');
+      document.body.classList.remove('index-is-open');
+    };
+
+    window.openAboutPanel = function() {
+      const aboutPanel = document.getElementById('jd-about-panel');
+      if (aboutPanel) {
+        aboutPanel.classList.add('is-open');
+        document.body.classList.add('about-is-open');
+        // Piilota gallery bottom nav, jotta se ei näy about paneelin alta
+        const jdNormalNav = document.getElementById('jd-normal-nav');
+        if (jdNormalNav) jdNormalNav.style.display = 'none';
+      }
+    };
+
+    window.closeAboutPanel = function() {
+      const aboutPanel = document.getElementById('jd-about-panel');
+      if (aboutPanel) {
+        aboutPanel.classList.remove('is-open');
+        document.body.classList.remove('about-is-open');
+        // Palauta gallery bottom nav, jos ei olla thumbs-tilassa
+        const jdNormalNav = document.getElementById('jd-normal-nav');
+        const thumbsPanel = document.getElementById('jd-thumbs-panel');
+        if (jdNormalNav && (!thumbsPanel || !thumbsPanel.classList.contains('is-open'))) {
+          jdNormalNav.style.display = 'flex';
+        }
+      }
+    };
+
+    // Sulje klikkaamalla tummaa galleria-aluetta
+    indexOverlay?.addEventListener('click', (e) => {
+      window.closeIndexPanel();
     });
-    indexOverlay?.addEventListener('click', closeIndex);
+
+    // Klikkaus suoraan jd-main:iin (fallback jos overlay ei reagoi)
+    jdMain?.addEventListener('click', (e) => {
+      // Jos klikkaus tulee alapalkin napeista, älä tee mitään
+      if (e.target.closest('#jd-bottom-nav')) return;
+      
+      if (document.body.classList.contains('index-is-open')) {
+        window.closeIndexPanel();
+      }
+    });
+
+    // Sulje nykyinen kategoria-linkki klikkaamalla (sama sivu)
+    document.querySelectorAll('#jd-index-panel .jd-index-link.active').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        window.closeIndexPanel();
+      });
+    });
 
     // Sulje Escape-näppäimellä
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeIndex();
+      if (e.key === 'Escape') {
+        window.closeIndexPanel();
+        window.closeAboutPanel();
+      }
     });
+
   </script>
 </body>
 </html>
+

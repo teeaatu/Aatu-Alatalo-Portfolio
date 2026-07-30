@@ -1,35 +1,10 @@
 ---
 lang: en
-layout: default
-title: "Hasselblad Masters 2026 — Finalist, Project//21 | Aatu Alatalo"
-description_fi: "Aatu Alatalo valittiin Hasselblad Masters 2026 -kilpailun finalistiksi Project//21 -kategoriassa. Kilpailuun osallistui yli 108 000 valokuvaajaa yli 160 maasta. Yksi kymmenestä kansainvälisestä finalistista kategorian voittajan Panitbhand Paribatra Na Ayudhy'n rinnalla."
-description_en: "Aatu Alatalo was selected as a Hasselblad Masters 2026 finalist in the Project//21 category — open to photographers aged 21 and under. One of ten global finalists, alongside category winner Panitbhand Paribatra Na Ayudhya (Thailand). Official portfolio of the Finnish Project//21 finalist."
-keywords: "Hasselblad Masters 2026, Project//21, Aatu Alatalo, Panitbhand Paribatra Na Ayudhya, Project 21 finalist, young photographer award 2026, Hasselblad Masters finalist Finland, other finalists, unnamed finalists, anonymous finalists, photography competition 2026"
-active_nav: "masters-2026"
-mobile_title: "Hasselblad Masters 2026"
+layout: jd_gallery
+title: "Masters 2026"
+category: masters-2026
+category_label: "Masters 2026"
+prev_url: /en/photo-project-time-v365.html
+next_url: /en/recent.html
 translation_url: /masters-2026.html
 ---
-
-<div class="content-wrapper">
-    <header class="intro-section">
-        <div class="intro-title">Hasselblad Masters 2026<br><span class="masters-subtitle">Finalist / Project//21</span></div>
-        <div class="intro-grid">
-            <div class="intro-text" lang="en">
-                <p>In April 2026, this project was selected among the top finalists of the <strong>Hasselblad Masters 2026</strong>. It is one of the world's most prestigious photography competitions, receiving over <strong>108,000 submissions</strong> from photographers across more than 160 countries.</p>
-
-                <p>The <strong>Project//21</strong> category is open exclusively to photographers aged 21 and younger. With no restrictions on theme or genre, it is an open category where young photographers can define their own visual language. Ten finalists were selected globally in this category.</p>
-
-                <p>The series presented here documents the Finnish landscape after dark in early winter, when there is little snow on the ground and darkness takes over the scene, photographed in 2025.</p>
-            </div>
-        </div>
-    </header>
-
-        {% for item in site.data['masters-2026'] %}
-    {% if forloop.index <= 2 %}
-        {% assign is_lazy = false %}
-    {% else %}
-        {% assign is_lazy = true %}
-    {% endif %}
-    {% include category-item.html item=item lazy_load=is_lazy %}
-{% endfor %}
-</div>

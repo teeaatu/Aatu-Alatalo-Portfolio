@@ -115,8 +115,12 @@
   height: 1875
   otsikko: Utajärvi ABC / Utajärvi ABC
   paikka: Utajärvi, Finland (2026) / Utajärvi, Suomi (2026)
-  alt_text: "A bright daytime photograph of a retro-style gas station with orange and green branding. A man in an orange and black shirt stands next to a black SUV parked at the pump. Behind them is a small grill and cafe building, surrounded by tall green trees under a sunny blue sky."
-  series: "utajarvi"
+  alt_text: A bright daytime photograph of a retro-style gas station with orange and green branding. A man in an orange and black shirt stands next to a black SUV parked at the pump. Behind them is a small grill and cafe building, surrounded by tall green trees under a sunny blue sky.
+  series: utajarvi
+- tyyppi: teksti
+  otsikko: Utajärvi Series / Utajärvi-sarja
+  teksti: "Väri ja muoto -sarjassa näet havaintojani ympäröivistä kiehtovista väreistä ja muodoista."
+  series: utajarvi
 - kuva: https://media.aatualatalo.com/Photographs/utajarvi_vesi.webp
   width: 2500
   height: 1875

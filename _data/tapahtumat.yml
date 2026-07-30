@@ -3,7 +3,11 @@
   height: 1500
   otsikko: Misfortune I / Misfortune I
   paikka: Misfortune at Tukikohta 2026 / Misfortune tukikohdalla 2026
-  alt_text: "A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."
+  alt_text: A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them.
+  series: misfortune
+- tyyppi: teksti
+  otsikko: Misfortune Series / Misfortune-sarja
+  teksti: "Tapahtumakuvausta — konsertteja, keikkoja ja hetkiä yleisön keskellä."
   series: misfortune
 - kuva: https://media.aatualatalo.com/Photographs/misfortnute_2.webp
   width: 1500

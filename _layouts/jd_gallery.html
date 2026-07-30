@@ -3,17 +3,115 @@ layout: jd_default
 ---
 {% assign lang = page.lang | default: 'fi' %}
 {% assign dataset = site.data[page.category] %}
-{% assign total_count = dataset | size %}
-{% assign total = dataset | size %}
+{% assign total_count = 0 %}
+{% for item in dataset %}
+{% if item.tyyppi == 'teksti' %}
+{% continue %}
+{% elsif item.layout == 'diptych' %}
+{% assign img_count = item.images | size %}
+{% assign total_count = total_count | plus: img_count %}
+{% else %}
+{% assign total_count = total_count | plus: 1 %}
+{% endif %}
+{% endfor %}
+{% assign cat_label = page.category_label | default: page.title | default: page.category %}
 
 <style>
-  /* ─── SLIDESHOW ──────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════
+   JD GALLERY — koko sivun override
+   Estää vanhan style.css:n interferenssin
+═══════════════════════════════════════════════════════ */
+
+  /* Ylikuormita body */
+  html,
+  body {
+    background: #f5f4f0 !important;
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: none;
+    /* Ei !important, jotta napit voivat käyttää pointeria */
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  #jd-main {
+    position: absolute !important;
+    inset: 0 !important;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  body.index-is-open #jd-main {
+    right: var(--jd-panel-w) !important;
+  }
+
+  /* ─── KATEGORIAN VAIHTO-SULJIN ─────────────────────── */
+  #jd-shutter {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 75px; /* Suljin peittää vain kuva-alueen, jättäen alanavigoinnin esiin */
+    background: #f5f4f0;
+    z-index: 99998;
+    pointer-events: none;
+    transform: translateY(0);
+    /* Oletuksena peittää kuva-alueen heti kun HTML ladataan */
+    transition: transform 0.6s cubic-bezier(0.64, 0, 0.35, 1);
+  }
+
+  body.is-entering-ready #jd-shutter {
+    transform: translateY(-100%);
+    /* Vetäytyy ylös ja paljastaa kuvan */
+  }
+
+  body.prepare-leave #jd-shutter {
+    transition: none;
+    /* Siirretään välittömästi ylös piiloon ilman animaatiota */
+    transform: translateY(-100%);
+  }
+
+  body.is-leaving #jd-shutter {
+    transition: transform 0.6s cubic-bezier(0.64, 0, 0.35, 1);
+    transform: translateY(0);
+    /* Putoaa ylhäältä alas peittämään kuva-alueen */
+  }
+
+  /* Kategoriaa vaihdettaessa kursori liikahtaa kevyesti ylöspäin */
+  body.is-leaving #jd-cursor-custom {
+    transform: translate(-50%, calc(-50% - 25px)) !important;
+    opacity: 0 !important;
+    transition: transform 0.6s cubic-bezier(0.64, 0, 0.35, 1), opacity 0.4s ease !important;
+  }
+
+  /* Piilota kaikki vanhan layoutin elementit */
+  aside,
+  .mobile-header,
+  #mobileHeader,
+  #backToTop,
+  .back-to-top,
+  footer,
+  .page-nav,
+  #pswp {
+    display: none !important;
+  }
+
+
+
+  /* ─── SLIDESHOW ─────────────────────────────────────── */
   #jd-slideshow {
-    width: 100%; height: 100%;
-    position: relative;
-    cursor: none; /* käytämme custom-cursoria */
-    background: #111;
-    -webkit-user-select: none; user-select: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   .jd-slide {
@@ -26,295 +124,664 @@ layout: jd_default
     transition: opacity 0.4s ease;
     pointer-events: none;
   }
+
   .jd-slide.active {
     opacity: 1;
     pointer-events: auto;
   }
 
   .jd-slide img {
-    max-width: 92%;
-    max-height: 88vh;
+    /* Pienennetty maksimikoko lisää ilmaa kuvan ympärille */
+    max-width: calc(100% - 120px);
+    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
+    width: auto;
+    height: auto;
     object-fit: contain;
     display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    /* Vanha harmaa reuna korvattu taustan värisellä reunalla (ikään kuin paspartu) */
+    border: 20px solid #f5f4f0;
+    background-color: transparent;
+    box-sizing: border-box;
   }
 
-  /* Kuvainfo alhaalla vasemmalla */
-  #jd-caption {
+  .jd-text-slide {
+    max-width: 600px;
+    padding: 40px;
+    background: transparent;
+    color: #1a1a1a;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    text-align: center;
+    user-select: text;
+  }
+
+  /* ─── ALANAVIGOINTI: Index — Thumbs ─────────────────────── */
+  #jd-bottom-nav {
     position: fixed;
-    bottom: 1.6rem;
-    left: 1.8rem;
-    z-index: 100;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: rgba(232,228,222,0.55);
+    bottom: 25px;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    z-index: 100000;
     pointer-events: none;
-    transition: opacity 0.3s;
+    /* Laajennetaan hover-alue cursor:auto varten */
+    cursor: auto;
   }
-  #jd-caption span { display: block; }
 
-  /* Kuvalaskuri oikealla alhaalla */
+  .jd-bottom-btn {
+    background: none;
+    border: none;
+    color: #1a1a18 !important;
+    -webkit-text-fill-color: #1a1a18 !important;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer !important;
+    pointer-events: auto;
+    opacity: 1 !important;
+    padding: 0.5rem 1rem;
+  }
+
+  .jd-nav-divider {
+    color: #1a1a18 !important;
+    -webkit-text-fill-color: #1a1a18 !important;
+    opacity: 1 !important;
+    font-size: 0.8rem;
+    padding: 0 0.2rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Laskuri oikealla alhaalla (poistettu käytöstä, näkyy kursorissa) */
   #jd-counter {
-    position: fixed;
-    bottom: 1.6rem;
-    right: 1.8rem;
-    z-index: 100;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    color: rgba(232,228,222,0.4);
-    pointer-events: none;
+    display: none;
   }
 
-  /* Custom cursor (nuoli) */
-  #jd-cursor {
+  /* ─── CUSTOM CURSOR ─────────────────────────────────── */
+  #jd-cursor-custom {
     position: fixed;
-    width: 48px; height: 48px;
     pointer-events: none;
-    z-index: 9000;
+    z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: opacity 0.2s;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: white;
+    mix-blend-mode: difference;
+    white-space: nowrap;
     opacity: 0;
-  }
-  #jd-cursor svg {
-    width: 100%; height: 100%;
-    fill: none;
-    stroke: rgba(232,228,222,0.8);
-    stroke-width: 1.5;
+    transition: opacity 0.2s;
+    user-select: none;
   }
 
-  /* Thumbs-ruudukko */
-  #jd-thumbs-panel {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 6px;
-    padding: 4.5rem 1rem 2rem;
-    background: #111;
+  /* ─── INTRO TITLE ANIMATION ─────────────────────────── */
+  #jd-intro-title {
+    position: fixed;
+    top: 50%;
+    top: 50dvh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: clamp(1.2rem, 3vw, 2.2rem);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: white;
+    mix-blend-mode: difference;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    user-select: none;
   }
-  @media (max-width: 600px) {
-    #jd-thumbs-panel { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+
+  /* ─── THUMBS STAGGER ANIMATION ──────────────────────── */
+  @keyframes thumbFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .jd-thumb.thumb-animate {
+    opacity: 0;
+    animation: thumbFadeIn 0.4s ease forwards;
+  }
+
+  /* ─── THUMBS PANEL ──────────────────────────────────── */
+  #jd-thumbs-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(245, 244, 240, 0.95);
+    /* Haalea, ei blurria */
+    z-index: 300;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Pehmeä ja aavistuksen hitaampi sulava animaatio */
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 6px;
+    padding: 8rem 5% 4rem;
+    /* Enemmän tilaa ylös ja keskittää ei-reunoihin */
+    cursor: auto;
+    /* Normaali kursori thumbs-paneelissa */
+  }
+
+  #jd-thumbs-panel.is-open {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .jd-thumb {
     cursor: pointer;
-    overflow: hidden;
-    background: #1a1a1a;
-    aspect-ratio: 3/4;
+    background: transparent;
+    /* Ei turhaa harmaata taustaa */
+    position: relative;
+    width: 180px;
+    /* Sopiva koko */
   }
-  .jd-thumb img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    opacity: 0.75;
-    transition: opacity 0.2s;
-    display: block;
-  }
-  .jd-thumb:hover img,
-  .jd-thumb.active img { opacity: 1; }
-  .jd-thumb.active { outline: 1px solid rgba(232,228,222,0.5); }
 
-  /* Thumbs-nappi (oikea ylänurkka) */
-  #jd-thumbs-btn {
+  .jd-thumb img {
+    width: 100%;
+    height: auto;
+    opacity: 1;
+    /* Ei himmennystä */
     display: block;
+  }
+
+  .jd-thumb-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5e4e0;
+    aspect-ratio: 3 / 2;
+    width: 100%;
+  }
+
+  .jd-thumb-text {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 2rem;
+    color: #a0a0a0;
+  }
+
+  /* Thumbs auki: bottom-nav näyttää kategorian nimen ja Close-napin */
+  #jd-thumbs-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+
+  #jd-thumbs-nav.is-open {
+    display: flex;
+  }
+
+  #jd-thumbs-panel.is-open~#jd-bottom-nav #jd-normal-nav {
+    display: none;
+  }
+
+  @media (max-width: 800px) {
+    body.index-is-open #jd-main {
+      right: 0 !important;
+    }
+
+    .jd-thumb {
+      width: calc(33.333% - 6px);
+    }
+
+    #jd-thumbs-panel {
+      padding: 5rem 2% 2rem;
+    }
+
+    /* Puhelimella kuvan reuna 7px ja max-width isommaksi */
+    .jd-slide img {
+      border: 7px solid #f5f4f0;
+      max-width: calc(100% - 28px);
+      max-height: calc(100dvh - 130px);
+    }
+
+    /* Siirretään Index & Thumbs -napit ylös keskelle staattisella taustalla */
+    #jd-bottom-nav {
+      bottom: auto;
+      top: 0;
+      height: 70px;
+      background: #f5f4f0;
+      width: 100%;
+    }
+
+    /* Asetetaan slideshow koko näytölle dynaamisella korkeudella */
+    #jd-slideshow {
+      top: 0;
+      bottom: auto;
+      height: 100dvh;
+    }
+
+    /* Näytetään kategoria ja sivunumero alhaalla keskellä */
+    #jd-counter {
+      display: block;
+      position: fixed;
+      bottom: 25px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      z-index: 100000;
+      pointer-events: none;
+    }
+
+    /* Piilotetaan tekstikursori täysin mobiilissa, koska ei ole hiirtä */
+    #jd-cursor-custom {
+      display: none !important;
+    }
   }
 </style>
 
-<!-- Thumbs-nappi header-right-slottiin -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const right = document.querySelector('.jd-header-right');
-    if (right) {
-      const btn = document.createElement('button');
-      btn.className = 'jd-ui-btn';
-      btn.id = 'jd-thumbs-btn';
-      btn.textContent = 'Thumbs';
-      right.appendChild(btn);
-    }
-  });
-</script>
-
-<!-- Kuvadata JSON-muodossa JS:lle -->
+<!-- Kuvadata JSON:na JS:lle -->
 <script id="jd-data" type="application/json">
-[
-  {% for item in dataset %}
-  {
-    "index": {{ forloop.index0 }},
-    {% assign filename_no_ext = item.kuva | split: '/' | last | split: '.' | first %}
-    {% assign mobile_thumb = filename_no_ext | append: '_mobile.webp' %}
-    {% assign desktop_thumb = filename_no_ext | append: '_desktop.webp' %}
+[{% assign jd_idx = 0 %}
+{% for item in dataset %}
+  {% if item.tyyppi == 'teksti' %}
+    {% continue %}
+  {% elsif item.layout == 'diptych' %}
+    {% for subitem in item.images %}
+      {% assign fn = subitem.kuva | split: '/' | last | split: '.' | first %}
+      {% assign mob = fn | append: '_mobile.webp' %}
+      {% assign dsk = fn | append: '_desktop.webp' %}
+      {% if subitem.kuva contains 'http' %}
+        {% assign fnext = subitem.kuva | split: '/' | last %}
+        {% assign bpath = subitem.kuva | remove: fnext %}
+        {% assign src_mob = bpath | append: 'thumbs/' | append: mob %}
+        {% assign src_dsk = bpath | append: 'thumbs/' | append: dsk %}
+        {% assign full = subitem.kuva %}
+      {% else %}
+        {% assign src_mob = '/assets/thumbnails/' | append: mob %}
+        {% assign src_dsk = '/assets/thumbnails/' | append: dsk %}
+        {% assign full = '/assets/images/' | append: subitem.kuva %}
+      {% endif %}
+      {
+        "i": {{ jd_idx }},
+        "src": {{ src_dsk | jsonify }},
+        "srcset": {{ src_mob | append: ' 800w, ' | append: src_dsk | append: ' 1600w, ' | append: full | append: ' 3000w' | jsonify }},
+        "full": {{ full | jsonify }},
+        "thumb": {{ src_mob | jsonify }},
+        "alt": {{ subitem.alt_text | default: '' | jsonify }},
+        "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | strip | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | strip | jsonify }}{% endif %},
+        "place": {{ item.paikka | default: '' | jsonify }}
+      }{% assign jd_idx = jd_idx | plus: 1 %}{% if jd_idx < total_count %},{% endif %}
+    {% endfor %}
+  {% else %}
+    {% assign fn = item.kuva | split: '/' | last | split: '.' | first %}
+    {% assign mob = fn | append: '_mobile.webp' %}
+    {% assign dsk = fn | append: '_desktop.webp' %}
     {% if item.kuva contains 'http' %}
-      {% assign filename_with_ext = item.kuva | split: '/' | last %}
-      {% assign base_path = item.kuva | remove: filename_with_ext %}
-      {% assign p_mobile = base_path | append: "thumbs/" | append: mobile_thumb %}
-      {% assign p_desktop = base_path | append: "thumbs/" | append: desktop_thumb %}
-      {% assign full_url = item.kuva %}
+      {% assign fnext = item.kuva | split: '/' | last %}
+      {% assign bpath = item.kuva | remove: fnext %}
+      {% assign src_mob = bpath | append: 'thumbs/' | append: mob %}
+      {% assign src_dsk = bpath | append: 'thumbs/' | append: dsk %}
+      {% assign full = item.kuva %}
     {% else %}
-      {% assign p_mobile = '/assets/thumbnails/' | append: mobile_thumb %}
-      {% assign p_desktop = '/assets/thumbnails/' | append: desktop_thumb %}
-      {% assign full_url = '/assets/images/' | append: item.kuva %}
+      {% assign src_mob = '/assets/thumbnails/' | append: mob %}
+      {% assign src_dsk = '/assets/thumbnails/' | append: dsk %}
+      {% assign full = '/assets/images/' | append: item.kuva %}
     {% endif %}
-    "src": "{{ p_desktop }}",
-    "srcset": "{{ p_mobile }} 600w, {{ p_desktop }} 1200w",
-    "thumb": "{{ p_mobile }}",
-    "full": "{{ full_url }}",
-    "alt": {{ item.alt_text | default: item.otsikko | jsonify }},
-    "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | jsonify }}{% endif %},
-    "place": {{ item.paikka | jsonify }}
-  }{% unless forloop.last %},{% endunless %}
-  {% endfor %}
-]
+    {
+      "i": {{ jd_idx }},
+      "src": {{ src_dsk | jsonify }},
+      "srcset": {{ src_mob | append: ' 800w, ' | append: src_dsk | append: ' 1600w, ' | append: full | append: ' 3000w' | jsonify }},
+      "full": {{ full | jsonify }},
+      "thumb": {{ src_mob | jsonify }},
+      "alt": {{ item.alt_text | default: '' | jsonify }},
+      "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | strip | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | strip | jsonify }}{% endif %},
+      "place": {{ item.paikka | default: '' | jsonify }}
+    }{% assign jd_idx = jd_idx | plus: 1 %}{% if jd_idx < total_count %},{% endif %}
+  {% endif %}
+{% endfor %}]
 </script>
 
-<!-- Slideshow-kontaineri -->
+<!-- Slideshow -->
 <div id="jd-slideshow"></div>
 
-<!-- Kuvainfo + laskuri -->
-<div id="jd-caption">
-  <span id="jd-caption-title"></span>
-  <span id="jd-caption-place"></span>
+<!-- Alanavigointi -->
+<div id="jd-bottom-nav">
+  <div id="jd-normal-nav" style="display:flex;align-items:center;gap:0;">
+    <button class="jd-bottom-btn" id="jd-index-btn-bottom">{% if lang == 'en' %}Index{% else %}Valikko{% endif %}</button>
+    <span class="jd-nav-divider">—</span>
+    <button class="jd-bottom-btn" id="jd-thumbs-btn">{% if lang == 'en' %}Thumbs{% else %}Kuvat{% endif %}</button>
+  </div>
+  <div id="jd-thumbs-nav">
+    <span class="jd-bottom-btn" style="cursor:default;">{{ cat_label }}</span>
+    <span class="jd-nav-divider">—</span>
+    <button class="jd-bottom-btn" id="jd-thumbs-close">{% if lang == 'en' %}Close{% else %}Sulje{% endif %}</button>
+  </div>
 </div>
-<div id="jd-counter"><span id="jd-counter-current">1</span> / {{ total_count }}</div>
+
+<!-- Laskuri -->
+<div id="jd-counter">{{ cat_label }} – <span id="jd-counter-num">1</span> / {{ total_count }}</div>
 
 <!-- Custom cursor -->
-<div id="jd-cursor">
-  <svg id="jd-cursor-svg" viewBox="0 0 48 48">
-    <polyline id="cursor-arrow" points="18,12 30,24 18,36"/>
-  </svg>
-</div>
+<div id="jd-cursor-custom">{{ cat_label }}</div>
+
+<!-- Intro title animation -->
+<div id="jd-intro-title">{{ cat_label }}</div>
+
+<!-- Seuraavan/edellisen gallerian URLit -->
+{% if page.next_url %}<div id="jd-next-url" style="display:none">{{ page.next_url }}</div>{% endif %}
+{% if page.prev_url %}<div id="jd-prev-url" style="display:none">{{ page.prev_url }}</div>{% endif %}
+
+<!-- Thumbs-paneeli -->
+<div id="jd-thumbs-panel"></div>
+
+<!-- Suljin kategoriavaihtoihin -->
+<div id="jd-shutter"></div>
+
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const data     = JSON.parse(document.getElementById('jd-data').textContent);
-  const total    = data.length;
-  const slideshow = document.getElementById('jd-slideshow');
-  const thumbsPanel = document.getElementById('jd-thumbs-panel');
-  const captionTitle = document.getElementById('jd-caption-title');
-  const captionPlace = document.getElementById('jd-caption-place');
-  const counterEl = document.getElementById('jd-counter-current');
-  const cursor   = document.getElementById('jd-cursor');
-  const cursorArrow = document.getElementById('cursor-arrow');
+  document.addEventListener('DOMContentLoaded', function () {
+    /* ── Data ──────────────────────────────────────────── */
+    const data = JSON.parse(document.getElementById('jd-data').textContent);
+    const total = data.length;
 
-  let current = 0;
-  let thumbsOpen = false;
-  const slides = [];
+    const slideshow = document.getElementById('jd-slideshow');
+    const thumbsPanel = document.getElementById('jd-thumbs-panel');
+    const thumbsClose = document.getElementById('jd-thumbs-close');
+    const counterNum = document.getElementById('jd-counter-num');
+    const cursor = document.getElementById('jd-cursor-custom');
+    // Siirretään kursori suoraan body:n lapseksi, jotta mix-blend-mode:difference
+    // toimii koko viewporttia vastaan ilman stacking-context-rajoituksia
+    if (cursor && cursor.parentElement !== document.body) {
+      document.body.appendChild(cursor);
+    }
+    const introTitle = document.getElementById('jd-intro-title');
+    if (introTitle && introTitle.parentElement !== document.body) {
+      document.body.appendChild(introTitle);
+    }
+    const slides = [];
+    const thumbEls = [];
+    let current = 0;
+    let thumbsOpen = false;
 
-  // ── Luo slidet ───────────────────────────────────
-  data.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'jd-slide' + (i === 0 ? ' active' : '');
+    /* ── Rakenna slidet ────────────────────────────────── */
+    data.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'jd-slide' + (i === 0 ? ' active' : '');
 
-    const img = document.createElement('img');
-    img.src = item.src;
-    img.srcset = item.srcset;
-    img.sizes = '(max-width: 600px) 100vw, 92vw';
-    img.alt = item.alt || '';
-    img.loading = i < 2 ? 'eager' : 'lazy';
-    img.onerror = () => { img.srcset = ''; img.src = item.full; };
+      if (item.is_text) {
+        const textDiv = document.createElement('div');
+        textDiv.className = 'jd-text-slide';
+        textDiv.innerHTML = item.text_content;
+        div.appendChild(textDiv);
+      } else {
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.srcset = item.srcset;
+        img.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
+        img.alt = item.alt || '';
+        img.loading = i < 2 ? 'eager' : 'lazy';
+        /* Jos thumbnail ei löydy, lataa originaali */
+        img.onerror = () => { img.srcset = ''; img.src = item.full; };
 
-    div.appendChild(img);
-    slideshow.appendChild(div);
-    slides.push(div);
-  });
+        div.appendChild(img);
+      }
 
-  // ── Luo thumbnailt ────────────────────────────────
-  data.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'jd-thumb' + (i === 0 ? ' active' : '');
-
-    const img = document.createElement('img');
-    img.src = item.thumb;
-    img.alt = item.alt || '';
-    img.loading = 'lazy';
-    img.onerror = () => { img.src = item.full; };
-
-    div.appendChild(img);
-    div.addEventListener('click', () => {
-      goTo(i);
-      closeThumbsView();
+      slideshow.appendChild(div);
+      slides.push(div);
     });
-    thumbsPanel.appendChild(div);
-  });
 
-  function updateCaption(i) {
-    const item = data[i];
-    captionTitle.textContent = item.title || '';
-    captionPlace.textContent = item.place || '';
-    counterEl.textContent = i + 1;
-  }
+    /* ── Rakenna thumbnailt ─────────────────────────────── */
+    data.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'jd-thumb' + (i === 0 ? ' is-current' : '');
 
-  function goTo(i) {
-    slides[current].classList.remove('active');
-    document.querySelectorAll('.jd-thumb')[current]?.classList.remove('active');
-    current = ((i % total) + total) % total;
-    slides[current].classList.add('active');
-    document.querySelectorAll('.jd-thumb')[current]?.classList.add('active');
-    updateCaption(current);
-    // Preload seuraava
-    const nextIdx = (current + 1) % total;
-    const nextImg = slides[nextIdx].querySelector('img');
-    if (nextImg && !nextImg.src) nextImg.src = data[nextIdx].src;
-  }
+      if (item.is_text) {
+        const thumbCont = document.createElement('div');
+        thumbCont.className = 'jd-thumb-text-container';
+        thumbCont.innerHTML = '<div class="jd-thumb-text">T</div>';
+        div.appendChild(thumbCont);
+      } else {
+        const img = document.createElement('img');
+        img.src = item.thumb;
+        img.alt = item.alt || '';
+        img.loading = 'lazy';
+        img.onerror = () => { img.src = item.full; };
+        div.appendChild(img);
+      }
 
-  function next() { goTo(current + 1); }
-  function prev() { goTo(current - 1); }
+      div.addEventListener('click', () => { goTo(i); closeThumbsView(); });
+      thumbsPanel.appendChild(div);
+      thumbEls.push(div);
+    });
 
-  updateCaption(0);
-
-  // ── Klikkaus: vasen/oikea puoli ──────────────────
-  slideshow.addEventListener('click', (e) => {
-    if (thumbsOpen) return;
-    const half = window.innerWidth / 2;
-    e.clientX > half ? next() : prev();
-  });
-
-  // ── Custom cursor ─────────────────────────────────
-  slideshow.addEventListener('mousemove', (e) => {
-    cursor.style.opacity = '1';
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top  = e.clientY + 'px';
-    // Oikea puoli = nuoli oikealle, vasen = nuoli vasemmalle
-    if (e.clientX > window.innerWidth / 2) {
-      cursorArrow.setAttribute('points', '18,12 30,24 18,36');
-    } else {
-      cursorArrow.setAttribute('points', '30,12 18,24 30,36');
+    /* ── Laskuri ja Kursori ─────────────────────────────────────────────── */
+    function updateCounter() {
+      const currentNum = current + 1;
+      if (document.getElementById('jd-counter-num')) {
+        document.getElementById('jd-counter-num').textContent = currentNum;
+      }
+      // Päivitetään kursorin teksti näyttämään 'Kategoria - X/Y'
+      if (cursor) {
+        cursor.textContent = `{{ cat_label }} - ${currentNum}/${total}`;
+      }
     }
-  });
-  slideshow.addEventListener('mouseleave', () => {
-    cursor.style.opacity = '0';
-  });
 
-  // ── Näppäimistönavigointi ────────────────────────
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
-    if (e.key === 'ArrowLeft')                   { e.preventDefault(); prev(); }
-  });
+    // Alustetaan kursorin teksti ensimmäiselle kuvalle
+    updateCounter();
 
-  // ── Thumbs-näkymä ────────────────────────────────
-  function openThumbsView() {
-    thumbsOpen = true;
-    thumbsPanel.classList.add('is-open');
-    const btn = document.getElementById('jd-thumbs-btn');
-    if (btn) btn.textContent = 'Close';
-  }
-  function closeThumbsView() {
-    thumbsOpen = false;
-    thumbsPanel.classList.remove('is-open');
-    const btn = document.getElementById('jd-thumbs-btn');
-    if (btn) btn.textContent = 'Thumbs';
-  }
+    /* ── Navigointi ─────────────────────────────────────── */
+    function goToCategory(url) {
+      document.body.classList.add('prepare-leave');
+      // Pakotetaan selain päivittämään sijainti ennen siirtymää (jotta siirto ilman animaatiota rekisteröityy)
+      void document.body.offsetWidth;
+      document.body.classList.add('is-leaving');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 600); // Odottaa suljin-animaation päättymistä
+    }
 
-  document.addEventListener('click', (e) => {
-    if (e.target.id === 'jd-thumbs-btn') {
+    function goTo(i) {
+      if (i >= total) {
+        const nextUrl = document.getElementById('jd-next-url');
+        if (nextUrl) { goToCategory(nextUrl.textContent); return; }
+      } else if (i < 0) {
+        const prevUrl = document.getElementById('jd-prev-url');
+        if (prevUrl) { goToCategory(prevUrl.textContent); return; }
+      }
+
+      slides[current].classList.remove('active');
+      thumbEls[current].classList.remove('is-current');
+      current = ((i % total) + total) % total;
+      slides[current].classList.add('active');
+      thumbEls[current].classList.add('is-current');
+      updateCounter();
+
+      /* Preload seuraava ja edellinen kuva */
+      const ni = (current + 1) % total;
+      const pi = (current - 1 + total) % total;
+      [ni, pi].forEach(idx => {
+        const img = slides[idx] ? slides[idx].querySelector('img') : null;
+        if (img && !img.complete) { img.loading = 'eager'; }
+      });
+    }
+
+    /* Klikkaus: oikea puoli = seuraava, vasen = edellinen */
+    slideshow.addEventListener('click', e => {
+      if (thumbsOpen) return;
+      e.clientX > window.innerWidth / 2 ? goTo(current + 1) : goTo(current - 1);
+    });
+
+    /* Näppäimistö */
+    document.addEventListener('keydown', e => {
+      if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+    });
+
+    /* Swipe mobiililla */
+    let tx = 0;
+    slideshow.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+    slideshow.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 40) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+    }, { passive: true });
+
+    /* ── Custom cursor ──────────────────────────────────── */
+    // Ei custom cursoria touch-laitteilla
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      document.addEventListener('mousemove', e => {
+        const target = e.target;
+        const isNav = target.closest('#jd-bottom-nav') ||
+          target.closest('#jd-thumbs-panel') ||
+          target.closest('#jd-index-panel') ||
+          target.closest('#jd-thumbs-close');
+        // Laajempi alue: alimmat 100px näytöstä = perusnuoli
+        const nearBottom = e.clientY > window.innerHeight - 100;
+        if (isNav || nearBottom) {
+          cursor.style.opacity = '0';
+          document.body.style.cursor = 'auto';
+        } else {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+          cursor.style.opacity = '1';
+          document.body.style.cursor = 'none';
+        }
+      });
+      document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+    }
+
+    /* ── Thumbs-näkymä ─────────────────────────────────── */
+    function openThumbsView() {
+      thumbsOpen = true;
+      thumbsPanel.classList.add('is-open');
+      thumbsClose.classList.add('is-open');
+      document.getElementById('jd-thumbs-btn').textContent = "{% if lang == 'en' %}Thumbs{% else %}Kuvat{% endif %}";
+      document.getElementById('jd-normal-nav').style.display = 'none';
+      document.getElementById('jd-thumbs-nav').classList.add('is-open');
+
+      /* Staggered ilmestymisanimaatio: nykyinen ensin, muut ripotellen satunnaisesti */
+      thumbEls.forEach(el => {
+        el.classList.remove('thumb-animate');
+        void el.offsetWidth;
+      });
+      
+      let others = [];
+      for (let i = 0; i < thumbEls.length; i++) {
+        if (i !== current) others.push(i);
+      }
+      
+      // Sekoitetaan muut kuvat satunnaiseen järjestykseen (Fisher-Yates shuffle)
+      for (let i = others.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [others[i], others[j]] = [others[j], others[i]];
+      }
+      
+      const order = [current, ...others];
+      
+      // Jaetaan 2500ms kesto tasaisesti kaikille kuville
+      const step = thumbEls.length > 1 ? 2500 / (thumbEls.length - 1) : 0;
+      
+      order.forEach((idx, rank) => {
+        const el = thumbEls[idx];
+        el.style.animationDelay = (rank * step) + 'ms';
+        el.classList.add('thumb-animate');
+      });
+
+      setTimeout(() => {
+        thumbEls[current]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }, 50);
+    }
+    function closeThumbsView() {
+      thumbsOpen = false;
+      thumbsPanel.classList.remove('is-open');
+      thumbsClose.classList.remove('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'flex';
+      document.getElementById('jd-thumbs-nav').classList.remove('is-open');
+    }
+
+    document.getElementById('jd-thumbs-btn')?.addEventListener('click', () => {
       thumbsOpen ? closeThumbsView() : openThumbsView();
+    });
+    thumbsClose?.addEventListener('click', closeThumbsView);
+
+    /* ── Index-nappi (alanavigoinnissa) → avaa index-paneeli ── */
+    document.getElementById('jd-index-btn-bottom')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (typeof window.openIndexPanel === 'function') {
+        const panel = document.getElementById('jd-index-panel');
+        panel?.classList.contains('is-open')
+          ? window.closeIndexPanel()
+          : window.openIndexPanel();
+      }
+    });
+
+    /* Piilota ylä-header:ssa oleva alkuperäinen Index-nappi
+       (koska nyt se on alanavigoinnissa) */
+    const topIndexBtn = document.getElementById('jd-index-btn');
+    if (topIndexBtn) topIndexBtn.style.display = 'none';
+
+    /* Käynnistä sivun saapumisanimaatio (suljin vetäytyy) */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('is-entering-ready');
+      });
+    });
+
+    /* ── Intro title: ilmestyy keskelle, sitten häipyy kursoriin ─ */
+    if (introTitle) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      const trackMouse = e => { mouseX = e.clientX; mouseY = e.clientY; };
+      document.addEventListener('mousemove', trackMouse);
+
+      // Viivästetään hieman, jotta suljinanimaatio on ensin valmis
+      setTimeout(() => {
+        introTitle.style.opacity = '1';
+
+        // Pienen hetken kuluttua liikutetaan kursoriin ja häivytetään
+        setTimeout(() => {
+          if (!window.matchMedia('(pointer: coarse)').matches) {
+            const rect = introTitle.getBoundingClientRect();
+            const fromX = rect.left + rect.width / 2;
+            const fromY = rect.top + rect.height / 2;
+            const dx = mouseX - fromX;
+            const dy = mouseY - fromY;
+            introTitle.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease';
+            introTitle.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+          } else {
+            introTitle.style.transition = 'opacity 0.5s ease';
+          }
+          introTitle.style.opacity = '0';
+          setTimeout(() => {
+            introTitle.style.display = 'none';
+            document.removeEventListener('mousemove', trackMouse);
+          }, 700);
+        }, 2000); // 2000ms = noin 2x pidempi kuin ennen
+      }, 400);
     }
+
   });
-
-  // ── Touch/swipe mobiililla ────────────────────────
-  let touchStartX = 0;
-  slideshow.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-  slideshow.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
-  }, { passive: true });
-
-}); // DOMContentLoaded
 </script>

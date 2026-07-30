@@ -1,24 +1,51 @@
-- kuva: DSC2284.jpg
-  width: 3024
-  height: 4536
-  otsikko: Graduate Portrait / Ylioppilas
-  paikka: Oulu, Finland 2025
-  alt_text: "A full-body black and white portrait of a recent graduate in a traditional Finnish graduation cap and a dark suit."
-- kuva: https://media.aatualatalo.com/Photographs/vihrearakennus.webp
-  width: 2100
-  height: 1500
+---
+- kuva: https://media.aatualatalo.com/Photographs/lapsetainola.webp
+  width: 1500
+  height: 2100
   otsikko: Untitled / Nimetön
-  paikka: Oulu, Finland 2026
-  alt_text: "An empty asphalt yard surrounded by industrial buildings. A green corrugated overhang casts deep, diagonal shadows."
-- kuva: https://media.aatualatalo.com/Photographs/misfortnute_6.webp
+  paikka: Ainola Park, Oulu, Finland 2026 / Ainolanpuisto, Oulu, Suomi 2026
+  alt_text: Two children in a park near a body of water under a large leafy tree.
+    In the foreground, a barefoot toddler with curly hair walks on a paved path, with
+    their sandals left on the grass nearby. Further back, an older child stands on
+    the grassy bank looking towards the water.
+- kuva: https://media.aatualatalo.com/Photographs/misfortnute_2.webp
   width: 1500
-  height: 1500
-  otsikko: Misfortune I / Misfortune I
+  height: 2001
+  otsikko: Misfortune II / Misfortune II
   paikka: Misfortune at Tukikohta 2026 / Misfortune tukikohdalla 2026
-  alt_text: "A black and white gig photo of a band performing live on stage."
-- kuva: DSC7318.jpg
+  alt_text: A black and white gig photo of a band performing live on stage. The musicians
+    are captured in action with stage lighting illuminating them.
+  series: misfortune
+- kuva: https://media.aatualatalo.com/Photographs/nainenkahvilassa.webp
+  width: 2000
+  height: 3000
+  otsikko: Woman in a Café / Nainen kahvilassa
+  paikka: Huovinen Bakery, Railway Station, Oulu 2026 / Huovisen leipomo rautatieasema,
+    Oulu 2026
+  alt_text: A black and white photograph of a young woman sitting in a cafe with retro
+    decor. She wears a dark winter coat and holds a white mug on a tray, looking directly
+    at the camera. The background features vintage patterned wallpaper, wooden paneling,
+    and white chairs.
+- kuva: https://media.aatualatalo.com/Photographs/lamppu.webp
+  width: 2250
+  height: 1500
+  otsikko: Lamp in the Living Room / Lamppu olohuoneessa
+  paikka: Oulu, Finland 2026
+  alt_text: A black and white photograph of an indoor ceiling lamp casting soft light
+    onto textured wallpaper and a zigzag border pattern in a living room in Oulu,
+    Finland.
+- kuva: https://media.aatualatalo.com/Photographs/unto_valikatto.webp
+  width: 2250
+  height: 3000
+  otsikko: Unto Välikatto (Hannu Suorsa)
+  paikka: Piippola, Finland 2026
+  alt_text: A black and white portrait photograph of a seated man wearing a bowler
+    hat, looking to his left with a thoughtful expression.
+- kuva: https://media.aatualatalo.com/Photographs/miesjaolut.webp
   width: 1500
-  height: 1000
-  otsikko: Underpass / Alikulku
-  paikka: Ylivieska, Finland 2026
-  alt_text: "A cold winter photograph of a snowy road passing underneath a concrete overpass in Ylivieska, Finland."
+  height: 2000
+  otsikko: Man, Newspaper, Cigarettes and Beer / Mies, sanomalehti, savukkeet ja olut
+  paikka: Oulu, Finland 2026
+  alt_text: A man in a dark suit sits alone at an outdoor table outside Michael Guinness
+    pub in Oulu, reading a newspaper. A beer glass and an ashtray are on the table.
+    A thick tree trunk fills the foreground.
