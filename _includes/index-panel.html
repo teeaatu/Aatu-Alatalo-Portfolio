@@ -28,25 +28,25 @@
   <ul style="list-style: none; margin-bottom: 3rem;">
     <li style="margin-bottom: 0.6rem;">
       <a href="{% if lang == 'en' %}/en/recent.html{% else %}/recent.html{% endif %}" class="jd-index-link {% if page.active_nav == 'recent' %}active{% endif %}">
-        <span>Recent</span>
+        <span>{% if lang == 'en' %}Recent{% else %}Uusimmat{% endif %}</span>
         <span class="jd-count">{{ site.data.recent | size }}</span>
       </a>
     </li>
     <li style="margin-bottom: 0.6rem;">
       <a href="{% if lang == 'en' %}/en/work1.html{% else %}/work1.html{% endif %}" class="jd-index-link {% if page.active_nav == 'work1' %}active{% endif %}">
-        <span>Work I</span>
+        <span>{% if lang == 'en' %}Work I{% else %}Työ I{% endif %}</span>
         <span class="jd-count">{{ site.data.work1 | size }}</span>
       </a>
     </li>
     <li style="margin-bottom: 0.6rem;">
       <a href="{% if lang == 'en' %}/en/work2.html{% else %}/work2.html{% endif %}" class="jd-index-link {% if page.active_nav == 'work2' %}active{% endif %}">
-        <span>Work II</span>
+        <span>{% if lang == 'en' %}Work II{% else %}Työ II{% endif %}</span>
         <span class="jd-count">{{ site.data.work2 | size }}</span>
       </a>
     </li>
     <li style="margin-bottom: 0.6rem;">
       <a href="{% if lang == 'en' %}/en/work3.html{% else %}/work3.html{% endif %}" class="jd-index-link {% if page.active_nav == 'work3' %}active{% endif %}">
-        <span>Work III</span>
+        <span>{% if lang == 'en' %}Work III{% else %}Työ III{% endif %}</span>
         <span class="jd-count">{{ site.data.work3 | size }}</span>
       </a>
     </li>
