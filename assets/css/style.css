@@ -60,6 +60,18 @@ body {
   overflow-y: scroll;
 }
 
+/* --- PEHMEÄ SIVUN SISÄÄNTULO --- */
+.page-enter-animation {
+  opacity: 0;
+  animation: slideUpFadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes slideUpFadeIn {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 /* --- TAKAISIN YLÖS --- */
 .back-to-top { 
     position: fixed; bottom: 30px; right: 30px; display: none; 
@@ -670,15 +682,23 @@ main {
   transform: translateY(0);
 }
 
-/* Pehmeä fade-in lazy load kuville (Fade-on-load) */
-.js-lazy-hidden {
-  opacity: 0;
-  filter: brightness(0.85); /* Hienovaraisempi ja pehmeämpi tummennus (0.5 sijaan) */
-  transition: opacity 0.8s ease-out, filter 0.8s ease-out;
-}
-.js-lazy-hidden.is-loaded {
+/* Pehmeä blur-up lazy load kuville (Fade-on-load) */
+.js-blur-up {
   opacity: 1;
-  filter: brightness(1);
+  filter: blur(15px) brightness(0.9);
+  transition: filter 0.8s ease-out, transform 0.8s ease-out;
+  transform: scale(1.02);
+  /* Taustaväri näkyy ennen kuin pikselit ovat saapuneet - estää tyhjän välkkeen */
+  background-color: #151515;
+}
+.js-blur-up.is-loaded {
+  opacity: 1;
+  filter: blur(0) brightness(1);
+  transform: scale(1);
+  background-color: transparent;
+}
+.image-wrapper, .overview-item {
+  overflow: hidden;
 }
 
 /* Varmistetaan, että sivun ensimmäiset kuvat näkyvät aina välittömästi ilman vieritystä (scroll) */

@@ -57,17 +57,20 @@ layout: default
               {% assign alt_content = filename_no_ext | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
             {% endif %}
 
+            {% assign lqip_b64 = site.data.lqip[filename_no_ext] %}
+
             <section class="image-section" data-series="{{ page.series_id }}">
                 <div class="image-wrapper">
                     <a href="{{ full_img_url }}" class="gallery-link-wrapper">
-                        <img src="{{ p_desktop }}" srcset="{{ p_mobile }} 600w, {{ p_desktop }} 1200w" 
-                             sizes="(max-width: 768px) 100vw, 50vw" 
+                        <img src="{% if lqip_b64 %}{{ lqip_b64 }}{% else %}{{ p_mobile }}{% endif %}"
+                             data-mobile="{{ p_mobile }}"
+                             data-desktop="{{ p_desktop }}"
                              alt="{% if item.alt %}{{ item.alt }}{% else %}{{ alt_content }}{% endif %}" 
                              width="{{ item.width }}" 
                              height="{{ item.height }}"
-                             class="gallery-img {% if is_lazy %}js-lazy-hidden{% endif %}" 
-                             {% if is_lazy %}loading="lazy" onload="this.classList.add('is-loaded');"{% else %}loading="eager" fetchpriority="high"{% endif %} 
-                             onerror="this.onerror=null;this.srcset='';this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
+                             class="gallery-img js-blur-up" 
+                             {% if is_lazy %}loading="lazy"{% else %}loading="eager" fetchpriority="high"{% endif %} 
+                             onerror="this.onerror=null;this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
                     </a>
                     <div class="project-info">
                         <p>{% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last }}{% else %}{{ item.otsikko | split: ' / ' | first }}{% endif %}</p>

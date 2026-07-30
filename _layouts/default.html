@@ -11,7 +11,7 @@
 
 {% include sidebar.html %}
 
-<main>
+<main class="page-enter-animation">
   {{ content }}
 
   {% include page_nav.html %}
@@ -335,30 +335,44 @@
     }, { passive: true });
   }
 
-  // --- PEHMEÄ SIVUNVAIHTO (GLOBAL FADE OUT) ---
-  document.addEventListener('click', function(e) {
-    const link = e.target.closest('a');
-    if (!link) return;
-    
-    const href = link.getAttribute('href');
-    
-    // Ohitetaan ankkurit, ulkoiset linkit ja lightbox-toiminnot
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.getAttribute('target') === '_blank' || link.classList.contains('gallery-link-wrapper')) {
-        return;
-    }
 
-    const isLocal = link.hostname === window.location.hostname || !link.hostname;
-    if (isLocal && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
-        e.preventDefault();
-        const main = document.querySelector('main');
-        if (main) {
-            main.style.transition = 'opacity 0.4s ease-in-out';
-            main.style.opacity = '0';
-        }
-        setTimeout(() => { window.location.href = href; }, 400);
-    }
+
+  // --- Blur-Up (LQIP): Ladataan desktop-versiot taustalla ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const isDesktop = window.innerWidth > 768;
+
+    const loadDesktop = (img) => {
+        const targetSrc = isDesktop ? img.dataset.desktop : (img.dataset.mobile || img.dataset.desktop);
+        if (!targetSrc) return;
+        
+        // Aloitetaan lataus taustalla heti kun lqip näkyy ruudulla
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            // Kaksi rAF-kehystä: varmistetaan että blur on ehtinyt piirtyä
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                img.src = tempImg.src;
+                img.classList.add('is-loaded');
+            }));
+        };
+        tempImg.onerror = () => img.classList.add('is-loaded');
+        tempImg.src = targetSrc;
+    };
+
+    // Observer käynnistää latauksen kun kuva saapuu lähelle viewporttia
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                obs.unobserve(entry.target);
+                loadDesktop(entry.target);
+            }
+        });
+    }, { rootMargin: '300px' });
+
+    document.querySelectorAll('.js-blur-up').forEach(img => observer.observe(img));
   });
+
 </script>
+<script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxK3jE1T8oOqOaweW3HJvxyji"></script>
 </body>
 
 </html>
