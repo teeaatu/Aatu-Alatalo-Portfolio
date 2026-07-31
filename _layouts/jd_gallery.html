@@ -492,6 +492,14 @@ layout: jd_default
 
   /* ─── MOBILE MEDIA QUERY ─────────────────────────────── */
   @media (max-width: 800px) {
+    /* Safari Scroll Hack: sallitaan bodyn vieritys, jotta alapalkki piiloutuu */
+    html, body {
+      min-height: 200vh !important;
+      overflow-y: auto !important;
+    }
+    #jd-main, #jd-slideshow {
+      position: fixed !important;
+    }
     /* Mobiilissa teksti ja suljin liukuvat alas paljastaen kuvan */
     body.is-entering-ready #jd-shutter {
       transform: translateY(100%);
