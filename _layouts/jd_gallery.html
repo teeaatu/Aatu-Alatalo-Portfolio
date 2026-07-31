@@ -8,8 +8,7 @@ layout: jd_default
 {% if item.tyyppi == 'teksti' %}
 {% continue %}
 {% elsif item.layout == 'diptych' %}
-{% assign img_count = item.images | size %}
-{% assign total_count = total_count | plus: img_count %}
+{% assign total_count = total_count | plus: 1 %}
 {% else %}
 {% assign total_count = total_count | plus: 1 %}
 {% endif %}
@@ -142,22 +141,35 @@ layout: jd_default
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
-    /* Vanha harmaa reuna korvattu taustan värisellä reunalla (ikään kuin paspartu) */
-    border: 20px solid #f5f4f0;
-    background-color: transparent;
-    box-sizing: border-box;
   }
 
   .jd-text-slide {
     max-width: 600px;
     padding: 40px;
-    background: transparent;
-    color: #1a1a1a;
+    background-color: transparent;
+    box-sizing: border-box;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1.2rem;
     line-height: 1.6;
     text-align: center;
     user-select: text;
+  }
+  
+  /* ─── DIPTYCH SLIDE ────────────────────────────────────── */
+  .jd-diptych-slide {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 100vw;
+  }
+  .jd-diptych-slide img {
+    max-width: calc(50% - 75px) !important;
+    max-height: calc(100dvh - 180px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
   }
 
   /* ─── ALANAVIGOINTI: Index — Thumbs ─────────────────────── */
@@ -166,11 +178,12 @@ layout: jd_default
     bottom: 25px;
     left: 0;
     right: 0;
-    height: 56px;
+    height: auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0;
+    gap: 8px;
     z-index: 100000;
     pointer-events: none;
     /* Laajennetaan hover-alue cursor:auto varten */
@@ -205,6 +218,69 @@ layout: jd_default
   /* Laskuri oikealla alhaalla (poistettu käytöstä, näkyy kursorissa) */
   #jd-counter {
     display: none;
+  }
+
+  /* ─── FILTER NAV ────────────────────────────────────── */
+  .jd-filter-dropdown-container {
+    position: fixed;
+    bottom: 25px;
+    right: 35px;
+    display: none;
+    pointer-events: auto;
+    z-index: 100000;
+  }
+  .jd-filter-dropdown-container.is-visible {
+    display: block;
+  }
+  .jd-filter-menu {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    left: auto;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f5f4f0;
+    padding: 15px 25px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    margin-bottom: 15px;
+  }
+  .jd-filter-menu.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .jd-filter-btn {
+    background: none;
+    border: none;
+    color: rgba(26, 26, 24, 0.5);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+  .jd-filter-btn:hover {
+    color: rgba(26, 26, 24, 0.8);
+  }
+  .jd-filter-btn.active {
+    color: rgba(26, 26, 24, 1);
+  }
+
+  /* Funnel-ikoni hover-animaatio (optimaalinen) */
+  #jd-filter-toggle svg {
+    transition: stroke 0.3s ease;
+  }
+  #jd-filter-toggle:hover svg, #jd-filter-toggle.is-open svg {
+    stroke: rgba(26, 26, 24, 0.7);
   }
 
   /* ─── CUSTOM CURSOR ─────────────────────────────────── */
@@ -430,20 +506,44 @@ layout: jd_default
       outline-offset: 4px;
     }
 
-    /* Puhelimella kuvan reuna 7px ja max-width isommaksi */
+    /* Puhelimella max-width isommaksi */
     .jd-slide img {
-      border: 7px solid #f5f4f0;
       max-width: calc(100% - 28px);
       max-height: calc(100dvh - 130px);
+    }
+    
+    .jd-diptych-slide {
+      flex-direction: column;
+      gap: 15px;
+    }
+    .jd-diptych-slide img {
+      max-width: calc(100% - 28px) !important;
+      max-height: calc(50dvh - 75px) !important;
     }
 
     /* Siirretään Index & Thumbs -napit ylös keskelle staattisella taustalla */
     #jd-bottom-nav {
       bottom: auto;
       top: 0;
-      height: 70px;
+      height: auto;
+      min-height: 70px;
       background: #f5f4f0;
       width: 100%;
+      align-items: center;
+      padding-top: 25px;
+      padding-bottom: 15px;
+    }
+    
+    .jd-filter-dropdown-container {
+      bottom: auto;
+      top: 25px;
+      right: 25px;
+    }
+    .jd-filter-menu {
+      bottom: auto;
+      top: 100%;
+      margin-bottom: 0;
+      margin-top: 15px;
     }
 
     /* HINT ARROWS ON MOBILE (BOTTOM) */
@@ -522,32 +622,38 @@ layout: jd_default
   {% if item.tyyppi == 'teksti' %}
     {% continue %}
   {% elsif item.layout == 'diptych' %}
-    {% for subitem in item.images %}
-      {% assign fn = subitem.kuva | split: '/' | last | split: '.' | first %}
-      {% assign mob = fn | append: '_mobile.webp' %}
-      {% assign dsk = fn | append: '_desktop.webp' %}
-      {% if subitem.kuva contains 'http' %}
-        {% assign fnext = subitem.kuva | split: '/' | last %}
-        {% assign bpath = subitem.kuva | remove: fnext %}
-        {% assign src_mob = bpath | append: 'thumbs/' | append: mob %}
-        {% assign src_dsk = bpath | append: 'thumbs/' | append: dsk %}
-        {% assign full = subitem.kuva %}
-      {% else %}
-        {% assign src_mob = '/assets/thumbnails/' | append: mob %}
-        {% assign src_dsk = '/assets/thumbnails/' | append: dsk %}
-        {% assign full = '/assets/images/' | append: subitem.kuva %}
-      {% endif %}
-      {
-        "i": {{ jd_idx }},
-        "src": {{ src_dsk | jsonify }},
-        "srcset": {{ src_mob | append: ' 800w, ' | append: src_dsk | append: ' 1600w, ' | append: full | append: ' 3000w' | jsonify }},
-        "full": {{ full | jsonify }},
-        "thumb": {{ src_mob | jsonify }},
-        "alt": {{ subitem.alt_text | default: '' | jsonify }},
-        "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | strip | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | strip | jsonify }}{% endif %},
-        "place": {{ item.paikka | default: '' | jsonify }}
-      }{% assign jd_idx = jd_idx | plus: 1 %}{% if jd_idx < total_count %},{% endif %}
-    {% endfor %}
+    {
+      "i": {{ jd_idx }},
+      "layout": "diptych",
+      "images": [
+      {% for subitem in item.images %}
+        {% assign fn = subitem.kuva | split: '/' | last | split: '.' | first %}
+        {% assign mob = fn | append: '_mobile.webp' %}
+        {% assign dsk = fn | append: '_desktop.webp' %}
+        {% if subitem.kuva contains 'http' %}
+          {% assign fnext = subitem.kuva | split: '/' | last %}
+          {% assign bpath = subitem.kuva | remove: fnext %}
+          {% assign src_mob = bpath | append: 'thumbs/' | append: mob %}
+          {% assign src_dsk = bpath | append: 'thumbs/' | append: dsk %}
+          {% assign full = subitem.kuva %}
+        {% else %}
+          {% assign src_mob = '/assets/thumbnails/' | append: mob %}
+          {% assign src_dsk = '/assets/thumbnails/' | append: dsk %}
+          {% assign full = '/assets/images/' | append: subitem.kuva %}
+        {% endif %}
+        {
+          "src": {{ src_dsk | jsonify }},
+          "srcset": {{ src_mob | append: ' 800w, ' | append: src_dsk | append: ' 1600w, ' | append: full | append: ' 3000w' | jsonify }},
+          "full": {{ full | jsonify }},
+          "thumb": {{ src_mob | jsonify }},
+          "alt": {{ subitem.alt_text | default: '' | jsonify }}
+        }{% if forloop.last == false %},{% endif %}
+      {% endfor %}
+      ],
+      "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | strip | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | strip | jsonify }}{% endif %},
+      "place": {{ item.paikka | default: '' | jsonify }},
+      "series": {{ item.series | default: 'all' | jsonify }}
+    }{% assign jd_idx = jd_idx | plus: 1 %}{% if jd_idx < total_count %},{% endif %}
   {% else %}
     {% assign fn = item.kuva | split: '/' | last | split: '.' | first %}
     {% assign mob = fn | append: '_mobile.webp' %}
@@ -571,7 +677,8 @@ layout: jd_default
       "thumb": {{ src_mob | jsonify }},
       "alt": {{ item.alt_text | default: '' | jsonify }},
       "title": {% if lang == 'fi' %}{{ item.otsikko | split: ' / ' | last | strip | jsonify }}{% else %}{{ item.otsikko | split: ' / ' | first | strip | jsonify }}{% endif %},
-      "place": {{ item.paikka | default: '' | jsonify }}
+      "place": {{ item.paikka | default: '' | jsonify }},
+      "series": {{ item.series | default: 'all' | jsonify }}
     }{% assign jd_idx = jd_idx | plus: 1 %}{% if jd_idx < total_count %},{% endif %}
   {% endif %}
 {% endfor %}]
@@ -592,10 +699,18 @@ layout: jd_default
 
 <!-- Alanavigointi -->
 <div id="jd-bottom-nav">
-  <div id="jd-normal-nav" style="display:flex;align-items:center;gap:0;">
+  <div id="jd-normal-nav" style="display:flex;align-items:center;gap:0;pointer-events:auto;">
     <button class="jd-bottom-btn" id="jd-index-btn-bottom">{% if lang == 'en' %}Index{% else %}Valikko{% endif %}</button>
     <span class="jd-nav-divider">—</span>
     <button class="jd-bottom-btn" id="jd-thumbs-btn">{% if lang == 'en' %}All Works{% else %}Kaikki teokset{% endif %}</button>
+  </div>
+  <div id="jd-filter-dropdown-container" class="jd-filter-dropdown-container">
+    <button id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display: flex; align-items: center; justify-content: center; height: 100%; cursor: pointer;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(26,26,24,0.35)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+      </svg>
+    </button>
+    <div id="jd-filter-menu" class="jd-filter-menu"></div>
   </div>
   <div id="jd-thumbs-nav">
     <span class="jd-bottom-btn" style="cursor:default;">{{ cat_label }}</span>
@@ -605,7 +720,7 @@ layout: jd_default
 </div>
 
 <!-- Laskuri -->
-<div id="jd-counter">{{ cat_label }} – <span id="jd-counter-num">1</span> / {{ total_count }}</div>
+<div id="jd-counter">{{ cat_label }} — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{{ total_count }}</span></div>
 
 <!-- Custom cursor -->
 <div id="jd-cursor-custom">{{ cat_label }}</div>
@@ -673,8 +788,8 @@ layout: jd_default
                 <div class="jd-thumb-global" data-cat="{{ cat }}" data-idx="{{ thumb_idx }}" data-url="{{ target_url }}#img-{{ thumb_idx }}">
                   <img src="{{ src_mob }}" loading="lazy" alt="{{ subitem.alt_text | default: '' }}">
                 </div>
-                {% assign thumb_idx = thumb_idx | plus: 1 %}
               {% endfor %}
+              {% assign thumb_idx = thumb_idx | plus: 1 %}
             {% else %}
               {% assign fn = item.kuva | split: '/' | last | split: '.' | first %}
               {% assign mob = fn | append: '_mobile.webp' %}
@@ -724,7 +839,6 @@ layout: jd_default
       document.body.appendChild(introTitle);
     }
     const slides = [];
-    const thumbEls = [];
     let current = 0;
     let thumbsOpen = false;
 
@@ -738,15 +852,28 @@ layout: jd_default
     }
 
     /* ── Rakenna slidet ────────────────────────────────── */
-    data.forEach((item, i) => {
-      const div = document.createElement('div');
-      div.className = 'jd-slide' + (i === current ? ' active' : '');
-
-      if (item.is_text) {
+    function createSlide(item, i) {
+      const slide = document.createElement('div');
+      slide.className = 'jd-slide' + (i === current ? ' active' : '');
+      
+      if (item.layout === 'diptych' && item.images) {
+        slide.className += ' jd-diptych-slide';
+        item.images.forEach(imgData => {
+          const img = document.createElement('img');
+          img.src = imgData.src;
+          img.srcset = imgData.srcset;
+          img.sizes = '(max-width: 768px) 100vw, 50vw';
+          img.alt = imgData.alt || '';
+          img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
+          
+          img.onerror = () => { img.srcset = ''; img.src = imgData.full; };
+          slide.appendChild(img);
+        });
+      } else if (item.is_text) {
         const textDiv = document.createElement('div');
         textDiv.className = 'jd-text-slide';
         textDiv.innerHTML = item.text_content;
-        div.appendChild(textDiv);
+        slide.appendChild(textDiv);
       } else {
         const img = document.createElement('img');
         img.src = item.src;
@@ -755,20 +882,89 @@ layout: jd_default
         img.alt = item.alt || '';
         img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
         
-        // Use thumbnail as an instant placeholder for incredibly fast perceived loading
-        if (item.thumb) {
-          img.style.background = `url("${item.thumb}") center/contain no-repeat`;
-        }
-        
-        /* Jos thumbnail ei löydy, lataa originaali */
         img.onerror = () => { img.srcset = ''; img.src = item.full; };
-
-        div.appendChild(img);
+        slide.appendChild(img);
       }
+      return slide;
+    }
 
-      slideshow.appendChild(div);
-      slides.push(div);
+    data.forEach((item, i) => {
+      const slide = createSlide(item, i);
+      slideshow.appendChild(slide);
+      slides.push(slide);
     });
+
+    /* ── FILTER LOGIC ──────────────────────────────────── */
+    const filterContainer = document.getElementById('jd-filter-dropdown-container');
+    const filterToggle = document.getElementById('jd-filter-toggle');
+    const filterMenu = document.getElementById('jd-filter-menu');
+    let uniqueSeries = [...new Set(data.map(item => item.series))].filter(s => s && s !== 'all');
+    let currentFilter = 'all';
+    let visibleIndices = data.map((_, i) => i);
+    let visibleTotal = visibleIndices.length;
+    
+    const isEventsCategory = {{ page.category | jsonify }} === 'tapahtumat';
+    
+    if (uniqueSeries.length > 1 && filterContainer && isEventsCategory) {
+      filterContainer.classList.add('is-visible');
+      const btnAll = document.createElement('button');
+      btnAll.className = 'jd-filter-btn active';
+      btnAll.textContent = 'ALL CATEGORIES';
+      btnAll.dataset.filter = 'all';
+      filterMenu.appendChild(btnAll);
+      
+      uniqueSeries.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'jd-filter-btn';
+        btn.textContent = s.toUpperCase().replace(/-/g, ' ');
+        btn.dataset.filter = s;
+        filterMenu.appendChild(btn);
+      });
+      
+      filterToggle.addEventListener('click', (e) => {
+         e.stopPropagation();
+         filterMenu.classList.toggle('is-open');
+         filterToggle.classList.toggle('is-open');
+      });
+      
+      document.addEventListener('click', (e) => {
+         if (!filterContainer.contains(e.target)) {
+            filterMenu.classList.remove('is-open');
+            filterToggle.classList.remove('is-open');
+         }
+      });
+      
+      filterMenu.addEventListener('click', e => {
+        if (e.target.tagName === 'BUTTON') {
+          const newFilter = e.target.dataset.filter;
+          filterMenu.classList.remove('is-open');
+          filterToggle.classList.remove('is-open');
+          if (newFilter !== currentFilter) {
+            applyFilter(newFilter);
+          }
+        }
+      });
+    }
+
+    function applyFilter(filter) {
+      currentFilter = filter;
+      visibleIndices = [];
+      data.forEach((item, i) => {
+        if (filter === 'all' || item.series === filter) {
+          visibleIndices.push(i);
+        }
+      });
+      visibleTotal = visibleIndices.length;
+      
+      document.querySelectorAll('.jd-filter-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.filter === filter);
+      });
+      
+      let newCurrent = visibleIndices.includes(current) ? current : visibleIndices[0];
+      if (newCurrent === undefined) newCurrent = 0;
+      
+      goToAbsolute(newCurrent, true);
+    }
 
     /* ── Rakenna thumbnailt ─────────────────────────────── */
     // Note: The global thumbs panel is now rendered via Liquid HTML.
@@ -780,7 +976,7 @@ layout: jd_default
         const url = thumb.getAttribute('data-url');
         
         if (cat === '{{ page.category }}') {
-          goTo(idx);
+          goToAbsolute(idx);
           closeThumbsView();
         } else {
           closeThumbsView(); // Fade out thumbs panel immediately
@@ -796,13 +992,17 @@ layout: jd_default
 
     /* ── Laskuri ja Kursori ─────────────────────────────────────────────── */
     function updateCounter() {
-      const currentNum = current + 1;
+      let vi = visibleIndices.indexOf(current);
+      if (vi === -1) vi = 0;
+      const currentNum = vi + 1;
       if (document.getElementById('jd-counter-num')) {
         document.getElementById('jd-counter-num').textContent = currentNum;
       }
-      // Päivitetään kursorin teksti näyttämään 'Kategoria - X/Y'
+      if (document.getElementById('jd-counter-tot')) {
+        document.getElementById('jd-counter-tot').textContent = visibleTotal;
+      }
       if (cursor) {
-        cursor.textContent = `{{ cat_label }} - ${currentNum}/${total}`;
+        cursor.textContent = `{{ cat_label }} — ${currentNum} / ${visibleTotal}`;
       }
     }
 
@@ -820,41 +1020,58 @@ layout: jd_default
       }, 600); // Odottaa suljin-animaation päättymistä
     }
 
-    function goTo(i) {
-      if (i >= total) {
+    function goToRelative(step) {
+      if (visibleTotal === 0) return;
+      let vi = visibleIndices.indexOf(current);
+      if (vi === -1) vi = 0;
+      vi += step;
+      
+      if (vi >= visibleTotal) {
         const nextUrl = document.getElementById('jd-next-url');
         if (nextUrl) { goToCategory(nextUrl.textContent); return; }
-      } else if (i < 0) {
+      } else if (vi < 0) {
         const prevUrl = document.getElementById('jd-prev-url');
         if (prevUrl) { goToCategory(prevUrl.textContent); return; }
       }
-
-      slides[current].classList.remove('active');
       
+      vi = ((vi % visibleTotal) + visibleTotal) % visibleTotal;
+      goToAbsolute(visibleIndices[vi]);
+    }
+
+    function goToAbsolute(idx, skipFilterCheck = false) {
+      if (visibleTotal === 0) return;
+      if (!skipFilterCheck && !visibleIndices.includes(idx)) {
+         applyFilter('all');
+      }
+
+      if (slides[current]) slides[current].classList.remove('active');
       const localThumbs = document.querySelectorAll('.jd-thumb-global[data-cat="{{ page.category }}"]');
       if (localThumbs[current]) localThumbs[current].classList.remove('is-active');
 
-      current = ((i % total) + total) % total;
+      current = idx;
       
-      slides[current].classList.add('active');
+      if (slides[current]) slides[current].classList.add('active');
       if (localThumbs[current]) localThumbs[current].classList.add('is-active');
       
       updateCounter();
 
       /* Preload seuraava ja edellinen kuva */
-      const ni = (current + 1) % total;
-      const pi = (current - 1 + total) % total;
-      [ni, pi].forEach(idx => {
-        const img = slides[idx] ? slides[idx].querySelector('img') : null;
-        if (img && !img.complete) { img.loading = 'eager'; }
-      });
+      let vi = visibleIndices.indexOf(current);
+      if (vi !== -1) {
+        const ni = visibleIndices[(vi + 1) % visibleTotal];
+        const pi = visibleIndices[(vi - 1 + visibleTotal) % visibleTotal];
+        [ni, pi].forEach(ix => {
+          const img = slides[ix] ? slides[ix].querySelector('img') : null;
+          if (img && !img.complete) { img.loading = 'eager'; }
+        });
+      }
     }
 
     /* Klikkaus: oikea puoli = seuraava, vasen = edellinen */
     slideshow.addEventListener('click', e => {
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
-      e.clientX > window.innerWidth / 2 ? goTo(current + 1) : goTo(current - 1);
+      e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
     });
 
     /* Näppäimistö */
@@ -863,8 +1080,8 @@ layout: jd_default
         document.body.classList.add('user-has-interacted');
       }
       if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToRelative(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
     });
 
     /* Swipe mobiililla */
@@ -875,7 +1092,7 @@ layout: jd_default
     }, { passive: true });
     slideshow.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - tx;
-      if (Math.abs(dx) > 40) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+      if (Math.abs(dx) > 40) dx < 0 ? goToRelative(1) : goToRelative(-1);
     }, { passive: true });
 
     /* ── Custom cursor ──────────────────────────────────── */
