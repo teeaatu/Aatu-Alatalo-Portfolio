@@ -1,13 +1,100 @@
 ---
-- kuva: https://media.aatualatalo.com/Photographs/lapsetainola.webp
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_8.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A view from the audience looking up at a performer in white on stage.
+    A large screen behind them displays the word OWN in red letters, and an audience
+    member's hand is raised in the foreground.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_10.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A black and white view of a performer in a feathery outfit and sunglasses
+    holding long tassels up. The background has a starry, glittery effect.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_7.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A blonde female singer smiling and speaking into a microphone on stage.
+    She is wearing a light-colored dress and large earrings under warm stage lights.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_2.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A female singer on stage wearing a blue outfit with feathers and blue
+    boots. Two backup dancers in black are visible behind her in the background.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_9.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A black and white view from behind a female singer with long blonde hair
+    on stage. She is facing bright stage lights with a microphone stand to her left.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_1.webp
   width: 1500
   height: 2100
-  otsikko: Untitled / Nimetön
-  paikka: Ainola Park, Oulu, Finland 2026 / Ainolanpuisto, Oulu, Suomi 2026
-  alt_text: Two children in a park near a body of water under a large leafy tree.
-    In the foreground, a barefoot toddler with curly hair walks on a paved path, with
-    their sandals left on the grass nearby. Further back, an older child stands on
-    the grassy bank looking towards the water.
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A side profile of a male singer on stage holding a microphone with both
+    hands. He is wearing a black tank top and dark jeans.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_4.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A blonde woman playing a violin on stage. She is wearing a light gold-colored
+    dress and thigh-high boots.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_3.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A male singer with dark curly hair and sunglasses performing on stage.
+    He is dressed in a black button-up shirt and black trousers.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_6.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A male singer playing an electric guitar and singing into a microphone.
+    He is wearing a red sleeveless vest with green and red stage lights behind him.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A male singer performing on stage with a microphone. He is wearing a black
+    tank top and is illuminated by red and white stage lights at Qstock 2026.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/unto_valikatto.webp
+  width: 2250
+  height: 3000
+  otsikko: Unto Välikatto (Hannu Suorsa)
+  paikka: Piippola, Finland 2026
+  alt_text: A black and white portrait photograph of a seated man wearing a bowler
+    hat, looking to his left with a thoughtful expression.
+- kuva: https://media.aatualatalo.com/Photographs/miesjaolut.webp
+  width: 1500
+  height: 2000
+  otsikko: Man, Newspaper, Cigarettes and Beer / Mies, sanomalehti, savukkeet ja olut
+  paikka: Oulu, Finland 2026
+  alt_text: A man in a dark suit sits alone at an outdoor table outside Michael Guinness
+    pub in Oulu, reading a newspaper. A beer glass and an ashtray are on the table.
+    A thick tree trunk fills the foreground.
 - kuva: https://media.aatualatalo.com/Photographs/misfortnute_2.webp
   width: 1500
   height: 2001
@@ -26,6 +113,15 @@
     decor. She wears a dark winter coat and holds a white mug on a tray, looking directly
     at the camera. The background features vintage patterned wallpaper, wooden paneling,
     and white chairs.
+- kuva: https://media.aatualatalo.com/Photographs/lapsetainola.webp
+  width: 1500
+  height: 2100
+  otsikko: Untitled / Nimetön
+  paikka: Ainola Park, Oulu, Finland 2026 / Ainolanpuisto, Oulu, Suomi 2026
+  alt_text: Two children in a park near a body of water under a large leafy tree.
+    In the foreground, a barefoot toddler with curly hair walks on a paved path, with
+    their sandals left on the grass nearby. Further back, an older child stands on
+    the grassy bank looking towards the water.
 - kuva: https://media.aatualatalo.com/Photographs/lamppu.webp
   width: 2250
   height: 1500
@@ -34,18 +130,3 @@
   alt_text: A black and white photograph of an indoor ceiling lamp casting soft light
     onto textured wallpaper and a zigzag border pattern in a living room in Oulu,
     Finland.
-- kuva: https://media.aatualatalo.com/Photographs/unto_valikatto.webp
-  width: 2250
-  height: 3000
-  otsikko: Unto Välikatto (Hannu Suorsa)
-  paikka: Piippola, Finland 2026
-  alt_text: A black and white portrait photograph of a seated man wearing a bowler
-    hat, looking to his left with a thoughtful expression.
-- kuva: https://media.aatualatalo.com/Photographs/miesjaolut.webp
-  width: 1500
-  height: 2000
-  otsikko: Man, Newspaper, Cigarettes and Beer / Mies, sanomalehti, savukkeet ja olut
-  paikka: Oulu, Finland 2026
-  alt_text: A man in a dark suit sits alone at an outdoor table outside Michael Guinness
-    pub in Oulu, reading a newspaper. A beer glass and an ashtray are on the table.
-    A thick tree trunk fills the foreground.
