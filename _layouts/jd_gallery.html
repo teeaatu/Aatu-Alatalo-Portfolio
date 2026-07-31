@@ -542,8 +542,7 @@ layout: jd_default
       right: 0 !important;
     }
     body.index-is-open #jd-counter,
-    body.index-is-open #jd-bottom-nav,
-    body.index-is-open #jd-scroll-hint {
+    body.index-is-open #jd-bottom-nav {
       opacity: 0 !important;
       visibility: hidden !important;
       transition: opacity 0.3s ease;
@@ -748,13 +747,7 @@ layout: jd_default
 </script>
 
 <!-- Slideshow -->
-<!-- Vihje rullaamisesta -->
-<div id="jd-scroll-hint" class="jd-scroll-hint">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 4px;">
-    <polyline points="18 15 12 9 6 15"></polyline>
-  </svg>
-  <span>Swipe</span>
-</div>
+<!-- Slideshow -->
 
 <div id="jd-slideshow"></div>
 
@@ -1186,33 +1179,49 @@ layout: jd_default
 
     // ── Safari Scroll Hack Logiikka ──
     if (window.innerWidth <= 800) {
-      // 1. Siirretään rullaus keskelle aluksi, jotta voi rullata kumpaan suuntaan tahansa
-      setTimeout(() => { window.scrollTo(0, 1000); }, 100);
+      let initialHeight = window.innerHeight;
       
-      const scrollHint = document.getElementById('jd-scroll-hint');
-      let hintHidden = false;
+      // 1. Siirretään rullaus keskelle aluksi
+      setTimeout(() => { 
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        window.scrollTo(0, maxScroll / 2); 
+      }, 100);
 
-      // Piilotetaan vihje heti kun käyttäjä koskee ruutuun, ei koodin scrollista
-      window.addEventListener('touchstart', () => {
-        if (!hintHidden && scrollHint) {
-          scrollHint.classList.add('is-hidden');
-          hintHidden = true;
-          setTimeout(() => { scrollHint.style.display = 'none'; }, 500);
+      // 2. Kun URL-palkki piiloutuu (resize), keskitetään rullaus huomaamattomasti uudelleen
+      window.addEventListener('resize', () => {
+        if (document.body.classList.contains('index-is-open')) return;
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        if (maxScroll > 0) {
+          window.scrollTo({ top: maxScroll / 2, left: 0, behavior: 'instant' });
         }
-      }, { passive: true });
+      });
 
+      // 3. Kuunnellaan rullausta
       window.addEventListener('scroll', () => {
         // Jos index-paneeli on auki, ÄLÄ tee vierityshackia (Safari sekoaa)
         if (document.body.classList.contains('index-is-open')) return;
 
-        // Pidetään vieritys "äärettömänä" (keskitetään huomaamattomasti)
-        const scrollTop = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+
+        const scrollTop = window.scrollY;
+        const center = maxScroll / 2;
+        const dist = Math.abs(scrollTop - center);
         
-        if (maxScroll > 0) {
-          if (scrollTop < 200 || scrollTop > maxScroll - 200) {
-            window.scrollTo({ top: maxScroll / 2, left: 0, behavior: 'instant' });
+        // Onko URL-palkki piilossa? (Sivu on "iso")
+        const isBig = window.innerHeight > initialHeight + 20;
+
+        if (isBig && dist > 100) {
+          // Käyttäjä teki toisen pyyhkäisyn koko ruudun tilassa -> Avaa Index
+          if (typeof window.openIndexPanel === 'function') {
+            window.openIndexPanel();
           }
+          // Palautetaan rullaus aina keskelle, ettei tila lopu
+          window.scrollTo({ top: center, left: 0, behavior: 'instant' });
+        } 
+        else if (!isBig && dist > (center - 50)) {
+          // Jos sivu ei ole vielä iso, mutta rullataan liian kauas, keskitetään jottei tila lopu
+          window.scrollTo({ top: center, left: 0, behavior: 'instant' });
         }
       });
     }
