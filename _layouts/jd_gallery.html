@@ -523,10 +523,13 @@ layout: jd_default
     .jd-scroll-hint {
       display: flex;
     }
-    /* Safari Scroll Hack: sallitaan bodyn vieritys, jotta alapalkki piiloutuu */
-    html, body {
-      min-height: 300vh !important;
+    /* Safari Scroll Hack: sallitaan vain html:n vieritys, jotta position:fixed ei mene rikki */
+    html {
       overflow-y: auto !important;
+    }
+    body {
+      min-height: 300vh !important;
+      overflow-y: visible !important;
       overscroll-behavior-y: none !important;
     }
     #jd-main, #jd-slideshow {
@@ -1194,6 +1197,9 @@ layout: jd_default
       }, { passive: true });
 
       window.addEventListener('scroll', () => {
+        // Jos index-paneeli on auki, ÄLÄ tee vierityshackia (Safari sekoaa)
+        if (document.body.classList.contains('index-is-open')) return;
+
         // Pidetään vieritys "äärettömänä" (keskitetään huomaamattomasti)
         const scrollTop = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
