@@ -518,11 +518,11 @@ layout: jd_default
     .jd-scroll-hint {
       display: flex;
     }
-    /* Safari Scroll Hack: sallitaan NATIVE viewport -vieritys, jotta position:fixed ei mene rikki */
+    /* Safari-mobiili: Sallitaan riittävä scroll-alue jotta osoitepalkki piiloutuu */
     html, body {
       overflow: visible !important;
       height: auto !important;
-      min-height: 300vh !important;
+      min-height: 150vh !important;
       overscroll-behavior-y: none !important;
     }
     #jd-main, #jd-slideshow {
@@ -557,10 +557,13 @@ layout: jd_default
       outline-offset: 4px;
     }
 
-    /* Puhelimella max-width isommaksi */
+    /* Puhelimella älykäs skaalaus joka täyttää safe zonen täysin */
     .jd-slide img {
+      width: 100%;
+      height: 100%;
       max-width: calc(100% - 28px);
       max-height: 100%;
+      object-fit: contain;
     }
     
     .jd-diptych-slide {
@@ -568,8 +571,8 @@ layout: jd_default
       gap: 15px;
     }
     .jd-diptych-slide img {
-      width: auto;
-      height: auto;
+      width: 100%;
+      height: 100%;
       max-width: calc(100% - 28px) !important;
       max-height: calc(50dvh - 75px) !important;
       object-fit: contain;
@@ -1232,54 +1235,9 @@ layout: jd_default
     if (window.innerWidth <= 800) {
       window.initialHeight = window.innerHeight;
       let initialHeight = window.innerHeight;
-      
-      // 1. Siirretään rullaus keskelle aluksi
-      setTimeout(() => { 
-        const maxScroll = document.body.scrollHeight - window.innerHeight;
-        window.scrollTo(0, maxScroll / 2); 
-      }, 100);
-
-      // 2. Kun URL-palkki piiloutuu (resize), keskitetään rullaus huomaamattomasti uudelleen
-      let lastResizeTime = 0;
-      window.addEventListener('resize', () => {
-        lastResizeTime = Date.now();
-        if (document.body.classList.contains('index-is-open')) return;
-        const maxScroll = document.body.scrollHeight - window.innerHeight;
-        if (maxScroll > 0) {
-          window.scrollTo({ top: maxScroll / 2, left: 0, behavior: 'instant' });
-        }
-      });
-
-      const indexPanel = document.getElementById('jd-index-panel');
-      let scrollTimeout;
-
-      // 3. Kuunnellaan rullausta
-      window.addEventListener('scroll', () => {
-        // Jos index-paneeli on auki, ÄLÄ tee vierityshackia (Safari sekoaa)
-        if (document.body.classList.contains('index-is-open')) return;
-
-        const maxScroll = document.body.scrollHeight - window.innerHeight;
-        if (maxScroll <= 0) return;
-
-        const scrollTop = window.scrollY;
-        const center = maxScroll / 2;
-        const rawDist = scrollTop - center; // positiivinen kun rullataan alaspäin
-        
-        // Onko URL-palkki piilossa? (Sivu on "iso")
-        const isBig = window.innerHeight > initialHeight + 20;
-
-        if (isBig) {
-          // Vain pakollinen takaisinkeskitys varmuuden vuoksi,
-          // Menu-vetologiikka on nyt täysin siirretty touch-eventteihin 1:1 seurantaa varten.
-          if (rawDist < -100) {
-            window.scrollTo({ top: center, left: 0, behavior: 'instant' });
-          }
-        } 
-        else if (!isBig && Math.abs(rawDist) > (center - 50)) {
-          // Jos sivu ei ole vielä iso, mutta rullataan liian kauas, keskitetään jottei tila lopu
-          window.scrollTo({ top: center, left: 0, behavior: 'instant' });
-        }
-      });
+      // Keskitys- ja hyppimislogiikka (infinite scroll) poistettu.
+      // Sivu on nyt äärellisen mittainen (150vh), jotta natiivi skrollaus sujuu luonnollisesti pohjaan asti,
+      // eikä taustaskrollaus tappele 1:1 touchmove-eleen kanssa.
     }
 
     // Ei custom cursoria touch-laitteilla
