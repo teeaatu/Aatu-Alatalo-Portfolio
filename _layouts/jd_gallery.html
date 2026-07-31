@@ -586,11 +586,11 @@ layout: jd_default
       }
     }
 
-    /* Asetetaan slideshow koko näytölle dynaamisella korkeudella */
+    /* Asetetaan slideshow alkamaan yläpalkin (90px) alapuolelta, ettei kuva jää sen alle */
     #jd-slideshow {
-      top: 0;
+      top: 90px;
       bottom: auto;
-      height: 100dvh;
+      height: calc(100dvh - 90px);
     }
 
     /* Näytetään kategoria ja sivunumero alhaalla keskellä */
