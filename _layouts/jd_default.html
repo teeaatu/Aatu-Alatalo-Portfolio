@@ -239,18 +239,70 @@
 
 
     window.openIndexPanel = function() {
-      indexPanel?.classList.add('is-open');
+      if (indexPanel) {
+        indexPanel.style.transition = '';
+        indexPanel.style.transform = '';
+        indexPanel.classList.add('is-open');
+      }
       indexOverlay?.classList.add('is-open');
       document.body.classList.add('index-is-open');
       
       if (indexPanel) indexPanel.scrollTop = 0;
     };
     window.closeIndexPanel = function() {
-      indexPanel?.classList.remove('parallax-ready');
-      indexPanel?.classList.remove('is-open');
+      if (indexPanel) {
+        indexPanel.style.transition = '';
+        indexPanel.style.transform = '';
+        indexPanel.classList.remove('parallax-ready');
+        indexPanel.classList.remove('is-open');
+      }
       indexOverlay?.classList.remove('is-open');
       document.body.classList.remove('index-is-open');
     };
+
+    // ── Swipe-to-Close logiikka (Index Panel) ──────────────
+    if (indexPanel) {
+      let panelTouchStartY = 0;
+      let isDraggingPanel = false;
+
+      indexPanel.addEventListener('touchstart', (e) => {
+        if (indexPanel.scrollTop <= 0) {
+          panelTouchStartY = e.touches[0].clientY;
+          isDraggingPanel = true;
+          indexPanel.style.transition = 'none'; // Poista CSS-siirtymä seuraamisen ajaksi
+        } else {
+          isDraggingPanel = false;
+        }
+      }, { passive: true });
+
+      indexPanel.addEventListener('touchmove', (e) => {
+        if (!isDraggingPanel) return;
+        const dy = e.touches[0].clientY - panelTouchStartY;
+        if (dy > 0) {
+          // Vetää alaspäin
+          indexPanel.style.transform = `translateY(calc(-100% + ${dy}px))`;
+          if (e.cancelable) e.preventDefault(); // Estää sivun natiivin overscrollin
+        } else {
+          // Vetää ylöspäin yli reunan
+          indexPanel.style.transform = `translateY(-100%)`;
+        }
+      }, { passive: false });
+
+      indexPanel.addEventListener('touchend', (e) => {
+        if (!isDraggingPanel) return;
+        isDraggingPanel = false;
+        const dy = e.changedTouches[0].clientY - panelTouchStartY;
+        
+        if (dy > 120) {
+          // Vedettiin tarpeeksi alas -> sulje valikko
+          window.closeIndexPanel();
+        } else {
+          // Ei vedetty tarpeeksi -> palauta täysin auki
+          indexPanel.style.transition = '';
+          indexPanel.style.transform = ''; // Palauttaa CSS-luokan määrittämän translateY(-100%)
+        }
+      }, { passive: true });
+    }
 
     window.openAboutPanel = function() {
       const aboutPanel = document.getElementById('jd-about-panel');

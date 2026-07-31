@@ -1139,28 +1139,65 @@ layout: jd_default
     let touchStartX = 0;
     let touchStartY = 0;
     let hasSwiped = false;
+    let isDraggingMenu = false;
+    let menuCurrentDrag = 0;
 
     slideshow.addEventListener('touchstart', e => { 
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
       hasSwiped = false;
       document.body.classList.add('user-has-interacted');
-    }, { passive: true });
+      
+      const isBig = window.innerHeight > (window.initialHeight || window.innerHeight) + 20;
+      if (isBig && !document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
+        isDraggingMenu = true;
+        menuCurrentDrag = 0;
+        const panel = document.getElementById('jd-index-panel');
+        if (panel) panel.style.setProperty('transition', 'none', 'important');
+      }
+    }, { passive: false });
 
     slideshow.addEventListener('touchmove', e => {
-      if (!hasSwiped) {
-        const dx = Math.abs(e.touches[0].clientX - touchStartX);
-        const dy = Math.abs(e.touches[0].clientY - touchStartY);
-        if (dx > 10 || dy > 10) {
-          hasSwiped = true;
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (!hasSwiped && (dx > 10 || dy > 10)) {
+        hasSwiped = true;
+      }
+      
+      if (isDraggingMenu) {
+        const dragY = touchStartY - e.touches[0].clientY; // Ylöspäin vetäminen on positiivinen
+        if (dragY > 0) {
+          menuCurrentDrag = dragY;
+          const panel = document.getElementById('jd-index-panel');
+          if (panel) panel.style.transform = `translateY(-${dragY}px)`;
+          if (e.cancelable) e.preventDefault(); // ESTÄÄ NATIIVIN SKROLLIN TÄYSIN! Puhdas 1:1 seuranta.
         }
       }
-    }, { passive: true });
+    }, { passive: false });
 
     slideshow.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 40 && !document.body.classList.contains('index-is-open')) {
+      if (Math.abs(dx) > 40 && !document.body.classList.contains('index-is-open') && !isDraggingMenu) {
         dx < 0 ? goToRelative(1) : goToRelative(-1);
+      }
+      
+      if (isDraggingMenu) {
+        isDraggingMenu = false;
+        const panel = document.getElementById('jd-index-panel');
+        if (panel) {
+          panel.style.transition = ''; // Palauta CSS-siirtymä
+          
+          if (menuCurrentDrag > window.innerHeight * 0.4) {
+            // Ylitti 40vh kynnyksen -> lukitse auki
+            panel.style.transform = '';
+            if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+          } else {
+            // Ei ylittänyt kynnystä -> pudota alas
+            panel.style.transform = '';
+            const center = (document.body.scrollHeight - window.innerHeight) / 2;
+            window.scrollTo({ top: center, behavior: 'instant' });
+          }
+        }
       }
     }, { passive: true });
 
@@ -1193,6 +1230,7 @@ layout: jd_default
 
     // ── Safari Scroll Hack Logiikka ──
     if (window.innerWidth <= 800) {
+      window.initialHeight = window.innerHeight;
       let initialHeight = window.innerHeight;
       
       // 1. Siirretään rullaus keskelle aluksi
@@ -1202,7 +1240,9 @@ layout: jd_default
       }, 100);
 
       // 2. Kun URL-palkki piiloutuu (resize), keskitetään rullaus huomaamattomasti uudelleen
+      let lastResizeTime = 0;
       window.addEventListener('resize', () => {
+        lastResizeTime = Date.now();
         if (document.body.classList.contains('index-is-open')) return;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
         if (maxScroll > 0) {
@@ -1229,15 +1269,9 @@ layout: jd_default
         const isBig = window.innerHeight > initialHeight + 20;
 
         if (isBig) {
-          if (rawDist > 120) {
-            // Käyttäjä pyyhkäisi alaspäin tarpeeksi -> Avaa valikko
-            if (typeof window.openIndexPanel === 'function') {
-              window.openIndexPanel();
-            }
-            // Emme rullaa enää takaisin keskelle tässä, koska openIndexPanel
-            // muuttaa body:n korkeutta ja nollaa skrollin (mikä aiheuttaisi muuten bugin/hypyn).
-          } else if (rawDist < -100) {
-            // Scrolling up past threshold, just recenter smoothly
+          // Vain pakollinen takaisinkeskitys varmuuden vuoksi,
+          // Menu-vetologiikka on nyt täysin siirretty touch-eventteihin 1:1 seurantaa varten.
+          if (rawDist < -100) {
             window.scrollTo({ top: center, left: 0, behavior: 'instant' });
           }
         } 
