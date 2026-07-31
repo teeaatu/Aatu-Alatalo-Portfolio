@@ -1184,14 +1184,16 @@ layout: jd_default
       const scrollHint = document.getElementById('jd-scroll-hint');
       let hintHidden = false;
 
-      window.addEventListener('scroll', () => {
-        // Piilotetaan vihje heti kun käyttäjä rullaa
+      // Piilotetaan vihje heti kun käyttäjä koskee ruutuun, ei koodin scrollista
+      window.addEventListener('touchstart', () => {
         if (!hintHidden && scrollHint) {
           scrollHint.classList.add('is-hidden');
           hintHidden = true;
           setTimeout(() => { scrollHint.style.display = 'none'; }, 500);
         }
+      }, { passive: true });
 
+      window.addEventListener('scroll', () => {
         // Pidetään vieritys "äärettömänä" (keskitetään huomaamattomasti)
         const scrollTop = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
