@@ -314,26 +314,7 @@ layout: jd_default
     user-select: none;
   }
 
-  /* ─── INTRO TITLE ANIMATION ─────────────────────────── */
-  #jd-intro-title {
-    position: fixed;
-    top: 50%;
-    top: 50dvh;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: clamp(1.2rem, 3vw, 2.2rem);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: white;
-    mix-blend-mode: difference;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    user-select: none;
-  }
+
 
   /* ─── THUMBS STAGGER ANIMATION ──────────────────────── */
   @keyframes thumbFadeIn {
@@ -745,8 +726,6 @@ layout: jd_default
 <!-- Custom cursor -->
 <div id="jd-cursor-custom">{{ cat_label }}</div>
 
-<!-- Intro title animation -->
-<div id="jd-intro-title">{{ cat_label }}</div>
 
 <!-- Seuraavan/edellisen gallerian URLit -->
 {% if page.next_url %}<div id="jd-next-url" style="display:none">{{ page.next_url }}</div>{% endif %}
@@ -855,10 +834,6 @@ layout: jd_default
     // toimii koko viewporttia vastaan ilman stacking-context-rajoituksia
     if (cursor && cursor.parentElement !== document.body) {
       document.body.appendChild(cursor);
-    }
-    const introTitle = document.getElementById('jd-intro-title');
-    if (introTitle && introTitle.parentElement !== document.body) {
-      document.body.appendChild(introTitle);
     }
     const slides = [];
     let current = 0;
@@ -1213,40 +1188,8 @@ layout: jd_default
           }
         });
       });
-    }, 1000);
+    }, 1600);
 
-    /* ── Intro title: ilmestyy keskelle, sitten häipyy kursoriin ─ */
-    if (introTitle) {
-      let mouseX = window.innerWidth / 2;
-      let mouseY = window.innerHeight / 2;
-      const trackMouse = e => { mouseX = e.clientX; mouseY = e.clientY; };
-      document.addEventListener('mousemove', trackMouse);
-
-      // Viivästetään hieman, jotta suljinanimaatio on ensin valmis
-      setTimeout(() => {
-        introTitle.style.opacity = '1';
-
-        // Pienen hetken kuluttua liikutetaan kursoriin ja häivytetään
-        setTimeout(() => {
-          if (!window.matchMedia('(pointer: coarse)').matches) {
-            const rect = introTitle.getBoundingClientRect();
-            const fromX = rect.left + rect.width / 2;
-            const fromY = rect.top + rect.height / 2;
-            const dx = mouseX - fromX;
-            const dy = mouseY - fromY;
-            introTitle.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease';
-            introTitle.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-          } else {
-            introTitle.style.transition = 'opacity 0.5s ease';
-          }
-          introTitle.style.opacity = '0';
-          setTimeout(() => {
-            introTitle.style.display = 'none';
-            document.removeEventListener('mousemove', trackMouse);
-          }, 700);
-        }, 2000); // 2000ms = noin 2x pidempi kuin ennen
-      }, 400);
-    }
 
   });
 </script>
