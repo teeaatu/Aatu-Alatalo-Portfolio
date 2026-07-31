@@ -523,13 +523,11 @@ layout: jd_default
     .jd-scroll-hint {
       display: flex;
     }
-    /* Safari Scroll Hack: sallitaan vain html:n vieritys, jotta position:fixed ei mene rikki */
-    html {
-      overflow-y: auto !important;
-    }
-    body {
+    /* Safari Scroll Hack: sallitaan NATIVE viewport -vieritys, jotta position:fixed ei mene rikki */
+    html, body {
+      overflow: visible !important;
+      height: auto !important;
       min-height: 300vh !important;
-      overflow-y: visible !important;
       overscroll-behavior-y: none !important;
     }
     #jd-main, #jd-slideshow {
