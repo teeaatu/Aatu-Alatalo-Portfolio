@@ -490,12 +490,44 @@ layout: jd_default
     }
   }
 
+  /* ─── SCROLL HACK HINT ───────────────────────────────── */
+  .jd-scroll-hint {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none; /* Näytetään vain mobiilissa */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 10000;
+    pointer-events: none;
+    animation: jdPulse 2s infinite ease-in-out;
+    transition: opacity 0.5s ease;
+  }
+  .jd-scroll-hint.is-hidden {
+    opacity: 0;
+  }
+  @keyframes jdPulse {
+    0% { transform: translate(-50%, 0); opacity: 0.3; }
+    50% { transform: translate(-50%, -10px); opacity: 0.7; }
+    100% { transform: translate(-50%, 0); opacity: 0.3; }
+  }
+
   /* ─── MOBILE MEDIA QUERY ─────────────────────────────── */
   @media (max-width: 800px) {
+    .jd-scroll-hint {
+      display: flex;
+    }
     /* Safari Scroll Hack: sallitaan bodyn vieritys, jotta alapalkki piiloutuu */
     html, body {
-      min-height: 200vh !important;
+      min-height: 300vh !important;
       overflow-y: auto !important;
+      overscroll-behavior-y: none !important;
     }
     #jd-main, #jd-slideshow {
       position: fixed !important;
@@ -708,6 +740,14 @@ layout: jd_default
 </script>
 
 <!-- Slideshow -->
+<!-- Vihje rullaamisesta -->
+<div id="jd-scroll-hint" class="jd-scroll-hint">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 4px;">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+  <span>Swipe</span>
+</div>
+
 <div id="jd-slideshow"></div>
 
 <!-- Navigointivihje (Nuolet, jotka haalistuvat pois) -->
@@ -1131,6 +1171,39 @@ layout: jd_default
     }, { passive: true });
 
     /* ── Custom cursor ──────────────────────────────────── */
+    if ('ontouchstart' in window) {
+      if (cursor) cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    }
+
+    // ── Safari Scroll Hack Logiikka ──
+    if (window.innerWidth <= 800) {
+      // 1. Siirretään rullaus keskelle aluksi, jotta voi rullata kumpaan suuntaan tahansa
+      setTimeout(() => { window.scrollTo(0, 1000); }, 100);
+      
+      const scrollHint = document.getElementById('jd-scroll-hint');
+      let hintHidden = false;
+
+      window.addEventListener('scroll', () => {
+        // Piilotetaan vihje heti kun käyttäjä rullaa
+        if (!hintHidden && scrollHint) {
+          scrollHint.classList.add('is-hidden');
+          hintHidden = true;
+          setTimeout(() => { scrollHint.style.display = 'none'; }, 500);
+        }
+
+        // Pidetään vieritys "äärettömänä" (keskitetään huomaamattomasti)
+        const scrollTop = window.scrollY;
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        
+        if (maxScroll > 0) {
+          if (scrollTop < 200 || scrollTop > maxScroll - 200) {
+            window.scrollTo({ top: maxScroll / 2, left: 0, behavior: 'instant' });
+          }
+        }
+      });
+    }
+
     // Ei custom cursoria touch-laitteilla
     if (!window.matchMedia('(pointer: coarse)').matches) {
       document.addEventListener('mousemove', e => {
