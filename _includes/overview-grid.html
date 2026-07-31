@@ -76,7 +76,7 @@
              width="{{ p_width }}" height="{{ p_height }}"
              class="link-img js-blur-up"
              {% if is_lazy_overview %}loading="lazy"{% else %}loading="eager" fetchpriority="high"{% endif %}
-             onerror="this.onerror=null;this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
+             onerror="this.onerror=null;this.src='{{ full_img_url }}'; this.classList.add('is-loaded');" draggable="false" oncontextmenu="return false;">
         <div class="external-link-text">
           <span>{% if page.lang == 'en' %}{{ p_link_text_en }}{% else %}{{ p_link_text_fi }}{% endif %}</span>
           <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -95,7 +95,7 @@
              class="gallery-img js-blur-up"
              data-pswp-src="{{ full_img_url }}"
              {% if is_lazy_overview %}loading="lazy"{% else %}loading="eager" fetchpriority="high"{% endif %}
-             onerror="this.onerror=null;this.src='{{ full_img_url }}'; this.classList.add('is-loaded');">
+             onerror="this.onerror=null;this.src='{{ full_img_url }}'; this.classList.add('is-loaded');" draggable="false" oncontextmenu="return false;">
       </a>
       {% endif %}
     </div>

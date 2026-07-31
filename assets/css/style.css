@@ -714,6 +714,16 @@ main {
     transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.2s ease-in-out, filter 0.4s ease; 
     background-color: var(--color-hex-111); 
 }
+
+/* Kuvan suojaukset (estetään pitkä painallus ja maalaus) */
+.jd-sticky-wrapper img,
+.gallery-img,
+.link-img,
+.overview-item img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
 .gallery-img { cursor: zoom-in; }
 .link-img { cursor: pointer; }
 
