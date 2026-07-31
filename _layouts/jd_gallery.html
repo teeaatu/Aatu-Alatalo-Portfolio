@@ -69,9 +69,22 @@ layout: jd_default
   .jd-shutter-title {
     color: #1a1a18;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.8rem;
+    font-size: 1.4rem; /* Hieman isompi */
     letter-spacing: 0.22em;
     text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  body.show-shutter-title .jd-shutter-title {
+    opacity: 1;
+  }
+
+  /* Kun sivu sulkeutuu (shutter peittää näytön), teksti piilotetaan heti */
+  body.is-leaving .jd-shutter-title,
+  body.prepare-leave .jd-shutter-title {
+    opacity: 0 !important;
+    transition: none !important;
   }
 
   body.is-entering-ready #jd-shutter {
@@ -1174,7 +1187,14 @@ layout: jd_default
     const topIndexBtn = document.getElementById('jd-index-btn');
     if (topIndexBtn) topIndexBtn.style.display = 'none';
 
-    /* Käynnistä sivun saapumisanimaatio (suljin vetäytyy) pienen viiveen jälkeen */
+    /* Käynnistä sivun saapumisanimaatio pienen viiveen jälkeen */
+    
+    // 1. Fade-in kategorian nimi sulkimen päälle
+    setTimeout(() => {
+      document.body.classList.add('show-shutter-title');
+    }, 100);
+
+    // 2. Avaa suljin myöhemmin
     setTimeout(() => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
