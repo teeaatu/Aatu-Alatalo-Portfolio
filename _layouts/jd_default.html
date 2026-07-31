@@ -241,6 +241,13 @@
       indexPanel?.classList.add('is-open');
       indexOverlay?.classList.add('is-open');
       document.body.classList.add('index-is-open');
+      
+      if (window.innerWidth <= 800) {
+        document.body.style.setProperty('min-height', '100dvh', 'important');
+        document.documentElement.style.setProperty('min-height', '100dvh', 'important');
+        window.scrollTo(0, 0);
+      }
+      
       if (indexPanel) indexPanel.scrollTop = 0;
     };
     window.closeIndexPanel = function() {
@@ -248,6 +255,12 @@
       indexPanel?.classList.remove('is-open');
       indexOverlay?.classList.remove('is-open');
       document.body.classList.remove('index-is-open');
+      
+      if (window.innerWidth <= 800 && document.getElementById('jd-slideshow')) {
+        document.body.style.removeProperty('min-height');
+        document.documentElement.style.removeProperty('min-height');
+        setTimeout(() => { window.scrollTo(0, 1000); }, 50);
+      }
     };
 
     window.openAboutPanel = function() {
