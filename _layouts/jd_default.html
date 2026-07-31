@@ -138,7 +138,7 @@
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-panel {
       position: fixed;
-      top: 0; right: 0;
+      top: 0; right: -100vw;
       width: var(--jd-panel-w, 50vw);
       height: 100dvh;
       background: var(--jd-bg);
@@ -148,11 +148,10 @@
       overflow-y: auto;
       overscroll-behavior-y: contain;
       cursor: auto;
-      transform: translateX(100%);
-      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: right 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
     #jd-index-panel.is-open {
-      transform: translateX(0);
+      right: 0;
     }
 
     /* Ylikirjoitetaan paneelin tekstien värit vaaleiksi */
@@ -208,7 +207,7 @@
       
       /* Poistetaan hover/parallax -hyppy puhelimella koskettaessa */
       #jd-index-panel.is-open.parallax-ready:hover {
-        transform: translateX(0) !important;
+        right: 0 !important;
       }
     }
   </style>
