@@ -134,8 +134,8 @@ layout: jd_default
     max-width: calc(100% - 120px);
     max-height: calc(100vh - 180px);
     max-height: calc(100dvh - 180px);
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     display: block;
     user-select: none;
@@ -166,9 +166,10 @@ layout: jd_default
   }
   .jd-diptych-slide img {
     max-width: calc(50% - 75px) !important;
+    max-height: calc(100vh - 180px);
     max-height: calc(100dvh - 180px);
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 
@@ -519,6 +520,8 @@ layout: jd_default
     .jd-diptych-slide img {
       max-width: calc(100% - 28px) !important;
       max-height: calc(50dvh - 75px) !important;
+      width: 100%;
+      height: 100%;
     }
 
     /* Siirretään Index & Thumbs -napit ylös keskelle staattisella taustalla */
