@@ -40,11 +40,6 @@ layout: jd_default
   #jd-main {
     position: absolute !important;
     inset: 0 !important;
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  }
-  
-  body.index-is-open #jd-main {
-    right: var(--jd-panel-w) !important;
   }
 
   /* ─── KATEGORIAN VAIHTO-SULJIN ─────────────────────── */
@@ -538,9 +533,6 @@ layout: jd_default
       transform: translateY(100%);
     }
 
-    body.index-is-open #jd-main {
-      right: 0 !important;
-    }
     body.index-is-open #jd-counter,
     body.index-is-open #jd-bottom-nav {
       opacity: 0 !important;
@@ -1143,8 +1135,41 @@ layout: jd_default
       }
     }
 
+    /* Swipe mobiililla ja rullauksen erottaminen klikkauksesta */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let hasSwiped = false;
+
+    slideshow.addEventListener('touchstart', e => { 
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      hasSwiped = false;
+      document.body.classList.add('user-has-interacted');
+    }, { passive: true });
+
+    slideshow.addEventListener('touchmove', e => {
+      if (!hasSwiped) {
+        const dx = Math.abs(e.touches[0].clientX - touchStartX);
+        const dy = Math.abs(e.touches[0].clientY - touchStartY);
+        if (dx > 10 || dy > 10) {
+          hasSwiped = true;
+        }
+      }
+    }, { passive: true });
+
+    slideshow.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40 && !document.body.classList.contains('index-is-open')) {
+        dx < 0 ? goToRelative(1) : goToRelative(-1);
+      }
+    }, { passive: true });
+
     /* Klikkaus: oikea puoli = seuraava, vasen = edellinen */
     slideshow.addEventListener('click', e => {
+      if (hasSwiped) {
+        hasSwiped = false;
+        return; // Älä vaihda kuvaa, jos käyttäjä vain rullasi/pyyhkäisi
+      }
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
       e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
@@ -1159,17 +1184,6 @@ layout: jd_default
       if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToRelative(1); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
     });
-
-    /* Swipe mobiililla */
-    let tx = 0;
-    slideshow.addEventListener('touchstart', e => { 
-      tx = e.touches[0].clientX; 
-      document.body.classList.add('user-has-interacted');
-    }, { passive: true });
-    slideshow.addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - tx;
-      if (Math.abs(dx) > 40) dx < 0 ? goToRelative(1) : goToRelative(-1);
-    }, { passive: true });
 
     /* ── Custom cursor ──────────────────────────────────── */
     if ('ontouchstart' in window) {
@@ -1196,6 +1210,9 @@ layout: jd_default
         }
       });
 
+      const indexPanel = document.getElementById('jd-index-panel');
+      let scrollTimeout;
+
       // 3. Kuunnellaan rullausta
       window.addEventListener('scroll', () => {
         // Jos index-paneeli on auki, ÄLÄ tee vierityshackia (Safari sekoaa)
@@ -1206,20 +1223,25 @@ layout: jd_default
 
         const scrollTop = window.scrollY;
         const center = maxScroll / 2;
-        const dist = Math.abs(scrollTop - center);
+        const rawDist = scrollTop - center; // positiivinen kun rullataan alaspäin
         
         // Onko URL-palkki piilossa? (Sivu on "iso")
         const isBig = window.innerHeight > initialHeight + 20;
 
-        if (isBig && dist > 100) {
-          // Käyttäjä teki toisen pyyhkäisyn koko ruudun tilassa -> Avaa Index
-          if (typeof window.openIndexPanel === 'function') {
-            window.openIndexPanel();
+        if (isBig) {
+          if (rawDist > 120) {
+            // Käyttäjä pyyhkäisi alaspäin tarpeeksi -> Avaa valikko
+            if (typeof window.openIndexPanel === 'function') {
+              window.openIndexPanel();
+            }
+            // Emme rullaa enää takaisin keskelle tässä, koska openIndexPanel
+            // muuttaa body:n korkeutta ja nollaa skrollin (mikä aiheuttaisi muuten bugin/hypyn).
+          } else if (rawDist < -100) {
+            // Scrolling up past threshold, just recenter smoothly
+            window.scrollTo({ top: center, left: 0, behavior: 'instant' });
           }
-          // Palautetaan rullaus aina keskelle, ettei tila lopu
-          window.scrollTo({ top: center, left: 0, behavior: 'instant' });
         } 
-        else if (!isBig && dist > (center - 50)) {
+        else if (!isBig && Math.abs(rawDist) > (center - 50)) {
           // Jos sivu ei ole vielä iso, mutta rullataan liian kauas, keskitetään jottei tila lopu
           window.scrollTo({ top: center, left: 0, behavior: 'instant' });
         }
