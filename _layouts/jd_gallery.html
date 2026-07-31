@@ -60,6 +60,18 @@ layout: jd_default
     transform: translateY(0);
     /* Oletuksena peittää kuva-alueen heti kun HTML ladataan */
     transition: transform 0.6s cubic-bezier(0.64, 0, 0.35, 1);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .jd-shutter-title {
+    color: #1a1a18;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
   }
 
   body.is-entering-ready #jd-shutter {
@@ -486,6 +498,11 @@ layout: jd_default
 
   /* ─── MOBILE MEDIA QUERY ─────────────────────────────── */
   @media (max-width: 800px) {
+    /* Mobiilissa teksti ja suljin liukuvat alas paljastaen kuvan */
+    body.is-entering-ready #jd-shutter {
+      transform: translateY(100%);
+    }
+
     body.index-is-open #jd-main {
       right: 0 !important;
     }
@@ -818,7 +835,9 @@ layout: jd_default
 </div>
 
 <!-- Suljin kategoriavaihtoihin -->
-<div id="jd-shutter"></div>
+<div id="jd-shutter">
+  <div class="jd-shutter-title">{{ cat_label }}</div>
+</div>
 
 
 <script>
@@ -1180,19 +1199,21 @@ layout: jd_default
     const topIndexBtn = document.getElementById('jd-index-btn');
     if (topIndexBtn) topIndexBtn.style.display = 'none';
 
-    /* Käynnistä sivun saapumisanimaatio (suljin vetäytyy) */
-    requestAnimationFrame(() => {
+    /* Käynnistä sivun saapumisanimaatio (suljin vetäytyy) pienen viiveen jälkeen */
+    setTimeout(() => {
       requestAnimationFrame(() => {
-        document.body.classList.add('is-entering-ready');
-        
-        // Näytä opastusnuolet vain kerran per vierailu (sessio)
-        if (!sessionStorage.getItem('jd-hints-seen')) {
-          const hintArrows = document.getElementById('jd-hint-arrows');
-          if (hintArrows) hintArrows.classList.add('show-hints');
-          sessionStorage.setItem('jd-hints-seen', 'true');
-        }
+        requestAnimationFrame(() => {
+          document.body.classList.add('is-entering-ready');
+          
+          // Näytä opastusnuolet vain kerran per vierailu (sessio)
+          if (!sessionStorage.getItem('jd-hints-seen')) {
+            const hintArrows = document.getElementById('jd-hint-arrows');
+            if (hintArrows) hintArrows.classList.add('show-hints');
+            sessionStorage.setItem('jd-hints-seen', 'true');
+          }
+        });
       });
-    });
+    }, 1000);
 
     /* ── Intro title: ilmestyy keskelle, sitten häipyy kursoriin ─ */
     if (introTitle) {
