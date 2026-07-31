@@ -140,12 +140,13 @@
       position: fixed;
       top: 0; right: 0;
       width: var(--jd-panel-w, 50vw);
-      height: 100%;
+      height: 100dvh;
       background: var(--jd-bg);
       color: var(--jd-text);
       z-index: 500;
       padding: 4rem 2.5rem 2.5rem;
       overflow-y: auto;
+      overscroll-behavior-y: contain;
       cursor: auto;
       transform: translateX(100%);
       transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -241,6 +242,7 @@
       indexPanel?.classList.add('is-open');
       indexOverlay?.classList.add('is-open');
       document.body.classList.add('index-is-open');
+      if (indexPanel) indexPanel.scrollTop = 0;
     };
     window.closeIndexPanel = function() {
       indexPanel?.classList.remove('parallax-ready');
