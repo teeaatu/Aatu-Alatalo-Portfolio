@@ -909,7 +909,7 @@ layout: jd_default
       filterContainer.classList.add('is-visible');
       const btnAll = document.createElement('button');
       btnAll.className = 'jd-filter-btn active';
-      btnAll.textContent = 'ALL CATEGORIES';
+      btnAll.textContent = {% if lang == 'fi' %}'KAIKKI'{% else %}'ALL'{% endif %};
       btnAll.dataset.filter = 'all';
       filterMenu.appendChild(btnAll);
       
