@@ -1021,6 +1021,7 @@ layout: jd_default
 
     /* ── Navigointi ─────────────────────────────────────── */
     function goToCategory(url) {
+      document.body.classList.remove('is-entering-ready'); // Varmistaa ettei avausanimaatio estä sulkeutumista mobiilissa
       document.body.classList.add('prepare-leave');
       // Pakotetaan selain päivittämään sijainti ennen siirtymää (jotta siirto ilman animaatiota rekisteröityy)
       void document.body.offsetWidth;
@@ -1029,6 +1030,21 @@ layout: jd_default
         window.location.href = url;
       }, 600); // Odottaa suljin-animaation päättymistä
     }
+    
+    // Kaappaa kaikki sisäiset linkit (esim. Index-paneelista) kulkemaan animaation kautta
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a');
+      if (link && link.href) {
+        const urlObj = new URL(link.href, window.location.origin);
+        if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
+          // Varmistetaan ettei ole pelkkä ankkurilinkki samalle sivulle (#)
+          if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
+            e.preventDefault();
+            goToCategory(link.href);
+          }
+        }
+      }
+    });
 
     function goToRelative(step) {
       if (visibleTotal === 0) return;
