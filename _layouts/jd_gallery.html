@@ -541,6 +541,13 @@ layout: jd_default
     body.index-is-open #jd-main {
       right: 0 !important;
     }
+    body.index-is-open #jd-counter,
+    body.index-is-open #jd-bottom-nav,
+    body.index-is-open #jd-scroll-hint {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: opacity 0.3s ease;
+    }
 
     #jd-thumbs-panel {
       padding: 5rem 1rem 5rem;
