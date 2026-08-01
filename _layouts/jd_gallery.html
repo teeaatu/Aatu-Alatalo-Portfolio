@@ -54,8 +54,8 @@ layout: jd_default
     pointer-events: none;
     transform: translateY(0);
     /* Oletuksena peittää kuva-alueen heti kun HTML ladataan.
-       0.8s + expo-out-tyylinen käyrä → hyvin sulava, elokuvamainen paljastus. */
-    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+       1.1s + expo-out-tyylinen käyrä → hyvin sulava, elokuvamainen paljastus. */
+    transition: transform 1.1s cubic-bezier(0.19, 1, 0.22, 1);
     
     display: flex;
     align-items: center;
@@ -96,7 +96,7 @@ layout: jd_default
 
   body.is-leaving #jd-shutter {
     /* Sulkeva liike käyttää ease-in-out -käyrää → notkeampi ja täydellinen pari avaukselle */
-    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    transition: transform 1.0s cubic-bezier(0.65, 0, 0.35, 1);
     transform: translateY(0);
     /* Putoaa ylhäältä alas peittämään kuva-alueen */
   }
@@ -531,12 +531,17 @@ layout: jd_default
     .jd-scroll-hint {
       display: flex;
     }
-    /* Safari-mobiili: Sallitaan riittävä scroll-alue jotta osoitepalkki piiloutuu */
+    /* Safari-mobiili: Lukitaan sivu estämään selaimen UI-elementtien ("chrome") liikkuminen */
+    html {
+      background: #000 !important; /* Musta tausta alapalkin värille */
+    }
     html, body {
-      overflow: visible !important;
-      height: auto !important;
-      min-height: 150vh !important;
-      overscroll-behavior-y: none !important;
+      overflow: hidden !important;
+      position: fixed !important;
+      height: 100vh !important; /* Fallback */
+      height: 100dvh !important; /* Dynaaminen viewport, joka ottaa Safarin UI:n huomioon */
+      overscroll-behavior: none !important;
+      min-height: 0 !important; /* Poistetaan vanha 150vh hakkeri */
     }
     #jd-main, #jd-slideshow {
       position: fixed !important;
@@ -904,6 +909,9 @@ layout: jd_default
     const thumbsClose = document.getElementById('jd-thumbs-close');
     const counterNum = document.getElementById('jd-counter-num');
     const cursor = document.getElementById('jd-cursor-custom');
+    const shutter = document.getElementById('jd-shutter');
+    const shutterTitle = document.querySelector('.jd-shutter-title');
+
     // Siirretään kursori suoraan body:n lapseksi, jotta mix-blend-mode:difference
     // toimii koko viewporttia vastaan ilman stacking-context-rajoituksia
     if (cursor && cursor.parentElement !== document.body) {
@@ -1050,13 +1058,8 @@ layout: jd_default
           goToAbsolute(idx);
           closeThumbsView();
         } else {
-          closeThumbsView(); // Fade out thumbs panel immediately
-          document.body.classList.add('prepare-leave');
-          void document.body.offsetWidth;
-          document.body.classList.add('is-leaving');
-          setTimeout(() => {
-            window.location.href = url;
-          }, 600);
+          // Ei tarvita closeThumbsView() täällä, koska goToCategory hoitaa sen
+          goToCategory(url);
         }
       });
     });
@@ -1081,16 +1084,17 @@ layout: jd_default
     // Alustetaan kursorin teksti ensimmäiselle kuvalle
     updateCounter();
 
-    /* ── Navigointi ─────────────────────────────────────── */
+    /* ── Navigointi (Uusi, transitionend-pohjainen) ─────────────────────── */
     function goToCategory(url) {
-      document.body.classList.remove('is-entering-ready'); // Varmistaa ettei avausanimaatio estä sulkeutumista mobiilissa
-      document.body.classList.add('prepare-leave');
-      // Pakotetaan selain päivittämään sijainti ennen siirtymää (jotta siirto ilman animaatiota rekisteröityy)
-      void document.body.offsetWidth;
+      if (document.body.classList.contains('is-leaving')) return;
+      
+      if (thumbsOpen) closeThumbsView();
+
       document.body.classList.add('is-leaving');
-      setTimeout(() => {
+      
+      shutter.addEventListener('transitionend', () => {
         window.location.href = url;
-      }, 600); // Odottaa suljin-animaation päättymistä
+      }, { once: true });
     }
     
     // Kaappaa kaikki sisäiset linkit (esim. Index-paneelista) kulkemaan animaation kautta
@@ -1099,7 +1103,6 @@ layout: jd_default
       if (link && link.href) {
         const urlObj = new URL(link.href, window.location.origin);
         if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
-          // Varmistetaan ettei ole pelkkä ankkurilinkki samalle sivulle (#)
           if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
             e.preventDefault();
             goToCategory(link.href);
@@ -1168,8 +1171,7 @@ layout: jd_default
       hasSwiped = false;
       document.body.classList.add('user-has-interacted');
       
-      const isBig = window.innerHeight > (window.initialHeight || window.innerHeight) + 20;
-      if (isBig && !document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
+      if (!document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
         isDraggingMenu = true;
         menuCurrentDrag = 0;
         const panel = document.getElementById('jd-index-panel');
@@ -1190,7 +1192,7 @@ layout: jd_default
           menuCurrentDrag = dragY;
           const panel = document.getElementById('jd-index-panel');
           if (panel) panel.style.transform = `translateY(-${dragY}px)`;
-          if (e.cancelable) e.preventDefault(); // ESTÄÄ NATIIVIN SKROLLIN TÄYSIN! Puhdas 1:1 seuranta.
+          if (e.cancelable) e.preventDefault();
         }
       }
     }, { passive: false });
@@ -1205,17 +1207,13 @@ layout: jd_default
         isDraggingMenu = false;
         const panel = document.getElementById('jd-index-panel');
         if (panel) {
-          panel.style.transition = ''; // Palauta CSS-siirtymä
+          panel.style.transition = '';
           
           if (menuCurrentDrag > window.innerHeight * 0.4) {
-            // Ylitti 40vh kynnyksen -> lukitse auki
             panel.style.transform = '';
             if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
           } else {
-            // Ei ylittänyt kynnystä -> pudota alas
             panel.style.transform = '';
-            const center = (document.body.scrollHeight - window.innerHeight) / 2;
-            window.scrollTo({ top: center, behavior: 'instant' });
           }
         }
       }
@@ -1225,7 +1223,7 @@ layout: jd_default
     slideshow.addEventListener('click', e => {
       if (hasSwiped) {
         hasSwiped = false;
-        return; // Älä vaihda kuvaa, jos käyttäjä vain rullasi/pyyhkäisi
+        return;
       }
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
@@ -1248,7 +1246,7 @@ layout: jd_default
 
     window.addEventListener('wheel', e => {
       if (thumbsOpen || document.body.classList.contains('about-is-open')) return;
-      if (window.innerWidth <= 800) return; // Koneversio vain
+      if (window.innerWidth <= 800) return;
 
       const panel = document.getElementById('jd-index-panel');
       if (!panel) return;
@@ -1256,7 +1254,6 @@ layout: jd_default
       const isMenuOpen = document.body.classList.contains('index-is-open');
 
       if (!isMenuOpen) {
-        // Galleria-tilassa rullataan alaspäin -> avaa menu
         if (e.deltaY > 0) {
           wheelDrag += Math.abs(e.deltaY);
           if (wheelDrag > window.innerHeight) wheelDrag = window.innerHeight;
@@ -1267,7 +1264,7 @@ layout: jd_default
           clearTimeout(wheelDragTimer);
           wheelDragTimer = setTimeout(() => {
             panel.style.transition = '';
-            if (wheelDrag > window.innerHeight * 0.20) { // 20% kynnys
+            if (wheelDrag > window.innerHeight * 0.20) {
               panel.style.transform = '';
               if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
             } else {
@@ -1277,7 +1274,6 @@ layout: jd_default
           }, 150);
         }
       } else {
-        // Menu on auki. Jos rullataan ylös ja ollaan ylhäällä:
         if (e.deltaY < 0 && panel.scrollTop <= 0) {
           wheelDrag += Math.abs(e.deltaY);
           
@@ -1309,16 +1305,6 @@ layout: jd_default
       document.body.style.cursor = 'auto';
     }
 
-    // ── Safari Scroll Hack Logiikka ──
-    if (window.innerWidth <= 800) {
-      window.initialHeight = window.innerHeight;
-      let initialHeight = window.innerHeight;
-      // Keskitys- ja hyppimislogiikka (infinite scroll) poistettu.
-      // Sivu on nyt äärellisen mittainen (150vh), jotta natiivi skrollaus sujuu luonnollisesti pohjaan asti,
-      // eikä taustaskrollaus tappele 1:1 touchmove-eleen kanssa.
-    }
-
-    // Ei custom cursoria touch-laitteilla
     if (!window.matchMedia('(pointer: coarse)').matches) {
       document.addEventListener('mousemove', e => {
         if (thumbsOpen) {
@@ -1331,7 +1317,6 @@ layout: jd_default
         const isNav = target.closest('#jd-bottom-nav') ||
           target.closest('#jd-index-panel') ||
           target.closest('#jd-thumbs-close');
-        // Laajempi alue: alimmat 100px näytöstä = perusnuoli
         const nearBottom = e.clientY > window.innerHeight - 100;
         if (isNav || nearBottom) {
           cursor.style.opacity = '0';
@@ -1355,12 +1340,9 @@ layout: jd_default
     function openThumbsView() {
       thumbsOpen = true;
       thumbsPanel.classList.add('is-open');
-      thumbsClose.classList.add('is-open');
-      document.getElementById('jd-thumbs-btn').textContent = "{% if lang == 'en' %}All Works{% else %}Kaikki teokset{% endif %}";
       document.getElementById('jd-normal-nav').style.display = 'none';
       document.getElementById('jd-thumbs-nav').classList.add('is-open');
 
-      // Scroll to current category section instantly (to the title)
       const currentCatSection = document.getElementById('jd-thumbs-section-{{ page.category }}');
       if (currentCatSection) {
         const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
@@ -1371,21 +1353,17 @@ layout: jd_default
         currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
       }
       
-      // Hide hint arrows if they were still visible
       const hintArrows = document.getElementById('jd-hint-arrows');
       if (hintArrows) hintArrows.style.opacity = '0';
     }
     function closeThumbsView() {
       thumbsOpen = false;
       thumbsPanel.classList.remove('is-open');
-      thumbsClose.classList.remove('is-open');
       document.getElementById('jd-normal-nav').style.display = 'flex';
       document.getElementById('jd-thumbs-nav').classList.remove('is-open');
     }
 
-    document.getElementById('jd-thumbs-btn')?.addEventListener('click', () => {
-      thumbsOpen ? closeThumbsView() : openThumbsView();
-    });
+    document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
     thumbsClose?.addEventListener('click', closeThumbsView);
 
     /* ── Index-nappi (alanavigoinnissa) → avaa index-paneeli ── */
@@ -1399,34 +1377,30 @@ layout: jd_default
       }
     });
 
-    /* Piilota ylä-header:ssa oleva alkuperäinen Index-nappi
-       (koska nyt se on alanavigoinnissa) */
     const topIndexBtn = document.getElementById('jd-index-btn');
     if (topIndexBtn) topIndexBtn.style.display = 'none';
 
-    /* Käynnistä sivun saapumisanimaatio pienen viiveen jälkeen */
+    /* ─── PAGE LOAD ANIMATION (ROBUST) ─────────────────── */
+    function startPageOpen() {
+      document.body.classList.add('is-entering-ready');
+      if (!sessionStorage.getItem('jd-hints-seen')) {
+        const hintArrows = document.getElementById('jd-hint-arrows');
+        if (hintArrows) hintArrows.classList.add('show-hints');
+        sessionStorage.setItem('jd-hints-seen', 'true');
+      }
+    }
     
-    // 1. Fade-in kategorian nimi sulkimen päälle
-    setTimeout(() => {
-      document.body.classList.add('show-shutter-title');
-    }, 100);
+    // 1. Näytä otsikko heti
+    document.body.classList.add('show-shutter-title');
+    
+    // 2. Kuuntele, kun otsikon animaatio on valmis
+    shutterTitle.addEventListener('transitionend', () => {
+      // 3. Pieni viive lukemiseen ja sitten avaa suljin
+      setTimeout(startPageOpen, 400); 
+    }, { once: true });
 
-    // 2. Avaa suljin myöhemmin
-    setTimeout(() => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          document.body.classList.add('is-entering-ready');
-          
-          // Näytä opastusnuolet vain kerran per vierailu (sessio)
-          if (!sessionStorage.getItem('jd-hints-seen')) {
-            const hintArrows = document.getElementById('jd-hint-arrows');
-            if (hintArrows) hintArrows.classList.add('show-hints');
-            sessionStorage.setItem('jd-hints-seen', 'true');
-          }
-        });
-      });
-    }, 1600);
-
+    // Fallback: Jos transitionend ei jostain syystä laukea 1s sisällä, avaa suljin silti.
+    setTimeout(startPageOpen, 1000);
 
   });
 </script>

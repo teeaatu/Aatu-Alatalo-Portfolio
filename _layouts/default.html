@@ -3,7 +3,6 @@
 <html lang="{{ lang }}">
 <head>
   {% include head.html %}
-  {% seo %}
 </head>
 <body id="body" class="{% if page.active_nav == 'index' %}index-page{% endif %}" ontouchstart="">
 
@@ -217,8 +216,32 @@
           }
       }
 
-      let resizeTimer;
-      window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layoutMasonry, 100); });
+      // --- MASONRY RELAYOUT TRIGGERS ---
+      // Debounce-funktio estää layout-funktion liian tiheän suorittamisen
+      function debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+              const later = () => {
+                  clearTimeout(timeout);
+                  func(...args);
+              };
+              clearTimeout(timeout);
+              timeout = setTimeout(later, wait);
+          };
+      }
+
+      const debouncedLayout = debounce(layoutMasonry, 100);
+
+      // ResizeObserver on luotettavin tapa, se huomaa myös fonttien lataukset ja scrollbarin
+      if ('ResizeObserver' in window) {
+        const observer = new ResizeObserver(debouncedLayout);
+        observer.observe(grid);
+      } else {
+        // Fallback vanhemmille selaimille
+        window.addEventListener('resize', debouncedLayout);
+      }
+      // Varmistus iOS-laitteille, jotka eivät aina laukaise resize-eventiä kääntyessään
+      window.addEventListener('orientationchange', debouncedLayout);
 
           // Above-the-fold first -strategia: Näytetään grid heti kun ylärivin kuvat ovat ladanneet
           const images = Array.from(grid.querySelectorAll('img'));
