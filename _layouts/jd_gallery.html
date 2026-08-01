@@ -140,14 +140,11 @@ layout: jd_default
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transform: translateX(40px); /* Kuva on hieman sivussa piilossa */
-    transition: opacity 0.6s ease, transform 0.6s ease-out; /* Hieman pidempi ja pehmeämpi liike */
     pointer-events: none;
   }
 
   .jd-slide.active {
     opacity: 1;
-    transform: translateX(0); /* Kuva liukuu keskiöön */
     pointer-events: auto;
   }
 
