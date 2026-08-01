@@ -50,6 +50,16 @@ a:hover {
   color: var(--color-hex-f4f0ea) !important;
 }
 
+/* Estä kuvien tallentaminen ja valinta mobiililaitteilla */
+img {
+  -webkit-touch-callout: none; /* iOS Safari pitkä painallus menu */
+  -webkit-user-select: none;   /* Safari */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* Standardi */
+  -webkit-user-drag: none;     /* Estää raahaamisen */
+}
 html {
   background-color: #000000 !important;
 }
