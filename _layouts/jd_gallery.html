@@ -320,6 +320,17 @@ layout: jd_default
     opacity: 0;
     transition: opacity 0.2s;
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #jd-cursor-arrow {
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 1;
+    margin-top: -2px;
   }
 
 
@@ -782,7 +793,10 @@ layout: jd_default
 <div id="jd-counter">{{ cat_label }} — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{{ total_count }}</span></div>
 
 <!-- Custom cursor -->
-<div id="jd-cursor-custom">{{ cat_label }}</div>
+<div id="jd-cursor-custom">
+  <div id="jd-cursor-text">{{ cat_label }}</div>
+  <div id="jd-cursor-arrow"></div>
+</div>
 
 
 <!-- Seuraavan/edellisen gallerian URLit -->
@@ -1056,8 +1070,9 @@ layout: jd_default
       if (document.getElementById('jd-counter-tot')) {
         document.getElementById('jd-counter-tot').textContent = visibleTotal;
       }
-      if (cursor) {
-        cursor.textContent = `{{ cat_label }} — ${currentNum} / ${visibleTotal}`;
+      const cursorText = document.getElementById('jd-cursor-text');
+      if (cursorText) {
+        cursorText.textContent = `{{ cat_label }} — ${currentNum} / ${visibleTotal}`;
       }
     }
 
@@ -1225,6 +1240,67 @@ layout: jd_default
       if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
     });
 
+    /* Desktop wheel - avaa menu rullaamalla alas, sulje rullaamalla ylös nollakohdassa */
+    let wheelDrag = 0;
+    let wheelDragTimer = null;
+
+    window.addEventListener('wheel', e => {
+      if (thumbsOpen || document.body.classList.contains('about-is-open')) return;
+      if (window.innerWidth <= 800) return; // Koneversio vain
+
+      const panel = document.getElementById('jd-index-panel');
+      if (!panel) return;
+
+      const isMenuOpen = document.body.classList.contains('index-is-open');
+
+      if (!isMenuOpen) {
+        // Galleria-tilassa rullataan alaspäin -> avaa menu
+        if (e.deltaY > 0) {
+          wheelDrag += Math.abs(e.deltaY);
+          if (wheelDrag > window.innerHeight) wheelDrag = window.innerHeight;
+          
+          panel.style.transition = 'none';
+          panel.style.transform = `translateY(-${wheelDrag}px)`;
+          
+          clearTimeout(wheelDragTimer);
+          wheelDragTimer = setTimeout(() => {
+            panel.style.transition = '';
+            if (wheelDrag > window.innerHeight * 0.20) { // 20% kynnys
+              panel.style.transform = '';
+              if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+            } else {
+              panel.style.transform = '';
+            }
+            wheelDrag = 0;
+          }, 150);
+        }
+      } else {
+        // Menu on auki. Jos rullataan ylös ja ollaan ylhäällä:
+        if (e.deltaY < 0 && panel.scrollTop <= 0) {
+          wheelDrag += Math.abs(e.deltaY);
+          
+          panel.style.transition = 'none';
+          panel.style.transform = `translateY(calc(-100% + ${wheelDrag}px))`;
+          
+          clearTimeout(wheelDragTimer);
+          wheelDragTimer = setTimeout(() => {
+            panel.style.transition = '';
+            if (wheelDrag > window.innerHeight * 0.20) { 
+              panel.style.transform = '';
+              if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
+            } else {
+              panel.style.transform = ''; 
+            }
+            wheelDrag = 0;
+          }, 150);
+          
+          if (e.cancelable) e.preventDefault();
+        } else {
+          wheelDrag = 0;
+        }
+      }
+    }, { passive: false });
+
     /* ── Custom cursor ──────────────────────────────────── */
     if ('ontouchstart' in window) {
       if (cursor) cursor.style.display = 'none';
@@ -1263,6 +1339,11 @@ layout: jd_default
           cursor.style.top = e.clientY + 'px';
           cursor.style.opacity = '1';
           document.body.style.cursor = 'none';
+
+          const arrowEl = document.getElementById('jd-cursor-arrow');
+          if (arrowEl) {
+            arrowEl.textContent = e.clientX > window.innerWidth / 2 ? '→' : '←';
+          }
         }
       });
       document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
