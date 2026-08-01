@@ -2,7 +2,7 @@
   --bg-color: #0a0a0a;
   --accent-color: #eab848;
   --text-main: rgba(244, 240, 234, 0.85); /* 85% kirkkaus kaikelle perustekstille */
-  --text-dimmed: #888;
+  --text-dimmed: #a3a3a3;
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
 
@@ -1290,62 +1290,6 @@ body.index-page main {
   .about-premium-wrapper { padding: 4rem 1.5rem; }
   .about-premium-wrapper .image-container { position: relative; top: 0; }
   .about-premium-wrapper .about-text h1 { font-size: 2.2rem; }
-}
-
-/* --- NATIVE CSS VIEW TRANSITIONS (SPA NAVIGATION) --- */
-@media (prefers-reduced-motion: no-preference) {
-  /* Enable cross-document transitions globally */
-  @view-transition {
-    navigation: auto;
-  }
-
-  /* 1. Isolate static navigation layers to prevent shifting */
-  @media (min-width: 1025px) {
-    aside {
-      view-transition-name: site-sidebar;
-    }
-  }
-
-  .mobile-header {
-    view-transition-name: mobile-header;
-  }
-
-  /* 2. Isolate the main content for a clean crossfade */
-  main {
-    view-transition-name: main-content;
-  }
-
-  /* 3. Override stagger initial states during the transition snapshot phase */
-  ::view-transition-new(main-content) .stagger-item {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  /* 4. Isolate typography globally for crisp, independent crossfades */
-  .intro-title {
-    view-transition-name: intro-title;
-  }
-  .intro-text {
-    view-transition-name: intro-text;
-  }
-  .mobile-page-title {
-    view-transition-name: mobile-page-title;
-  }
-
-  /* 5. Smooth out the crossfade timing for a more cinematic feel */
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-old(main-content),
-  ::view-transition-new(main-content),
-  ::view-transition-old(intro-title),
-  ::view-transition-new(intro-title),
-  ::view-transition-old(intro-text),
-  ::view-transition-new(intro-text),
-  ::view-transition-old(mobile-page-title),
-  ::view-transition-new(mobile-page-title) {
-    animation-duration: 0.4s;
-    animation-timing-function: ease-in-out;
-  }
 }
 
 /* Sujuvat siirtymät kuvien piilottamiseen/näyttämiseen */
