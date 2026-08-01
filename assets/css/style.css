@@ -920,8 +920,8 @@ main {
   body.menu-open aside { left: 0; }
 
   body {
-    /* Palautetaan mobiilissa natiivi skrollaus, joka piilottaa automaattisesti osoitepalkin */
-    overflow-y: visible !important;
+    /* Lukitaan skrollaus täydellisesti fullscreen app-kokemusta varten */
+    overflow: hidden !important;
   }
   body.menu-open {
     overflow: hidden !important; /* Estää taustasivun skrollauksen vahingossa */
