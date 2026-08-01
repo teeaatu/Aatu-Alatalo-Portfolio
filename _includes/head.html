@@ -31,6 +31,9 @@
   <link rel="dns-prefetch" href="https://media.aatualatalo.com">
   
   <title>{{ page.title | default: "Aatu Alatalo | Valokuvaaja & Hasselblad Masters 2026 Finalist" }}</title>
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ '/assets/images/favicon-192x192.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/images/favicon-192x192.png' | relative_url }}">
   {% if page.lang == 'fi' %}
     {% assign main_desc = page.description_fi | default: page.description | default: 'Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti. Virallinen portfolio.' %}
   {% else %}
