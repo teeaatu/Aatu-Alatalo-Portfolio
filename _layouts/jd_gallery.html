@@ -54,8 +54,8 @@ layout: jd_default
     pointer-events: none;
     transform: translateY(0);
     /* Oletuksena peittää kuva-alueen heti kun HTML ladataan.
-       2.0s + expo-out-tyylinen käyrä → hyvin sulava, elokuvamainen paljastus. */
-    transition: transform 2.0s cubic-bezier(0.19, 1, 0.22, 1);
+       0.8s + expo-out-tyylinen käyrä → hyvin sulava, elokuvamainen paljastus. */
+    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
     
     display: flex;
     align-items: center;
@@ -95,7 +95,8 @@ layout: jd_default
   }
 
   body.is-leaving #jd-shutter {
-    transition: transform 0.6s cubic-bezier(0.64, 0, 0.35, 1);
+    /* Sulkeva liike käyttää ease-in-out -käyrää → notkeampi ja täydellinen pari avaukselle */
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
     transform: translateY(0);
     /* Putoaa ylhäältä alas peittämään kuva-alueen */
   }
