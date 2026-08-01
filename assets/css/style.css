@@ -67,12 +67,12 @@ html {
 body {
   margin: 0;
   background-color: var(--bg-color);
-  min-height: 100vh;
+  height: 100dvh;
+  width: 100vw;
   color: var(--text-main);
   display: flex;
   flex-direction: row;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 /* Piilota scrollbar, mutta pidä sivun scrollaus toiminnassa */
