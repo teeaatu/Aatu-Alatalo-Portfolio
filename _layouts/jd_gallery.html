@@ -1090,11 +1090,28 @@ layout: jd_default
       
       if (thumbsOpen) closeThumbsView();
 
+      // Pakko poistaa is-entering-ready, muuten mobiilin CSS-sääntö (translateY 100%) jyrää is-leaving -säännön
+      document.body.classList.remove('is-entering-ready');
+
+      // Pieni layout flush, jotta besides poisto rekisteröityy ennen is-leaving lisäystä
+      void document.body.offsetWidth;
+
       document.body.classList.add('is-leaving');
       
-      shutter.addEventListener('transitionend', () => {
+      let triggered = false;
+      const handler = () => {
+        triggered = true;
         window.location.href = url;
-      }, { once: true });
+      };
+      
+      shutter.addEventListener('transitionend', handler, { once: true });
+      
+      // Fallback-ajastin (jos selain ei jostain syystä ammu transitionend-tapahtumaa, esim. Safarilla)
+      setTimeout(() => {
+        if (!triggered) {
+          window.location.href = url;
+        }
+      }, 1200);
     }
     
     // Kaappaa kaikki sisäiset linkit (esim. Index-paneelista) kulkemaan animaation kautta
@@ -1113,20 +1130,30 @@ layout: jd_default
 
     function goToRelative(step) {
       if (visibleTotal === 0) return;
-      let vi = visibleIndices.indexOf(current);
-      if (vi === -1) vi = 0;
-      vi += step;
-      
-      if (vi >= visibleTotal) {
+
+      let currentVisibleIndex = visibleIndices.indexOf(current);
+      if (currentVisibleIndex === -1) currentVisibleIndex = 0;
+
+      const nextVisibleIndex = currentVisibleIndex + step;
+
+      if (nextVisibleIndex >= 0 && nextVisibleIndex < visibleTotal) {
+        // Navigate within the current gallery
+        goToAbsolute(visibleIndices[nextVisibleIndex]);
+      } else if (nextVisibleIndex >= visibleTotal) {
+        // Attempt to navigate to the next gallery
         const nextUrl = document.getElementById('jd-next-url');
-        if (nextUrl) { goToCategory(nextUrl.textContent); return; }
-      } else if (vi < 0) {
+        if (nextUrl) {
+          goToCategory(nextUrl.textContent);
+        }
+        // Otherwise, do nothing (stay on the last image)
+      } else if (nextVisibleIndex < 0) {
+        // Attempt to navigate to the previous gallery
         const prevUrl = document.getElementById('jd-prev-url');
-        if (prevUrl) { goToCategory(prevUrl.textContent); return; }
+        if (prevUrl) {
+          goToCategory(prevUrl.textContent);
+        }
+        // Otherwise, do nothing (stay on the first image)
       }
-      
-      vi = ((vi % visibleTotal) + visibleTotal) % visibleTotal;
-      goToAbsolute(visibleIndices[vi]);
     }
 
     function goToAbsolute(idx, skipFilterCheck = false) {
