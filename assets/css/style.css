@@ -75,6 +75,16 @@ body {
   overflow-y: scroll;
 }
 
+/* Piilota scrollbar, mutta pidä sivun scrollaus toiminnassa */
+html, body, .jd-menu-scroll-container, .jd-categories {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 /* --- PEHMEÄ SIVUN SISÄÄNTULO --- */
 .page-enter-animation {
   opacity: 0;
