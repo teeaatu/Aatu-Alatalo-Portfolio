@@ -137,8 +137,8 @@
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-panel {
       position: fixed !important;
-      top: 100% !important; left: 0; right: 0;
-      width: 100%;
+      top: 100% !important; right: 0; left: auto;
+      width: 50%;
       height: 100dvh !important;
       background: rgba(245, 244, 240, 0.82);
       -webkit-backdrop-filter: saturate(180%) blur(24px);
@@ -149,8 +149,9 @@
       overflow-y: auto;
       overscroll-behavior-y: contain;
       cursor: auto;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
       transform: translateY(0);
+      opacity: 0;
     }
     /* Fallback selaimille, jotka eivät tue backdrop-filteriä */
     @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
@@ -160,6 +161,7 @@
     }
     #jd-index-panel.is-open {
       transform: translateY(-100%);
+      opacity: 1;
     }
 
     /* Ylikirjoitetaan paneelin tekstien värit vaaleiksi */
@@ -210,6 +212,7 @@
     /* ─── MOBILE (<768px) ────────────────────────────── */
     @media (max-width: 768px) {
       :root { --jd-panel-w: 100%; }
+      #jd-index-panel { width: 100%; left: 0; right: 0; }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
       
@@ -368,6 +371,14 @@
     });
 
   </script>
+  {% if page.layout == 'jd_gallery' %}
+  {% assign cat_label = page.category_label | default: page.title | default: page.category %}
+  <!-- Suljin kategoriavaihtoihin (Double Curtain) - Siirretty body-tason lapseksi containing block -bugin välttämiseksi -->
+  <div id="jd-shutter-container">
+    <div class="jd-curtain-primary"></div>
+  </div>
+  <div class="jd-shutter-title">{{ cat_label }}</div>
+  {% endif %}
 </body>
 </html>
 
