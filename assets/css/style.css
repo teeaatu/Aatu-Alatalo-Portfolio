@@ -6,6 +6,13 @@
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
 
+  /* --- VELVET DROP: View Transition easing-muuttujat --- */
+  --vt-exit-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --vt-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --vt-exit-dur: 700ms;
+  --vt-enter-dur: 600ms;
+  --vt-enter-delay: 200ms;
+
   /* Auto-centralized styles */
   --color-hex-050505: #050505;
   --color-hex-f4f0ea: #f4f0ea;
@@ -176,6 +183,9 @@ nav {
   flex-direction: column; 
   gap: 18px;
   margin-bottom: 40px;
+  /* View Transition: sidebar nav animoidaan kokonaisena yksikkönä */
+  view-transition-name: sidebar-nav;
+  contain: layout;
 }
 
 nav a {
@@ -1293,14 +1303,18 @@ body.index-page main {
 }
 
 /* Sujuvat siirtymät kuvien piilottamiseen/näyttämiseen */
+/* HUOM: Velvet Drop View Transitions -animaatiot hoitavat pääkoreografian.
+   Nämä säännöt toimivat fallbackina ja non-transition -tilanteissa. */
 .image-section {
   opacity: 1;
   visibility: visible;
   max-height: 4000px;
   transform: translateY(0);
   --stagger-delay: 0s;
-  /* Max-height aukeaa heti, opacity ja transform tulevat porrastetulla viiveellä */
-  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out, opacity 0.8s ease-out var(--stagger-delay), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) var(--stagger-delay), visibility 0s;
+  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out,
+              opacity 0.5s ease-out var(--stagger-delay),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) var(--stagger-delay),
+              visibility 0s;
 }
 .image-section.hidden {
   opacity: 0 !important;
@@ -1308,9 +1322,23 @@ body.index-page main {
   max-height: 0 !important;
   margin-bottom: 0 !important;
   overflow: hidden !important;
-  transform: translateY(40px) !important;
-  /* Piilotettaessa elementti katoaa nopeasti ilman viivettä */
-  transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s 0.4s !important;
+  transform: translateY(50px) !important;
+  /* Nopea poistuminen — View Transitions hoitaa eleganssin */
+  transition: max-height 0.35s ease-out, margin-bottom 0.35s ease-out,
+              opacity 0.25s ease-out, transform 0.25s ease-out,
+              visibility 0s 0.35s !important;
+}
+
+/* Velvet Drop: galleriaisisältö saa oman View Transition -nimen */
+.gallery-content {
+  view-transition-name: gallery-content;
+  contain: layout;
+}
+
+/* Suodatusnavigaatio saa oman View Transition -nimen */
+.gallery-filter-nav {
+  view-transition-name: filter-nav;
+  contain: layout;
 }
 
 /* Alasarjan esittelyteksti */
@@ -1319,7 +1347,9 @@ body.index-page main {
   visibility: visible;
   max-height: 1000px;
   transform: translateY(0);
-  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out, opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+  transition: max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out,
+              opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0s;
 }
 .sub-series-intro.hidden {
   opacity: 0 !important;
@@ -1329,7 +1359,9 @@ body.index-page main {
   padding: 0 !important;
   overflow: hidden !important;
   transform: translateY(20px) !important;
-  transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out, padding 0.4s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s 0.4s !important;
+  transition: max-height 0.35s ease-out, margin-bottom 0.35s ease-out,
+              padding 0.35s ease-out, opacity 0.25s ease-out,
+              transform 0.25s ease-out, visibility 0s 0.35s !important;
 }
 
 /* --- GALLERY FILTER NAVIGATION --- */
@@ -1421,4 +1453,104 @@ body.index-page main {
   -webkit-touch-callout: none !important;
   -webkit-tap-highlight-color: transparent !important;
   outline: none !important;
+}
+
+/* ==========================================================================
+   VELVET DROP — CSS View Transitions API
+   Koreografia: elementit laskeutuvat alas exitissä, nousevat ylös enterissä.
+   Tuntuma: raskas silkki, premium, arvokas. Ei overshootia.
+   ========================================================================== */
+
+/* --- Oletusarvo: poista selain default cross-fade kaikesta --- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ==========================================================================
+   SIDEBAR NAV — aktiivinen kategoria laskeutuu, muut stagger
+   ========================================================================== */
+
+/* EXIT: sidebar nav-alue häipyy ja laskeutuu alas */
+::view-transition-old(sidebar-nav) {
+  animation: vt-sidebar-exit var(--vt-exit-dur) var(--vt-exit-ease) both;
+}
+
+/* ENTER: sidebar nav-alue nousee ylhäältä alas paikalleen */
+::view-transition-new(sidebar-nav) {
+  animation: vt-sidebar-enter var(--vt-enter-dur) var(--vt-enter-ease) var(--vt-enter-delay) both;
+}
+
+@keyframes vt-sidebar-exit {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(32px); }
+}
+
+@keyframes vt-sidebar-enter {
+  0%   { opacity: 0; transform: translateY(-18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   GALLERY CONTENT — kuvat laskeutuvat alas hitaasti, nousevat elegantisti
+   ========================================================================== */
+
+/* EXIT: gallerian kuvasektiot häipyvät ja laskeutuvat +50px alas */
+::view-transition-old(gallery-content) {
+  animation: vt-gallery-exit var(--vt-exit-dur) var(--vt-exit-ease) both;
+}
+
+/* ENTER: uusi galleriasisältö saapuu ylhäältä -40px → 0 */
+::view-transition-new(gallery-content) {
+  animation: vt-gallery-enter var(--vt-enter-dur) var(--vt-enter-ease) var(--vt-enter-delay) both;
+}
+
+@keyframes vt-gallery-exit {
+  0%   { opacity: 1; transform: translateY(0); }
+  30%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(50px); }
+}
+
+@keyframes vt-gallery-enter {
+  0%   { opacity: 0; transform: translateY(-40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   FILTER NAV — suodatuslinkit laskeutuvat ja nousevat
+   ========================================================================== */
+
+/* EXIT: suodatusnavigaatio painuu alas +20px */
+::view-transition-old(filter-nav) {
+  animation: vt-filter-exit var(--vt-exit-dur) var(--vt-exit-ease) both;
+}
+
+/* ENTER: suodatusnavigaatio kohoaa ylhäältä */
+::view-transition-new(filter-nav) {
+  animation: vt-filter-enter var(--vt-enter-dur) var(--vt-enter-ease) var(--vt-enter-delay) both;
+}
+
+@keyframes vt-filter-exit {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(20px); }
+}
+
+@keyframes vt-filter-enter {
+  0%   { opacity: 0; transform: translateY(-12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   @media: Kunnioitetaan prefers-reduced-motion -asetusta
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(sidebar-nav),
+  ::view-transition-new(sidebar-nav),
+  ::view-transition-old(gallery-content),
+  ::view-transition-new(gallery-content),
+  ::view-transition-old(filter-nav),
+  ::view-transition-new(filter-nav) {
+    animation-duration: 0.001ms !important;
+  }
 }
