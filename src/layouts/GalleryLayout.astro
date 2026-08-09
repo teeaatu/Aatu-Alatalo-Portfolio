@@ -63,7 +63,7 @@ function resolveImagePaths(kuva: string) {
     const bpath = kuva.replace(fnext, '');
     return { src: `${bpath}thumbs/${dsk}`, srcMob: `${bpath}thumbs/${mob}`, full: kuva };
   }
-  return { src: `/images/thumbnails/${dsk}`, srcMob: `/images/thumbnails/${mob}`, full: `/images/${kuva}` };
+  return { src: `/assets/thumbnails/${dsk}`, srcMob: `/assets/thumbnails/${mob}`, full: `/assets/images/${kuva}` };
 }
 
 let jdIdx = 0;
@@ -122,6 +122,25 @@ allCats.forEach(c => { indexCounts[c.key] = c.data?.length || 0; });
 const fiBase = (slug: string) => `/${slug}`;
 const enBase = (slug: string, enSlug?: string) => `/en/${enSlug || slug}`;
 
+const getCatUrl = (key: string, l: string) => {
+  return l === 'en'
+    ? `/en/${key === 'kuvaprojekti-ajasta-v365' ? 'photo-project-time-v365' : key === 'tapahtumat' ? 'events' : key === 'vari-ja-muoto' ? 'color-and-form' : key === 'mustavalkoinen-sarja' ? 'black-and-white-series' : key === 'sisatilan-valo' ? 'interior-light' : key === 'kiehtovat-rakennukset' ? 'buildings' : key === 'luonto-ja-ymparisto' ? 'nature' : key}`
+    : `/${key}`;
+};
+
+const currentIndex = allCats.findIndex(c => c.key === categorySlug);
+let computedNextUrl = nextUrl;
+let computedPrevUrl = prevUrl;
+
+if (currentIndex !== -1) {
+  if (!computedNextUrl && currentIndex < allCats.length - 1) {
+    computedNextUrl = getCatUrl(allCats[currentIndex + 1].key, lang);
+  }
+  if (!computedPrevUrl && currentIndex > 0) {
+    computedPrevUrl = getCatUrl(allCats[currentIndex - 1].key, lang);
+  }
+}
+
 const navItems = [
   { fi: 'recent', en: 'recent', label: lang === 'fi' ? 'Uusimmat' : 'Recent' },
   { fi: 'work1', en: 'work1', label: lang === 'fi' ? 'Työ I' : 'Work I' },
@@ -165,12 +184,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png">
-  <link rel="apple-touch-icon" href="/images/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicon-192x192.png">
+  <link rel="apple-touch-icon" href="/assets/images/favicon-192x192.png">
   <meta property="og:title" content={pageTitle}>
   <meta property="og:description" content={mainDesc}>
   <meta property="og:type" content="website">
-  <meta property="og:image" content={`${siteUrl}/images/PROJECT%2021%20FINALIST.jpg`}>
+  <meta property="og:image" content={`${siteUrl}/assets/images/PROJECT%2021%20FINALIST.jpg`}>
   <link rel="canonical" href={`${siteUrl}${currentUrl}`}>
   {translationUrl && <link rel="alternate" hreflang="fi" href={`${siteUrl}${fiTransUrl}`} />}
   {translationUrl && <link rel="alternate" hreflang="en" href={`${siteUrl}${enTransUrl}`} />}
@@ -179,7 +198,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <link rel="preconnect" href="https://media.aatualatalo.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&display=swap" media="print" onload="this.media='all'">
-  <style>
+  <style is:global>
     /* ─── RESET ────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -252,14 +271,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* ─── MAIN ───────────────────────────────────────── */
     #jd-main {
-      position: fixed; top: 0; left: 0; width: 100%;
-      height: 100vh; height: 100dvh;
-      z-index: 10;
+      position: absolute !important;
+      inset: 0 !important;
     }
 
     /* ─── SLIDESHOW ─────────────────────────────────── */
     #jd-slideshow {
       position: absolute; inset: 0;
+      width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
       user-select: none; -webkit-user-select: none;
     }
@@ -297,16 +316,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       pointer-events: none; user-select: none;
     }
     #jd-counter { display: none; }
-
-    /* ─── COUNTER (right side) ───────────────────────── */
-    #jd-side-counter {
-      position: fixed; right: 2rem; top: 50%; transform: translateY(-50%);
-      pointer-events: none; z-index: 200;
-      font-family: var(--jd-font);
-      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--jd-text); opacity: 0.7;
-      display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;
-    }
 
     /* ─── SHUTTER / CURTAIN ─────────────────────────── */
     #jd-shutter-container {
@@ -513,7 +522,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-slideshow { top: 90px; bottom: 60px; height: calc(100dvh - 150px); }
       #jd-counter { display: block; position: fixed; bottom: 25px; left: 0; right: 0; text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; z-index: 100000; pointer-events: none; }
       #jd-cursor-custom { display: none !important; }
-      #jd-side-counter { display: none; }
+
       .jd-thumb-global { width: calc(50% - 1rem); }
       .jd-thumbs-grid { gap: 1rem; }
       #jd-about-bottom-nav { bottom: auto; top: 0; height: 70px; background: #f5f4f0; width: 100%; }
@@ -566,11 +575,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <!-- Mobile counter -->
   <div id="jd-counter">{catLabel} — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></div>
 
-  <!-- Side counter (desktop) -->
-  <div id="jd-side-counter">
-    <span id="jd-side-cat">{catLabel} — <span id="jd-side-num">1</span> / <span id="jd-side-tot">{galleryData.length}</span></span>
-    <span style="font-size:1.2em;">→</span>
-  </div>
+
+
 
   <!-- Custom cursor -->
   <div id="jd-cursor-custom">
@@ -579,8 +585,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   </div>
 
   <!-- Next/prev urls for gallery-to-gallery navigation -->
-  {nextUrl && <div id="jd-next-url" style="display:none">{nextUrl}</div>}
-  {prevUrl && <div id="jd-prev-url" style="display:none">{prevUrl}</div>}
+  {computedNextUrl && <div id="jd-next-url" style="display:none">{computedNextUrl}</div>}
+  {computedPrevUrl && <div id="jd-prev-url" style="display:none">{computedPrevUrl}</div>}
 
   <!-- Index panel -->
   <nav id="jd-index-panel">
@@ -642,8 +648,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     <div class="jd-about-content">
       <div class="jd-about-image">
         <picture>
-          <source srcset="/images/thumbnails/aatu-alatalo-valokuvaaja-oulu_mobile.webp 600w, /images/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp 1200w" type="image/webp" sizes="(max-width:768px) 100vw, 50vw">
-          <img src="/images/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp" alt="Aatu Alatalo - Photographer" loading="lazy" width="1080" height="1440" draggable="false" oncontextmenu="return false;">
+          <source srcset="/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_mobile.webp 600w, /assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp 1200w" type="image/webp" sizes="(max-width:768px) 100vw, 50vw">
+          <img src="/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp" alt="Aatu Alatalo - Photographer" loading="lazy" width="1080" height="1440" draggable="false" oncontextmenu="return false;">
         </picture>
       </div>
       <div class="jd-about-text">
@@ -693,9 +699,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <div id="jd-thumbs-panel">
     <div class="jd-thumbs-inner">
       {allCats.map(({ key, data }) => {
-        const catUrl = lang === 'en'
-          ? `/en/${key === 'kuvaprojekti-ajasta-v365' ? 'photo-project-time-v365' : key === 'tapahtumat' ? 'events' : key === 'vari-ja-muoto' ? 'color-and-form' : key === 'mustavalkoinen-sarja' ? 'black-and-white-series' : key === 'sisatilan-valo' ? 'interior-light' : key === 'kiehtovat-rakennukset' ? 'buildings' : key === 'luonto-ja-ymparisto' ? 'nature' : key}`
-          : `/${key}`;
+        const catUrl = getCatUrl(key, lang);
         return data && data.length > 0 ? (
           <div class="jd-thumbs-section" id={`jd-thumbs-section-${key}`}>
             <div class="jd-thumbs-section-title">{catLabels[key] || key}</div>
@@ -708,7 +712,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                   const mob = `${fn}_mobile.webp`;
                   const srcMob = sub.kuva.includes('http')
                     ? `${sub.kuva.replace(sub.kuva.split('/').pop(), '')}thumbs/${mob}`
-                    : `/images/thumbnails/${mob}`;
+                    : `/assets/thumbnails/${mob}`;
                   return (
                     <div class="jd-thumb-global" data-cat={key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <img src={srcMob} loading="lazy" alt={sub.alt_text || ''}>
@@ -719,7 +723,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                 const mob = `${fn}_mobile.webp`;
                 const srcMob = item.kuva.includes('http')
                   ? `${item.kuva.replace(item.kuva.split('/').pop(), '')}thumbs/${mob}`
-                  : `/images/thumbnails/${mob}`;
+                  : `/assets/thumbnails/${mob}`;
                 return (
                   <div class="jd-thumb-global" data-cat={key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                     <img src={srcMob} loading="lazy" alt={item.alt_text || ''}>
@@ -845,8 +849,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const n = vi + 1;
       if (document.getElementById('jd-counter-num')) document.getElementById('jd-counter-num').textContent = n;
       if (document.getElementById('jd-counter-tot')) document.getElementById('jd-counter-tot').textContent = visibleTotal;
-      if (document.getElementById('jd-side-num')) document.getElementById('jd-side-num').textContent = n;
-      if (document.getElementById('jd-side-tot')) document.getElementById('jd-side-tot').textContent = visibleTotal;
+
       const cursorText = document.getElementById('jd-cursor-text');
       if (cursorText) cursorText.textContent = `${catLabel} — ${n} / ${visibleTotal}`;
     }
