@@ -2,6 +2,7 @@
 import { ViewTransitions } from 'astro:transitions';
 import Head from '../components/Head.astro';
 import MobileHeader from '../components/MobileHeader.astro';
+import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
 
 const { title, description, lang = 'fi', activeNav, translationUrl } = Astro.props;
@@ -16,7 +17,7 @@ const { title, description, lang = 'fi', activeNav, translationUrl } = Astro.pro
 
   <MobileHeader lang={lang} translationUrl={translationUrl} />
 
-  <slot name="sidebar" />
+  <Sidebar lang={lang} activeNav={activeNav} translationUrl={translationUrl} />
 
   <main class="page-enter-animation">
     <slot />
