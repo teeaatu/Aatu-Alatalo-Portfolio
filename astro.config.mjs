@@ -4,6 +4,7 @@ import yaml from '@rollup/plugin-yaml';
 
 // https://astro.build/config
 export default defineConfig({
+  devToolbar: { enabled: false },
   vite: {
     plugins: [yaml()]
   }
