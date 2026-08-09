@@ -112,7 +112,7 @@ const catLabels: Record<string, string> = {
   elaimet: t.animals[lang],
 };
 
-const catLabel = categoryTitle || catLabels[categorySlug] || categorySlug;
+const catLabel = catLabels[categorySlug] || categoryTitle || categorySlug;
 const isEventsCategory = categorySlug === 'tapahtumat';
 
 // Index panel data
@@ -131,13 +131,19 @@ const getCatUrl = (key: string, l: string) => {
 const currentIndex = allCats.findIndex(c => c.key === categorySlug);
 let computedNextUrl = nextUrl;
 let computedPrevUrl = prevUrl;
+let computedNextLabel = '';
+let computedPrevLabel = '';
 
 if (currentIndex !== -1) {
   if (!computedNextUrl && currentIndex < allCats.length - 1) {
-    computedNextUrl = getCatUrl(allCats[currentIndex + 1].key, lang);
+    const nextCat = allCats[currentIndex + 1];
+    computedNextUrl = getCatUrl(nextCat.key, lang);
+    computedNextLabel = catLabels[nextCat.key] || nextCat.key;
   }
   if (!computedPrevUrl && currentIndex > 0) {
-    computedPrevUrl = getCatUrl(allCats[currentIndex - 1].key, lang);
+    const prevCat = allCats[currentIndex - 1];
+    computedPrevUrl = getCatUrl(prevCat.key, lang);
+    computedPrevLabel = catLabels[prevCat.key] || prevCat.key;
   }
 }
 
@@ -332,36 +338,45 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0.03;
     }
     .jd-shutter-title {
-      position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%);
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
       color: white; mix-blend-mode: difference; z-index: 99999999;
       font-family: var(--jd-font); font-size: 1.4rem; letter-spacing: 0.22em; text-transform: uppercase;
-      opacity: 0; pointer-events: none;
-      transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+      opacity: 1; pointer-events: none;
     }
-    body.show-shutter-title .jd-shutter-title { top: 50%; opacity: 1; }
-    body.is-entering-ready .jd-shutter-title { top: 40%; opacity: 0; transition: top 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease; }
-    body.is-leaving .jd-shutter-title, body.prepare-leave .jd-shutter-title { opacity: 0 !important; transition: none !important; }
+    @keyframes titleEnter {
+      0% { top: 53%; opacity: 0; }
+      100% { top: 50%; opacity: 1; }
+    }
+    .trigger-title-enter {
+      animation: titleEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    body.is-entering-ready .jd-shutter-title { 
+      opacity: 0; top: -10%; 
+      transition: top 2.5s 1.6s cubic-bezier(0.16,1,0.3,1), opacity 1.2s 1.6s ease; 
+    }
+    body.hide-shutter-title .jd-shutter-title { opacity: 0 !important; transition: none !important; }
+    body.is-leaving .jd-shutter-title, body.prepare-leave .jd-shutter-title { transition: none !important; }
     body.is-entering-ready .jd-curtain-primary { transition: transform 1800ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(-150vh); }
     body.prepare-leave .jd-curtain-primary { transition: none; transform: translateY(-150vh); }
     body.is-leaving .jd-curtain-primary { transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
 
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-panel {
-      position: fixed !important; top: 100% !important; right: 0; left: auto;
-      width: 50%; height: 100dvh !important;
-      background: rgba(245, 244, 240, 0.82);
+      position: fixed !important; top: 0 !important; right: 0; left: auto;
+      width: var(--jd-panel-w); height: 100dvh !important;
+      background: rgba(245, 244, 240, 0.9);
       -webkit-backdrop-filter: saturate(180%) blur(24px);
       backdrop-filter: saturate(180%) blur(24px);
       color: var(--jd-text);
       z-index: 500; padding: 4rem 2.5rem 2.5rem;
       overflow-y: auto; overscroll-behavior-y: contain; cursor: auto;
       transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
-      transform: translateY(0); opacity: 0;
+      transform: translateX(100%); opacity: 0;
     }
     @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
       #jd-index-panel { background: var(--jd-bg); }
     }
-    #jd-index-panel.is-open { transform: translateY(-100%); opacity: 1; }
+    #jd-index-panel.is-open { transform: translateX(0); opacity: 1; }
     #jd-index-panel a, #jd-index-panel div, #jd-index-panel span { color: var(--jd-text) !important; }
 
     #jd-index-overlay {
@@ -391,12 +406,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── THUMBS PANEL ───────────────────────────────── */
     #jd-thumbs-panel {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--jd-bg); z-index: 300; overflow-y: auto;
+      background: rgba(245, 244, 240, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 300; overflow-y: auto;
       padding: 4rem 1.5rem 2rem; pointer-events: none;
-      transform: translateY(-100%);
-      transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
-    #jd-thumbs-panel.is-open { transform: translateY(0); pointer-events: auto; }
+    #jd-thumbs-panel.is-open { opacity: 1; pointer-events: auto; }
     .jd-thumbs-inner { max-width: 1600px; margin: 0 auto; }
     .jd-thumbs-section { margin-bottom: 5rem; scroll-margin-top: 6rem; }
     .jd-thumbs-section-title {
@@ -432,14 +450,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-filter-btn:hover { color: rgba(26,26,24,0.8); }
     .jd-filter-btn.active { color: rgba(26,26,24,1); }
 
-    /* ─── CUSTOM CURSOR ─────────────────────────────── */
+    /* ─── CUSTOM CURSOR (JD LERP STYLE) ─────────────── */
     #jd-cursor-custom {
       position: fixed; pointer-events: none; z-index: 9999;
       transform: translate(-50%, -50%);
       font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
       color: white; mix-blend-mode: difference; white-space: nowrap;
-      opacity: 0; transition: opacity 0.2s; user-select: none;
+      opacity: 0; user-select: none;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
+      left: 50%; top: 50%; /* Start at center */
+      will-change: left, top, opacity;
+      transition: opacity 0.4s ease;
     }
     #jd-cursor-arrow { font-size: 14px; letter-spacing: 0; line-height: 1; margin-top: -2px; }
 
@@ -586,8 +607,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   </div>
 
   <!-- Next/prev urls for gallery-to-gallery navigation -->
-  {computedNextUrl && <div id="jd-next-url" style="display:none">{computedNextUrl}</div>}
-  {computedPrevUrl && <div id="jd-prev-url" style="display:none">{computedPrevUrl}</div>}
+  {computedNextUrl && <div id="jd-next-url" style="display:none" data-cat-label={computedNextLabel}>{computedNextUrl}</div>}
+  {computedPrevUrl && <div id="jd-prev-url" style="display:none" data-cat-label={computedPrevLabel}>{computedPrevUrl}</div>}
 
   <!-- Index panel -->
   <nav id="jd-index-panel">
@@ -715,7 +736,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                     ? `${sub.kuva.replace(sub.kuva.split('/').pop(), '')}thumbs/${mob}`
                     : `/assets/thumbnails/${mob}`;
                   return (
-                    <div class="jd-thumb-global" data-cat={key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                    <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <img src={srcMob} loading="lazy" alt={sub.alt_text || ''}>
                     </div>
                   );
@@ -726,7 +747,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                   ? `${item.kuva.replace(item.kuva.split('/').pop(), '')}thumbs/${mob}`
                   : `/assets/thumbnails/${mob}`;
                 return (
-                  <div class="jd-thumb-global" data-cat={key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                  <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                     <img src={srcMob} loading="lazy" alt={item.alt_text || ''}>
                   </div>
                 );
@@ -857,9 +878,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     updateCounter();
 
     /* Navigation */
-    function goToCategory(url) {
+    function goToCategory(url, titleText = '') {
       if (document.body.classList.contains('is-leaving')) return;
-      if (thumbsOpen) closeThumbsView();
+      if (titleText && shutterTitle) {
+        shutterTitle.textContent = titleText;
+        document.body.classList.remove('hide-shutter-title');
+        shutterTitle.classList.remove('trigger-title-enter');
+        void shutterTitle.offsetWidth; // force reflow
+        shutterTitle.classList.add('trigger-title-enter');
+      } else {
+        document.body.classList.add('hide-shutter-title');
+      }
       document.body.classList.remove('is-entering-ready');
       document.body.classList.add('prepare-leave');
       void document.body.offsetWidth;
@@ -879,7 +908,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
             e.preventDefault();
             if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
-            goToCategory(link.href);
+            
+            let titleText = '';
+            const spanText = link.querySelector('span:not(.jd-count)');
+            if (spanText) titleText = spanText.textContent.trim();
+            else if (link.classList.contains('jd-filter-btn')) titleText = link.textContent.trim();
+            else {
+              const textNode = Array.from(link.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length > 0);
+              if (textNode) titleText = textNode.textContent.trim();
+            }
+            
+            goToCategory(link.href, titleText);
           }
         }
       }
@@ -894,10 +933,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         goToAbsolute(visibleIndices[nvi]);
       } else if (nvi >= visibleTotal) {
         const nextUrl = document.getElementById('jd-next-url');
-        if (nextUrl) goToCategory(nextUrl.textContent);
+        if (nextUrl) goToCategory(nextUrl.textContent, nextUrl.getAttribute('data-cat-label') || '');
       } else {
         const prevUrl = document.getElementById('jd-prev-url');
-        if (prevUrl) goToCategory(prevUrl.textContent);
+        if (prevUrl) goToCategory(prevUrl.textContent, prevUrl.getAttribute('data-cat-label') || '');
       }
     }
 
@@ -1010,44 +1049,95 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     }, { passive: false });
 
-    /* Cursor */
+    /* Cursor Physics (Instant) */
     if ('ontouchstart' in window) { if (cursor) cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
     if (!window.matchMedia('(pointer: coarse)').matches) {
+      document.body.style.cursor = 'none';
+      
       document.addEventListener('mousemove', e => {
-        if (thumbsOpen) { cursor.style.opacity = '0'; document.body.style.cursor = 'auto'; return; }
+        if (thumbsOpen) { document.body.style.cursor = 'auto'; return; }
+        
         const target = e.target;
         const isNav = target.closest('#jd-bottom-nav') || target.closest('#jd-index-panel') || target.closest('#jd-thumbs-close');
         const nearBottom = e.clientY > window.innerHeight - 100;
-        if (isNav || nearBottom) { cursor.style.opacity = '0'; document.body.style.cursor = 'auto'; }
-        else {
-          cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
-          sessionStorage.setItem('jdLastMouseX', e.clientX); sessionStorage.setItem('jdLastMouseY', e.clientY);
-          cursor.style.opacity = '1'; document.body.style.cursor = 'none';
+        
+        if (isNav || nearBottom) { 
+          cursor.style.opacity = '0'; 
+          document.body.style.cursor = 'auto'; 
+        } else {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+          cursor.style.opacity = '1'; 
+          document.body.style.cursor = 'none';
           const arrowEl = document.getElementById('jd-cursor-arrow');
           if (arrowEl) arrowEl.textContent = e.clientX > window.innerWidth / 2 ? '→' : '←';
         }
       });
+      
       document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
     }
 
     /* Thumbs view */
     function openThumbsView() {
-      thumbsOpen = true; thumbsPanel.classList.add('is-open');
-      document.getElementById('jd-normal-nav').style.display = 'none';
-      document.getElementById('jd-thumbs-nav').classList.add('is-open');
-      const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
-      if (currentCatSection) {
-        const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
-        if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
-        currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
-      }
-      const hintArrows = document.getElementById('jd-hint-arrows');
-      if (hintArrows) hintArrows.style.opacity = '0';
+      if (thumbsOpen) return;
+      if (document.body.classList.contains('is-leaving')) return;
+      
+      document.body.classList.remove('is-entering-ready');
+      document.body.classList.add('hide-shutter-title');
+      document.body.classList.add('prepare-leave');
+      void document.body.offsetWidth;
+      document.body.classList.remove('prepare-leave');
+      document.body.classList.add('is-leaving');
+      
+      let triggered = false;
+      const handler = () => {
+        if(triggered) return; triggered = true;
+        thumbsOpen = true; 
+        thumbsPanel.classList.add('is-open');
+        document.getElementById('jd-normal-nav').style.display = 'none';
+        document.getElementById('jd-thumbs-nav').classList.add('is-open');
+        const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
+        if (currentCatSection) {
+          const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
+          if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
+          currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
+        }
+        const hintArrows = document.getElementById('jd-hint-arrows');
+        if (hintArrows) hintArrows.style.opacity = '0';
+        
+        document.body.classList.remove('is-leaving');
+        document.body.classList.add('is-entering-ready');
+      };
+      
+      shutter.addEventListener('transitionend', handler, { once: true });
+      setTimeout(handler, 1600);
     }
+    
     function closeThumbsView() {
-      thumbsOpen = false; thumbsPanel.classList.remove('is-open');
-      document.getElementById('jd-normal-nav').style.display = 'flex';
-      document.getElementById('jd-thumbs-nav').classList.remove('is-open');
+      if (!thumbsOpen) return;
+      if (document.body.classList.contains('is-leaving')) return;
+      
+      document.body.classList.remove('is-entering-ready');
+      document.body.classList.add('hide-shutter-title');
+      document.body.classList.add('prepare-leave');
+      void document.body.offsetWidth;
+      document.body.classList.remove('prepare-leave');
+      document.body.classList.add('is-leaving');
+      
+      let triggered = false;
+      const handler = () => {
+        if(triggered) return; triggered = true;
+        thumbsOpen = false; 
+        thumbsPanel.classList.remove('is-open');
+        document.getElementById('jd-normal-nav').style.display = 'flex';
+        document.getElementById('jd-thumbs-nav').classList.remove('is-open');
+        
+        document.body.classList.remove('is-leaving');
+        document.body.classList.add('is-entering-ready');
+      };
+      
+      shutter.addEventListener('transitionend', handler, { once: true });
+      setTimeout(handler, 1600);
     }
     document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
     document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
@@ -1084,7 +1174,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     document.body.classList.add('show-shutter-title');
     let isLoaded = document.readyState === 'complete', isMinTimePassed = false, hasOpened = false;
     window.addEventListener('load', () => { isLoaded = true; tryOpen(); });
-    setTimeout(() => { isMinTimePassed = true; tryOpen(); }, 1200);
+    setTimeout(() => { isMinTimePassed = true; tryOpen(); }, 200);
     function tryOpen() { if (!hasOpened && isLoaded && isMinTimePassed) { hasOpened = true; startPageOpen(); } }
     setTimeout(() => { if (!hasOpened) { hasOpened = true; startPageOpen(); } }, 3000);
 
