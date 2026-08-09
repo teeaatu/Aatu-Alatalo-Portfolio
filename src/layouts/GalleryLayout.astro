@@ -392,10 +392,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-thumbs-panel {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: var(--jd-bg); z-index: 300; overflow-y: auto;
-      padding: 4rem 1.5rem 2rem; opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
+      padding: 4rem 1.5rem 2rem; pointer-events: none;
+      transform: translateY(-100%);
+      transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
     }
-    #jd-thumbs-panel.is-open { opacity: 1; pointer-events: auto; }
+    #jd-thumbs-panel.is-open { transform: translateY(0); pointer-events: auto; }
     .jd-thumbs-inner { max-width: 1600px; margin: 0 auto; }
     .jd-thumbs-section { margin-bottom: 5rem; scroll-margin-top: 6rem; }
     .jd-thumbs-section-title {
