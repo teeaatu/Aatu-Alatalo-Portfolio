@@ -6,6 +6,13 @@
   --sidebar-width: 300px;
   --nav-speed: 0.3s;
 
+  /* Easing variables */
+  --ease-standard: cubic-bezier(0, 0, 0.2, 1);
+  --ease-fast: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-custom: cubic-bezier(0.77, 0, 0.175, 1);
+
 
 
   /* Auto-centralized styles */
@@ -90,7 +97,7 @@ html, body, .jd-menu-scroll-container, .jd-categories {
 /* --- PEHMEÄ SIVUN SISÄÄNTULO --- */
 .page-enter-animation {
   opacity: 0;
-  animation: slideUpFadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideUpFadeIn 0.7s var(--ease-out-expo) forwards;
   animation-delay: 0.1s;
 }
 
@@ -105,7 +112,7 @@ html, body, .jd-menu-scroll-container, .jd-categories {
     background: var(--color-rgb-7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: var(--color-hex-f4f0ea); border: 1px solid var(--color-rgb-8); 
     width: 44px; height: 44px; border-radius: 50%; 
     font-size: 14px; cursor: pointer; z-index: 1000; 
-    transition: background 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0, 0, 0.2, 1); display: flex; justify-content: center; align-items: center;
+    transition: background 280ms var(--ease-standard), transform 280ms var(--ease-standard), box-shadow 280ms var(--ease-standard); display: flex; justify-content: center; align-items: center;
     box-shadow: 0 4px 15px var(--color-rgb-9);
 }
 .back-to-top:hover {
@@ -113,7 +120,7 @@ html, body, .jd-menu-scroll-container, .jd-categories {
 }
 .back-to-top:active {
     transform: scale(0.97);
-    transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+    transition: transform 80ms var(--ease-fast);
 }
 .back-to-top svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); width: 44px; height: 44px }
 .back-to-top circle { fill: none; stroke-width: 2.5 }
@@ -142,14 +149,14 @@ aside .site-logo {
   flex-direction: column;
   align-items: flex-start; /* Align left for desktop sidebar */
   margin-bottom: 2rem;
-  transition: opacity 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: opacity 280ms var(--ease-standard), transform 280ms var(--ease-standard);
 }
 aside .site-logo:hover {
   opacity: 0.85;
 }
 aside .site-logo:active {
   transform: scale(0.98);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1), opacity 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 80ms var(--ease-fast), opacity 280ms var(--ease-standard);
 }
 
 aside .site-logo .logo-name {
@@ -188,14 +195,14 @@ nav a {
   color: var(--text-dimmed);
   font-size: 13px; 
   letter-spacing: 1px;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   line-height: 1.4;
   display: inline-block;
   text-transform: none;
 }
 
 nav a:hover { color: var(--color-hex-f4f0ea); }
-nav a:active { transform: scale(0.97); transition: transform 80ms cubic-bezier(0.4, 0, 1, 1); }
+nav a:active { transform: scale(0.97); transition: transform 80ms var(--ease-fast); }
 
 nav a.active { 
   color: var(--color-hex-f4f0ea); 
@@ -249,7 +256,7 @@ nav a.masters-nav-item.active {
   color: var(--text-dimmed);
   font-size: 13px;
   letter-spacing: 1px;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   line-height: 1.4;
   text-transform: none;
   display: inline-block;
@@ -260,7 +267,7 @@ nav a.masters-nav-item.active {
 }
 .info-nav-links a:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 
 .info-nav-links a.active {
@@ -289,7 +296,7 @@ nav a.masters-nav-item.active {
 }
 .sidebar-socials .social-icon-link:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1), opacity 200ms ease;
+  transition: transform 80ms var(--ease-fast), opacity 200ms ease;
 }
 
 /* Clean Text Language Switcher */
@@ -305,12 +312,12 @@ nav a.masters-nav-item.active {
 .lang-switcher-clean a {
   color: var(--text-dimmed) !important;
   text-decoration: none !important;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   display: inline-block;
 }
 .lang-switcher-clean a:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 
 .lang-switcher-clean a:hover {
@@ -333,12 +340,12 @@ nav a.masters-nav-item.active {
   align-items: center; 
   gap: 10px; 
   color: var(--color-hex-f4f0ea); 
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), opacity 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1); 
+  transition: color 280ms var(--ease-standard), opacity 280ms var(--ease-standard), transform 280ms var(--ease-standard); 
   opacity: 0.8;
   text-decoration: none !important;
 }
 .social-icon-link:hover { color: var(--accent-color); opacity: 1; }
-.social-icon-link:active { transform: scale(0.97); transition: transform 80ms cubic-bezier(0.4, 0, 1, 1); }
+.social-icon-link:active { transform: scale(0.97); transition: transform 80ms var(--ease-fast); }
 
 /* --- MOBIILIOTSIKKO --- */
 .mobile-header {
@@ -350,24 +357,24 @@ nav a.masters-nav-item.active {
   display: block;
   max-width: 140px; /* Säädä tätä lukua jos logo tuntuu liian isolta/pieneltä mobiilissa */
   margin-bottom: 0;
-  transition: opacity 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: opacity 280ms var(--ease-standard), transform 280ms var(--ease-standard);
 }
 .mobile-logo:hover {
   opacity: 0.85;
 }
 .mobile-logo:active {
   transform: scale(0.98);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 .brand-logo-mobile {
-  transition: opacity 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: opacity 280ms var(--ease-standard), transform 280ms var(--ease-standard);
 }
 .brand-logo-mobile:hover {
   opacity: 0.85;
 }
 .brand-logo-mobile:active {
   transform: scale(0.98);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 .mobile-logo img {
   width: 100%;
@@ -392,7 +399,7 @@ nav a.masters-nav-item.active {
   color: var(--text-dimmed);
   text-decoration: none;
   text-transform: uppercase;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   display: inline-block;
 }
 .lang-switcher-desktop:hover {
@@ -400,7 +407,7 @@ nav a.masters-nav-item.active {
 }
 .lang-switcher-desktop:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 
 @media (max-width: 1024px) {
@@ -430,14 +437,14 @@ nav a.masters-nav-item.active {
   .mobile-header .site-logo {
     align-items: center; /* Center the text lines within the logo container */
     margin-bottom: 0; /* No margin below in mobile header */
-    transition: opacity 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+    transition: opacity 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   }
   .mobile-header .site-logo:hover {
     opacity: 0.85;
   }
   .mobile-header .site-logo:active {
     transform: scale(0.98);
-    transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+    transition: transform 80ms var(--ease-fast);
   }
   .mobile-header .site-logo .logo-name {
     font-size: 1.4rem; /* Adjusted for mobile (slightly smaller) */
@@ -504,8 +511,8 @@ main {
   animation: fadeGridIn 0.8s ease-out forwards;
 }
 @keyframes fadeGridIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 .overview-item {
   position: relative;
@@ -704,8 +711,8 @@ main {
 /* --- STAGGERED LOAD ANIMATION & GALLERY IMAGES --- */
 .stagger-item {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
 }
 .stagger-item.is-visible {
   opacity: 1;
@@ -812,7 +819,7 @@ main {
 .gallery-img:active {
   transform: scale(0.99) !important;
   box-shadow: 0 10px 20px var(--color-rgb-14) !important;
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1), box-shadow 80ms cubic-bezier(0.4, 0, 1, 1) !important;
+  transition: transform 80ms var(--ease-fast), box-shadow 80ms var(--ease-fast) !important;
 }
 
 .external-link-text {
@@ -878,7 +885,7 @@ main {
 }
 .footer-socials .social-icon-link:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1), opacity 200ms ease;
+  transition: transform 80ms var(--ease-fast), opacity 200ms ease;
 }
 
 /* --- HAMPURILAINEN --- */
@@ -888,11 +895,11 @@ main {
   background: none; border: none; cursor: pointer;
   z-index: 2000;
   display: flex; justify-content: center; align-items: center;
-  transition: transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: transform 280ms var(--ease-standard);
 }
 .menu-toggle:active {
   transform: scale(0.97) !important;
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1) !important;
+  transition: transform 80ms var(--ease-fast) !important;
 }
 .hamburger { width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: relative; transition: all 0.4s ease; }
 .hamburger::before, .hamburger::after { content: ''; width: 25px; height: 2px; background: var(--color-hex-f4f0ea); position: absolute; left: 0; transition: all 0.4s ease; }
@@ -912,7 +919,7 @@ main {
     width: 100%;
     height: 100vh;
     height: 100dvh; /* Mukautuu automaattisesti, kun osoitepalkki ilmestyy/katoaa */
-    transition: left 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: left 0.5s var(--ease-custom);
     z-index: 1500;
     background: rgba(10, 10, 10, 0.95); /* Vain hennosti läpikuultava, lähes musta */
     justify-content: flex-start; /* Korjaa skrollausbugin: sallii kaiken sisällön vierittämisen */
@@ -985,7 +992,7 @@ main {
   }
   aside nav a:active {
     transform: scale(0.97) !important; /* Apple-tyylinen painallus myös mobiilivalikossa */
-    transition: transform 80ms cubic-bezier(0.4, 0, 1, 1) !important;
+    transition: transform 80ms var(--ease-fast) !important;
   }
   aside nav a.active {
     border-left: none !important;
@@ -1010,7 +1017,7 @@ main {
   }
   aside .info-nav-links a:active {
     transform: scale(0.97) !important; /* Apple-tyylinen painallus myös mobiilivalikossa */
-    transition: transform 80ms cubic-bezier(0.4, 0, 1, 1) !important;
+    transition: transform 80ms var(--ease-fast) !important;
   }
   aside .info-nav-links a.active {
     border-left: none !important;
@@ -1073,7 +1080,8 @@ body.index-page main {
 }
 
 @keyframes revealGallery {
-  to { opacity: 1; }
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .gallery-frame {
@@ -1135,7 +1143,7 @@ body.index-page main {
   font-size: 14px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1146,7 +1154,7 @@ body.index-page main {
 }
 .page-navigation a:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 
 .page-navigation .nav-arrow {
@@ -1193,12 +1201,12 @@ body.index-page main {
   font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
 }
 
 .about-cta a:active {
   transform: scale(0.97);
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1);
+  transition: transform 80ms var(--ease-fast);
 }
 .about-cta a span {
   font-size: 1.2rem;
@@ -1358,7 +1366,7 @@ body.index-page main {
   color: rgba(244, 240, 234, 0.45); /* Lämmin ja hienostunut himmennys */
   text-decoration: none !important;
   margin: 0;
-  transition: color 280ms cubic-bezier(0, 0, 0.2, 1), text-decoration-color 280ms cubic-bezier(0, 0, 0.2, 1), transform 280ms cubic-bezier(0, 0, 0.2, 1);
+  transition: color 280ms var(--ease-standard), text-decoration-color 280ms var(--ease-standard), transform 280ms var(--ease-standard);
   display: inline-block;
   padding: 10px 0;
   text-underline-offset: 8px; /* Antaa kirjaimille reilusti happea */
@@ -1366,7 +1374,7 @@ body.index-page main {
 }
 .gallery-filter-nav .filter-link:active {
   transform: scale(0.99) !important;
-  transition: transform 80ms cubic-bezier(0.4, 0, 1, 1) !important;
+  transition: transform 80ms var(--ease-fast) !important;
 }
 .gallery-filter-nav .filter-link:hover {
   color: var(--color-hex-f4f0ea);
@@ -1402,7 +1410,7 @@ body.index-page main {
    ':not(.pswp--dragging)' varmistaa, että mobiilissa sormella vetäminen pysyy silti tarkkana. */
 .pswp:not(.pswp--dragging) .pswp__container {
   transition-duration: 0.5s !important;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-timing-function: var(--ease-in-out) !important;
 }
 
 /* Lisää tyylikkään blur-efektin taustalle */
@@ -1430,4 +1438,16 @@ body.index-page main {
   -webkit-touch-callout: none !important;
   -webkit-tap-highlight-color: transparent !important;
   outline: none !important;
+}
+
+/* --- VIEW TRANSITIONS CONFLICT PREVENTION --- */
+html.is-view-transitioning .page-enter-animation,
+html.is-view-transitioning .overview-grid,
+html.is-view-transitioning .dan-winters-container,
+html.is-view-transitioning .stagger-item,
+html.is-view-transitioning .stagger-item.is-visible {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
