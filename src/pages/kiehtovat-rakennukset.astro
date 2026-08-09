@@ -1,0 +1,11 @@
+---
+import GalleryLayout from '../layouts/GalleryLayout.astro';
+import dataset from '../data/kiehtovat-rakennukset.yml';
+---
+<GalleryLayout 
+  lang="fi" 
+  dataset={dataset} 
+  categoryTitle="Kiehtovat Rakennukset" 
+  activeNav="kiehtovat-rakennukset" 
+  translationUrl="/en/buildings" 
+/>

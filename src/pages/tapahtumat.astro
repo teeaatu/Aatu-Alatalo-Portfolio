@@ -1,0 +1,11 @@
+---
+import GalleryLayout from '../layouts/GalleryLayout.astro';
+import dataset from '../data/tapahtumat.yml';
+---
+<GalleryLayout 
+  lang="fi" 
+  dataset={dataset} 
+  categoryTitle="Tapahtumat" 
+  activeNav="tapahtumat" 
+  translationUrl="/en/events" 
+/>
