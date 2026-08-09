@@ -1,0 +1,159 @@
+---
+import t from '../data/t.yml';
+import recent from '../data/recent.yml';
+import work1 from '../data/work1.yml';
+import work2 from '../data/work2.yml';
+import work3 from '../data/work3.yml';
+import tapahtumat from '../data/tapahtumat.yml';
+import variJaMuoto from '../data/vari-ja-muoto.yml';
+import raw from '../data/raw.yml';
+import mustavalkoinenSarja from '../data/mustavalkoinen-sarja.yml';
+import sisatilanValo from '../data/sisatilan-valo.yml';
+import kiehtovatRakennukset from '../data/kiehtovat-rakennukset.yml';
+import luontoJaYmparisto from '../data/luonto-ja-ymparisto.yml';
+import stillLife from '../data/still-life.yml';
+import elaimet from '../data/elaimet.yml';
+
+const { lang = 'fi', activeNav, translationUrl } = Astro.props;
+
+const fiUrl = translationUrl && lang === 'en' ? translationUrl : (lang === 'fi' ? '/' : '/');
+const enUrl = translationUrl && lang === 'fi' ? translationUrl : (lang === 'en' ? '/en/' : '/en/');
+
+const counts = {
+  recent: recent.length,
+  work1: work1.length,
+  work2: work2.length,
+  work3: work3.length,
+  tapahtumat: tapahtumat.length,
+  variJaMuoto: variJaMuoto.length,
+  raw: raw.length,
+  mustavalkoinenSarja: mustavalkoinenSarja.length,
+  sisatilanValo: sisatilanValo.length,
+  kiehtovatRakennukset: kiehtovatRakennukset.length,
+  luontoJaYmparisto: luontoJaYmparisto.length,
+  stillLife: stillLife.length,
+  elaimet: elaimet.length,
+};
+---
+<nav id="jd-index-panel">
+  <!-- Top Navigation -->
+  <div class="jd-top-nav">
+    <a href={lang === 'en' ? "/en/recent" : "/recent"} style="text-decoration: underline; text-underline-offset: 4px;">
+      {lang === 'en' ? "Works" : "Kategoriat"}
+    </a>
+    <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
+      {lang === 'en' ? "Info" : "Info & Ajatuksia"}
+    </a>
+    <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener">
+      Instagram
+    </a>
+    <div style="margin-left: auto; display: flex; gap: 1.5rem; align-items: baseline;">
+      <a href={lang === 'fi' ? enUrl : fiUrl} onclick={`localStorage.setItem('langPref','${lang === 'fi' ? 'en' : 'fi'}')`}>
+        {lang === 'fi' ? "EN" : "FI"}
+      </a>
+      <a href="#" class="jd-mobile-close" onclick="window.closeIndexPanel(); return false;">
+        {lang === 'fi' ? "Sulje" : "Close"}
+      </a>
+    </div>
+  </div>
+
+  <!-- Kuraatiot -->
+  <ul style="list-style: none; margin-bottom: 3rem;">
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/recent" : "/recent"} class={`jd-index-link ${activeNav === 'recent' ? 'active' : ''}`}>
+        <span>{lang === 'en' ? "Recent" : "Uusimmat"}</span>
+        <span class="jd-count">{counts.recent}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/work1" : "/work1"} class={`jd-index-link ${activeNav === 'work1' ? 'active' : ''}`}>
+        <span>{lang === 'en' ? "Work I" : "Työ I"}</span>
+        <span class="jd-count">{counts.work1}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/work2" : "/work2"} class={`jd-index-link ${activeNav === 'work2' ? 'active' : ''}`}>
+        <span>{lang === 'en' ? "Work II" : "Työ II"}</span>
+        <span class="jd-count">{counts.work2}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/work3" : "/work3"} class={`jd-index-link ${activeNav === 'work3' ? 'active' : ''}`}>
+        <span>{lang === 'en' ? "Work III" : "Työ III"}</span>
+        <span class="jd-count">{counts.work3}</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Kategoriat -->
+  <ul style="list-style: none; margin-bottom: 3rem;">
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/events" : "/tapahtumat"} class={`jd-index-link ${activeNav === 'tapahtumat' ? 'active' : ''}`}>
+        <span>{t.events[lang]}</span>
+        <span class="jd-count">{counts.tapahtumat}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/color-and-form" : "/vari-ja-muoto"} class={`jd-index-link ${activeNav === 'vari-ja-muoto' ? 'active' : ''}`}>
+        <span>{t.color_and_form[lang]}</span>
+        <span class="jd-count">{counts.variJaMuoto}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/raw" : "/raw"} class={`jd-index-link ${activeNav === 'raw' ? 'active' : ''}`}>
+        <span>{t.portraits[lang]}</span>
+        <span class="jd-count">{counts.raw}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/black-and-white-series" : "/mustavalkoinen-sarja"} class={`jd-index-link ${activeNav === 'mustavalkoinen-sarja' ? 'active' : ''}`}>
+        <span>{t.monochrome[lang]}</span>
+        <span class="jd-count">{counts.mustavalkoinenSarja}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/interior-light" : "/sisatilan-valo"} class={`jd-index-link ${activeNav === 'sisatilan-valo' ? 'active' : ''}`}>
+        <span>{t.interior[lang]}</span>
+        <span class="jd-count">{counts.sisatilanValo}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/buildings" : "/kiehtovat-rakennukset"} class={`jd-index-link ${activeNav === 'kiehtovat-rakennukset' ? 'active' : ''}`}>
+        <span>{t.buildings[lang]}</span>
+        <span class="jd-count">{counts.kiehtovatRakennukset}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/nature" : "/luonto-ja-ymparisto"} class={`jd-index-link ${activeNav === 'luonto-ja-ymparisto' ? 'active' : ''}`}>
+        <span>{t.nature[lang]}</span>
+        <span class="jd-count">{counts.luontoJaYmparisto}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/still-life" : "/still-life"} class={`jd-index-link ${activeNav === 'still-life' ? 'active' : ''}`}>
+        <span>{t.still_life[lang]}</span>
+        <span class="jd-count">{counts.stillLife}</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/animals" : "/elaimet"} class={`jd-index-link ${activeNav === 'elaimet' ? 'active' : ''}`}>
+        <span>{t.animals[lang]}</span>
+        <span class="jd-count">{counts.elaimet}</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Projektit -->
+  <ul style="list-style: none; margin-bottom: 3rem;">
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/masters-2026" : "/masters-2026"} class={`jd-index-link ${activeNav === 'masters-2026' ? 'active' : ''}`}>
+        <span>Hasselblad Masters 2026</span>
+      </a>
+    </li>
+    <li style="margin-bottom: 0.6rem;">
+      <a href={lang === 'en' ? "/en/photo-project-time-v365" : "/kuvaprojekti-ajasta-v365"} class={`jd-index-link ${activeNav === 'kuvaprojekti-ajasta-v365' ? 'active' : ''}`}>
+        <span>{t.v365[lang]}</span>
+      </a>
+    </li>
+  </ul>
+</nav>
