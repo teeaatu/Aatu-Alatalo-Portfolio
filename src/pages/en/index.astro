@@ -1,0 +1,10 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import OverviewGrid from '../../components/OverviewGrid.astro';
+import { getOverviewImages } from '../../utils/getOverviewImages.js';
+
+const images = getOverviewImages();
+---
+<Layout lang="en" activeNav="index" translationUrl="/">
+  <OverviewGrid images={images} lang="en" />
+</Layout>

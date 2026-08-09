@@ -1,0 +1,11 @@
+---
+import GalleryLayout from '../layouts/GalleryLayout.astro';
+import dataset from '../data/recent.yml';
+---
+<GalleryLayout 
+  lang="fi" 
+  dataset={dataset} 
+  categoryTitle="Uusimmat" 
+  activeNav="recent" 
+  translationUrl="/en/recent" 
+/>

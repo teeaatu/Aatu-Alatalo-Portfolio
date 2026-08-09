@@ -1,24 +1,10 @@
 ---
-import recentData from '../data/recent.yml';
-const firstImage = recentData[0];
----
+import Layout from '../layouts/Layout.astro';
+import OverviewGrid from '../components/OverviewGrid.astro';
+import { getOverviewImages } from '../utils/getOverviewImages.js';
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Data Test</title>
-	</head>
-	<body>
-		<h1>Astro Data Test</h1>
-		<p>Testing YAML import and absolute Cloudflare URL:</p>
-		<div>
-			<img src={firstImage.kuva} alt={firstImage.alt_text} style="max-width: 500px" />
-			<p><strong>{firstImage.otsikko}</strong></p>
-			<p>{firstImage.paikka}</p>
-		</div>
-	</body>
-</html>
+const images = getOverviewImages();
+---
+<Layout lang="fi" activeNav="index" translationUrl="/en/">
+  <OverviewGrid images={images} lang="fi" />
+</Layout>

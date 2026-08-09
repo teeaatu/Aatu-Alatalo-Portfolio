@@ -1,0 +1,11 @@
+---
+import GalleryLayout from '../layouts/GalleryLayout.astro';
+import dataset from '../data/raw.yml';
+---
+<GalleryLayout 
+  lang="fi" 
+  dataset={dataset} 
+  categoryTitle="Muotokuvat" 
+  activeNav="raw" 
+  translationUrl="/en/raw" 
+/>
