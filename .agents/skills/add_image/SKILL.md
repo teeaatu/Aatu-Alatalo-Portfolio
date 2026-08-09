@@ -74,7 +74,7 @@ HYVÄ: "A crowd walking down a wet street in the rain. A dark pink umbrella stan
 
 ## Vaihe 5: Päivitä YML-datatiedosto
 
-Lisää uusi merkintä tiedostoon `_data/<kategorian-nimi>.yml`. Noudata täsmälleen olemassa olevaa rakennetta:
+Lisää uusi merkintä tiedostoon `src/data/<kategorian-nimi>.yml`. Noudata täsmälleen olemassa olevaa rakennetta:
 
 ```yaml
 - kuva: tiedostonimi.jpg
@@ -94,7 +94,7 @@ Varmista että sivusto rakentuu virheettömästi:
 
 ```bash
 cd /Volumes/A26/Portfolio\ Home
-bundle exec jekyll build
+npm run build
 ```
 
 Tarkista että build päättyy onnistuneesti eikä sisällä varoituksia kyseisestä tiedostosta.
