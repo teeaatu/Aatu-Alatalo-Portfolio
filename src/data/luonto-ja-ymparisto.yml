@@ -1,0 +1,45 @@
+- kuva: https://media.aatualatalo.com/Photographs/soratie.webp
+  width: 2250
+  height: 1500
+  otsikko: Gravel Road and Jackdaws / Soratie ja naakat
+  paikka: Tyrnävä, Finland 2025
+  alt_text: "A scenic countryside landscape of a gravel road stretching through flat fields in Tyrnävä, Finland, with several jackdaws flying low over the ground under a soft, overcast sky."
+- tyyppi: teksti
+  otsikko: Luonto ja ympäristö / Nature
+  teksti: "Aina kun menen lähellekään luontoa, mielialani kohoaa. Luonto on yksi tärkeimmistä inspiraation lähteistäni. Sieltähän löytyy vaikka minkälaisia harmonisia värejä ja muotoja, ääniä ja hiljaisuutta."
+- kuva: https://media.aatualatalo.com/Photographs/myrsky.webp
+  width: 2100
+  height: 1500
+  otsikko: Storm / Myrsky
+  paikka: Muhos, Finland 2026
+  alt_text: "A wide summer countryside landscape in Muhos, Finland under a dark stormy sky. Lush green fields and large trees frame a small wooden building on the right, while the playful silhouette of a cat's ears appears in the foreground."
+- kuva: DSC3900_Panorama.jpg
+  width: 3064
+  height: 2198
+  otsikko: Hossa National Park / Hossan kansallispuisto
+  paikka: Suomussalmi, Finland 2025
+  alt_text: "A detailed landscape photograph of Hossa National Park in Finland. The scene features a steep, rocky hillside covered with lush green undergrowth and moss-covered boulders. In the center, a prominent leaning dead pine tree stands amidst dense, dark green coniferous forest."
+- layout: diptych
+  otsikko: Quarry / Louhos
+  paikka: Murto, Tyrnävä 2026
+  images:
+    - kuva: Louhos_1.jpg
+      width: 3000
+      height: 2250
+      alt_text: "A wide landscape photograph showing the entrance to an open sand and gravel quarry in Murto, Tyrnävä. A closed light green metal security gate with safety warning signs blocks a dirt road in the foreground. Behind the gate, massive smooth piles of extracted gravel rise against an overcast sky."
+    - kuva: Louhos_2.jpg
+      width: 3000
+      height: 2250
+      alt_text: "A photograph taken through a wire mesh fence at a gravel quarry in Murto, Tyrnävä. The foreground shows an embankment overgrown with vibrant green weeds, small bushes, and scattered rocks. In the background, large conical piles of excavated sand and gravel rise up under a cloudy sky."
+- kuva: pr1.jpg
+  width: 2000
+  height: 1500
+  otsikko: Early Spring / Kevättalvi
+  paikka: Muhos, Finland 2026
+  alt_text: "A scenic winter photograph of a traditional red wooden barn in Muhos, Finland. The barn is partially obscured by large, snow-laden pine trees on the left. The ground is covered in a thick, bright layer of snow with some scattered footprint tracks, capturing a beautiful sunny late-winter day."
+- kuva: DSC7318.jpg
+  width: 1500
+  height: 1000
+  otsikko: Underpass / Alikulku
+  paikka: Ylivieska, Finland 2026
+  alt_text: "A cold winter photograph of a snowy road passing underneath a concrete overpass in Ylivieska, Finland. The surrounding trees and ground are covered in thick frost, and a yellow wooden house is visible in the background above the bridge."
