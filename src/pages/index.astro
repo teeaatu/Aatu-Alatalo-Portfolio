@@ -1,5 +1,6 @@
 ---
-
+import recentData from '../data/recent.yml';
+const firstImage = recentData[0];
 ---
 
 <html lang="en">
@@ -9,9 +10,15 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Astro Data Test</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<h1>Astro Data Test</h1>
+		<p>Testing YAML import and absolute Cloudflare URL:</p>
+		<div>
+			<img src={firstImage.kuva} alt={firstImage.alt_text} style="max-width: 500px" />
+			<p><strong>{firstImage.otsikko}</strong></p>
+			<p>{firstImage.paikka}</p>
+		</div>
 	</body>
 </html>
