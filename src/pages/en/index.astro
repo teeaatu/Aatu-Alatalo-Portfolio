@@ -1,10 +1,12 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import OverviewGrid from '../../components/OverviewGrid.astro';
-import { getOverviewImages } from '../../utils/getOverviewImages.js';
-
-const images = getOverviewImages();
+import GalleryLayout from '../../layouts/GalleryLayout.astro';
+import dataset from '../../data/recent.yml';
 ---
-<Layout lang="en" activeNav="index" translationUrl="/">
-  <OverviewGrid images={images} lang="en" />
-</Layout>
+<GalleryLayout
+  lang="en"
+  dataset={dataset}
+  categoryTitle="Recent"
+  categorySlug="recent"
+  activeNav="recent"
+  translationUrl="/"
+/>
