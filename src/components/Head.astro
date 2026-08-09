@@ -1,0 +1,99 @@
+---
+const { title = "Aatu Alatalo | Valokuvaaja & Hasselblad Masters 2026 Finalist", description, lang = 'fi', translationUrl, keywords } = Astro.props;
+
+const mainDesc = description || (lang === 'fi' 
+  ? 'Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti. Virallinen portfolio.' 
+  : 'Aatu Alatalo is a photographer from Tyrnävä, based in Oulu, Finland, and a Hasselblad Masters 2026 finalist. Official portfolio.');
+
+const siteUrl = "https://aatualatalo.com";
+const currentUrl = Astro.url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+const fullUrl = `${siteUrl}${currentUrl}`;
+
+// Multilingual SEO
+const fiUrl = translationUrl && lang === 'en' ? `${siteUrl}${translationUrl}` : fullUrl;
+const enUrl = translationUrl && lang === 'fi' ? `${siteUrl}${translationUrl}` : fullUrl;
+---
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+{lang === 'fi' && translationUrl && (
+<script is:inline define:vars={{ translationUrl }}>
+  (function() {
+    var pref = localStorage.getItem('langPref');
+    if (pref === 'fi') return;
+    if (!pref) {
+      var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      if (lang.indexOf('fi') === 0) {
+        localStorage.setItem('langPref', 'fi');
+        return;
+      }
+    }
+    window.location.replace(translationUrl);
+  })();
+</script>
+)}
+
+<link rel="preconnect" href="https://media.aatualatalo.com" crossorigin>
+<link rel="dns-prefetch" href="https://media.aatualatalo.com">
+
+<title>{title}</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png">
+<link rel="apple-touch-icon" href="/images/favicon-192x192.png">
+
+<meta name="description" content={mainDesc}>
+<meta name="keywords" content={keywords || "Aatu Alatalo, valokuvaaja Oulu, Hasselblad Masters 2026, Project 21, suomalainen valokuvaus, photography portfolio Finland"}>
+
+<meta property="og:title" content={title}>
+<meta property="og:description" content={mainDesc}>
+<meta property="og:locale" content={lang === 'fi' ? "fi_FI" : "en_US"}>
+<meta property="og:locale:alternate" content={lang === 'fi' ? "en_US" : "fi_FI"}>
+<meta property="og:image" content={`${siteUrl}/images/PROJECT%2021%20FINALIST.jpg`}>
+<meta property="og:url" content={fullUrl}>
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={mainDesc}>
+<meta name="twitter:image" content={`${siteUrl}/images/PROJECT%2021%20FINALIST.jpg`}>
+
+<link rel="canonical" href={fullUrl}>
+
+{translationUrl ? (
+  <>
+    <link rel="alternate" hreflang="fi" href={fiUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={lang === 'fi' ? enUrl : fiUrl} />
+  </>
+) : (
+  <link rel="alternate" hreflang={lang} href={fullUrl} />
+)}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap">
+</noscript>
+
+<link rel="preload" as="style" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
+<link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css" media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.3/dist/photoswipe.css">
+</noscript>
+
+<link rel="stylesheet" href="/styles/style.css">
+
+<script is:inline>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').catch(function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+</script>
