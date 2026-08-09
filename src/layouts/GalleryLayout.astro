@@ -1,0 +1,1494 @@
+---
+import Layout from './Layout.astro';
+import IndexPanel from '../components/IndexPanel.astro';
+
+const { lang = 'fi', dataset, categoryTitle, activeNav, translationUrl } = Astro.props;
+
+let jdIdx = 0;
+const galleryData = [];
+
+if (dataset) {
+  dataset.forEach(item => {
+    if (item.tyyppi === 'teksti') return;
+    
+    if (item.layout === 'diptych') {
+      const images = item.images.map(subitem => {
+        const fn = subitem.kuva.split('/').pop().split('.')[0];
+        const mob = `${fn}_mobile.webp`;
+        const dsk = `${fn}_desktop.webp`;
+        
+        let src_mob, src_dsk, full;
+        if (subitem.kuva.includes('http')) {
+          const fnext = subitem.kuva.split('/').pop();
+          const bpath = subitem.kuva.replace(fnext, '');
+          src_mob = `${bpath}thumbs/${mob}`;
+          src_dsk = `${bpath}thumbs/${dsk}`;
+          full = subitem.kuva;
+        } else {
+          src_mob = `/images/thumbnails/${mob}`;
+          src_dsk = `/images/thumbnails/${dsk}`;
+          full = `/images/${subitem.kuva}`;
+        }
+        return {
+          src: src_dsk,
+          srcset: `${src_mob} 800w, ${src_dsk} 1600w, ${full} 3000w`,
+          full: full,
+          thumb: src_mob,
+          alt: subitem.alt_text || ''
+        };
+      });
+      
+      galleryData.push({
+        i: jdIdx++,
+        layout: 'diptych',
+        images,
+        title: lang === 'fi' ? item.otsikko.split(' / ').pop().trim() : item.otsikko.split(' / ')[0].trim(),
+        place: item.paikka || '',
+        series: item.series || 'all'
+      });
+    } else {
+      const fn = item.kuva.split('/').pop().split('.')[0];
+      const mob = `${fn}_mobile.webp`;
+      const dsk = `${fn}_desktop.webp`;
+      
+      let src_mob, src_dsk, full;
+      if (item.kuva.includes('http')) {
+        const fnext = item.kuva.split('/').pop();
+        const bpath = item.kuva.replace(fnext, '');
+        src_mob = `${bpath}thumbs/${mob}`;
+        src_dsk = `${bpath}thumbs/${dsk}`;
+        full = item.kuva;
+      } else {
+        src_mob = `/images/thumbnails/${mob}`;
+        src_dsk = `/images/thumbnails/${dsk}`;
+        full = `/images/${item.kuva}`;
+      }
+      
+      galleryData.push({
+        i: jdIdx++,
+        src: src_dsk,
+        srcset: `${src_mob} 800w, ${src_dsk} 1600w, ${full} 3000w`,
+        full: full,
+        thumb: src_mob,
+        alt: item.alt_text || '',
+        title: lang === 'fi' ? item.otsikko.split(' / ').pop().trim() : item.otsikko.split(' / ')[0].trim(),
+        place: item.paikka || '',
+        series: item.series || 'all'
+      });
+    }
+  });
+}
+---
+<Layout title={categoryTitle} lang={lang} activeNav={activeNav} translationUrl={translationUrl}>
+
+<style>
+  /* ═══════════════════════════════════════════════════════
+   JD GALLERY — koko sivun override
+   Estää vanhan style.css:n interferenssin
+═══════════════════════════════════════════════════════ */
+
+  /* Ylikuormita body */
+  html,
+  body {
+    background: #f5f4f0 !important;
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: none;
+    /* Ei !important, jotta napit voivat käyttää pointeria */
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  #jd-main {
+    position: absolute !important;
+    inset: 0 !important;
+  }
+
+  /* ─── DOUBLE CURTAIN: Kategorian vaihto-suljin ─────────────────────── */
+  #jd-shutter-container {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    pointer-events: none;
+    display: block;
+  }
+  
+  .jd-curtain-primary {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999998;
+    background: var(--jd-bg);
+    transform: translateY(0);
+    will-change: transform;
+    /* transition is defined in active classes */
+  }
+
+  /* Kohinatekstuuri verhoihin, jotta ne näyttävät pinnaltaan samanlaisilta kuin tausta */
+  .jd-curtain-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+  
+  .jd-shutter-title {
+    /* Initial position: Slightly below center */
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    mix-blend-mode: difference;
+    z-index: 99999999;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0;
+    pointer-events: none;
+    /* Transition for sliding up to center and fading in */
+    transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+  }
+  
+  body.show-shutter-title .jd-shutter-title {
+    /* Step 1: Slide to exact center and fade in */
+    top: 50%;
+    opacity: 1;
+  }
+
+  body.is-entering-ready .jd-shutter-title {
+    /* Step 2: Slide up and fade out as the curtain opens */
+    top: 40%;
+    opacity: 0;
+    transition: top 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  }
+
+  /* Kun sivu sulkeutuu, teksti piilotetaan heti */
+  body.is-leaving .jd-shutter-title,
+  body.prepare-leave .jd-shutter-title {
+    opacity: 0 !important;
+    transition: none !important;
+  }
+
+  /* ENTER ANIMATION: Curtains slide up */
+  body.is-entering-ready .jd-curtain-primary {
+    transition: transform 1800ms 0ms cubic-bezier(0.76, 0, 0.24, 1);
+    transform: translateY(-150vh);
+  }
+
+  body.prepare-leave .jd-curtain-primary {
+    transition: none;
+    transform: translateY(-150vh);
+  }
+
+  /* EXIT ANIMATION: Curtains slide down */
+  body.is-leaving .jd-curtain-primary {
+    transition: transform 1400ms 0ms cubic-bezier(0.76, 0, 0.24, 1);
+    transform: translateY(0);
+  }
+
+  /* VELVET DROP — ENTER: Varmistetaan että normaalissa tilassa (ei transitiossa) elementit ovat näkyvissä */
+
+  /* Varmistetaan että normaalissa tilassa (ei transitiossa) elementit ovat näkyvissä */
+  #jd-slideshow {
+    transform: translateY(0);
+  }
+
+  #jd-bottom-nav {
+    transform: translateY(0);
+  }
+
+  /* Piilota kaikki vanhan layoutin elementit */
+  aside,
+  .mobile-header,
+  #mobileHeader,
+  #backToTop,
+  .back-to-top,
+  footer,
+  .page-nav,
+  #pswp {
+    display: none !important;
+  }
+
+
+
+  /* ─── SLIDESHOW ─────────────────────────────────────── */
+  #jd-slideshow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .jd-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+  }
+
+  .jd-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .jd-slide img {
+    /* Pienennetty maksimikoko lisää ilmaa kuvan ympärille */
+    max-width: calc(100% - 120px);
+    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .jd-text-slide {
+    max-width: 600px;
+    padding: 40px;
+    background-color: transparent;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    text-align: center;
+    user-select: text;
+  }
+  
+  /* ─── DIPTYCH SLIDE ────────────────────────────────────── */
+  .jd-diptych-slide {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 100vw;
+  }
+  .jd-diptych-slide img {
+    max-width: calc(50% - 75px) !important;
+    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* ─── ALANAVIGOINTI: Index — Thumbs ─────────────────────── */
+  #jd-bottom-nav {
+    position: fixed;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 100000;
+    pointer-events: none;
+    /* Laajennetaan hover-alue cursor:auto varten */
+    cursor: auto;
+  }
+
+  .jd-bottom-btn {
+    background: none;
+    border: none;
+    color: #1a1a18 !important;
+    -webkit-text-fill-color: #1a1a18 !important;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer !important;
+    pointer-events: auto;
+    opacity: 1 !important;
+    padding: 0.5rem 1rem;
+  }
+
+  .jd-nav-divider {
+    color: #1a1a18 !important;
+    -webkit-text-fill-color: #1a1a18 !important;
+    opacity: 1 !important;
+    font-size: 0.8rem;
+    padding: 0 0.2rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Laskuri oikealla alhaalla (poistettu käytöstä, näkyy kursorissa) */
+  #jd-counter {
+    display: none;
+  }
+
+  /* ─── FILTER NAV ────────────────────────────────────── */
+  .jd-filter-dropdown-container {
+    position: fixed;
+    bottom: 25px;
+    right: 35px;
+    display: none;
+    pointer-events: auto;
+    z-index: 100000;
+  }
+  .jd-filter-dropdown-container.is-visible {
+    display: block;
+  }
+  .jd-filter-menu {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    left: auto;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f5f4f0;
+    padding: 15px 25px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    margin-bottom: 15px;
+  }
+  .jd-filter-menu.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .jd-filter-btn {
+    background: none;
+    border: none;
+    color: rgba(26, 26, 24, 0.5);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+  .jd-filter-btn:hover {
+    color: rgba(26, 26, 24, 0.8);
+  }
+  .jd-filter-btn.active {
+    color: rgba(26, 26, 24, 1);
+  }
+
+  /* Funnel-ikoni hover-animaatio (optimaalinen) */
+  #jd-filter-toggle svg {
+    transition: stroke 0.3s ease;
+  }
+  #jd-filter-toggle:hover svg, #jd-filter-toggle.is-open svg {
+    stroke: rgba(26, 26, 24, 0.7);
+  }
+
+  /* ─── CUSTOM CURSOR ─────────────────────────────────── */
+  #jd-cursor-custom {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: white;
+    mix-blend-mode: difference;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #jd-cursor-arrow {
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+
+
+  /* ─── THUMBS STAGGER ANIMATION ──────────────────────── */
+  @keyframes thumbFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .jd-thumb.thumb-animate {
+    opacity: 0;
+    animation: thumbFadeIn 0.4s ease forwards;
+  }
+
+  /* ─── THUMBS PANEL (GLOBAL) ──────────────────────────────────── */
+  #jd-thumbs-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(245, 244, 240, 0.98); /* Vahva tausta taakse */
+    z-index: 300;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 6rem 5% 6rem;
+    cursor: auto;
+  }
+
+  #jd-thumbs-panel.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .jd-thumbs-inner {
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .jd-thumbs-section {
+    margin-bottom: 5rem;
+    scroll-margin-top: 6rem; /* Ensures fixed nav doesn't cover category title when scrolling */
+  }
+
+  .jd-thumbs-section-title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(26, 26, 24, 0.7);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .jd-thumbs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .jd-thumb-global {
+    cursor: pointer;
+    position: relative;
+    width: calc(25% - 2rem); /* 4 rinnakkain Desktopilla */
+  }
+
+  .jd-thumb-global img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: opacity 0.15s ease-out;
+    will-change: opacity;
+    transform: translateZ(0);
+  }
+
+  .jd-thumb-global:hover img {
+    opacity: 0.7;
+  }
+
+  .jd-thumb-global.is-active img {
+    outline: 2px solid #1a1a18;
+    outline-offset: 6px;
+  }
+
+  /* Thumbs auki: bottom-nav näyttää kategorian nimen ja Close-napin */
+  #jd-thumbs-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+
+  #jd-thumbs-nav.is-open {
+    display: flex;
+  }
+
+  #jd-thumbs-panel.is-open~#jd-bottom-nav #jd-normal-nav {
+    display: none;
+  }
+
+  /* ─── HINT ARROWS (DESKTOP) ──────────────────────────── */
+  #jd-hint-arrows {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: none; /* Piilotettu oletuksena (näytetään vain ekalla kerralla) */
+    justify-content: space-between;
+    padding: 0 5vw;
+    pointer-events: none;
+    z-index: 10000;
+    opacity: 1;
+  }
+  
+  #jd-hint-arrows.show-hints {
+    display: flex;
+    animation: fadeHintOut 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 10s;
+  }
+
+  .jd-hint-arrow {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: rgba(245, 244, 240, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(26, 26, 24, 0.6);
+    animation: pulseArrow 2.5s infinite ease-in-out;
+  }
+
+  .jd-hint-arrow.left { animation-delay: 0s; }
+  .jd-hint-arrow.right { animation-delay: 1.25s; }
+
+  @keyframes fadeHintOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @keyframes pulseArrow {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+      background: rgba(245, 244, 240, 0.6);
+      color: rgba(26, 26, 24, 0.9);
+    }
+  }
+
+  /* ─── SCROLL HACK HINT ───────────────────────────────── */
+  .jd-scroll-hint {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none; /* Näytetään vain mobiilissa */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 10000;
+    pointer-events: none;
+    animation: jdPulse 2s infinite ease-in-out;
+    transition: opacity 0.5s ease;
+  }
+  .jd-scroll-hint.is-hidden {
+    opacity: 0;
+  }
+  @keyframes jdPulse {
+    0% { transform: translate(-50%, 0); opacity: 0.3; }
+    50% { transform: translate(-50%, -10px); opacity: 0.7; }
+    100% { transform: translate(-50%, 0); opacity: 0.3; }
+  }
+
+  /* ─── MOBILE MEDIA QUERY ─────────────────────────────── */
+  @media (max-width: 800px) {
+    .jd-scroll-hint {
+      display: flex;
+    }
+    /* Safari-mobiili: Lukitaan sivu estämään selaimen UI-elementtien ("chrome") liikkuminen */
+    html {
+      background: #000 !important; /* Musta tausta alapalkin värille */
+    }
+    html, body {
+      overflow: hidden !important;
+      position: fixed !important;
+      height: 100vh !important; /* Fallback */
+      height: 100dvh !important; /* Dynaaminen viewport, joka ottaa Safarin UI:n huomioon */
+      overscroll-behavior: none !important;
+      min-height: 0 !important; /* Poistetaan vanha 150vh hakkeri */
+    }
+    #jd-main, #jd-slideshow {
+      position: fixed !important;
+    }
+    /* Mobiilissa verhot liukuvat alas paljastaen kuvan */
+    body.is-entering-ready .jd-curtain-primary {
+      transform: translateY(100%);
+    }
+
+    body.index-is-open #jd-counter,
+    body.index-is-open #jd-bottom-nav {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: opacity 0.3s ease;
+    }
+
+    #jd-thumbs-panel {
+      padding: 5rem 1rem 5rem;
+    }
+    .jd-thumbs-section-title {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .jd-thumbs-grid {
+      gap: 1rem;
+    }
+    .jd-thumb-global {
+      width: calc(50% - 1rem); /* 2 rinnakkain mobiilissa */
+    }
+    .jd-thumb-global.is-active img {
+      outline-offset: 4px;
+    }
+
+    /* Puhelimella älykäs skaalaus joka täyttää safe zonen täysin */
+    .jd-slide img {
+      width: 100%;
+      height: 100%;
+      max-width: calc(100% - 28px);
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .jd-diptych-slide {
+      flex-direction: column;
+      gap: 15px;
+    }
+    .jd-diptych-slide img {
+      width: 100%;
+      height: 100%;
+      max-width: calc(100% - 28px) !important;
+      max-height: calc(50dvh - 75px) !important;
+      object-fit: contain;
+    }
+
+    /* Siirretään Index & Thumbs -napit ylös keskelle staattisella taustalla */
+    #jd-bottom-nav {
+      bottom: auto;
+      top: 0;
+      height: auto;
+      min-height: 70px;
+      background: #f5f4f0;
+      width: 100%;
+      align-items: center;
+      padding-top: 25px;
+      padding-bottom: 15px;
+    }
+    
+    .jd-filter-dropdown-container {
+      bottom: auto;
+      top: 25px;
+      right: 25px;
+    }
+    .jd-filter-menu {
+      bottom: auto;
+      top: 100%;
+      margin-bottom: 0;
+      margin-top: 15px;
+    }
+
+    /* HINT ARROWS ON MOBILE (BOTTOM) */
+    #jd-hint-arrows {
+      top: auto;
+      bottom: 25px;
+      transform: none;
+      padding: 0 20px;
+    }
+
+    #jd-hint-arrows.show-hints {
+      display: flex;
+      animation: fadeHintOut 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 10s;
+    }
+
+    .jd-hint-arrow {
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      width: auto;
+      height: auto;
+      color: rgba(26, 26, 24, 0.4); /* Hieman vaaleampi mobiilissa */
+      animation: pulseArrowMobile 2.5s infinite ease-in-out;
+    }
+
+    .jd-hint-arrow svg {
+      width: 22px; /* Pienempi SVG mobiilissa */
+      height: 22px;
+    }
+    
+    @keyframes pulseArrowMobile {
+      0%, 100% { transform: scale(1); }
+      50% { 
+        transform: scale(1.15); /* Hillitympi suurennus mobiilissa */
+        color: rgba(26, 26, 24, 0.8); 
+      }
+    }
+
+    /* Asetetaan slideshow alkamaan yläpalkin (90px) alapuolelta, ettei kuva jää sen alle */
+    #jd-slideshow {
+      top: 90px;
+      bottom: 60px;
+      height: calc(100dvh - 150px);
+    }
+
+    /* Näytetään kategoria ja sivunumero alhaalla keskellä */
+    #jd-counter {
+      display: block;
+      position: fixed;
+      bottom: 25px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      z-index: 100000;
+      pointer-events: none;
+    }
+
+    /* Piilotetaan tekstikursori täysin mobiilissa, koska ei ole hiirtä */
+    #jd-cursor-custom {
+      display: none !important;
+    }
+  }
+</style>
+
+<!-- Kuvadata JSON:na JS:lle -->
+<script id="jd-data" type="application/json">{JSON.stringify(galleryData)}</script>
+
+<!-- Slideshow -->
+<!-- Slideshow -->
+
+<div id="jd-slideshow"></div>
+
+<!-- Navigointivihje (Nuolet, jotka haalistuvat pois) -->
+<div id="jd-hint-arrows">
+  <div class="jd-hint-arrow left">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+  </div>
+  <div class="jd-hint-arrow right">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+</div>
+
+<!-- Alanavigointi -->
+<div id="jd-bottom-nav">
+  <div id="jd-normal-nav" style="display:flex;align-items:center;gap:0;pointer-events:auto;">
+    <button class="jd-bottom-btn" id="jd-index-btn-bottom">{% if lang == 'en' %}Index{% else %}Valikko{% endif %}</button>
+    <span class="jd-nav-divider">—</span>
+    <button class="jd-bottom-btn" id="jd-thumbs-btn">{% if lang == 'en' %}All Works{% else %}Kaikki teokset{% endif %}</button>
+  </div>
+  <div id="jd-filter-dropdown-container" class="jd-filter-dropdown-container">
+    <button id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display: flex; align-items: center; justify-content: center; height: 100%; cursor: pointer;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(26,26,24,0.35)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+      </svg>
+    </button>
+    <div id="jd-filter-menu" class="jd-filter-menu"></div>
+  </div>
+  <div id="jd-thumbs-nav">
+    <span class="jd-bottom-btn" style="cursor:default;">{categoryTitle}</span>
+    <span class="jd-nav-divider">—</span>
+    <button class="jd-bottom-btn" id="jd-thumbs-close">{% if lang == 'en' %}Close{% else %}Sulje{% endif %}</button>
+  </div>
+</div>
+
+<!-- Laskuri -->
+<div id="jd-counter">{categoryTitle} — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{{ total_count }}</span></div>
+
+<!-- Custom cursor -->
+<div id="jd-cursor-custom">
+  <div id="jd-cursor-text">{categoryTitle}</div>
+  <div id="jd-cursor-arrow"></div>
+</div>
+
+
+<!-- Seuraavan/edellisen gallerian URLit -->
+{% if page.next_url %}<div id="jd-next-url" style="display:none">{{ page.next_url }}</div>{% endif %}
+{% if page.prev_url %}<div id="jd-prev-url" style="display:none">{{ page.prev_url }}</div>{% endif %}
+
+<!-- Thumbs-paneeli (Global) -->
+<div id="jd-thumbs-panel">
+  <div class="jd-thumbs-inner">
+    
+  {% for cat in all_cats %}
+        {% if dataset_key == 'kuvaprojekti-ajasta-v365' %}
+          {% endif %}
+        
+    {% if cat_data %}
+                        {% if lang == 'en' and cat_page_en %}
+              {% endif %}
+      
+      <div class="jd-thumbs-section" id="jd-thumbs-section-{{ cat }}">
+        <div class="jd-thumbs-section-title">
+          {% if cat == 'recent' %}
+            {% if lang == 'en' %}Recent{% else %}Uusimmat{% endif %}
+          {% elsif cat == 'work1' %}
+            {% if lang == 'en' %}Work I{% else %}Työ I{% endif %}
+          {% elsif cat == 'work2' %}
+            {% if lang == 'en' %}Work II{% else %}Työ II{% endif %}
+          {% elsif cat == 'work3' %}
+            {% if lang == 'en' %}Work III{% else %}Työ III{% endif %}
+          {% elsif cat == 'masters-2026' %}
+            Hasselblad Masters 2026
+          {% else %}
+            {% if lang == 'en' %}{{ site.data.t[dataset_key].en | default: cat }}{% else %}{{ site.data.t[dataset_key].fi | default: cat }}{% endif %}
+          {% endif %}
+        </div>
+        <div class="jd-thumbs-grid">
+                    {% for item in cat_data %}
+            {% if item.tyyppi == 'teksti' %}{% continue %}{% endif %}
+            
+            {% if item.layout == 'diptych' %}
+              {% for subitem in item.images %}
+                                                {% if subitem.kuva contains 'http' %}
+                                                                      {% else %}
+                                  {% endif %}
+                
+                <div class="jd-thumb-global" data-cat="{{ cat }}" data-idx="{{ thumb_idx }}" data-url="{{ target_url }}#img-{{ thumb_idx }}">
+                  <img src="{{ src_mob }}" loading="lazy" alt="{{ subitem.alt_text | default: '' }}">
+                </div>
+              {% endfor %}
+                          {% else %}
+                                          {% if item.kuva contains 'http' %}
+                                                              {% else %}
+                              {% endif %}
+              
+              <div class="jd-thumb-global" data-cat="{{ cat }}" data-idx="{{ thumb_idx }}" data-url="{{ target_url }}#img-{{ thumb_idx }}">
+                <img src="{{ src_mob }}" loading="lazy" alt="{{ item.alt_text | default: '' }}">
+              </div>
+                          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+  </div>
+</div>
+
+<!-- Suljin siirretty jd_default.html-tiedostoon containing block -bugin korjaamiseksi -->
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    /* ── Data ──────────────────────────────────────────── */
+    const data = JSON.parse(document.getElementById('jd-data').textContent);
+    const total = data.length;
+
+    const slideshow = document.getElementById('jd-slideshow');
+    const thumbsPanel = document.getElementById('jd-thumbs-panel');
+    const thumbsClose = document.getElementById('jd-thumbs-close');
+    const counterNum = document.getElementById('jd-counter-num');
+    const cursor = document.getElementById('jd-cursor-custom');
+    const shutter = document.querySelector('.jd-curtain-primary');
+    const shutterTitle = document.querySelector('.jd-shutter-title');
+
+    // Siirretään kursori suoraan body:n lapseksi, jotta mix-blend-mode:difference
+    // toimii koko viewporttia vastaan ilman stacking-context-rajoituksia
+    if (cursor && cursor.parentElement !== document.body) {
+      document.body.appendChild(cursor);
+    }
+    const slides = [];
+    let current = 0;
+    let thumbsOpen = false;
+
+    // Check URL hash for direct image linking (e.g. #img-5)
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#img-')) {
+      const idx = parseInt(hash.replace('#img-', ''), 10);
+      if (!isNaN(idx) && idx >= 0 && idx < total) {
+        current = idx;
+      }
+    }
+
+    /* ── Rakenna slidet ────────────────────────────────── */
+    function createSlide(item, i) {
+      const slide = document.createElement('div');
+      slide.className = 'jd-slide' + (i === current ? ' active' : '');
+      
+      if (item.layout === 'diptych' && item.images) {
+        slide.className += ' jd-diptych-slide';
+        item.images.forEach(imgData => {
+          const img = document.createElement('img');
+          img.src = imgData.src;
+          img.srcset = imgData.srcset;
+          img.sizes = '(max-width: 768px) 100vw, 50vw';
+          img.alt = imgData.alt || '';
+          img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
+          
+          img.onerror = () => { img.srcset = ''; img.src = imgData.full; };
+          slide.appendChild(img);
+        });
+      } else if (item.is_text) {
+        const textDiv = document.createElement('div');
+        textDiv.className = 'jd-text-slide';
+        textDiv.innerHTML = item.text_content;
+        slide.appendChild(textDiv);
+      } else {
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.srcset = item.srcset;
+        img.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
+        img.alt = item.alt || '';
+        img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
+        
+        img.onerror = () => { img.srcset = ''; img.src = item.full; };
+        slide.appendChild(img);
+      }
+      return slide;
+    }
+
+    data.forEach((item, i) => {
+      const slide = createSlide(item, i);
+      slideshow.appendChild(slide);
+      slides.push(slide);
+    });
+
+    /* ── FILTER LOGIC ──────────────────────────────────── */
+    const filterContainer = document.getElementById('jd-filter-dropdown-container');
+    const filterToggle = document.getElementById('jd-filter-toggle');
+    const filterMenu = document.getElementById('jd-filter-menu');
+    let uniqueSeries = [...new Set(data.map(item => item.series))].filter(s => s && s !== 'all');
+    let currentFilter = 'all';
+    let visibleIndices = data.map((_, i) => i);
+    let visibleTotal = visibleIndices.length;
+    
+    const isEventsCategory = {{ page.category | jsonify }} === 'tapahtumat';
+    
+    if (uniqueSeries.length > 1 && filterContainer && isEventsCategory) {
+      filterContainer.classList.add('is-visible');
+      const btnAll = document.createElement('button');
+      btnAll.className = 'jd-filter-btn active';
+      btnAll.textContent = {% if lang == 'fi' %}'KAIKKI'{% else %}'ALL'{% endif %};
+      btnAll.dataset.filter = 'all';
+      filterMenu.appendChild(btnAll);
+      
+      uniqueSeries.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'jd-filter-btn';
+        btn.textContent = s.toUpperCase().replace(/-/g, ' ');
+        btn.dataset.filter = s;
+        filterMenu.appendChild(btn);
+      });
+      
+      filterToggle.addEventListener('click', (e) => {
+         e.stopPropagation();
+         filterMenu.classList.toggle('is-open');
+         filterToggle.classList.toggle('is-open');
+      });
+      
+      document.addEventListener('click', (e) => {
+         if (!filterContainer.contains(e.target)) {
+            filterMenu.classList.remove('is-open');
+            filterToggle.classList.remove('is-open');
+         }
+      });
+      
+      filterMenu.addEventListener('click', e => {
+        if (e.target.tagName === 'BUTTON') {
+          const newFilter = e.target.dataset.filter;
+          filterMenu.classList.remove('is-open');
+          filterToggle.classList.remove('is-open');
+          if (newFilter !== currentFilter) {
+            applyFilter(newFilter);
+          }
+        }
+      });
+    }
+
+    function applyFilter(filter) {
+      currentFilter = filter;
+      visibleIndices = [];
+      data.forEach((item, i) => {
+        if (filter === 'all' || item.series === filter) {
+          visibleIndices.push(i);
+        }
+      });
+      visibleTotal = visibleIndices.length;
+      
+      document.querySelectorAll('.jd-filter-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.filter === filter);
+      });
+      
+      let newCurrent = visibleIndices.includes(current) ? current : visibleIndices[0];
+      if (newCurrent === undefined) newCurrent = 0;
+      
+      goToAbsolute(newCurrent, true);
+    }
+
+    /* ── Rakenna thumbnailt ─────────────────────────────── */
+    // Note: The global thumbs panel is now rendered via Liquid HTML.
+    // We only attach event listeners here.
+    document.querySelectorAll('.jd-thumb-global').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const cat = thumb.getAttribute('data-cat');
+        const idx = parseInt(thumb.getAttribute('data-idx'), 10);
+        const url = thumb.getAttribute('data-url');
+        
+        if (cat === '{{ page.category }}') {
+          goToAbsolute(idx);
+          closeThumbsView();
+        } else {
+          // Ei tarvita closeThumbsView() täällä, koska goToCategory hoitaa sen
+          goToCategory(url);
+        }
+      });
+    });
+
+    /* ── Laskuri ja Kursori ─────────────────────────────────────────────── */
+    function updateCounter() {
+      let vi = visibleIndices.indexOf(current);
+      if (vi === -1) vi = 0;
+      const currentNum = vi + 1;
+      if (document.getElementById('jd-counter-num')) {
+        document.getElementById('jd-counter-num').textContent = currentNum;
+      }
+      if (document.getElementById('jd-counter-tot')) {
+        document.getElementById('jd-counter-tot').textContent = visibleTotal;
+      }
+      const cursorText = document.getElementById('jd-cursor-text');
+      if (cursorText) {
+        cursorText.textContent = `{categoryTitle} — ${currentNum} / ${visibleTotal}`;
+      }
+    }
+
+    // Alustetaan kursorin teksti ensimmäiselle kuvalle
+    updateCounter();
+
+    /* ── Navigointi (Uusi, transitionend-pohjainen) ─────────────────────── */
+    function goToCategory(url) {
+      if (document.body.classList.contains('is-leaving')) return;
+      
+      if (thumbsOpen) closeThumbsView();
+
+      // Pakko poistaa is-entering-ready, muuten vanha transitio voi häiritä
+      document.body.classList.remove('is-entering-ready');
+      document.body.classList.add('prepare-leave');
+
+      // Pieni layout flush, jotta prepare-leave rekisteröityy (siirtää verhon vasemmalle) ennen is-leaving lisäystä
+      void document.body.offsetWidth;
+
+      document.body.classList.remove('prepare-leave');
+      document.body.classList.add('is-leaving');
+      
+      let triggered = false;
+      const handler = () => {
+        triggered = true;
+        window.location.href = url;
+      };
+      
+      shutter.addEventListener('transitionend', handler, { once: true });
+      
+      // Fallback-ajastin (jos selain ei jostain syystä ammu transitionend-tapahtumaa, esim. Safarilla)
+      setTimeout(() => {
+        if (!triggered) {
+          window.location.href = url;
+        }
+      }, 1600);
+    }
+    
+    // Kaappaa kaikki sisäiset linkit (esim. Index-paneelista) kulkemaan animaation kautta
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a');
+      if (link && link.href) {
+        const urlObj = new URL(link.href, window.location.origin);
+        if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
+          if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
+            e.preventDefault();
+            
+            // Sulje index-paneeli kauniisti ennen sivun vaihtumista
+            if (typeof window.closeIndexPanel === 'function') {
+              window.closeIndexPanel();
+            }
+            
+            goToCategory(link.href);
+          }
+        }
+      }
+    });
+
+    function goToRelative(step) {
+      if (visibleTotal === 0) return;
+
+      let currentVisibleIndex = visibleIndices.indexOf(current);
+      if (currentVisibleIndex === -1) currentVisibleIndex = 0;
+
+      const nextVisibleIndex = currentVisibleIndex + step;
+
+      if (nextVisibleIndex >= 0 && nextVisibleIndex < visibleTotal) {
+        // Navigate within the current gallery
+        goToAbsolute(visibleIndices[nextVisibleIndex]);
+      } else if (nextVisibleIndex >= visibleTotal) {
+        // Attempt to navigate to the next gallery
+        const nextUrl = document.getElementById('jd-next-url');
+        if (nextUrl) {
+          goToCategory(nextUrl.textContent);
+        }
+        // Otherwise, do nothing (stay on the last image)
+      } else if (nextVisibleIndex < 0) {
+        // Attempt to navigate to the previous gallery
+        const prevUrl = document.getElementById('jd-prev-url');
+        if (prevUrl) {
+          goToCategory(prevUrl.textContent);
+        }
+        // Otherwise, do nothing (stay on the first image)
+      }
+    }
+
+    function goToAbsolute(idx, skipFilterCheck = false) {
+      if (visibleTotal === 0) return;
+      if (!skipFilterCheck && !visibleIndices.includes(idx)) {
+         applyFilter('all');
+      }
+
+      if (slides[current]) slides[current].classList.remove('active');
+      const localThumbs = document.querySelectorAll('.jd-thumb-global[data-cat="{{ page.category }}"]');
+      if (localThumbs[current]) localThumbs[current].classList.remove('is-active');
+
+      current = idx;
+      
+      if (slides[current]) slides[current].classList.add('active');
+      if (localThumbs[current]) localThumbs[current].classList.add('is-active');
+      
+      updateCounter();
+
+      /* Preload seuraava ja edellinen kuva */
+      let vi = visibleIndices.indexOf(current);
+      if (vi !== -1) {
+        const ni = visibleIndices[(vi + 1) % visibleTotal];
+        const pi = visibleIndices[(vi - 1 + visibleTotal) % visibleTotal];
+        [ni, pi].forEach(ix => {
+          const img = slides[ix] ? slides[ix].querySelector('img') : null;
+          if (img && !img.complete) { img.loading = 'eager'; }
+        });
+      }
+    }
+
+    /* Swipe mobiililla ja rullauksen erottaminen klikkauksesta */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let hasSwiped = false;
+    let isDraggingMenu = false;
+    let menuCurrentDrag = 0;
+
+    slideshow.addEventListener('touchstart', e => { 
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      hasSwiped = false;
+      document.body.classList.add('user-has-interacted');
+      
+      if (!document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
+        isDraggingMenu = true;
+        menuCurrentDrag = 0;
+        const panel = document.getElementById('jd-index-panel');
+        if (panel) panel.style.setProperty('transition', 'none', 'important');
+      }
+    }, { passive: false });
+
+    slideshow.addEventListener('touchmove', e => {
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (!hasSwiped && (dx > 10 || dy > 10)) {
+        hasSwiped = true;
+      }
+      
+      if (isDraggingMenu) {
+        const dragY = touchStartY - e.touches[0].clientY; // Ylöspäin vetäminen on positiivinen
+        if (dragY > 0) {
+          menuCurrentDrag = dragY;
+          const panel = document.getElementById('jd-index-panel');
+          if (panel) panel.style.transform = `translateY(-${dragY}px)`;
+          if (e.cancelable) e.preventDefault();
+        }
+      }
+    }, { passive: false });
+
+    slideshow.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40 && !document.body.classList.contains('index-is-open') && !isDraggingMenu) {
+        dx < 0 ? goToRelative(1) : goToRelative(-1);
+      }
+      
+      if (isDraggingMenu) {
+        isDraggingMenu = false;
+        const panel = document.getElementById('jd-index-panel');
+        if (panel) {
+          panel.style.transition = '';
+          
+          if (menuCurrentDrag > window.innerHeight * 0.4) {
+            panel.style.transform = '';
+            if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+          } else {
+            panel.style.transform = '';
+          }
+        }
+      }
+    }, { passive: true });
+
+    /* Klikkaus: oikea puoli = seuraava, vasen = edellinen */
+    slideshow.addEventListener('click', e => {
+      if (hasSwiped) {
+        hasSwiped = false;
+        return;
+      }
+      document.body.classList.add('user-has-interacted');
+      if (thumbsOpen) return;
+      e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
+    });
+
+    /* Näppäimistö */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === ' ') {
+        document.body.classList.add('user-has-interacted');
+      }
+      if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToRelative(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
+    });
+
+    /* Desktop wheel - avaa menu rullaamalla alas, sulje rullaamalla ylös nollakohdassa */
+    let wheelDrag = 0;
+    let wheelDragTimer = null;
+
+    window.addEventListener('wheel', e => {
+      if (thumbsOpen || document.body.classList.contains('about-is-open')) return;
+      if (window.innerWidth <= 800) return;
+
+      const panel = document.getElementById('jd-index-panel');
+      if (!panel) return;
+
+      const isMenuOpen = document.body.classList.contains('index-is-open');
+
+      if (!isMenuOpen) {
+        if (e.deltaY > 0) {
+          wheelDrag += Math.abs(e.deltaY);
+          if (wheelDrag > window.innerHeight) wheelDrag = window.innerHeight;
+          
+          panel.style.transition = 'none';
+          panel.style.transform = `translateY(-${wheelDrag}px)`;
+          
+          clearTimeout(wheelDragTimer);
+          wheelDragTimer = setTimeout(() => {
+            panel.style.transition = '';
+            if (wheelDrag > window.innerHeight * 0.20) {
+              panel.style.transform = '';
+              if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+            } else {
+              panel.style.transform = '';
+            }
+            wheelDrag = 0;
+          }, 150);
+        }
+      } else {
+        if (e.deltaY < 0 && panel.scrollTop <= 0) {
+          wheelDrag += Math.abs(e.deltaY);
+          
+          panel.style.transition = 'none';
+          panel.style.transform = `translateY(calc(-100% + ${wheelDrag}px))`;
+          
+          clearTimeout(wheelDragTimer);
+          wheelDragTimer = setTimeout(() => {
+            panel.style.transition = '';
+            if (wheelDrag > window.innerHeight * 0.20) { 
+              panel.style.transform = '';
+              if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
+            } else {
+              panel.style.transform = ''; 
+            }
+            wheelDrag = 0;
+          }, 150);
+          
+          if (e.cancelable) e.preventDefault();
+        } else {
+          wheelDrag = 0;
+        }
+      }
+    }, { passive: false });
+
+    /* ── Custom cursor ──────────────────────────────────── */
+    if ('ontouchstart' in window) {
+      if (cursor) cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    }
+
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      document.addEventListener('mousemove', e => {
+        if (thumbsOpen) {
+          cursor.style.opacity = '0';
+          document.body.style.cursor = 'auto';
+          return;
+        }
+        
+        const target = e.target;
+        const isNav = target.closest('#jd-bottom-nav') ||
+          target.closest('#jd-index-panel') ||
+          target.closest('#jd-thumbs-close');
+        const nearBottom = e.clientY > window.innerHeight - 100;
+        if (isNav || nearBottom) {
+          cursor.style.opacity = '0';
+          document.body.style.cursor = 'auto';
+        } else {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+          
+          // Tallenna hiiren sijainti sessionStorageen kategoriavaihdon lennätystä varten
+          sessionStorage.setItem('jdLastMouseX', e.clientX);
+          sessionStorage.setItem('jdLastMouseY', e.clientY);
+          cursor.style.opacity = '1';
+          document.body.style.cursor = 'none';
+
+          const arrowEl = document.getElementById('jd-cursor-arrow');
+          if (arrowEl) {
+            arrowEl.textContent = e.clientX > window.innerWidth / 2 ? '→' : '←';
+          }
+        }
+      });
+      document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+    }
+
+    /* ── Thumbs-näkymä ─────────────────────────────────── */
+    function openThumbsView() {
+      thumbsOpen = true;
+      thumbsPanel.classList.add('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'none';
+      document.getElementById('jd-thumbs-nav').classList.add('is-open');
+
+      const currentCatSection = document.getElementById('jd-thumbs-section-{{ page.category }}');
+      if (currentCatSection) {
+        const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
+        if (currentThumb) {
+          document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active'));
+          currentThumb.classList.add('is-active');
+        }
+        currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
+      
+      const hintArrows = document.getElementById('jd-hint-arrows');
+      if (hintArrows) hintArrows.style.opacity = '0';
+    }
+    function closeThumbsView() {
+      thumbsOpen = false;
+      thumbsPanel.classList.remove('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'flex';
+      document.getElementById('jd-thumbs-nav').classList.remove('is-open');
+    }
+
+    document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
+    thumbsClose?.addEventListener('click', closeThumbsView);
+
+    /* ── Index-nappi (alanavigoinnissa) → avaa index-paneeli ── */
+    document.getElementById('jd-index-btn-bottom')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (typeof window.openIndexPanel === 'function') {
+        const panel = document.getElementById('jd-index-panel');
+        panel?.classList.contains('is-open')
+          ? window.closeIndexPanel()
+          : window.openIndexPanel();
+      }
+    });
+
+    const topIndexBtn = document.getElementById('jd-index-btn');
+    if (topIndexBtn) topIndexBtn.style.display = 'none';
+
+    /* ─── PAGE LOAD ANIMATION (ROBUST) ─────────────────── */
+    function startPageOpen() {
+      // Näytä custom kursori oikeassa paikassa heti (tietokoneella)
+      if (shutterTitle) {
+        const isMobile = window.innerWidth <= 768;
+        if (!isMobile) {
+          const lastX = sessionStorage.getItem('jdLastMouseX');
+          const lastY = sessionStorage.getItem('jdLastMouseY');
+          if (lastX && lastY && cursor) {
+            cursor.style.left = lastX + 'px';
+            cursor.style.top = lastY + 'px';
+            cursor.style.opacity = '1';
+            document.body.style.cursor = 'none';
+          }
+        }
+      }
+      
+      // Pieni viive jotta CSS rekisteröi alun sijainnin ennen kuin lisätään luokka
+      setTimeout(() => {
+        document.body.classList.add('is-entering-ready');
+        
+        if (!sessionStorage.getItem('jd-hints-seen')) {
+          const hintArrows = document.getElementById('jd-hint-arrows');
+          if (hintArrows) hintArrows.classList.add('show-hints');
+          sessionStorage.setItem('jd-hints-seen', 'true');
+        }
+      }, 50);
+    }
+    
+    // 1. Näytä otsikko heti
+    document.body.classList.add('show-shutter-title');
+    
+    // 2. Odotetaan että uusi sivu (ja kuvat) on oikeasti latautunut
+    let isLoaded = document.readyState === 'complete';
+    let isMinTimePassed = false;
+    let hasOpened = false;
+    
+    window.addEventListener('load', () => {
+      isLoaded = true;
+      tryOpen();
+    });
+    
+    // Pakotetaan vähintään pienen hetken viive, jotta otsikon ehtii lukea vaikka sivu olisi jo välimuistissa
+    setTimeout(() => {
+      isMinTimePassed = true;
+      tryOpen();
+    }, 1200);
+    
+    function tryOpen() {
+      if (!hasOpened && isLoaded && isMinTimePassed) {
+        hasOpened = true;
+        startPageOpen();
+      }
+    }
+    
+    // Fallback: avataan verho joka tapauksessa viimeistään 3 sekunnin kuluttua
+    setTimeout(() => {
+      if (!hasOpened) {
+        hasOpened = true;
+        startPageOpen();
+      }
+    }, 3000);
+
+  });
+</script>
+</Layout>
