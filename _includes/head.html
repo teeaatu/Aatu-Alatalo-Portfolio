@@ -4,7 +4,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="view-transition" content="same-origin">
-  
+  <script>
+    // Prevent double-animation by disabling legacy CSS entrances if View Transitions are active
+    document.addEventListener('pagereveal', (e) => {
+      if (e.viewTransition) {
+        document.documentElement.classList.add('is-view-transitioning');
+        e.viewTransition.finished.then(() => {
+          document.documentElement.classList.remove('is-view-transitioning');
+        });
+      }
+    });
+  </script>
   {% if page.lang == 'fi' and page.translation_url %}
   <script>
     // Automaattinen kieliohjaus: ohjaa ei-suomenkieliset kävijät englanninkieliselle sivulle
