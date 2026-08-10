@@ -74,11 +74,9 @@ for (const item of dataset) {
   if (item.tyyppi === 'teksti') {
     if (categorySlug !== 'work4') continue;
     const titleVal = item.otsikko || '';
-    const textVal = item.teksti || '';
     galleryData.push({
       i: jdIdx++, type: 'text',
-      title: lang === 'fi' ? titleVal.split(' / ').pop()?.trim() : titleVal.split(' / ')[0]?.trim(),
-      text: lang === 'fi' ? textVal.split(' / ')[0]?.trim() : textVal.split(' / ').pop()?.trim(),
+      title: lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim(),
       series: item.series || 'all',
       kartta: item.kartta || null
     });
@@ -92,7 +90,7 @@ for (const item of dataset) {
     const titleVal = item.otsikko || '';
     galleryData.push({
       i: jdIdx++, layout: 'diptych', images,
-      title: lang === 'fi' ? titleVal.split(' / ').pop()?.trim() : titleVal.split(' / ')[0]?.trim(),
+      title: lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim(),
       place: item.paikka || '', series: item.series || 'all',
     });
   } else {
@@ -101,7 +99,7 @@ for (const item of dataset) {
     galleryData.push({
       i: jdIdx++, src, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob,
       alt: item.alt_text || '',
-      title: lang === 'fi' ? titleVal.split(' / ').pop()?.trim() : titleVal.split(' / ')[0]?.trim(),
+      title: lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim(),
       place: item.paikka || '', series: item.series || 'all',
     });
   }
@@ -203,6 +201,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#f5f4f0">
+  <meta name="color-scheme" content="light">
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -227,6 +226,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      color-scheme: light;
       --jd-bg:       #f5f4f0;
       --jd-text:     #1a1a18;
       --jd-dimmed:   #888880;
@@ -854,14 +854,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
               {data.filter((item: any) => key === 'work4' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
                 if (item.tyyppi === 'teksti') {
                   const titleVal = item.otsikko || '';
-                  const textVal = item.teksti || '';
-                  const tStr = lang === 'fi' ? titleVal.split(' / ').pop()?.trim() : titleVal.split(' / ')[0]?.trim();
-                  const pStr = lang === 'fi' ? textVal.split(' / ')[0]?.trim() : textVal.split(' / ').pop()?.trim();
+                  const tStr = lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim();
                   return (
                     <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <div class="jd-thumb-text-inner">
                         <h3>{tStr}</h3>
-                        <p>{pStr}</p>
                       </div>
                     </div>
                   );
@@ -933,7 +930,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         slide.className += ' jd-text-slide';
         const content = document.createElement('div');
         content.className = 'jd-text-content';
-        content.innerHTML = `<h2>${item.title || ''}</h2><p>${item.text || ''}</p>`;
+        content.innerHTML = `<h2>${item.title || ''}</h2>`;
         
         if (item.kartta && window.L) {
           const mapContainer = document.createElement('div');
