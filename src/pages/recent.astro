@@ -2,10 +2,13 @@
 import GalleryLayout from '../layouts/GalleryLayout.astro';
 import dataset from '../data/recent.yml';
 ---
-<GalleryLayout 
-  lang="fi" 
-  dataset={dataset} 
-  categoryTitle="Uusimmat" 
-  activeNav="recent" categorySlug="recent" 
-  translationUrl="/en/recent" 
+<GalleryLayout
+  lang="fi"
+  dataset={dataset}
+  categoryTitle="Uusimmat"
+  categorySlug="recent"
+  activeNav="recent"
+  translationUrl="/en/recent"
+  title="Uusimmat kuvat — Aatu Alatalo"
+  description="Aatu Alatalon uusimmat valokuvat. Dokumentaarinen kuvaus, kaupunkikuvaus ja luontokuvaus Suomesta."
 />
