@@ -238,7 +238,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     html, body {
       width: 100%; height: 100%;
       overflow: hidden;
-      touch-action: pan-y;
       background: var(--jd-bg);
       color: var(--jd-text);
       font-family: var(--jd-font);
@@ -1167,20 +1166,30 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     /* Touch */
-    let touchStartX = 0, touchStartY = 0, hasSwiped = false, isDraggingMenu = false, menuCurrentDrag = 0;
+    let touchStartX = 0, touchStartY = 0, hasSwiped = false, isDraggingMenu = false, menuCurrentDrag = 0, swipeIntentDetermined = false;
     slideshow.addEventListener('touchstart', e => {
       touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; hasSwiped = false;
+      swipeIntentDetermined = false; isDraggingMenu = false; menuCurrentDrag = 0;
+      if (touchStartX < 30) return; // Allow Safari edge swipe
       document.body.classList.add('user-has-interacted');
-      if (!document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
-        isDraggingMenu = true; menuCurrentDrag = 0;
-        const panel = document.getElementById('jd-index-panel');
-        if (panel) panel.style.setProperty('transition', 'none', 'important');
-      }
-    }, { passive: false });
+    }, { passive: true });
+    
     slideshow.addEventListener('touchmove', e => {
+      if (touchStartX < 30) return;
       const dx = Math.abs(e.touches[0].clientX - touchStartX);
       const dy = Math.abs(e.touches[0].clientY - touchStartY);
-      if (!hasSwiped && (dx > 10 || dy > 10)) hasSwiped = true;
+      
+      if (!swipeIntentDetermined && (dx > 10 || dy > 10)) {
+        swipeIntentDetermined = true;
+        hasSwiped = true;
+        const isSwipingUp = (touchStartY - e.touches[0].clientY) > 0;
+        if (dy > dx && isSwipingUp && !document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
+          isDraggingMenu = true;
+          const panel = document.getElementById('jd-index-panel');
+          if (panel) panel.style.setProperty('transition', 'none', 'important');
+        }
+      }
+      
       if (isDraggingMenu) {
         const dragY = touchStartY - e.touches[0].clientY;
         if (dragY > 0) {
@@ -1189,19 +1198,31 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           if (panel) panel.style.transform = `translateY(-${dragY}px)`;
           if (e.cancelable) e.preventDefault();
         }
+      } else if (swipeIntentDetermined && dx > dy) {
+        if (e.cancelable) e.preventDefault();
       }
     }, { passive: false });
+    
     slideshow.addEventListener('touchend', e => {
+      if (touchStartX < 30) return;
       const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 40 && !document.body.classList.contains('index-is-open') && !isDraggingMenu)
+      const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+      
+      if (!isDraggingMenu && Math.abs(dx) > 40 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
         dx < 0 ? goToRelative(1) : goToRelative(-1);
+      }
+      
       if (isDraggingMenu) {
         isDraggingMenu = false;
         const panel = document.getElementById('jd-index-panel');
         if (panel) {
           panel.style.transition = '';
-          if (menuCurrentDrag > window.innerHeight * 0.4) { panel.style.transform = ''; if (typeof window.openIndexPanel === 'function') window.openIndexPanel(); }
-          else panel.style.transform = '';
+          if (menuCurrentDrag > window.innerHeight * 0.4) { 
+            panel.style.transform = ''; 
+            if (typeof window.openIndexPanel === 'function') window.openIndexPanel(); 
+          } else {
+            panel.style.transform = '';
+          }
         }
       }
     }, { passive: true });
