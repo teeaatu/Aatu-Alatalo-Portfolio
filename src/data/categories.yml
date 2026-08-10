@@ -4,6 +4,9 @@
 - id: work1
   fi_url: /work1.html
   en_url: /en/work1.html
+- id: work4
+  fi_url: /work4.html
+  en_url: /en/work4.html
 - id: masters-2026
   fi_url: /masters-2026.html
   en_url: /en/masters-2026.html
