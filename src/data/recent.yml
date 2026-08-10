@@ -2,9 +2,38 @@
 - kuva: https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp
   width: 1500
   height: 2100
-  otsikko: Child in Front of a Store / Lapsi kaupan edessä
+  otsikko: Work IV / Work 4
   paikka: Hamina, Finland 2026
   alt_text: "A small child walks near a pedestrian crosswalk in front of a white commercial building with large red signs. Sunlight illuminates the building's corner, while the street behind it is in deep shadow."
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Porvoo, Finland 2026
+  alt_text: "A red car parked in Porvoo."
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/halonen_kotka.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Kotka, Finland 2026
+  alt_text: "The Halonen building facade in Kotka."
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Kotka, Finland 2026
+  alt_text: "The City Hall building in Kotka."
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp
+  width: 2100
+  height: 1500
+  otsikko: Work IV / Work 4
+  paikka: Kotka, Finland 2026
+  alt_text: "A street lamp in Kotka."
+  series: work4
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26_8.webp
   width: 2100
   height: 1500

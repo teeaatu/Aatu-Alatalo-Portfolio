@@ -21,4 +21,5 @@ pnpm-debug.log*
 .DS_Store
 
 # jetbrains setting folder
-.idea/
+# macOS resource forks
+._*
