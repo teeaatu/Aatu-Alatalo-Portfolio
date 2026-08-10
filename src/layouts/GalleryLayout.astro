@@ -186,7 +186,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#f5f4f0">
+  <meta name="theme-color" content="#000000">
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -237,7 +237,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     a { color: inherit; text-decoration: none; }
-    img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; }
+    img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; pointer-events: none; }
 
     /* ─── HEADER ──────────────────────────────────────── */
     #jd-header {
@@ -342,22 +342,36 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       color: white; mix-blend-mode: difference; z-index: 99999999;
       font-family: var(--jd-font); font-size: 1.4rem; letter-spacing: 0.22em; text-transform: uppercase;
       opacity: 1; pointer-events: none;
+      white-space: nowrap;
     }
     @keyframes titleEnter {
       0% { top: 53%; opacity: 0; }
       100% { top: 50%; opacity: 1; }
     }
     .trigger-title-enter {
-      animation: titleEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: titleEnter 0.6s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     body.is-entering-ready .jd-shutter-title { 
-      opacity: 0; top: -10%; 
-      transition: top 2.5s 1.6s cubic-bezier(0.16,1,0.3,1), opacity 1.2s 1.6s ease; 
+      top: var(--target-y, -10%);
+      left: var(--target-x, 50%);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      opacity: 0;
+      transition: top 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
+                  left 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
+                  font-size 1.2s 1.6s cubic-bezier(0.16,1,0.3,1),
+                  letter-spacing 1.2s 1.6s cubic-bezier(0.16,1,0.3,1),
+                  opacity 0.6s 2.2s ease;
+    }
+    @media (min-width: 769px) {
+      body.is-entering-ready .jd-shutter-title {
+        letter-spacing: 0.18em;
+      }
     }
     body.hide-shutter-title .jd-shutter-title { opacity: 0 !important; transition: none !important; }
     body.is-leaving .jd-shutter-title, body.prepare-leave .jd-shutter-title { transition: none !important; }
     body.is-entering-ready .jd-curtain-primary { transition: transform 1800ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(-150vh); }
-    body.prepare-leave .jd-curtain-primary { transition: none; transform: translateY(-150vh); }
+    body.prepare-leave .jd-curtain-primary { transition: none; transform: translateY(150vh); }
     body.is-leaving .jd-curtain-primary { transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
 
     /* ─── INDEX PANEL ────────────────────────────────── */
@@ -459,8 +473,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0; user-select: none;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
       left: 50%; top: 50%; /* Start at center */
-      will-change: left, top, opacity;
-      transition: opacity 0.4s ease;
+      will-change: left, top, opacity, transform;
+      transition: transform 0.2s ease, opacity 0.4s ease;
+    }
+    body.is-leaving #jd-cursor-custom {
+      transform: translate(-50%, calc(-50% - 60px));
+      transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
     }
     #jd-cursor-arrow { font-size: 14px; letter-spacing: 0; line-height: 1; margin-top: -2px; }
 
@@ -521,10 +539,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── MOBILE ─────────────────────────────────────── */
     @media (max-width: 768px) {
       :root { --jd-panel-w: 100%; }
-      #jd-index-panel { width: 100%; left: 0; right: 0; }
+      #jd-index-panel { width: 100%; left: 0; right: 0; padding: 5rem 2rem 3rem; text-align: center; }
+      .jd-top-nav { justify-content: center; margin-bottom: 3rem; gap: 0.8rem; }
+      .jd-top-nav .jd-index-link { font-size: 0.85rem; padding: 0.3rem 0.6rem; }
+      .jd-index-link { justify-content: center; font-size: 0.9rem; padding: 0.45rem 0; gap: 0.8rem; border-bottom: 1px solid rgba(26,26,24,0.05); }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
-      .jd-mobile-close { display: inline; text-decoration: underline; }
+      .jd-mobile-close { display: block; text-decoration: underline; margin-top: 2rem; font-size: 0.85rem; }
     }
     @media (max-width: 800px) {
       html { background: #000 !important; }
@@ -595,7 +616,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   </div>
 
   <!-- Mobile counter -->
-  <div id="jd-counter">{catLabel} — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></div>
+  <div id="jd-counter"><span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span></div>
 
 
 
@@ -880,24 +901,37 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* Navigation */
     function goToCategory(url, titleText = '') {
       if (document.body.classList.contains('is-leaving')) return;
-      if (titleText && shutterTitle) {
-        shutterTitle.textContent = titleText;
-        document.body.classList.remove('hide-shutter-title');
-        shutterTitle.classList.remove('trigger-title-enter');
-        void shutterTitle.offsetWidth; // force reflow
-        shutterTitle.classList.add('trigger-title-enter');
-      } else {
-        document.body.classList.add('hide-shutter-title');
+      
+      let delay = 0;
+      if (document.body.classList.contains('index-is-open') && typeof window.closeIndexPanel === 'function') {
+        window.closeIndexPanel();
+        delay = 400;
       }
-      document.body.classList.remove('is-entering-ready');
-      document.body.classList.add('prepare-leave');
-      void document.body.offsetWidth;
-      document.body.classList.remove('prepare-leave');
-      document.body.classList.add('is-leaving');
-      let triggered = false;
-      const handler = () => { triggered = true; window.location.href = url; };
-      shutter.addEventListener('transitionend', handler, { once: true });
-      setTimeout(() => { if (!triggered) window.location.href = url; }, 1600);
+      if (document.body.classList.contains('about-is-open') && typeof window.closeAboutPanel === 'function') {
+        window.closeAboutPanel();
+        delay = 400;
+      }
+
+      setTimeout(() => {
+        if (titleText && shutterTitle) {
+          shutterTitle.textContent = titleText;
+          document.body.classList.remove('hide-shutter-title');
+          shutterTitle.classList.remove('trigger-title-enter');
+          void shutterTitle.offsetWidth; // force reflow
+          shutterTitle.classList.add('trigger-title-enter');
+        } else {
+          document.body.classList.add('hide-shutter-title');
+        }
+        document.body.classList.remove('is-entering-ready');
+        document.body.classList.add('prepare-leave');
+        void document.body.offsetWidth;
+        document.body.classList.remove('prepare-leave');
+        document.body.classList.add('is-leaving');
+        let triggered = false;
+        const handler = () => { triggered = true; window.location.href = url; };
+        shutter.addEventListener('transitionend', handler, { once: true });
+        setTimeout(() => { if (!triggered) window.location.href = url; }, 1600);
+      }, delay);
     }
 
     document.addEventListener('click', e => {
@@ -907,7 +941,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
           if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
             e.preventDefault();
-            if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
             
             let titleText = '';
             const spanText = link.querySelector('span:not(.jd-count)');
@@ -1055,6 +1088,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       document.body.style.cursor = 'none';
       
       document.addEventListener('mousemove', e => {
+        sessionStorage.setItem('jdLastMouseX', e.clientX);
+        sessionStorage.setItem('jdLastMouseY', e.clientY);
+        if (window.jdCursorFrozen) return;
+
         if (thumbsOpen) { document.body.style.cursor = 'auto'; return; }
         
         const target = e.target;
@@ -1154,11 +1191,43 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* Page entrance animation */
     function startPageOpen() {
       if (shutterTitle) {
-        const isMobile = window.innerWidth <= 768;
+        const isMobile = window.innerWidth <= 800;
         if (!isMobile) {
           const lastX = sessionStorage.getItem('jdLastMouseX');
           const lastY = sessionStorage.getItem('jdLastMouseY');
-          if (lastX && lastY && cursor) { cursor.style.left = lastX + 'px'; cursor.style.top = lastY + 'px'; cursor.style.opacity = '1'; document.body.style.cursor = 'none'; }
+          if (lastX && lastY && cursor) { 
+            cursor.style.left = lastX + 'px'; cursor.style.top = lastY + 'px'; 
+            cursor.style.opacity = '0'; document.body.style.cursor = 'none'; 
+            shutterTitle.style.setProperty('--target-x', lastX + 'px');
+            shutterTitle.style.setProperty('--target-y', lastY + 'px');
+            window.jdCursorFrozen = true;
+            setTimeout(() => {
+              window.jdCursorFrozen = false;
+              cursor.style.opacity = '1';
+            }, 2800);
+          }
+        } else {
+          const catSpan = document.getElementById('jd-counter-cat');
+          const counterRest = document.getElementById('jd-counter-rest');
+          if (catSpan && counterRest) {
+            // Calculate immediately so CSS vars are ready before class is added
+            const rect = catSpan.getBoundingClientRect();
+            if (rect.width > 0) {
+              const targetX = rect.left + rect.width / 2;
+              const targetY = rect.top + rect.height / 2;
+              shutterTitle.style.setProperty('--target-x', targetX + 'px');
+              shutterTitle.style.setProperty('--target-y', targetY + 'px');
+            } else {
+              shutterTitle.style.setProperty('--target-x', '50%');
+              shutterTitle.style.setProperty('--target-y', 'calc(100dvh - 25px)');
+            }
+            setTimeout(() => {
+              catSpan.style.transition = 'opacity 0.6s ease';
+              catSpan.style.opacity = '1';
+              counterRest.style.transition = 'opacity 0.6s ease';
+              counterRest.style.opacity = '1';
+            }, 2200);
+          }
         }
       }
       setTimeout(() => {
@@ -1192,13 +1261,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
       indexOverlay?.classList.remove('is-open'); document.body.classList.remove('index-is-open');
     };
-
-    if (indexPanel) {
-      let panelTouchStartY = 0, isDraggingPanel = false;
-      indexPanel.addEventListener('touchstart', e => { if (indexPanel.scrollTop <= 0) { panelTouchStartY = e.touches[0].clientY; isDraggingPanel = true; indexPanel.style.transition = 'none'; } else isDraggingPanel = false; }, { passive: true });
-      indexPanel.addEventListener('touchmove', e => { if (!isDraggingPanel) return; const dy = e.touches[0].clientY - panelTouchStartY; if (dy > 0) { indexPanel.style.transform = `translateY(calc(-100% + ${dy}px))`; if (e.cancelable) e.preventDefault(); } else indexPanel.style.transform = 'translateY(-100%)'; }, { passive: false });
-      indexPanel.addEventListener('touchend', e => { if (!isDraggingPanel) return; isDraggingPanel = false; const dy = e.changedTouches[0].clientY - panelTouchStartY; if (dy > 120) window.closeIndexPanel(); else { indexPanel.style.transition = ''; indexPanel.style.transform = ''; } }, { passive: true });
-    }
 
     window.openAboutPanel = function() { const p = document.getElementById('jd-about-panel'); if (p) { p.classList.add('is-open'); document.body.classList.add('about-is-open'); const n = document.getElementById('jd-normal-nav'); if (n) n.style.display = 'none'; } };
     window.closeAboutPanel = function() { const p = document.getElementById('jd-about-panel'); if (p) { p.classList.remove('is-open'); document.body.classList.remove('about-is-open'); const n = document.getElementById('jd-normal-nav'); const tp = document.getElementById('jd-thumbs-panel'); if (n && (!tp || !tp.classList.contains('is-open'))) n.style.display = 'flex'; } };
