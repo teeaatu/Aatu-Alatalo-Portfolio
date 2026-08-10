@@ -1200,6 +1200,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     slideshow.addEventListener('click', e => {
       if (hasSwiped) { hasSwiped = false; return; }
+      if (e.target.closest('.jd-postcard-map')) return;
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
       e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
