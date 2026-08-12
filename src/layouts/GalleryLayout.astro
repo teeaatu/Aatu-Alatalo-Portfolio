@@ -667,9 +667,22 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-bottom-nav { bottom: auto; top: 0; height: auto; min-height: 70px; background: #f5f4f0; width: 100%; padding-top: 25px; padding-bottom: 15px; }
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
-      #jd-hint-arrows { top: auto; bottom: 25px; transform: none; padding: 0 20px; }
-      .jd-hint-arrow { background: none; backdrop-filter: none; width: auto; height: auto; color: rgba(26,26,24,0.4); }
+      #jd-hint-arrows.show-hints { animation: none; }
+      #jd-hint-arrows { display: flex !important; top: auto; bottom: 25px; transform: none; padding: 0 20px; animation: none; }
+      .jd-hint-arrow { 
+        background: none; backdrop-filter: none; width: auto; height: auto; color: rgba(26,26,24,0.4); 
+        animation: pulseArrowMobile 2.5s 3 ease-in-out, mobileShrink 0.5s 7.5s forwards;
+      }
+      .jd-hint-arrow.left { animation-delay: 0s, 0s; }
+      .jd-hint-arrow.right { animation-delay: 1.25s, 0s; }
       .jd-hint-arrow svg { width: 22px; height: 22px; }
+      @keyframes pulseArrowMobile {
+        0%,100% { transform: scale(1); }
+        50% { transform: scale(1.3); color: rgba(26,26,24,0.8); }
+      }
+      @keyframes mobileShrink {
+        to { transform: scale(0.85); color: rgba(26,26,24,0.4); }
+      }
       #jd-slideshow { top: 90px; bottom: 60px; height: calc(100dvh - 150px); }
       #jd-counter { display: block; position: fixed; bottom: 25px; left: 0; right: 0; text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; z-index: 100000; pointer-events: none; }
       #jd-cursor-custom { display: none !important; }
