@@ -668,11 +668,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
       #jd-hint-arrows.show-hints { animation: none; }
-      #jd-hint-arrows { display: flex !important; top: auto; bottom: 25px; transform: none; padding: 0 20px; animation: none; }
+      #jd-hint-arrows { display: flex !important; top: auto; bottom: 25px; transform: none; padding: 0 15px; animation: none; height: 24px; align-items: center; z-index: 100001; }
       .jd-hint-arrow { 
         background: none; backdrop-filter: none; width: auto; height: auto; color: rgba(26,26,24,0.4); 
         animation: pulseArrowMobile 2.5s 3 ease-in-out, mobileShrink 0.5s 7.5s forwards;
+        pointer-events: auto; cursor: pointer; padding: 10px; margin: -10px;
+        transition: transform 0.1s ease, color 0.1s ease;
       }
+      .jd-hint-arrow:active { transform: scale(0.65) !important; }
       .jd-hint-arrow.left { animation-delay: 0s, 0s; }
       .jd-hint-arrow.right { animation-delay: 1.25s, 0s; }
       .jd-hint-arrow svg { width: 22px; height: 22px; }
@@ -684,7 +687,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         to { transform: scale(0.85); color: rgba(26,26,24,0.4); }
       }
       #jd-slideshow { top: 90px; bottom: 60px; height: calc(100dvh - 150px); }
-      #jd-counter { display: block; position: fixed; bottom: 25px; left: 0; right: 0; text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; z-index: 100000; pointer-events: none; }
+      #jd-counter { display: flex; align-items: center; justify-content: center; height: 24px; position: fixed; bottom: 25px; left: 0; right: 0; text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; z-index: 100000; pointer-events: none; }
       #jd-cursor-custom { display: none !important; }
 
       .jd-thumb-global { width: calc(50% - 1rem); }
@@ -1246,6 +1249,21 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
       e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
+    });
+
+    document.querySelectorAll('.jd-hint-arrow.left').forEach(el => {
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        goToRelative(-1);
+      });
+    });
+    document.querySelectorAll('.jd-hint-arrow.right').forEach(el => {
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        goToRelative(1);
+      });
     });
 
     document.addEventListener('keydown', e => {
