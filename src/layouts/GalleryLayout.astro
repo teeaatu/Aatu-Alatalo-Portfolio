@@ -199,7 +199,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 <html lang={lang}>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f5f4f0">
   <meta name="color-scheme" content="light">
   <title>{pageTitle}</title>
@@ -272,13 +272,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       background: none; border: none;
       color: var(--jd-text);
       font-family: var(--jd-font);
-      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
       cursor: pointer; padding: 12px; margin: -12px; opacity: 1;
       min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
     }
     .jd-ui-link {
       color: var(--jd-text); text-decoration: none;
-      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
       padding: 12px; margin: -12px;
       min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
     }
@@ -406,23 +406,31 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* ─── BOTTOM NAV ─────────────────────────────────── */
     #jd-bottom-nav {
-      position: fixed; bottom: 25px; left: 0; right: 0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 8px; z-index: 100000; pointer-events: none; cursor: auto;
+      position: fixed; bottom: 15px; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
+      display: flex; flex-direction: row; align-items: center; justify-content: center;
+      gap: 15px; z-index: 100000; pointer-events: auto; cursor: auto;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.index-is-open #jd-bottom-nav {
+      opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
     .jd-bottom-btn {
       background: none; border: none;
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       font-family: var(--jd-font);
-      font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+      font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase;
       cursor: pointer !important; pointer-events: auto;
       opacity: 1 !important; padding: 12px 16px;
       min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+      transition: opacity 0.2s;
     }
+    .jd-bottom-btn:hover { opacity: 0.6 !important; }
     .jd-nav-divider {
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       opacity: 1 !important; font-size: 0.8rem; padding: 0 0.2rem;
       pointer-events: none; user-select: none;
+      display: inline-flex; align-items: center; justify-content: center;
     }
     #jd-counter { display: none; }
 
@@ -457,7 +465,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     body.is-entering-ready .jd-shutter-title { 
       top: var(--target-y, -10%);
       left: var(--target-x, 50%);
-      font-size: 0.68rem;
+      font-size: 0.75rem;
       letter-spacing: 0.22em;
       opacity: 0;
       transition: top 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
@@ -478,6 +486,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     body.is-leaving .jd-curtain-primary { transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
 
     /* ─── INDEX PANEL ────────────────────────────────── */
+    #jd-index-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45);
+      z-index: 499; opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    #jd-index-overlay.is-open {
+      opacity: 1; visibility: visible; pointer-events: auto; cursor: pointer;
+    }
     #jd-index-panel {
       position: fixed !important; top: 0 !important; right: 0; left: auto;
       width: var(--jd-panel-w); height: 100dvh !important;
@@ -495,16 +511,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     #jd-index-panel.is-open { transform: translateX(0); opacity: 1; }
     #jd-index-panel a, #jd-index-panel div, #jd-index-panel span { color: var(--jd-text) !important; }
-
-    #jd-index-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 490; background: rgba(0,0,0,0); opacity: 0; pointer-events: none;
-      transition: background 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.01s;
-    }
-    #jd-index-overlay.is-open {
-      background: rgba(0,0,0,0); opacity: 1; pointer-events: auto; cursor: pointer;
-      width: calc(100vw - var(--jd-panel-w));
-    }
 
     /* Index panel inner styles */
     .jd-top-nav {
@@ -548,12 +554,34 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-thumb-global img { width: 100%; height: auto; display: block; transition: opacity 0.15s ease-out; }
     .jd-thumb-global:hover img { opacity: 0.7; }
     .jd-thumb-global.is-active img { outline: 2px solid #1a1a18; outline-offset: 6px; }
-    #jd-thumbs-nav { display: none; align-items: center; justify-content: center; gap: 0; }
-    #jd-thumbs-nav.is-open { display: flex; }
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #jd-thumbs-nav { 
+      display: none; align-items: center; justify-content: center; gap: 0; 
+      background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      height: 48px; padding: 0 20px;
+    }
+    #jd-thumbs-nav .jd-bottom-btn { color: #fff !important; -webkit-text-fill-color: #fff !important; padding: 0; }
+    #jd-thumbs-nav.is-open { display: flex; animation: slideUpFade 0.4s ease forwards; }
     #jd-thumbs-panel.is-open ~ #jd-bottom-nav #jd-normal-nav { display: none; }
+    body.thumbs-is-open #jd-bottom-nav {
+      top: auto !important;
+      bottom: 25px !important;
+    }
+    body.thumbs-is-open #jd-counter {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
 
     /* ─── FILTER ─────────────────────────────────────── */
-    .jd-filter-dropdown-container { position: fixed; bottom: 25px; right: 35px; display: none; pointer-events: auto; z-index: 100000; }
+    .jd-filter-dropdown-container { 
+      position: fixed; bottom: 25px; right: 35px; display: none; pointer-events: auto; z-index: 100000;
+      width: auto; height: auto;
+    }
     .jd-filter-dropdown-container.is-visible { display: block; }
     .jd-filter-menu {
       position: absolute; bottom: 100%; right: 0;
@@ -564,8 +592,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-filter-menu.is-open { opacity: 1; pointer-events: auto; }
     .jd-filter-btn {
-      background: none; border: none; color: rgba(26,26,24,0.5);
-      font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.22em;
+      background: none; border: none; color: rgba(26,26,24,0.7);
+      font-family: var(--jd-font); font-size: 0.75rem; letter-spacing: 0.22em;
       text-transform: uppercase; cursor: pointer; padding: 12px; margin: -12px; transition: color 0.3s; white-space: nowrap;
       min-height: 44px; display: inline-flex; align-items: center;
     }
@@ -576,7 +604,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-cursor-custom {
       position: fixed; pointer-events: none; z-index: 9999;
       transform: translate(-50%, -50%);
-      font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      font-family: var(--jd-font); font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
       color: white; mix-blend-mode: difference; white-space: nowrap;
       opacity: 0; user-select: none;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -630,10 +658,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-about-text { flex: 1.2; color: #1a1a1a; font-family: var(--jd-font); }
     .jd-about-text header { margin-bottom: 2.5rem; }
     .jd-about-text h1 { font-family: var(--jd-font-serif); font-size: 2.5rem; font-weight: 400; margin: 0 0 0.5rem 0; letter-spacing: 0.02em; }
-    .jd-about-subtitle { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; }
+    .jd-about-subtitle { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.72; }
     .jd-about-bio { font-size: 1.1rem; line-height: 1.6; margin-bottom: 3rem; max-width: 500px; }
     .jd-about-section { margin-bottom: 2rem; }
-    .jd-about-section h2 { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; margin-bottom: 1rem; }
+    .jd-about-section h2 { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.72; margin-bottom: 1rem; }
     .jd-about-section ul { list-style: none; padding: 0; margin: 0; }
     .jd-about-section li { font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.8rem; max-width: 500px; }
     #jd-about-bottom-nav {
@@ -664,13 +692,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-slide img { width: 100%; height: 100%; max-width: calc(100% - 28px); max-height: 100%; object-fit: contain; }
       .jd-diptych-slide { flex-direction: column; gap: 15px; }
       .jd-diptych-slide img { max-width: calc(100% - 28px) !important; max-height: calc(50dvh - 75px) !important; }
-      #jd-bottom-nav { bottom: auto; top: 0; height: auto; min-height: 70px; background: #f5f4f0; width: 100%; padding-top: 25px; padding-bottom: 15px; }
+      #jd-bottom-nav { bottom: auto; top: 30px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: auto; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; }
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
       #jd-hint-arrows.show-hints { animation: none; }
       #jd-hint-arrows { display: flex !important; top: auto; bottom: 25px; transform: none; padding: 0 15px; animation: none; height: 24px; align-items: center; z-index: 100001; }
       .jd-hint-arrow { 
-        background: none; backdrop-filter: none; width: auto; height: auto; color: rgba(26,26,24,0.4); 
+        background: none; backdrop-filter: none; width: auto; height: auto; color: rgba(26,26,24,0.6); 
         animation: pulseArrowMobile 2.5s 3 ease-in-out, mobileShrink 0.5s 7.5s forwards;
         pointer-events: auto; cursor: pointer; padding: 10px; margin: -10px;
         transition: transform 0.1s ease, color 0.1s ease;
@@ -687,7 +715,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         to { transform: scale(0.85); color: rgba(26,26,24,0.4); }
       }
       #jd-slideshow { top: 90px; bottom: 60px; height: calc(100dvh - 150px); }
-      #jd-counter { display: flex; align-items: center; justify-content: center; height: 24px; position: fixed; bottom: 25px; left: 0; right: 0; text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; z-index: 100000; pointer-events: none; }
+      #jd-counter { display: flex; align-items: center; justify-content: center; height: auto; width: auto; padding: 0; position: fixed; bottom: 35px; left: 50%; right: auto; transform: translateX(-50%); text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; z-index: 100000; pointer-events: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; }
       #jd-cursor-custom { display: none !important; }
 
       .jd-thumb-global { width: calc(50% - 1rem); }
@@ -716,10 +744,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <!-- Hint arrows -->
   <div id="jd-hint-arrows">
-    <div class="jd-hint-arrow left">
+    <div class="jd-hint-arrow left" aria-label="Edellinen kuva / Previous image" role="button" tabindex="0">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
     </div>
-    <div class="jd-hint-arrow right">
+    <div class="jd-hint-arrow right" aria-label="Seuraava kuva / Next image" role="button" tabindex="0">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
     </div>
   </div>
@@ -731,18 +759,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       <span class="jd-nav-divider">—</span>
       <button class="jd-bottom-btn" id="jd-thumbs-btn">{lang === 'en' ? 'All Works' : 'Kaikki teokset'}</button>
     </div>
+    <div id="jd-thumbs-nav">
+      <button class="jd-bottom-btn" id="jd-thumbs-close">{lang === 'en' ? 'Close' : 'Sulje'}</button>
+    </div>
+  </div>
+
+  { (categorySlug === 'tapahtumat' || categorySlug === 'events') && (
     <div id="jd-filter-dropdown-container" class="jd-filter-dropdown-container">
       <button id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display:flex;align-items:center;justify-content:center;height:100%;cursor:pointer;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(26,26,24,0.35)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
       </button>
       <div id="jd-filter-menu" class="jd-filter-menu"></div>
     </div>
-    <div id="jd-thumbs-nav">
-      <span class="jd-bottom-btn" style="cursor:default;">{catLabel}</span>
-      <span class="jd-nav-divider">—</span>
-      <button class="jd-bottom-btn" id="jd-thumbs-close">{lang === 'en' ? 'Close' : 'Sulje'}</button>
-    </div>
-  </div>
+  )}
 
   <!-- Mobile counter -->
   <div id="jd-counter"><span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span></div>
@@ -761,6 +790,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   {computedPrevUrl && <div id="jd-prev-url" style="display:none" data-cat-label={computedPrevLabel}>{computedPrevUrl}</div>}
 
   <!-- Index panel -->
+  <div id="jd-index-overlay"></div>
   <nav id="jd-index-panel">
     <div class="jd-top-nav">
       <a href={lang === 'en' ? '/en/recent' : '/recent'} style="text-decoration: underline; text-underline-offset: 4px;">
@@ -1198,23 +1228,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (!swipeIntentDetermined && (dx > 10 || dy > 10)) {
         swipeIntentDetermined = true;
         hasSwiped = true;
-        const isSwipingUp = (touchStartY - e.touches[0].clientY) > 0;
-        if (dy > dx && isSwipingUp && !document.body.classList.contains('index-is-open') && window.innerWidth <= 800) {
-          isDraggingMenu = true;
-          const panel = document.getElementById('jd-index-panel');
-          if (panel) panel.style.setProperty('transition', 'none', 'important');
-        }
       }
       
-      if (isDraggingMenu) {
-        const dragY = touchStartY - e.touches[0].clientY;
-        if (dragY > 0) {
-          menuCurrentDrag = dragY;
-          const panel = document.getElementById('jd-index-panel');
-          if (panel) panel.style.transform = `translateY(-${dragY}px)`;
-          if (e.cancelable) e.preventDefault();
-        }
-      } else if (swipeIntentDetermined && dx > dy) {
+      if (swipeIntentDetermined && dx > dy) {
         if (e.cancelable) e.preventDefault();
       }
     }, { passive: false });
@@ -1224,22 +1240,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
       
-      if (!isDraggingMenu && Math.abs(dx) > 40 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
+      if (Math.abs(dx) > 40 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
         dx < 0 ? goToRelative(1) : goToRelative(-1);
-      }
-      
-      if (isDraggingMenu) {
-        isDraggingMenu = false;
-        const panel = document.getElementById('jd-index-panel');
-        if (panel) {
-          panel.style.transition = '';
-          if (menuCurrentDrag > window.innerHeight * 0.4) { 
-            panel.style.transform = ''; 
-            if (typeof window.openIndexPanel === 'function') window.openIndexPanel(); 
-          } else {
-            panel.style.transform = '';
-          }
-        }
       }
     }, { passive: true });
 
@@ -1273,42 +1275,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
     });
 
-    /* Wheel to open/close index */
-    let wheelDrag = 0, wheelDragTimer = null;
-    window.addEventListener('wheel', e => {
-      if (thumbsOpen || document.body.classList.contains('about-is-open')) return;
-      if (window.innerWidth <= 800) return;
-      const panel = document.getElementById('jd-index-panel');
-      if (!panel) return;
-      const isMenuOpen = document.body.classList.contains('index-is-open');
-      if (!isMenuOpen) {
-        if (e.deltaY > 0) {
-          wheelDrag += Math.abs(e.deltaY);
-          if (wheelDrag > window.innerHeight) wheelDrag = window.innerHeight;
-          panel.style.transition = 'none'; panel.style.transform = `translateY(-${wheelDrag}px)`;
-          clearTimeout(wheelDragTimer);
-          wheelDragTimer = setTimeout(() => {
-            panel.style.transition = '';
-            if (wheelDrag > window.innerHeight * 0.20) { panel.style.transform = ''; if (typeof window.openIndexPanel === 'function') window.openIndexPanel(); }
-            else panel.style.transform = '';
-            wheelDrag = 0;
-          }, 150);
-        }
-      } else {
-        if (e.deltaY < 0 && panel.scrollTop <= 0) {
-          wheelDrag += Math.abs(e.deltaY);
-          panel.style.transition = 'none'; panel.style.transform = `translateY(calc(-100% + ${wheelDrag}px))`;
-          clearTimeout(wheelDragTimer);
-          wheelDragTimer = setTimeout(() => {
-            panel.style.transition = '';
-            if (wheelDrag > window.innerHeight * 0.20) { panel.style.transform = ''; if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel(); }
-            else panel.style.transform = '';
-            wheelDrag = 0;
-          }, 150);
-          if (e.cancelable) e.preventDefault();
-        } else { wheelDrag = 0; }
-      }
-    }, { passive: false });
+    /* Wheel to open/close index feature removed */
 
     /* Cursor Physics (Instant) */
     if ('ontouchstart' in window) { if (cursor) cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
@@ -1345,64 +1312,46 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* Thumbs view */
     function openThumbsView() {
       if (thumbsOpen) return;
-      if (document.body.classList.contains('is-leaving')) return;
       
-      document.body.classList.remove('is-entering-ready');
-      document.body.classList.add('hide-shutter-title');
-      document.body.classList.add('prepare-leave');
-      void document.body.offsetWidth;
-      document.body.classList.remove('prepare-leave');
-      document.body.classList.add('is-leaving');
+      thumbsOpen = true; 
+      document.body.classList.add('thumbs-is-open');
+      if (cursor) cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
+      thumbsPanel.classList.add('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'none';
       
-      let triggered = false;
-      const handler = () => {
-        if(triggered) return; triggered = true;
-        thumbsOpen = true; 
-        thumbsPanel.classList.add('is-open');
-        document.getElementById('jd-normal-nav').style.display = 'none';
-        document.getElementById('jd-thumbs-nav').classList.add('is-open');
-        const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
-        if (currentCatSection) {
-          const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
-          if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
-          currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
-        }
-        const hintArrows = document.getElementById('jd-hint-arrows');
-        if (hintArrows) hintArrows.style.opacity = '0';
-        
-        document.body.classList.remove('is-leaving');
-        document.body.classList.add('is-entering-ready');
-      };
+      const thumbsNav = document.getElementById('jd-thumbs-nav');
+      thumbsNav.style.animation = 'none';
+      void thumbsNav.offsetWidth;
+      thumbsNav.classList.add('is-open');
+      thumbsNav.style.animation = '';
       
-      shutter.addEventListener('transitionend', handler, { once: true });
-      setTimeout(handler, 1600);
+      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
+      const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
+      if (currentCatSection) {
+        const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
+        if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
+        currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
+      const hintArrows = document.getElementById('jd-hint-arrows');
+      if (hintArrows) hintArrows.style.opacity = '0';
     }
     
     function closeThumbsView() {
       if (!thumbsOpen) return;
-      if (document.body.classList.contains('is-leaving')) return;
       
-      document.body.classList.remove('is-entering-ready');
-      document.body.classList.add('hide-shutter-title');
-      document.body.classList.add('prepare-leave');
-      void document.body.offsetWidth;
-      document.body.classList.remove('prepare-leave');
-      document.body.classList.add('is-leaving');
+      thumbsOpen = false; 
+      document.body.classList.remove('thumbs-is-open');
+      if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
+        if (cursor) cursor.style.display = '';
+        document.body.style.cursor = 'none';
+      }
+      thumbsPanel.classList.remove('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'flex';
+      document.getElementById('jd-thumbs-nav').classList.remove('is-open');
       
-      let triggered = false;
-      const handler = () => {
-        if(triggered) return; triggered = true;
-        thumbsOpen = false; 
-        thumbsPanel.classList.remove('is-open');
-        document.getElementById('jd-normal-nav').style.display = 'flex';
-        document.getElementById('jd-thumbs-nav').classList.remove('is-open');
-        
-        document.body.classList.remove('is-leaving');
-        document.body.classList.add('is-entering-ready');
-      };
-      
-      shutter.addEventListener('transitionend', handler, { once: true });
-      setTimeout(handler, 1600);
+      const hintArrows = document.getElementById('jd-hint-arrows');
+      if (hintArrows) hintArrows.style.opacity = '1';
     }
     document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
     document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
@@ -1447,7 +1396,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
               shutterTitle.style.setProperty('--target-y', targetY + 'px');
             } else {
               shutterTitle.style.setProperty('--target-x', '50%');
-              shutterTitle.style.setProperty('--target-y', 'calc(100dvh - 25px)');
+              shutterTitle.style.setProperty('--target-y', 'calc(100dvh - 59px)');
             }
             setTimeout(() => {
               catSpan.style.transition = 'opacity 0.6s ease';
@@ -1481,6 +1430,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     const jdMain = document.getElementById('jd-main');
 
     window.openIndexPanel = function() {
+      if (typeof closeThumbsView === 'function') closeThumbsView();
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
       if (indexPanel) indexPanel.scrollTop = 0;
