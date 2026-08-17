@@ -351,51 +351,54 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 2rem;
     }
     /* ─── EDITORIAL TEXT SLIDES (MAGNUM STYLE) ──────── */
-    .jd-text-content.jd-editorial-text {
+    .jd-editorial-content {
       background: transparent !important;
       box-shadow: none !important;
       border: none !important;
-      padding: 2rem 1.5rem;
-      max-width: 780px;
-      min-height: auto;
+      outline: none !important;
+      padding: 3rem 2rem;
+      max-width: 820px;
       width: 100%;
+      min-height: auto;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.8rem;
+      gap: 2.2rem;
+      z-index: 2;
     }
-    .jd-text-content.jd-editorial-text::before {
+    .jd-editorial-content::before,
+    .jd-editorial-content::after {
       display: none !important;
     }
-    .jd-text-content.jd-editorial-text h2 {
-      font-family: var(--jd-font-garamond);
-      font-size: clamp(2.4rem, 5.5vw, 4.4rem);
-      font-weight: 300;
-      line-height: 1.12;
-      color: #111111;
-      letter-spacing: -0.01em;
-      margin: 0;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
-    }
-    .jd-text-content.jd-editorial-text p {
-      font-family: var(--jd-font);
-      font-size: clamp(1.2rem, 2.3vw, 1.55rem);
-      font-weight: 300;
-      line-height: 1.65;
-      color: rgba(26, 26, 24, 0.82);
-      max-width: 700px;
-      margin: 0;
-      letter-spacing: 0.005em;
+    .jd-editorial-content h2 {
+      font-family: var(--jd-font-garamond) !important;
+      font-size: clamp(2.6rem, 6vw, 4.6rem) !important;
+      font-weight: 300 !important;
+      line-height: 1.12 !important;
+      color: #111111 !important;
+      letter-spacing: -0.015em !important;
+      margin: 0 !important;
       opacity: 0;
       transform: translateY(28px);
-      transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.25s, transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
     }
-    .jd-slide.active .jd-text-content.jd-editorial-text h2,
-    .jd-slide.active .jd-text-content.jd-editorial-text p {
+    .jd-editorial-content p {
+      font-family: var(--jd-font) !important;
+      font-size: clamp(1.2rem, 2.2vw, 1.55rem) !important;
+      font-weight: 300 !important;
+      line-height: 1.7 !important;
+      color: rgba(26, 26, 24, 0.82) !important;
+      max-width: 720px !important;
+      margin: 0 !important;
+      letter-spacing: 0.005em !important;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.25s, transform 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+    }
+    .jd-slide.active .jd-editorial-content h2,
+    .jd-slide.active .jd-editorial-content p {
       opacity: 1;
       transform: translateY(0);
     }
@@ -777,19 +780,16 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-counter span { white-space: nowrap; }
       #jd-cursor-custom { display: none !important; }
 
-      .jd-text-content.jd-editorial-text {
-        padding: 1.5rem 1rem;
-        gap: 1.2rem;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
+      .jd-editorial-content {
+        padding: 2rem 1.25rem !important;
+        gap: 1.4rem !important;
       }
-      .jd-text-content.jd-editorial-text h2 {
-        font-size: clamp(2rem, 7.5vw, 2.9rem);
+      .jd-editorial-content h2 {
+        font-size: clamp(2.2rem, 8vw, 3.2rem) !important;
       }
-      .jd-text-content.jd-editorial-text p {
-        font-size: 1.15rem;
-        line-height: 1.6;
+      .jd-editorial-content p {
+        font-size: 1.15rem !important;
+        line-height: 1.6 !important;
       }
 
       .jd-thumb-global { width: calc(50% - 1rem); }
@@ -1067,61 +1067,73 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (item.type === 'text') {
         slide.className += ' jd-text-slide';
         const content = document.createElement('div');
-        content.className = 'jd-text-content' + (!item.kartta ? ' jd-editorial-text' : '');
-        if (item.title) {
-          const h2 = document.createElement('h2');
-          h2.textContent = item.title;
-          content.appendChild(h2);
-        }
-        if (item.text) {
-          const p = document.createElement('p');
-          p.textContent = item.text;
-          content.appendChild(p);
-        }
-        
-        if (item.kartta && window.L) {
-          const mapContainer = document.createElement('div');
-          mapContainer.className = 'jd-postcard-map';
-          content.appendChild(mapContainer);
-          
-          setTimeout(() => {
-            const map = L.map(mapContainer, {
-              center: item.kartta.center || [60, 25],
-              zoom: item.kartta.zoom || 8,
-              zoomControl: false,
-              dragging: false,
-              touchZoom: false,
-              doubleClickZoom: false,
-              scrollWheelZoom: false,
-              boxZoom: false,
-              keyboard: false
-            });
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-              attribution: '&copy; OpenStreetMap &copy; CARTO'
-            }).addTo(map);
+        if (item.kartta) {
+          content.className = 'jd-text-content jd-postcard-content';
+          if (item.title) {
+            const h2 = document.createElement('h2');
+            h2.textContent = item.title;
+            content.appendChild(h2);
+          }
+          if (item.text) {
+            const p = document.createElement('p');
+            p.textContent = item.text;
+            content.appendChild(p);
+          }
+          if (window.L) {
+            const mapContainer = document.createElement('div');
+            mapContainer.className = 'jd-postcard-map';
+            content.appendChild(mapContainer);
             
-            if (item.kartta.points && item.kartta.points.length > 0) {
-              const dotIcon = L.divIcon({ className: 'jd-map-dot-wrapper', html: '<div class="jd-map-dot"></div>', iconSize: [14, 14] });
-              const bounds = L.latLngBounds();
-              item.kartta.points.forEach(pt => {
-                const coords = pt.latlng || pt;
-                bounds.extend(coords);
-                const marker = L.marker(coords, { icon: dotIcon }).addTo(map);
-                if (pt.nimi) {
-                  marker.bindTooltip(pt.nimi, {
-                    permanent: true,
-                    direction: 'top',
-                    className: 'jd-map-tooltip',
-                    offset: [0, -5],
-                    opacity: 1
-                  });
-                }
+            setTimeout(() => {
+              const map = L.map(mapContainer, {
+                center: item.kartta.center || [60, 25],
+                zoom: item.kartta.zoom || 8,
+                zoomControl: false,
+                dragging: false,
+                touchZoom: false,
+                doubleClickZoom: false,
+                scrollWheelZoom: false,
+                boxZoom: false,
+                keyboard: false
               });
-              map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
-            }
-          }, 300);
+              L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO'
+              }).addTo(map);
+              
+              if (item.kartta.points && item.kartta.points.length > 0) {
+                const dotIcon = L.divIcon({ className: 'jd-map-dot-wrapper', html: '<div class="jd-map-dot"></div>', iconSize: [14, 14] });
+                const bounds = L.latLngBounds();
+                item.kartta.points.forEach(pt => {
+                  const coords = pt.latlng || pt;
+                  bounds.extend(coords);
+                  const marker = L.marker(coords, { icon: dotIcon }).addTo(map);
+                  if (pt.nimi) {
+                    marker.bindTooltip(pt.nimi, {
+                      permanent: true,
+                      direction: 'top',
+                      className: 'jd-map-tooltip',
+                      offset: [0, -5],
+                      opacity: 1
+                    });
+                  }
+                });
+                map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+              }
+            }, 300);
+          }
+        } else {
+          content.className = 'jd-editorial-content';
+          if (item.title) {
+            const h2 = document.createElement('h2');
+            h2.textContent = item.title;
+            content.appendChild(h2);
+          }
+          if (item.text) {
+            const p = document.createElement('p');
+            p.textContent = item.text;
+            content.appendChild(p);
+          }
         }
-        
         slide.appendChild(content);
       } else if (item.layout === 'diptych' && item.images) {
         slide.className += ' jd-diptych-slide';
