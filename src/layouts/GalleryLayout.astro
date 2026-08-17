@@ -71,12 +71,25 @@ function resolveImagePaths(kuva: string) {
 let jdIdx = 0;
 const galleryData: any[] = [];
 for (const item of dataset) {
+  const titleVal = item.otsikko || '';
+  const placeVal = item.paikka || '';
+  const textVal = item.teksti || '';
+
+  const parseField = (val: any) => {
+    if (val === undefined || val === null || val === '') return '';
+    const str = String(val);
+    if (str.includes(' / ')) {
+      const parts = str.split(' / ');
+      return lang === 'fi' ? parts[0]?.trim() : parts.slice(1).join(' / ').trim();
+    }
+    return str;
+  };
+
   if (item.tyyppi === 'teksti') {
-    if (categorySlug !== 'work4') continue;
-    const titleVal = item.otsikko || '';
     galleryData.push({
       i: jdIdx++, type: 'text',
-      title: lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim(),
+      title: parseField(titleVal),
+      text: parseField(textVal),
       series: item.series || 'all',
       kartta: item.kartta || null
     });
@@ -87,20 +100,20 @@ for (const item of dataset) {
       const { src, srcMob, full } = resolveImagePaths(sub.kuva);
       return { src, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob, alt: sub.alt_text || '' };
     });
-    const titleVal = item.otsikko || '';
     galleryData.push({
       i: jdIdx++, layout: 'diptych', images,
-      title: lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim(),
-      place: item.paikka || '', series: item.series || 'all',
+      title: parseField(titleVal),
+      place: parseField(placeVal),
+      series: item.series || 'all',
     });
   } else {
     const { src, srcMob, full } = resolveImagePaths(item.kuva);
-    const titleVal = item.otsikko || '';
     galleryData.push({
       i: jdIdx++, src, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob,
       alt: item.alt_text || '',
-      title: lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim(),
-      place: item.paikka || '', series: item.series || 'all',
+      title: parseField(titleVal),
+      place: parseField(placeVal),
+      series: item.series || 'all',
     });
   }
 }
@@ -336,6 +349,22 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       text-align: center;
       display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 2rem;
     }
+    .jd-text-content.jd-editorial-text {
+      min-height: auto;
+      max-width: 540px;
+      padding: 4rem 3.5rem;
+      gap: 1.6rem;
+      justify-content: center;
+    }
+    .jd-text-content.jd-editorial-text h2 {
+      font-size: 1.9rem;
+      letter-spacing: 0.04em;
+    }
+    .jd-text-content.jd-editorial-text p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #333;
+    }
     .jd-text-content::before {
       content: "";
       position: absolute;
@@ -345,6 +374,30 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-text-content h2 { font-family: var(--jd-font-serif); font-size: 2.2rem; font-weight: normal; margin: 0; color: #1a1a18; letter-spacing: 0.05em; line-height: 1.3; z-index: 2; }
     .jd-text-content p { font-family: var(--jd-font); font-size: 1.15rem; line-height: 1.6; color: #444; margin: 0; z-index: 2; }
+
+    /* ─── EDITORIAL CAPTION ───────────────────────── */
+    #jd-caption {
+      position: fixed;
+      bottom: 22px;
+      left: 32px;
+      font-family: var(--jd-font);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(26, 26, 24, 0.5);
+      z-index: 10000;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      max-width: 35vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    body.index-is-open #jd-caption,
+    body.about-is-open #jd-caption,
+    body.thumbs-is-open #jd-caption {
+      opacity: 0 !important;
+    }
     .jd-postcard-map {
       width: 100%;
       height: 450px;
@@ -723,6 +776,16 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-counter span { white-space: nowrap; }
       #jd-cursor-custom { display: none !important; }
 
+      #jd-caption {
+        bottom: 58px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        max-width: 88vw;
+        text-align: center;
+      }
+
       .jd-thumb-global { width: calc(50% - 1rem); }
       .jd-thumbs-grid { gap: 1rem; }
       .jd-text-content { width: calc(100% - 2rem); min-height: 400px; height: auto; margin: 1rem; padding: 3rem 1.5rem 2rem; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: none; background: #fdfbf7; border: 1px solid rgba(0,0,0,0.08); }
@@ -780,6 +843,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <!-- Mobile counter -->
   <div id="jd-counter"><span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span></div>
+
+  <!-- Editorial caption (Option 3) -->
+  <div id="jd-caption"></div>
 
 
 
@@ -911,10 +977,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           <div class="jd-thumbs-section" id={`jd-thumbs-section-${key}`}>
             <div class="jd-thumbs-section-title">{catLabels[key] || key}</div>
             <div class="jd-thumbs-grid">
-              {data.filter((item: any) => key === 'work4' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
+              {data.map((item: any, idx: number) => {
                 if (item.tyyppi === 'teksti') {
                   const titleVal = item.otsikko || '';
-                  const tStr = lang === 'fi' ? titleVal.split(' / ')[0]?.trim() : titleVal.split(' / ').pop()?.trim();
+                  const parseField = (val: any) => {
+                    if (val === undefined || val === null || val === '') return '';
+                    const str = String(val);
+                    if (str.includes(' / ')) {
+                      const parts = str.split(' / ');
+                      return lang === 'fi' ? parts[0]?.trim() : parts.slice(1).join(' / ').trim();
+                    }
+                    return str;
+                  };
+                  const tStr = parseField(titleVal);
                   return (
                     <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <div class="jd-thumb-text-inner">
@@ -989,8 +1064,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (item.type === 'text') {
         slide.className += ' jd-text-slide';
         const content = document.createElement('div');
-        content.className = 'jd-text-content';
-        content.innerHTML = `<h2>${item.title || ''}</h2>`;
+        content.className = 'jd-text-content' + (!item.kartta ? ' jd-editorial-text' : '');
+        if (item.title) {
+          const h2 = document.createElement('h2');
+          h2.textContent = item.title;
+          content.appendChild(h2);
+        }
+        if (item.text) {
+          const p = document.createElement('p');
+          p.textContent = item.text;
+          content.appendChild(p);
+        }
         
         if (item.kartta && window.L) {
           const mapContainer = document.createElement('div');
@@ -1120,6 +1204,28 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
       const cursorText = document.getElementById('jd-cursor-text');
       if (cursorText) cursorText.textContent = `${catLabel} — ${n} / ${visibleTotal}`;
+
+      const captionEl = document.getElementById('jd-caption');
+      if (captionEl) {
+        const item = data[current];
+        if (!item || item.type === 'text') {
+          captionEl.style.opacity = '0';
+        } else {
+          let cText = '';
+          if (item.title && item.title !== 'Untitled' && item.title !== 'Nimetön') {
+            cText = item.title;
+            if (item.place) cText += ` — ${item.place}`;
+          } else if (item.place) {
+            cText = item.place;
+          }
+          if (cText) {
+            captionEl.textContent = cText;
+            captionEl.style.opacity = '1';
+          } else {
+            captionEl.style.opacity = '0';
+          }
+        }
+      }
     }
     updateCounter();
 
