@@ -115,7 +115,7 @@ Voit luoda tämän luonnoksen Wikipedian hiekkalaatikkoon / käyttäjäsivulle:
 | syntymäaika = {{Syntymäaika ja ikä|2005|1|25}}
 | syntymäpaikka = [[Tyrnävä]]
 | kansalaisuus = [[Suomi]]
-| koulutus = [[Oulun ammattikorkeakoulu]] (medianomi)
+| koulutus = Media-alan perustutkinto ([[Jokilaaksojen koulutuskuntayhtymä|JEDU]])<br />[[Oulun ammattikorkeakoulu]] (medianomi, opiskelee)
 | ammatti = [[Valokuvaaja]]
 | tunnetut_työt = Valokuvia Suomenlahdelta, Hasselblad Masters 2026 (Project//21)
 | palkinnot = Hasselblad Masters 2026 -finalisti (Project//21)<br />SAKUstars 2023 -kunniamaininta
@@ -125,7 +125,7 @@ Voit luoda tämän luonnoksen Wikipedian hiekkalaatikkoon / käyttäjäsivulle:
 '''Aatu Elias Alatalo''' (s. [[25. tammikuuta]] [[2005]] [[Tyrnävä]]) on suomalainen [[Oulu]]ssa asuva valokuvaaja. Hänet valittiin kansainvälisen [[Hasselblad Masters]] 2026 -valokuvakilpailun finaaliin alle 21-vuotiaiden sarjassa (Project//21).
 
 == Ura ja opinnot ==
-Alatalo aloitti valokuvauksen vuonna 2014. Hän opiskelee medianomiksi [[Oulun ammattikorkeakoulu|Oulun ammattikorkeakoulussa]]. Alatalon valokuvataiteelle on ominaista dokumentaarinen ja toimituksellinen ote, jossa yhdistyvät suomalainen arki, katuvalokuvaus ja pohjoinen valo.
+Alatalo aloitti valokuvauksen vuonna 2014. Hän on suorittanut media-alan ja kuvallisen ilmaisun perustutkinnon [[Jokilaaksojen koulutuskuntayhtymä|Jokilaaksojen koulutuskuntayhtymä Jedussa]] ja opiskelee medianomiksi [[Oulun ammattikorkeakoulu|Oulun ammattikorkeakoulussa]]. Alatalon valokuvataiteelle on ominaista dokumentaarinen ja toimituksellinen ote, jossa yhdistyvät suomalainen arki, katuvalokuvaus ja pohjoinen valo.
 
 Vuonna 2026 Alatalo valittiin kymmenen parhaan joukkoon kansainvälisessä Hasselblad Masters -kilpailussa yli 108 000 osallistuneen kuvan joukosta sarjassa Project//21.
 
