@@ -296,18 +296,26 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-ui-btn {
       background: none; border: none;
-      color: var(--jd-text);
+      color: rgba(26, 26, 24, 0.45);
       font-family: var(--jd-font);
       font-size: 1.05rem; letter-spacing: 0.02em; text-transform: none;
-      cursor: pointer; padding: 12px; margin: -12px; opacity: 1;
+      cursor: pointer; padding: 12px; margin: -12px;
       min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
+      transition: color 0.3s ease;
+    }
+    .jd-ui-btn:hover {
+      color: rgba(26, 26, 24, 1);
     }
     .jd-ui-link {
-      color: var(--jd-text); text-decoration: none;
+      color: rgba(26, 26, 24, 0.45); text-decoration: none;
       font-family: var(--jd-font);
       font-size: 1.05rem; letter-spacing: 0.02em; text-transform: none;
       padding: 12px; margin: -12px;
       min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
+      transition: color 0.3s ease;
+    }
+    .jd-ui-link:hover {
+      color: rgba(26, 26, 24, 1);
     }
 
     /* Tactile press feedback */
@@ -474,16 +482,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-bottom-btn {
       background: none; border: none;
-      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
+      color: rgba(26, 26, 24, 0.45) !important; -webkit-text-fill-color: rgba(26, 26, 24, 0.45) !important;
       font-family: var(--jd-font);
       font-size: 1.18rem; font-weight: 500; letter-spacing: 0.02em; text-transform: none !important;
       cursor: pointer !important; pointer-events: auto;
-      opacity: 0.85; padding: 8px 0;
+      padding: 8px 0;
       min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: color 0.3s ease, -webkit-text-fill-color 0.3s ease, transform 0.2s ease;
       white-space: nowrap;
     }
-    .jd-bottom-btn:hover { opacity: 1 !important; }
+    .jd-bottom-btn:hover {
+      color: rgba(26, 26, 24, 1) !important;
+      -webkit-text-fill-color: rgba(26, 26, 24, 1) !important;
+    }
     .jd-nav-divider { display: none !important; }
     #jd-counter { display: none; }
 
@@ -848,7 +859,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-diptych-slide img { max-width: calc(100% - 28px) !important; max-height: calc(50dvh - 75px) !important; }
       #jd-bottom-nav { bottom: auto; top: 25px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: max-content; max-width: 95vw; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
       #jd-normal-nav { gap: 2.2rem !important; }
-      #jd-bottom-nav .jd-bottom-btn { padding: 8px 0 !important; font-size: 1.05rem !important; font-weight: 500 !important; letter-spacing: 0.02em !important; white-space: nowrap; }
+      #jd-bottom-nav .jd-bottom-btn { padding: 8px 0 !important; font-size: 1.05rem !important; font-weight: 500 !important; letter-spacing: 0.02em !important; color: rgba(26, 26, 24, 0.5) !important; -webkit-text-fill-color: rgba(26, 26, 24, 0.5) !important; white-space: nowrap; }
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
       #jd-hint-arrows.show-hints { animation: none; }
