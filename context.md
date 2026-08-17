@@ -6,16 +6,22 @@ Tähän tiedostoon on koottu portfolion arkkitehtuurin, ominaisuuksien ja sisäl
 
 ## 📅 Elokuu 2026
 
-### 1. Sivuston taustan ja visuaalisuuden hionta (17.8.2026)
+### 1. Sivuston taustan, typografian ja visuaalisuuden hionta (17.8.2026)
 - **Täysin puhdas valkoinen tausta (`#ffffff`):** Poistettu aiempi harmahtava/kellertävä sävy ja korvattu se 100 % puhtaalla galleriavalkoisella, jolloin valokuvat ja kontrastit toistuvat kirkkaasti ja raikkaasti.
 - **Kohinan ja rakeisuuden poisto:** Poistettu kaikki SVG-noise- ja grain-overlayt, jotta sivusto on täysin puhdas ja veitsenterävä.
+- **Yhtenäinen editorial-typografia (EB Garamond):**
+  - Asetettu *EB Garamond* (Magnum Photos -henkinen kirjasin) sivuston yhtenäiseksi pääfontiksi.
+  - Poistettu vanha pakotettu suuraakkostus (`uppercase`), jolloin kirjasimen luonnolliset, pehmeät ja arvokkaat mittasuhteet pääsevät oikeuksiinsa.
+- **Alavalikon ja käyttöliittymän hionta (UI Refinement):**
+  - Poistettu ahdas väliviiva (`—`) ja toteutettu moderni, ilmava negatiivinen tila (`gap: 3.5rem` työpöydällä, `2.2rem` mobiilissa).
+  - Vaimennettu käyttöliittymän lepotilan kontrasti pehmeäksi grafiitiksi (`rgba(26,26,24,0.45)`), joka nousee sulavasti täyteen mustaan vasta hoverissa – valokuva säilyy aina 100 % huomion keskipisteenä.
+  - Pienennetty painikkeiden ja kursorin kirjasinkoot siroiksi (`0.95rem` / `0.92rem`) täydellisesti Index-menun mittasuhteisiin sointuviksi.
 - **Index-valikon Editorial Hover Preview (Desktop):**
   - Toteutettu desktop-valikkoon vuorovaikutteinen esikatselu, jossa kunkin kategorian ensimmäinen teoskuva liukuu pehmeästi esiin vasempaan ruutuun.
   - Aito ja rauhallinen kahden kerroksen ristihäivytys (Dual-Layer Smooth Crossfade) ilman äkillisiä välähdyksiä.
   - Valikon ollessa auki kustomoitu laskurikursori piilotetaan ja käytössä on normaali osoitinkursori.
 - **Valokuvia Suomenlahdelta (Work IV) editorial-teksti:**
-  - Tekstikortit uudistettu kevyeksi ja elegantiksi *EB Garamond* -typografiaksi ilman vanhanaikaisia laatikkoreunuksia.
-  - Ylimääräiset vanhat tekstikortit poistettu muista gallerioista.
+  - Tekstikortit uudistettu kevyeksi ja elegantiksi *EB Garamond* -typografiaksi ilman vanhanaikaisia laatikkoreunuksia ja poistettu toistuva ylimääräinen teksti.
 
 ### 2. Uusi teoslisäys & kuvanhallinta (15.8.2026)
 - Lisätty uusi teos *Kaksi ihmistä* sarjoihin **Mustavalkoinen sarja** ja **Uusimmat** (`Kaksiihmista.webp`).
