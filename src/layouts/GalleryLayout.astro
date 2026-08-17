@@ -715,20 +715,18 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     #jd-thumbs-nav { 
       display: none; align-items: center; justify-content: center; gap: 0; 
-      background: none; border: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;
-      height: auto; padding: 0;
+      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      height: 44px; padding: 0 22px;
     }
     #jd-thumbs-nav .jd-bottom-btn { 
-      color: rgba(26, 26, 24, 0.45) !important;
-      -webkit-text-fill-color: rgba(26, 26, 24, 0.45) !important;
+      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       font-family: var(--jd-font);
       font-size: 0.95rem; font-weight: 500; letter-spacing: 0.04em;
-      padding: 8px 0;
-      transition: color 0.3s ease, -webkit-text-fill-color 0.3s ease;
+      padding: 0; min-height: auto;
     }
     #jd-thumbs-nav .jd-bottom-btn:hover {
-      color: rgba(26, 26, 24, 1) !important;
-      -webkit-text-fill-color: rgba(26, 26, 24, 1) !important;
+      opacity: 0.6 !important;
     }
     #jd-thumbs-nav.is-open { display: flex; animation: slideUpFade 0.4s ease forwards; }
     body.thumbs-is-open #jd-normal-nav { display: none !important; }
@@ -1144,7 +1142,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                   const fn = sub.kuva.split('/').pop().split('.')[0];
                   const mob = `${fn}_mobile.webp`;
                   const srcMob = sub.kuva.includes('http')
-                    ? `${sub.kuva.replace(sub.kuva.split('/').pop(), '')}thumbs/${mob}`
+                    ? sub.kuva
                     : `/assets/thumbnails/${mob}`;
                   return (
                     <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
@@ -1155,7 +1153,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                 const fn = item.kuva.split('/').pop().split('.')[0];
                 const mob = `${fn}_mobile.webp`;
                 const srcMob = item.kuva.includes('http')
-                  ? `${item.kuva.replace(item.kuva.split('/').pop(), '')}thumbs/${mob}`
+                  ? item.kuva
                   : `/assets/thumbnails/${mob}`;
                 return (
                   <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
