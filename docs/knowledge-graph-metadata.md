@@ -129,7 +129,7 @@ Alatalo aloitti valokuvauksen vuonna 2014. Hän opiskelee medianomiksi [[Oulun a
 
 Vuonna 2026 Alatalo valittiin kymmenen parhaan joukkoon kansainvälisessä Hasselblad Masters -kilpailussa yli 108 000 osallistuneen kuvan joukosta sarjassa Project//21.
 
-Alatalon teoksia on ollut esillä yksityis- ja ryhmänäyttelyissä muun muassa Piippolan Könkkölässä sekä Kestilän kirjastossa vuosina 2023 ja 2024. Lisäksi hänen valokuviaan on valittu Oulun joukkoliikenteen Outshine-digitaaliseen katugalleriaprojektiin vuosina 2025 ja 2026.
+Alatalon teoksia on ollut esillä yksityis- ja ryhmänäyttelyissä muun muassa Piippolan Könkkölässä sekä Kestilän kirjastossa vuosina 2023 ja 2024.
 
 == Palkinnot ja tunnustukset ==
 * '''Hasselblad Masters 2026''': Finalisti, Project//21 -sarja.
