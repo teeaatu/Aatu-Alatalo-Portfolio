@@ -197,6 +197,16 @@ const projectNavItems = [
   { fi: 'kuvaprojekti-ajasta-v365', en: 'photo-project-time-v365', label: t.v365[lang] },
 ];
 
+const catCoverImages: Record<string, string> = {};
+allCats.forEach(c => {
+  const firstItem = c.data?.find((it: any) => it.kuva || (it.layout === 'diptych' && it.images?.[0]?.kuva));
+  if (firstItem) {
+    const k = firstItem.kuva || firstItem.images[0].kuva;
+    const paths = resolveImagePaths(k);
+    catCoverImages[c.key] = paths.src;
+  }
+});
+
 function navUrl(item: { fi: string; en: string }) {
   return lang === 'en' ? `/en/${item.en}` : `/${item.fi}`;
 }
@@ -527,7 +537,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45);
+      position: fixed; inset: 0;
+      background: rgba(245, 244, 240, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 499; opacity: 0; visibility: hidden; pointer-events: none;
       transition: opacity 0.4s ease, visibility 0.4s ease;
     }
@@ -537,7 +550,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-index-panel {
       position: fixed !important; top: 0 !important; right: 0; left: auto;
       width: var(--jd-panel-w); height: 100dvh !important;
-      background: rgba(245, 244, 240, 0.9);
+      background: rgba(245, 244, 240, 0.95);
       -webkit-backdrop-filter: saturate(180%) blur(24px);
       backdrop-filter: saturate(180%) blur(24px);
       color: var(--jd-text);
@@ -545,12 +558,65 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       overflow-y: auto; overscroll-behavior-y: contain; cursor: auto;
       transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
       transform: translateX(100%); opacity: 0;
+      border-left: 1px solid rgba(0, 0, 0, 0.05);
     }
     @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
       #jd-index-panel { background: var(--jd-bg); }
     }
     #jd-index-panel.is-open { transform: translateX(0); opacity: 1; }
     #jd-index-panel a, #jd-index-panel div, #jd-index-panel span { color: var(--jd-text) !important; }
+
+    /* ─── INDEX HOVER PREVIEW (DESKTOP) ───────────────── */
+    #jd-index-preview-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: calc(100vw - var(--jd-panel-w));
+      height: 100dvh;
+      pointer-events: none;
+      z-index: 502;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 4rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
+    }
+    body.index-is-open #jd-index-preview-container {
+      opacity: 1;
+      visibility: visible;
+    }
+    #jd-index-preview-wrapper {
+      position: relative;
+      max-width: 88%;
+      max-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #jd-index-preview-img {
+      max-width: 100%;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+      border-radius: 1px;
+      opacity: 0;
+      transform: scale(0.96) translateY(8px);
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #jd-index-preview-img.is-visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    @media (max-width: 768px) {
+      #jd-index-preview-container {
+        display: none !important;
+      }
+    }
 
     /* Index panel inner styles */
     .jd-top-nav {
@@ -561,10 +627,25 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       padding: 12px 0; margin: -12px 0;
       min-height: 44px; display: inline-flex; align-items: center;
     }
+    .jd-index-list {
+      list-style: none;
+      margin-bottom: 3rem;
+    }
+    .jd-index-list:hover .jd-index-link {
+      opacity: 0.45;
+      transition: opacity 0.2s ease;
+    }
+    .jd-index-list:hover .jd-index-link:hover {
+      opacity: 1;
+    }
     .jd-index-link {
       display: flex; justify-content: space-between; align-items: center;
       font-family: var(--jd-font); font-size: 0.95rem; letter-spacing: 0.04em;
       padding: 12px 0; min-height: 44px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .jd-index-link:hover {
+      transform: translateX(4px);
     }
     .jd-count { font-size: 0.9em; font-family: var(--jd-font-serif); font-style: italic; }
     .jd-index-link.active span:first-child { font-style: italic; }
@@ -858,6 +939,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   {computedNextUrl && <div id="jd-next-url" style="display:none" data-cat-label={computedNextLabel}>{computedNextUrl}</div>}
   {computedPrevUrl && <div id="jd-prev-url" style="display:none" data-cat-label={computedPrevLabel}>{computedPrevUrl}</div>}
 
+  <!-- Index hover preview for desktop -->
+  <div id="jd-index-preview-container" aria-hidden="true">
+    <div id="jd-index-preview-wrapper">
+      <img id="jd-index-preview-img" src="" alt="" loading="eager" draggable="false">
+    </div>
+  </div>
+
   <!-- Index panel -->
   <div id="jd-index-overlay"></div>
   <nav id="jd-index-panel">
@@ -879,10 +967,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       </div>
     </div>
 
-    <ul style="list-style:none;margin-bottom:3rem;">
+    <ul class="jd-index-list">
       {navItems.map(item => (
         <li style="margin-bottom:0.6rem;">
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`}>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.fi] || ''}>
             <span>{item.label}</span>
             <span class="jd-count">{indexCounts[item.fi]}</span>
           </a>
@@ -890,10 +978,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       ))}
     </ul>
 
-    <ul style="list-style:none;margin-bottom:3rem;">
+    <ul class="jd-index-list">
       {catNavItems.map(item => (
         <li style="margin-bottom:0.6rem;">
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`}>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.fi] || ''}>
             <span>{item.label}</span>
             <span class="jd-count">{indexCounts[item.fi]}</span>
           </a>
@@ -901,10 +989,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       ))}
     </ul>
 
-    <ul style="list-style:none;margin-bottom:3rem;">
+    <ul class="jd-index-list">
       {projectNavItems.map(item => (
         <li style="margin-bottom:0.6rem;">
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`}>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.fi] || ''}>
             <span>{item.label}</span>
           </a>
         </li>
@@ -1527,16 +1615,68 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     const indexPanel = document.getElementById('jd-index-panel');
     const indexOverlay = document.getElementById('jd-index-overlay');
     const jdMain = document.getElementById('jd-main');
+    const previewImg = document.getElementById('jd-index-preview-img');
+    const indexLinks = document.querySelectorAll('.jd-index-link');
+
+    // Index desktop hover preview logic
+    if (previewImg && indexLinks.length > 0) {
+      let hidePreviewTimeout = null;
+      let activePreviewSrc = '';
+
+      indexLinks.forEach(link => {
+        const src = link.getAttribute('data-preview-src');
+        if (src) {
+          const preloader = new Image();
+          preloader.src = src;
+        }
+
+        link.addEventListener('mouseenter', () => {
+          if (window.innerWidth <= 768) return;
+          if (hidePreviewTimeout) { clearTimeout(hidePreviewTimeout); hidePreviewTimeout = null; }
+          const targetSrc = link.getAttribute('data-preview-src');
+          if (targetSrc) {
+            if (activePreviewSrc !== targetSrc) {
+              activePreviewSrc = targetSrc;
+              previewImg.classList.remove('is-visible');
+              previewImg.src = targetSrc;
+            }
+            requestAnimationFrame(() => {
+              previewImg.classList.add('is-visible');
+            });
+          }
+        });
+      });
+
+      indexPanel?.addEventListener('mouseleave', () => {
+        hidePreviewTimeout = setTimeout(() => {
+          previewImg.classList.remove('is-visible');
+          activePreviewSrc = '';
+        }, 200);
+      });
+    }
 
     window.openIndexPanel = function() {
       if (typeof closeThumbsView === 'function') closeThumbsView();
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
       if (indexPanel) indexPanel.scrollTop = 0;
+
+      // Autoselect active category preview if available on desktop
+      if (window.innerWidth > 768 && previewImg) {
+        const activeLink = document.querySelector('.jd-index-link.active');
+        const activeSrc = activeLink?.getAttribute('data-preview-src');
+        if (activeSrc) {
+          previewImg.src = activeSrc;
+          requestAnimationFrame(() => {
+            previewImg.classList.add('is-visible');
+          });
+        }
+      }
     };
     window.closeIndexPanel = function() {
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
       indexOverlay?.classList.remove('is-open'); document.body.classList.remove('index-is-open');
+      if (previewImg) previewImg.classList.remove('is-visible');
     };
 
     window.openAboutPanel = function() { const p = document.getElementById('jd-about-panel'); if (p) { p.classList.add('is-open'); document.body.classList.add('about-is-open'); const n = document.getElementById('jd-normal-nav'); if (n) n.style.display = 'none'; } };
