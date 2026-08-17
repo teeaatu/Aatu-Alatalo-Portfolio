@@ -12,10 +12,11 @@ Tähän tiedostoon on koottu portfolion arkkitehtuurin, ominaisuuksien ja sisäl
 - **Yhtenäinen editorial-typografia (EB Garamond):**
   - Asetettu *EB Garamond* (Magnum Photos -henkinen kirjasin) sivuston yhtenäiseksi pääfontiksi.
   - Poistettu vanha pakotettu suuraakkostus (`uppercase`), jolloin kirjasimen luonnolliset, pehmeät ja arvokkaat mittasuhteet pääsevät oikeuksiinsa.
-- **Alavalikon ja käyttöliittymän hionta (UI Refinement):**
-  - Poistettu ahdas väliviiva (`—`) ja toteutettu moderni, ilmava negatiivinen tila (`gap: 3.5rem` työpöydällä, `2.2rem` mobiilissa).
-  - Vaimennettu käyttöliittymän lepotilan kontrasti pehmeäksi grafiitiksi (`rgba(26,26,24,0.45)`), joka nousee sulavasti täyteen mustaan vasta hoverissa – valokuva säilyy aina 100 % huomion keskipisteenä.
-  - Pienennetty painikkeiden ja kursorin kirjasinkoot siroiksi (`0.95rem` / `0.92rem`) täydellisesti Index-menun mittasuhteisiin sointuviksi.
+- **Google Knowledge Graph & Schema.org Person JSON-LD:**
+  - Lisätty kattava `Person` ja `WebSite` JSON-LD -rakenne `GalleryLayout.astro`on (Aatu Elias Alatalo, syntymäaika, Tyrnävä/Oulu, Oamk, Hasselblad Masters 2026, SAKUstars, Instagram, LinkedIn).
+  - Varmistettu Open Graph & Twitter Card -metatiedot ja virallinen profiilikuvalinkki.
+  - Palautettu LinkedIn-linkki Index-valikkoon.
+  - Luotu kattava `docs/knowledge-graph-metadata.md` -dokumentaatio sisältäen valmiin Wikidata-datamallin ja suomenkielisen Wikipedia-artikkeliluonnoksen (Wikitext).
 - **Index-valikon Editorial Hover Preview (Desktop):**
   - Toteutettu desktop-valikkoon vuorovaikutteinen esikatselu, jossa kunkin kategorian ensimmäinen teoskuva liukuu pehmeästi esiin vasempaan ruutuun.
   - Aito ja rauhallinen kahden kerroksen ristihäivytys (Dual-Layer Smooth Crossfade) ilman äkillisiä välähdyksiä.
