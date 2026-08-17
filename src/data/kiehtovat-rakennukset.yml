@@ -3,20 +3,26 @@
   height: 3846
   otsikko: Cows' Home / Lehmien koti
   paikka: Suomussalmi, Finland 2026
-  alt_text: "A red wooden barn and a cylindrical silo in a snowy winter landscape in Suomussalmi. A snow-covered ramp leads up to a weathered green door."
+  alt_text: A red wooden barn and a cylindrical silo in a snowy winter landscape in
+    Suomussalmi. A snow-covered ramp leads up to a weathered green door.
   pinned: true
 - kuva: rakennukset.jpg
   width: 1500
   height: 1125
   otsikko: Red and Blue / Punainen ja sininen
   paikka: Kalajoki, Finland 2026
-  alt_text: "A small, bright red wooden shed with a snow-covered roof and light wooden double doors. Flat, snow-covered ground around it and a clear pale blue winter sky behind."
+  alt_text: A small, bright red wooden shed with a snow-covered roof and light wooden
+    double doors. Flat, snow-covered ground around it and a clear pale blue winter
+    sky behind.
 - kuva: DSC2636.jpg
   width: 4032
   height: 3024
   otsikko: Lighthouse / Majakka
   paikka: Hailuoto, Finland 2025
-  alt_text: "A photograph of the historic Marjaniemi lighthouse in Hailuoto, Finland. The tall, white brick lighthouse with its red lantern room stands against an overcast, grey sky. A sleek, modern white wind turbine tower is visible to the left, and the edge of a dark wooden building frames the bottom."
+  alt_text: A photograph of the historic Marjaniemi lighthouse in Hailuoto, Finland.
+    The tall, white brick lighthouse with its red lantern room stands against an overcast,
+    grey sky. A sleek, modern white wind turbine tower is visible to the left, and
+    the edge of a dark wooden building frames the bottom.
 - kuva: https://media.aatualatalo.com/Photographs/vaaleat_tilat.webp
   width: 3000
   height: 2250
@@ -26,23 +32,26 @@
     floor. Pendant lamps with a turquoise stripe hang above the tables. Floor-to-ceiling
     windows look onto an outdoor courtyard with white pillars.
   series: yliopisto-oamk
-- tyyppi: teksti
-  otsikko: Yliopisto-OAMK Campus / Yliopisto-OAMK Kampus
-  teksti: "Oulun yliopiston ja Oamk ammattikorkeakoulun arkkitehtuuria ja yksityiskohtia."
-  series: yliopisto-oamk
 - layout: diptych
-  series: "yliopisto-oamk"
+  series: yliopisto-oamk
   otsikko: Science Library & Spiral Staircase / Tiedekirjasto & Kierreportaat
   images:
-    - kuva: "https://media.aatualatalo.com/Photographs/vaaleat_tilat_1.webp"
-      width: 3000
-      height: 2250
-      otsikko: Science Library Pegasus / Tiedekirjasto Pegasus
-      paikka: Oulu, Finland 2026
-      alt_text: "A bright, airy interior photograph of a university hallway, characterized by pale mint green and white tones. On the left, a glass door with a white frame is labeled 'PK247 MIKROLUOKKA COMPUTER CLASS ROOM' in blue and red text. To the right, another white-framed door stands slightly open, revealing a stairwell. The floor is covered in light, glossy tiles."
-    - kuva: "https://media.aatualatalo.com/Photographs/vaaleat_tilat_2.webp"
-      width: 3000
-      height: 2250
-      otsikko: Spiral Staircase / Kierreportaat
-      paikka: Oulu, Finland 2026
-      alt_text: "Inside a university building, a spiral staircase winds upward around a pillar painted in pale blue and white stripes. The walls are tiled in a matching blue and white grid. A wire magazine rack stands on the left, a utility cart underneath the stairs."
+  - kuva: https://media.aatualatalo.com/Photographs/vaaleat_tilat_1.webp
+    width: 3000
+    height: 2250
+    otsikko: Science Library Pegasus / Tiedekirjasto Pegasus
+    paikka: Oulu, Finland 2026
+    alt_text: A bright, airy interior photograph of a university hallway, characterized
+      by pale mint green and white tones. On the left, a glass door with a white frame
+      is labeled 'PK247 MIKROLUOKKA COMPUTER CLASS ROOM' in blue and red text. To
+      the right, another white-framed door stands slightly open, revealing a stairwell.
+      The floor is covered in light, glossy tiles.
+  - kuva: https://media.aatualatalo.com/Photographs/vaaleat_tilat_2.webp
+    width: 3000
+    height: 2250
+    otsikko: Spiral Staircase / Kierreportaat
+    paikka: Oulu, Finland 2026
+    alt_text: Inside a university building, a spiral staircase winds upward around
+      a pillar painted in pale blue and white stripes. The walls are tiled in a matching
+      blue and white grid. A wire magazine rack stands on the left, a utility cart
+      underneath the stairs.
