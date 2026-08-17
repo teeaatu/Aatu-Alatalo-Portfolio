@@ -203,7 +203,7 @@ allCats.forEach(c => {
   if (firstItem) {
     const k = firstItem.kuva || firstItem.images[0].kuva;
     const paths = resolveImagePaths(k);
-    catCoverImages[c.key] = paths.src;
+    catCoverImages[c.key] = k.startsWith('http') ? k : paths.src;
   }
 });
 
