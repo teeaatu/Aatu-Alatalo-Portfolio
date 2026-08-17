@@ -224,7 +224,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#faf9f6">
+  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light">
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
@@ -261,7 +261,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     :root {
       color-scheme: light;
-      --jd-bg:       #faf9f6;
+      --jd-bg:       #ffffff;
       --jd-text:     #1a1a18;
       --jd-dimmed:   #888880;
       --jd-font:     'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -400,8 +400,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       transform: translateY(32px);
       transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
     }
-    .jd-postcard-map .leaflet-container { background: #faf9f6; }
-    .jd-postcard-map .leaflet-layer { filter: sepia(0.12) contrast(0.95) opacity(0.85); }
+    .jd-postcard-map .leaflet-container { background: #ffffff; }
+    .jd-postcard-map .leaflet-layer { filter: contrast(0.96) opacity(0.9); }
     .jd-postcard-map .leaflet-control-attribution { display: none; }
     
     .jd-map-dot-wrapper { display: flex; align-items: center; justify-content: center; overflow: visible !important; }
@@ -409,14 +409,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       width: 10px; height: 10px;
       background: red;
       border-radius: 50%;
-      border: 2px solid #faf9f6;
+      border: 2px solid #ffffff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .jd-map-dot-wrapper:hover .jd-map-dot { transform: scale(1.6); cursor: pointer; }
     
     .leaflet-tooltip.jd-map-tooltip {
-      background: #faf9f6;
+      background: #ffffff;
       border: 1px solid rgba(0,0,0,0.08);
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
       font-family: var(--jd-font-garamond);
@@ -426,7 +426,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       border-radius: 2px;
       letter-spacing: 0.04em;
     }
-    .leaflet-tooltip.jd-map-tooltip::before { border-top-color: #faf9f6; }
+    .leaflet-tooltip.jd-map-tooltip::before { border-top-color: #ffffff; }
     
     .jd-thumb-text-inner {
       background: #fdfbf7;
@@ -533,7 +533,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-overlay {
       position: fixed; inset: 0;
-      background: rgba(250, 249, 246, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       z-index: 499; opacity: 0; visibility: hidden; pointer-events: none;
@@ -545,7 +545,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-index-panel {
       position: fixed !important; top: 0 !important; right: 0; left: auto;
       width: var(--jd-panel-w); height: 100dvh !important;
-      background: rgba(250, 249, 246, 0.96);
+      background: rgba(255, 255, 255, 0.97);
       -webkit-backdrop-filter: saturate(180%) blur(24px);
       backdrop-filter: saturate(180%) blur(24px);
       color: var(--jd-text);
@@ -553,7 +553,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       overflow-y: auto; overscroll-behavior-y: contain; cursor: auto;
       transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
       transform: translateX(100%); opacity: 0;
-      border-left: 1px solid rgba(0, 0, 0, 0.05);
+      border-left: 1px solid rgba(0, 0, 0, 0.06);
     }
     @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
       #jd-index-panel { background: var(--jd-bg); }
@@ -670,7 +670,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── THUMBS PANEL ───────────────────────────────── */
     #jd-thumbs-panel {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(250, 249, 246, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       z-index: 300; overflow-y: auto;
@@ -695,13 +695,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .jd-thumb-global.thumb-animate {
+      opacity: 0;
+      animation: slideUpFade 0.4s ease forwards;
+    }
     #jd-thumbs-nav { 
       display: none; align-items: center; justify-content: center; gap: 0; 
-      background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
       height: 48px; padding: 0 20px;
     }
-    #jd-thumbs-nav .jd-bottom-btn { color: #fff !important; -webkit-text-fill-color: #fff !important; padding: 0; }
+    #jd-thumbs-nav .jd-bottom-btn { color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important; padding: 0; }
     #jd-thumbs-nav.is-open { display: flex; animation: slideUpFade 0.4s ease forwards; }
     #jd-thumbs-panel.is-open ~ #jd-bottom-nav #jd-normal-nav { display: none; }
     body.thumbs-is-open #jd-bottom-nav {
@@ -723,9 +727,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-filter-menu {
       position: absolute; bottom: 100%; right: 0;
       display: flex; flex-direction: column; gap: 12px;
-      background: #f5f4f0; padding: 15px 25px; border-radius: 4px;
+      background: #ffffff; padding: 15px 25px; border-radius: 4px;
       opacity: 0; pointer-events: none; transition: opacity 0.2s;
       z-index: 10000; box-shadow: 0 4px 15px rgba(0,0,0,0.06); margin-bottom: 15px;
+      border: 1px solid rgba(0,0,0,0.06);
     }
     .jd-filter-menu.is-open { opacity: 1; pointer-events: auto; }
     .jd-filter-btn {
@@ -759,19 +764,28 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-hint-arrows {
       position: fixed; top: 50%; left: 0; right: 0; transform: translateY(-50%);
       display: none; justify-content: space-between; padding: 0 5vw;
-      pointer-events: none; z-index: 10000; opacity: 1;
+      pointer-events: none; z-index: 100;
     }
-    #jd-hint-arrows.show-hints { display: flex; animation: fadeHintOut 1.5s cubic-bezier(0.16,1,0.3,1) forwards; animation-delay: 10s; }
     .jd-hint-arrow {
-      width: 65px; height: 65px; border-radius: 50%;
-      background: rgba(245,244,240,0.4); backdrop-filter: blur(4px);
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(26,26,24,0.6); animation: pulseArrow 2.5s infinite ease-in-out;
+      color: #1a1a18; opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      cursor: pointer; pointer-events: auto;
+      padding: 20px; margin: -20px;
     }
-    .jd-hint-arrow.left { animation-delay: 0s; }
-    .jd-hint-arrow.right { animation-delay: 1.25s; }
-    @keyframes fadeHintOut { to { opacity: 0; visibility: hidden; } }
-    @keyframes pulseArrow { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); background: rgba(245,244,240,0.6); color: rgba(26,26,24,0.9); } }
+    .jd-hint-arrow:hover { opacity: 0.8 !important; }
+    .jd-hint-arrow.left { transform: translateX(0); }
+    .jd-hint-arrow.right { transform: translateX(0); }
+
+    @keyframes pulseArrowMobile {
+      0%, 100% { transform: translateX(0); opacity: 0.6; }
+      50% { transform: translateX(6px); opacity: 1; }
+    }
+
+    #jd-hint-arrows.show-hints .jd-hint-arrow {
+      opacity: 0.25;
+    }
+
+    /* ─── THUMBNAIL LAZY LOAD ANIMATION ─────────────── */
     @keyframes thumbFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .jd-thumb.thumb-animate { opacity: 0; animation: thumbFadeIn 0.4s ease forwards; }
 
@@ -891,7 +905,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         display: none !important;
       }
       .jd-postcard-map { height: 300px; }
-      #jd-about-bottom-nav { bottom: auto; top: 0; height: 70px; background: #f5f4f0; width: 100%; }
+      #jd-about-bottom-nav { bottom: auto; top: 0; height: 70px; background: #ffffff; width: 100%; }
       .jd-about-content { flex-direction: column; padding-top: 5rem; gap: 2.5rem; }
       .jd-about-text h1 { font-size: 2.2rem; }
     }
