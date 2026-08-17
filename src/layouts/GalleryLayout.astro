@@ -339,79 +339,58 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── TEXT SLIDES ───────────────────────────────── */
     .jd-text-slide { flex-direction: column; width: 100%; height: 100%; }
     .jd-text-content {
-      background: #fdfbf7;
-      padding: 4rem 3.5rem 3.5rem;
-      max-width: 580px;
-      min-height: 620px;
-      width: 90%;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 10px 40px rgba(0,0,0,0.05);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      position: relative;
-      text-align: center;
-      display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 2rem;
-    }
-    /* ─── EDITORIAL TEXT SLIDES (MAGNUM STYLE) ──────── */
-    .jd-editorial-content {
-      background: transparent !important;
-      box-shadow: none !important;
-      border: none !important;
-      outline: none !important;
-      padding: 3rem 2rem;
-      max-width: 860px;
+      background: transparent;
+      padding: 2.5rem 1.5rem;
+      max-width: 680px;
       width: 100%;
-      min-height: auto;
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      z-index: 2;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem;
+      position: relative;
     }
-    .jd-editorial-content::before,
-    .jd-editorial-content::after {
+    .jd-text-content::before {
       display: none !important;
     }
-    .jd-editorial-content h2 {
-      font-family: var(--jd-font-garamond) !important;
-      font-size: clamp(2.6rem, 6vw, 4.6rem) !important;
-      font-weight: 300 !important;
-      line-height: 1.12 !important;
-      color: #111111 !important;
-      letter-spacing: -0.015em !important;
-      margin: 0 !important;
+    .jd-text-content h2 {
+      font-family: var(--jd-font-garamond);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: #111111;
+      letter-spacing: -0.01em;
+      margin: 0;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
+    }
+    .jd-text-content p {
+      font-family: var(--jd-font);
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: rgba(26, 26, 24, 0.8);
+      margin: 0;
       opacity: 0;
       transform: translateY(28px);
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
+      transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s, transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s;
     }
-    .jd-editorial-content p {
-      font-family: var(--jd-font-garamond) !important;
-      font-size: clamp(1.4rem, 2.8vw, 2.2rem) !important;
-      font-weight: 300 !important;
-      line-height: 1.55 !important;
-      color: rgba(26, 26, 24, 0.88) !important;
-      max-width: 780px !important;
-      margin: 0 !important;
-      letter-spacing: 0.005em !important;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.18s, transform 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.18s;
-    }
-    .jd-slide.active .jd-editorial-content h2,
-    .jd-slide.active .jd-editorial-content p {
+    .jd-slide.active .jd-text-content h2,
+    .jd-slide.active .jd-text-content p,
+    .jd-slide.active .jd-text-content .jd-postcard-map {
       opacity: 1;
       transform: translateY(0);
     }
     .jd-postcard-map {
       width: 100%;
-      height: 450px;
-      margin-top: 1rem;
-      border: 1px solid rgba(0,0,0,0.06);
+      height: 380px;
+      margin-top: 0.5rem;
+      border: 1px solid rgba(0,0,0,0.08);
       background: #fdfbf7;
       z-index: 2;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
     }
-    .jd-postcard-map .leaflet-container { background: #fdfbf7; }
-    .jd-postcard-map .leaflet-layer { filter: sepia(0.2) contrast(0.9) opacity(0.8); }
+    .jd-postcard-map .leaflet-container { background: #f5f4f0; }
+    .jd-postcard-map .leaflet-layer { filter: sepia(0.15) contrast(0.92) opacity(0.85); }
     .jd-postcard-map .leaflet-control-attribution { display: none; }
     
     .jd-map-dot-wrapper { display: flex; align-items: center; justify-content: center; overflow: visible !important; }
@@ -419,7 +398,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       width: 10px; height: 10px;
       background: red;
       border-radius: 50%;
-      border: 2px solid #fdfbf7;
+      border: 2px solid #f5f4f0;
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -429,12 +408,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       background: #fdfbf7;
       border: 1px solid rgba(0,0,0,0.1);
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      font-family: var(--jd-font-serif);
-      font-size: 1.2rem;
+      font-family: var(--jd-font-garamond);
+      font-size: 1.15rem;
       color: #1a1a18;
       padding: 0.3rem 0.6rem;
       border-radius: 2px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
     .leaflet-tooltip.jd-map-tooltip::before { border-top-color: #fdfbf7; }
     
@@ -794,11 +773,26 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
       .jd-thumb-global { width: calc(50% - 1rem); }
       .jd-thumbs-grid { gap: 1rem; }
-      .jd-text-content { width: calc(100% - 2rem); min-height: 400px; height: auto; margin: 1rem; padding: 3rem 1.5rem 2rem; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: none; background: #fdfbf7; border: 1px solid rgba(0,0,0,0.08); }
-      .jd-text-content h2 { font-size: 1.5rem; }
-      .jd-text-content p { font-size: 0.95rem; }
-      .jd-text-content::before { top: 8px; left: 8px; right: 8px; bottom: 8px; }
-      .jd-postcard-map { height: 320px; }
+      .jd-text-content {
+        width: 100%;
+        min-height: auto;
+        padding: 1.5rem 1rem;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        gap: 1.2rem;
+      }
+      .jd-text-content h2 {
+        font-size: clamp(2rem, 7.5vw, 2.9rem) !important;
+      }
+      .jd-text-content p {
+        font-size: 1.15rem !important;
+        line-height: 1.6 !important;
+      }
+      .jd-text-content::before {
+        display: none !important;
+      }
+      .jd-postcard-map { height: 300px; }
       #jd-about-bottom-nav { bottom: auto; top: 0; height: 70px; background: #f5f4f0; width: 100%; }
       .jd-about-content { flex-direction: column; padding-top: 5rem; gap: 2.5rem; }
       .jd-about-text h1 { font-size: 2.2rem; }
