@@ -110,43 +110,41 @@ Wikidata on Wikipedian sisarhanke ja **Googlen Knowledge Graphin tärkein rakent
 Voit luoda tämän luonnoksen Wikipedian hiekkalaatikkoon / käyttäjäsivulle:
 
 ```wikitext
-{{Valokuvaaja
+{{Taiteilija
 | nimi = Aatu Alatalo
-| syntymäaika = {{Syntymäaika ja ikä|2005|1|25}}
+| koko nimi = Aatu Elias Alatalo
+| syntymäaika = {{Syntymäaika ja ikä|25|1|2005}}
 | syntymäpaikka = [[Tyrnävä]]
 | kansalaisuus = [[Suomi]]
-| koulutus = Media-alan perustutkinto ([[Jokilaaksojen koulutuskuntayhtymä|JEDU]])<br />[[Oulun ammattikorkeakoulu]] (medianomi, opiskelee)
 | ammatti = [[Valokuvaaja]]
-| tunnetut_työt = Valokuvia Suomenlahdelta, Hasselblad Masters 2026 (Project//21)
+| koulutus = Media-alan perustutkinto ([[Jokilaaksojen koulutuskuntayhtymä|JEDU]])<br />[[Oulun ammattikorkeakoulu]] (medianomi, opiskelee)
+| kuuluisat_työt = Valokuvia Suomenlahdelta, Hasselblad Masters 2026 (Project//21)
 | palkinnot = Hasselblad Masters 2026 -finalisti (Project//21)<br />SAKUstars 2023 -kunniamaininta
-| kotisivu = [https://aatualatalo.com aatualatalo.com]
+| kotisivu = {{URL|https://aatualatalo.com}}
 }}
 
-'''Aatu Elias Alatalo''' (s. [[25. tammikuuta]] [[2005]] [[Tyrnävä]]) on suomalainen [[Oulu]]ssa asuva valokuvaaja. Hänet valittiin kansainvälisen [[Hasselblad Masters]] 2026 -valokuvakilpailun finaaliin alle 21-vuotiaiden sarjassa (Project//21).
+'''Aatu Elias Alatalo''' (s. [[25. tammikuuta]] [[2005]] [[Tyrnävä]]) on suomalainen [[Oulu]]ssa asuva valokuvaaja. Hänet valittiin kansainvälisen [[Hasselblad Masters]] 2026 -valokuvakilpailun finaaliin alle 21-vuotiaiden sarjassa (Project//21).<ref>{{Verkkoviite | osoite = https://www.hasselblad.com/inspiration/masters/2026/ | nimeke = Hasselblad Masters 2026 Finalists | julkaisija = Hasselblad | ajankohta = 2026 | viitattu = 17.8.2026}}</ref>
 
 == Ura ja opinnot ==
-Alatalo aloitti valokuvauksen vuonna 2014. Hän on suorittanut media-alan ja kuvallisen ilmaisun perustutkinnon [[Jokilaaksojen koulutuskuntayhtymä|Jokilaaksojen koulutuskuntayhtymä Jedussa]] ja opiskelee medianomiksi [[Oulun ammattikorkeakoulu|Oulun ammattikorkeakoulussa]]. Alatalon valokuvataiteelle on ominaista dokumentaarinen ja toimituksellinen ote, jossa yhdistyvät suomalainen arki, katuvalokuvaus ja pohjoinen valo.
+Alatalo aloitti valokuvauksen vuonna 2014. Hän on suorittanut media-alan ja kuvallisen ilmaisun perustutkinnon [[Jokilaaksojen koulutuskuntayhtymä|Jokilaaksojen koulutuskuntayhtymä Jedussa]] ja opiskelee medianomiksi [[Oulun ammattikorkeakoulu|Oulun ammattikorkeakoulussa]]. Alatalon valokuvataiteelle on ominaista dokumentaarinen ja toimituksellinen ote, jossa yhdistyvät suomalainen arki, katuvalokuvaus ja pohjoinen valo.<ref>{{Verkkoviite | osoite = https://aatualatalo.com | nimeke = Aatu Alatalo – Portfolio | julkaisija = aatualatalo.com | viitattu = 17.8.2026}}</ref>
 
-Vuonna 2026 Alatalo valittiin kymmenen parhaan joukkoon kansainvälisessä Hasselblad Masters -kilpailussa yli 108 000 osallistuneen kuvan joukosta sarjassa Project//21.
+Vuonna 2026 Alatalo valittiin kymmenen parhaan joukkoon kansainvälisessä Hasselblad Masters -kilpailussa yli 108 000 osallistuneen kuvan joukosta sarjassa Project//21.<ref>{{Verkkoviite | osoite = https://www.hasselblad.com/inspiration/masters/2026/ | nimeke = Hasselblad Masters 2026 – Project//21 Category | julkaisija = Hasselblad | viitattu = 17.8.2026}}</ref>
 
 Alatalon teoksia on ollut esillä yksityis- ja ryhmänäyttelyissä muun muassa Piippolan Könkkölässä sekä Kestilän kirjastossa vuosina 2023 ja 2024.
 
 == Palkinnot ja tunnustukset ==
-* '''Hasselblad Masters 2026''': Finalisti, Project//21 -sarja.
+* '''Hasselblad Masters 2026''': Finalisti, Project//21 -sarja.<ref>{{Verkkoviite | osoite = https://www.hasselblad.com/inspiration/masters/2026/ | nimeke = Hasselblad Masters 2026 Finalists | julkaisija = Hasselblad | viitattu = 17.8.2026}}</ref>
 * '''SAKUstars 2023''': Kunniamaininta, sarja ''Valokuvataide päivässä''.
 
 == Lähteet ==
-{{Viitteet|lähteet=
-<ref>[https://www.hasselblad.com/inspiration/masters/2026/ Hasselblad Masters 2026 Finalists]. Hasselblad. Viitattu 17.8.2026.</ref>
-<ref>[https://aatualatalo.com Virallinen portfoliosivusto]. Viitattu 17.8.2026.</ref>
-}}
+{{Viitteet}}
 
 == Aiheesta muualla ==
-* [https://aatualatalo.com Virallinen verkkosivusto]
+* [https://aatualatalo.com Aatu Alatalon kotisivut]
 * [https://www.instagram.com/teeaatu/ Aatu Alatalo Instagramissa]
 * [https://www.linkedin.com/in/aatu-alatalo-b67274304/ Aatu Alatalo LinkedInissä]
 
-{{Tynkä/Valokuvaaja}}
+{{Tynkä/Taiteilija}}
 
 [[Luokka:Suomalaiset valokuvaajat]]
 [[Luokka:Vuonna 2005 syntyneet]]
