@@ -455,18 +455,18 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* ─── BOTTOM NAV ─────────────────────────────────── */
     #jd-bottom-nav {
-      position: fixed; bottom: 20px; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
-      display: flex; flex-direction: row; align-items: center; justify-content: center;
+      position: fixed; bottom: 24px; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
+      display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: center !important;
       z-index: 100000; pointer-events: auto; cursor: auto;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
     }
     #jd-normal-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2.5rem;
-      pointer-events: auto;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 3.5rem !important;
+      pointer-events: auto !important;
     }
     body.index-is-open #jd-bottom-nav {
       opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
@@ -476,15 +476,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       background: none; border: none;
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       font-family: var(--jd-font);
-      font-size: 1.15rem; font-weight: 500; letter-spacing: 0.02em; text-transform: none;
+      font-size: 1.18rem; font-weight: 500; letter-spacing: 0.02em; text-transform: none !important;
       cursor: pointer !important; pointer-events: auto;
       opacity: 0.85; padding: 8px 0;
       min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.2s ease, transform 0.2s ease;
       white-space: nowrap;
     }
     .jd-bottom-btn:hover { opacity: 1 !important; }
-    .jd-nav-divider { display: none; }
+    .jd-nav-divider { display: none !important; }
     #jd-counter { display: none; }
 
     /* ─── SHUTTER / CURTAIN ─────────────────────────── */
@@ -846,9 +846,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-slide img { width: 100%; height: 100%; max-width: calc(100% - 28px); max-height: 100%; object-fit: contain; }
       .jd-diptych-slide { flex-direction: column; gap: 15px; }
       .jd-diptych-slide img { max-width: calc(100% - 28px) !important; max-height: calc(50dvh - 75px) !important; }
-      #jd-bottom-nav { bottom: auto; top: 30px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: max-content; max-width: 95vw; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
-      #jd-normal-nav { gap: 1.8rem; }
-      #jd-bottom-nav .jd-bottom-btn { padding: 10px 0; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.02em; white-space: nowrap; }
+      #jd-bottom-nav { bottom: auto; top: 25px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: max-content; max-width: 95vw; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
+      #jd-normal-nav { gap: 2.2rem !important; }
+      #jd-bottom-nav .jd-bottom-btn { padding: 8px 0 !important; font-size: 1.05rem !important; font-weight: 500 !important; letter-spacing: 0.02em !important; white-space: nowrap; }
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
       #jd-hint-arrows.show-hints { animation: none; }
