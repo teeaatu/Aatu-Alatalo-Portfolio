@@ -1,51 +1,62 @@
-- kuva: "https://media.aatualatalo.com/Photographs/kaijonharju.webp"
+- kuva: https://media.aatualatalo.com/Photographs/kaijonharju.webp
   width: 2000
   height: 1500
   otsikko: Kaijonharju Hoods
   paikka: Oulu, Finland 2026
-  alt_text: "A red-bearded man in a green beanie and olive jacket standing on a paved square in front of a weathered brick building with teal pillars and graffiti in Kaijonharju, Oulu. Other people pass in the background."
+  alt_text: A red-bearded man in a green beanie and olive jacket standing on a paved
+    square in front of a weathered brick building with teal pillars and graffiti in
+    Kaijonharju, Oulu. Other people pass in the background.
   pinned: true
-- tyyppi: teksti
-  otsikko: Potretti / Portraits
-  teksti: "Muotokuvaus on valokuvauksen osa-alue, joka kiehtoo minua erityisesti sen ilmaisuvoiman vuoksi. Pienikin ilmeen muutos voi vaihtaa koko kuvan merkityksen ja tunnelman. Se on alue, jossa riittää aina uutta opittavaa ja oivallettavaa."
 - kuva: NeaYO.jpg
   width: 3000
   height: 2000
   otsikko: Nea, Graduate / Nea Ylioppilas
   paikka: Oulu, Ainolanpuisto, Finland 2026
-  alt_text: "Close-up portrait of a person wearing a traditional Finnish graduation cap (Ylioppilaslakki) and a black outfit, standing outdoors. In the background, the Oulu dam is visible in soft focus, situated near the subject"
+  alt_text: Close-up portrait of a person wearing a traditional Finnish graduation
+    cap (Ylioppilaslakki) and a black outfit, standing outdoors. In the background,
+    the Oulu dam is visible in soft focus, situated near the subject
   pinned: true
 - kuva: MG_9039.jpg
   width: 1500
   height: 1125
   otsikko: Ronja in the Field / Ronja pellolla
   paikka: Tyrnävä, Finland 2025
-  alt_text: "A black and white portrait of a young person outdoors. A light leak or lens flare partially covers their face. They look to the side, standing between an open field and a bare bush."
+  alt_text: A black and white portrait of a young person outdoors. A light leak or
+    lens flare partially covers their face. They look to the side, standing between
+    an open field and a bare bush.
   pinned: true
 - kuva: https://media.aatualatalo.com/Photographs/unto_valikatto.webp
   width: 2250
   height: 3000
   otsikko: Unto Välikatto (Hannu Suorsa)
   paikka: Piippola, Finland 2026
-  alt_text: "A black and white portrait photograph of a seated man wearing a bowler hat, looking to his left with a thoughtful expression."
+  alt_text: A black and white portrait photograph of a seated man wearing a bowler
+    hat, looking to his left with a thoughtful expression.
 - kuva: potret1.jpg
   width: 1500
   height: 2000
   otsikko: Portrait of Viljami / Viljami
   paikka: Ylivieska, Finland 2026
-  alt_text: "Black and white studio portrait of a young man with glasses wearing a dark knitted sweater. He looks to his right, lit by strong side lighting against a black background."
+  alt_text: Black and white studio portrait of a young man with glasses wearing a
+    dark knitted sweater. He looks to his right, lit by strong side lighting against
+    a black background.
   pinned: true
 - kuva: Leila.jpg
   width: 1500
   height: 1000
   otsikko: Leila Palmu at the Torikatu Gallery / Leila Palmu Torikadun galleriassa
   paikka: Oulu, Finland 2025
-  alt_text: "Leila Palmu, the widow of Finnish artist Juhani Palmu, sitting on a wooden stool inside the Torikatu gallery in Oulu, 2025. Warm evening sunlight crosses the wooden floor and illuminates her pink sweater. Framed paintings hang on the dark green walls behind her."
+  alt_text: Leila Palmu, the widow of Finnish artist Juhani Palmu, sitting on a wooden
+    stool inside the Torikatu gallery in Oulu, 2025. Warm evening sunlight crosses
+    the wooden floor and illuminates her pink sweater. Framed paintings hang on the
+    dark green walls behind her.
   pinned: true
 - kuva: DSC2284.jpg
   width: 3024
   height: 4536
   otsikko: Graduate Portrait / Ylioppilas
   paikka: Oulu, Finland 2025
-  alt_text: "A full-body black and white portrait of a recent graduate in a traditional Finnish graduation cap and a dark suit. They stand on a muddy dirt path in an open landscape with bare trees and overhead power lines under a cloudy sky."
+  alt_text: A full-body black and white portrait of a recent graduate in a traditional
+    Finnish graduation cap and a dark suit. They stand on a muddy dirt path in an
+    open landscape with bare trees and overhead power lines under a cloudy sky.
   pinned: true

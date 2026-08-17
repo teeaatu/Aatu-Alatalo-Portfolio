@@ -86,6 +86,7 @@ for (const item of dataset) {
   };
 
   if (item.tyyppi === 'teksti') {
+    if (categorySlug !== 'work4') continue;
     galleryData.push({
       i: jdIdx++, type: 'text',
       title: parseField(titleVal),
@@ -974,7 +975,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           <div class="jd-thumbs-section" id={`jd-thumbs-section-${key}`}>
             <div class="jd-thumbs-section-title">{catLabels[key] || key}</div>
             <div class="jd-thumbs-grid">
-              {data.map((item: any, idx: number) => {
+              {data.filter((item: any) => key === 'work4' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
                 if (item.tyyppi === 'teksti') {
                   const titleVal = item.otsikko || '';
                   const parseField = (val: any) => {
