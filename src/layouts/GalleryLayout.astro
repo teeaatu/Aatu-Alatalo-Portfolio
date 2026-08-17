@@ -582,7 +582,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       padding: 3rem 4rem;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
+      transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.5s ease;
     }
     body.index-is-open #jd-index-preview-container {
       opacity: 1;
@@ -605,8 +605,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
       border-radius: 1px;
       opacity: 0;
-      transform: scale(0.96) translateY(8px);
-      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: scale(0.975) translateY(6px);
+      transition: opacity 0.55s cubic-bezier(0.25, 1, 0.5, 1), transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: opacity, transform;
     }
     #jd-index-preview-img.is-visible {
       opacity: 1;
@@ -616,6 +617,23 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-index-preview-container {
         display: none !important;
       }
+    }
+
+    /* Normal cursor when index is open */
+    body.index-is-open,
+    body.index-is-open * {
+      cursor: auto !important;
+    }
+    body.index-is-open .jd-index-link,
+    body.index-is-open .jd-top-nav a,
+    body.index-is-open button,
+    body.index-is-open #jd-index-overlay {
+      cursor: pointer !important;
+    }
+    body.index-is-open #jd-cursor-custom {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
 
     /* Index panel inner styles */
@@ -1474,7 +1492,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         sessionStorage.setItem('jdLastMouseY', e.clientY);
         if (window.jdCursorFrozen) return;
 
-        if (thumbsOpen) { document.body.style.cursor = 'auto'; return; }
+        if (document.body.classList.contains('index-is-open') || thumbsOpen) { 
+          if (cursor) cursor.style.opacity = '0'; 
+          document.body.style.cursor = 'auto'; 
+          return; 
+        }
         
         const target = e.target;
         const isNav = target.closest('#jd-bottom-nav') || target.closest('#jd-index-panel') || target.closest('#jd-thumbs-close');
@@ -1621,6 +1643,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     // Index desktop hover preview logic
     if (previewImg && indexLinks.length > 0) {
       let hidePreviewTimeout = null;
+      let switchPreviewTimeout = null;
       let activePreviewSrc = '';
 
       indexLinks.forEach(link => {
@@ -1634,15 +1657,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           if (window.innerWidth <= 768) return;
           if (hidePreviewTimeout) { clearTimeout(hidePreviewTimeout); hidePreviewTimeout = null; }
           const targetSrc = link.getAttribute('data-preview-src');
-          if (targetSrc) {
-            if (activePreviewSrc !== targetSrc) {
+          if (targetSrc && activePreviewSrc !== targetSrc) {
+            if (switchPreviewTimeout) clearTimeout(switchPreviewTimeout);
+            switchPreviewTimeout = setTimeout(() => {
               activePreviewSrc = targetSrc;
-              previewImg.classList.remove('is-visible');
               previewImg.src = targetSrc;
-            }
-            requestAnimationFrame(() => {
               previewImg.classList.add('is-visible');
-            });
+            }, 60);
           }
         });
       });
@@ -1651,7 +1672,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         hidePreviewTimeout = setTimeout(() => {
           previewImg.classList.remove('is-visible');
           activePreviewSrc = '';
-        }, 200);
+        }, 250);
       });
     }
 
@@ -1659,6 +1680,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (typeof closeThumbsView === 'function') closeThumbsView();
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
+      if (cursor) cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
       if (indexPanel) indexPanel.scrollTop = 0;
 
       // Autoselect active category preview if available on desktop
@@ -1677,6 +1700,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
       indexOverlay?.classList.remove('is-open'); document.body.classList.remove('index-is-open');
       if (previewImg) previewImg.classList.remove('is-visible');
+      if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
+        if (cursor) cursor.style.display = '';
+        document.body.style.cursor = 'none';
+      }
     };
 
     window.openAboutPanel = function() { const p = document.getElementById('jd-about-panel'); if (p) { p.classList.add('is-open'); document.body.classList.add('about-is-open'); const n = document.getElementById('jd-normal-nav'); if (n) n.style.display = 'none'; } };
