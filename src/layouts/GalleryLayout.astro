@@ -249,6 +249,68 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   {translationUrl && <link rel="alternate" hreflang="fi" href={`${siteUrl}${fiTransUrl}`} />}
   {translationUrl && <link rel="alternate" hreflang="en" href={`${siteUrl}${enTransUrl}`} />}
+
+  <!-- Schema.org Structured Data for Google Knowledge Graph & SEO -->
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://aatualatalo.com/#person",
+        "name": "Aatu Alatalo",
+        "alternateName": ["Aatu Elias Alatalo", "Teeaatu"],
+        "jobTitle": "Valokuvaaja",
+        "description": "Suomalainen valokuvaaja ja Hasselblad Masters 2026 -finalisti (Project//21).",
+        "url": "https://aatualatalo.com",
+        "image": "https://aatualatalo.com/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp",
+        "birthDate": "2005-01-25",
+        "birthPlace": {
+          "@type": "Place",
+          "name": "Tyrnävä, Finland"
+        },
+        "homeLocation": {
+          "@type": "Place",
+          "name": "Oulu, Finland"
+        },
+        "nationality": {
+          "@type": "Country",
+          "name": "Finland"
+        },
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "Oulun ammattikorkeakoulu"
+        },
+        "award": [
+          "Hasselblad Masters 2026 Finalist (Project//21)",
+          "SAKUstars 2023 Honorable Mention (Photographic Art in a Day)"
+        ],
+        "sameAs": [
+          "https://www.instagram.com/teeaatu/",
+          "https://www.linkedin.com/in/aatu-alatalo-b67274304/",
+          "https://www.hasselblad.com/inspiration/masters/2026/"
+        ],
+        "knowsAbout": [
+          "Photography",
+          "Fine Art Photography",
+          "Portrait Photography",
+          "Street Photography",
+          "Landscape Photography",
+          "Documentary Photography"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://aatualatalo.com/#website",
+        "url": "https://aatualatalo.com",
+        "name": "Aatu Alatalo Portfolio",
+        "description": mainDesc,
+        "publisher": {
+          "@id": "https://aatualatalo.com/#person"
+        },
+        "inLanguage": ["fi", "en"]
+      }
+    ]
+  })} />
   <!-- Fonts preload & CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1010,6 +1072,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         {lang === 'en' ? 'Info' : 'Info & Ajatuksia'}
       </a>
       <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener">LinkedIn</a>
       <div style="margin-left:auto;display:flex;gap:1.5rem;align-items:baseline;">
         <a href={switchLangUrl} onclick={`localStorage.setItem('langPref','${lang === 'fi' ? 'en' : 'fi'}')`}>
           {lang === 'fi' ? 'EN' : 'FI'}
