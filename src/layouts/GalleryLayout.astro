@@ -455,11 +455,18 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* ─── BOTTOM NAV ─────────────────────────────────── */
     #jd-bottom-nav {
-      position: fixed; bottom: 15px; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
+      position: fixed; bottom: 20px; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
       display: flex; flex-direction: row; align-items: center; justify-content: center;
-      gap: 15px; z-index: 100000; pointer-events: auto; cursor: auto;
+      z-index: 100000; pointer-events: auto; cursor: auto;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
+    }
+    #jd-normal-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      pointer-events: auto;
     }
     body.index-is-open #jd-bottom-nav {
       opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
@@ -469,21 +476,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       background: none; border: none;
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       font-family: var(--jd-font);
-      font-size: 1.05rem; letter-spacing: 0.02em; text-transform: none;
+      font-size: 1.15rem; font-weight: 500; letter-spacing: 0.02em; text-transform: none;
       cursor: pointer !important; pointer-events: auto;
-      opacity: 1 !important; padding: 12px 6px;
+      opacity: 0.85; padding: 8px 0;
       min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s ease;
       white-space: nowrap;
     }
-    .jd-bottom-btn:hover { opacity: 0.6 !important; }
-    .jd-nav-divider {
-      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
-      opacity: 1 !important; font-size: 0.8rem; padding: 0 0.2rem;
-      pointer-events: none; user-select: none;
-      display: inline-flex; align-items: center; justify-content: center;
-      white-space: nowrap;
-    }
+    .jd-bottom-btn:hover { opacity: 1 !important; }
+    .jd-nav-divider { display: none; }
     #jd-counter { display: none; }
 
     /* ─── SHUTTER / CURTAIN ─────────────────────────── */
@@ -846,7 +847,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-diptych-slide { flex-direction: column; gap: 15px; }
       .jd-diptych-slide img { max-width: calc(100% - 28px) !important; max-height: calc(50dvh - 75px) !important; }
       #jd-bottom-nav { bottom: auto; top: 30px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: max-content; max-width: 95vw; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
-      #jd-bottom-nav .jd-bottom-btn { padding: 10px 6px; font-size: 0.7rem; letter-spacing: 0.16em; white-space: nowrap; }
+      #jd-normal-nav { gap: 1.8rem; }
+      #jd-bottom-nav .jd-bottom-btn { padding: 10px 0; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.02em; white-space: nowrap; }
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
       #jd-hint-arrows.show-hints { animation: none; }
@@ -936,9 +938,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <!-- Bottom nav -->
   <div id="jd-bottom-nav">
-    <div id="jd-normal-nav" style="display:flex;align-items:center;gap:0;pointer-events:auto;">
+    <div id="jd-normal-nav">
       <button class="jd-bottom-btn" id="jd-index-btn-bottom">{lang === 'en' ? 'Index' : 'Valikko'}</button>
-      <span class="jd-nav-divider">—</span>
       <button class="jd-bottom-btn" id="jd-thumbs-btn">{lang === 'en' ? 'All Works' : 'Kaikki teokset'}</button>
     </div>
     <div id="jd-thumbs-nav">
@@ -1073,9 +1074,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       </div>
     </div>
     <div id="jd-about-bottom-nav">
-      <div class="jd-about-nav-container">
-        <span class="jd-bottom-btn" style="opacity:0.5;cursor:default;">{lang === 'en' ? 'Info & About' : 'Info & Ajatuksia'}</span>
-        <span class="jd-nav-divider">—</span>
+      <div class="jd-about-nav-container" style="display:flex;align-items:center;gap:2.5rem;">
+        <span class="jd-bottom-btn" style="opacity:0.4;cursor:default;">{lang === 'en' ? 'Info & About' : 'Info & Ajatuksia'}</span>
         <button class="jd-bottom-btn" onclick="window.closeAboutPanel()">{lang === 'en' ? 'Close' : 'Sulje'}</button>
       </div>
     </div>
