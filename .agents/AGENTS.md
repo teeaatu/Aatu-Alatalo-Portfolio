@@ -37,3 +37,30 @@ Nämä sanat ovat tunnistettavia AI-merkkejä ja ne on aina korvattava neutraali
 ❌ `"A moody street photograph of a crowd walking down a wet street on a rainy day. Bright pops of color come from a person in a yellow raincoat, contrasting with the cool blueish tones."`
 
 ✅ `"A crowd walking down a wet street in the rain. A dark pink umbrella stands out in the foreground, with a person in a yellow raincoat visible further back."`
+
+---
+
+## Autonomous Debugging & First-Principles Problem Solving Protocol
+
+Kaikessa vianetsinnässä, visuaalisissa virheissä, odottamattomissa tiloissa ja arkkitehtuuripäätöksissä noudatetaan aina tätä 4-vaiheista päättelyprosessia ennen koodimuutoksia:
+
+### 1. Concrete Observation vs. Assumption
+- Erottele havainto oletuksesta: mitä tarkalleen tapahtuu vs. mitä odotettiin.
+- Erota oire syystä: älä oleta, että ensimmäinen näkyvä virhe johtuu suoraan viimeksi muokatusta komponentista.
+- Määritä rajapinta: onko kyseessä renderöinti-, tilavuoto-, elinkaari/ajoitus-, build-työkalu- vai kilpatilanneongelma (race condition)?
+
+### 2. Hypothesis Generation & Active Disproof ("Wait, actually...")
+- Luo vähintään 2–3 erillistä teknistä hypoteesia ongelman syystä.
+- Yritä aktiivisesti kumota omat hypoteesisi vertaamalla:
+  * Framework & kääntäjätoteutus (Astro static build, Vite bundle ordering, hydraatio).
+  * Selain- ja alustainternalsit (CSS stacking contexts, event loop, spesifisyys, asynkroninen I/O, välimuisti/session-tila).
+  * Datavirta ja reunatapaukset (null-tilat, race conditionit, vanhentunut välimuisti).
+
+### 3. Root Cause Pinpointing
+- Tunnista tarkka mekanismi, joka aiheuttaa vian (ei pelkkää oireen pintapaikkaa).
+- Hylkää pintapuoliset väliaikaiskorjaukset: ei sokeita `!important`-määritteitä, mielivaltaisia `setTimeout`-viiveitä tai ylimääräisiä wrapper-elementtejä, ellei alusta sitä ehdottomasti vaadi.
+
+### 4. Minimal Surgical Execution
+- Toteuta puhtain ja eristetyin ratkaisu, joka korjaa perimmäisen juurisyyn ilman sivuvaikutuksia olemassa oleviin komponentteihin.
+- Esitä lyhyt tekninen päättelyketju ja tarkka korjaus ennen lopullisen koodin toimittamista.
+

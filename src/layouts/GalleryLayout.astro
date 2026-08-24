@@ -16,6 +16,8 @@ import stillLife from '../data/still-life.yml';
 import elaimet from '../data/elaimet.yml';
 import masters from '../data/masters-2026.yml';
 import v365 from '../data/kuvaprojekti_ajasta_v365.yml';
+import CreativeToolbar from '../components/creative/CreativeToolbar.astro';
+
 
 const {
   lang = 'fi',
@@ -717,9 +719,38 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     /* Index panel inner styles */
+    .jd-index-close-btn {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: rgba(26, 26, 24, 0.45);
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border-radius: 50%;
+      transition: color 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+      z-index: 10;
+    }
+    .jd-index-close-btn:hover {
+      color: rgba(26, 26, 24, 1);
+      transform: rotate(90deg) scale(1.1);
+      background-color: rgba(26, 26, 24, 0.04);
+    }
+    .jd-index-close-btn:active {
+      transform: rotate(90deg) scale(0.92);
+    }
     .jd-top-nav {
-      display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 4rem;
+      display: flex; align-items: baseline; margin-bottom: 4rem;
       font-family: var(--jd-font); font-size: 1rem;
+    }
+    .jd-top-nav-links {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 1.6rem;
     }
     .jd-top-nav a {
       padding: 12px 0; margin: -12px 0;
@@ -916,20 +947,24 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── MOBILE ─────────────────────────────────────── */
     @media (max-width: 768px) {
       :root { --jd-panel-w: 100%; }
-      #jd-index-panel { width: 100%; left: 0; right: 0; padding: 5rem 2rem 3rem; text-align: center; }
-      .jd-top-nav { justify-content: center; margin-bottom: 3rem; gap: 0.8rem; }
-      .jd-top-nav .jd-index-link { font-size: 0.85rem; padding: 0.3rem 0.6rem; }
+      #jd-index-panel { width: 100%; left: 0; right: 0; padding: 4.5rem 1.5rem 3rem; text-align: center; }
+      .jd-index-close-btn { top: 1.2rem; right: 1.2rem; }
+      .jd-top-nav { justify-content: center; margin-bottom: 2.5rem; }
+      .jd-top-nav-links { justify-content: center; gap: 0.8rem 1.4rem; font-size: 0.95rem; }
       .jd-index-link { justify-content: center; font-size: 0.9rem; padding: 0.45rem 0; gap: 0.8rem; border-bottom: 1px solid rgba(26,26,24,0.05); }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
-      .jd-mobile-close { display: block; text-decoration: underline; margin-top: 2rem; font-size: 0.85rem; }
     }
     @media (max-width: 800px) {
       html { background: #000 !important; }
       html, body { position: fixed !important; height: 100dvh !important; overscroll-behavior: none !important; min-height: 0 !important; }
       #jd-main, #jd-slideshow { position: fixed !important; }
       body.is-entering-ready .jd-curtain-primary { transform: translateY(100%); }
-      body.index-is-open #jd-counter, body.index-is-open #jd-bottom-nav { opacity: 0 !important; visibility: hidden !important; transition: opacity 0.3s ease; }
+      body.index-is-open #jd-counter, body.index-is-open #jd-bottom-nav,
+      body.about-is-open #jd-counter, body.about-is-open #jd-bottom-nav,
+      body.about-is-open #jd-hint-arrows, body.about-is-open .jd-filter-dropdown-container {
+        opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity 0.3s ease;
+      }
       .jd-slide img { width: 100%; height: 100%; max-width: calc(100% - 28px); max-height: 100%; object-fit: contain; }
       .jd-diptych-slide { flex-direction: column; gap: 15px; }
       .jd-diptych-slide img { max-width: calc(100% - 28px) !important; max-height: calc(50dvh - 75px) !important; }
@@ -996,8 +1031,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         display: none !important;
       }
       .jd-postcard-map { height: 300px; }
-      #jd-about-bottom-nav { bottom: auto; top: 0; height: 70px; background: #ffffff; width: 100%; }
-      .jd-about-content { flex-direction: column; padding-top: 5rem; gap: 2.5rem; }
+      #jd-about-bottom-nav { display: none !important; }
+      .jd-about-content { flex-direction: column; padding-top: 4.5rem; gap: 2.5rem; }
       .jd-about-text h1 { font-size: 2.2rem; }
     }
   </style>
@@ -1070,21 +1105,25 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <!-- Index panel -->
   <div id="jd-index-overlay"></div>
   <nav id="jd-index-panel">
+    <button id="jd-index-close-btn" class="jd-index-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
     <div class="jd-top-nav">
-      <a href={lang === 'en' ? '/en/recent' : '/recent'} style="text-decoration: underline; text-underline-offset: 4px;">
-        {lang === 'en' ? 'Works' : 'Kategoriat'}
-      </a>
-      <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
-        {lang === 'en' ? 'Info' : 'Info & Ajatuksia'}
-      </a>
-      <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener">LinkedIn</a>
-      <div style="margin-left:auto;display:flex;gap:1.5rem;align-items:baseline;">
+      <div class="jd-top-nav-links">
+        <a href={lang === 'en' ? '/en/recent' : '/recent'} style="text-decoration: underline; text-underline-offset: 4px;">
+          {lang === 'en' ? 'Works' : 'Kategoriat'}
+        </a>
+        <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
+          {lang === 'en' ? 'About' : 'Minusta'}
+        </a>
+        <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener">LinkedIn</a>
         <a href={switchLangUrl} onclick={`localStorage.setItem('langPref','${lang === 'fi' ? 'en' : 'fi'}')`}>
           {lang === 'fi' ? 'EN' : 'FI'}
-        </a>
-        <a href="#" class="jd-mobile-close" onclick="window.closeIndexPanel(); return false;">
-          {lang === 'fi' ? 'Sulje' : 'Close'}
         </a>
       </div>
     </div>
@@ -1126,6 +1165,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <!-- About panel -->
   <div id="jd-about-panel">
+    <button id="jd-about-close-btn" class="jd-index-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
     <div class="jd-about-content">
       <div class="jd-about-image">
         <picture>
@@ -1136,7 +1181,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       <div class="jd-about-text">
         <header>
           <h1>Aatu Alatalo</h1>
-          <div class="jd-about-subtitle">Photographer Oulu & Hasselblad Masters Finalist</div>
+          <div class="jd-about-subtitle">
+            {lang === 'en' ? 'Photographer Oulu & Hasselblad Masters Finalist' : 'Valokuvaaja Oulu & Hasselblad Masters -finalisti'}
+          </div>
         </header>
         <div class="jd-about-bio">
           {lang === 'en' ? (
@@ -1148,8 +1195,20 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         <div class="jd-about-section">
           <h2>{lang === 'en' ? 'Awards and Recognitions' : 'Palkinnot ja tunnustukset'}</h2>
           <ul>
-            <li><strong>Hasselblad Masters 2026</strong>: Finalist in Project//21 category.</li>
-            <li><strong>SAKUstars 2023</strong>: Honorable mention in "Photographic Art in a Day".</li>
+            <li>
+              {lang === 'en' ? (
+                <><strong>Hasselblad Masters 2026</strong>: Finalist in Project//21 category.</>
+              ) : (
+                <><strong>Hasselblad Masters 2026</strong>: Finalisti Project//21 -kategoriassa.</>
+              )}
+            </li>
+            <li>
+              {lang === 'en' ? (
+                <><strong>SAKUstars 2023</strong>: Honorable mention in "Photographic Art in a Day".</>
+              ) : (
+                <><strong>SAKUstars 2023</strong>: Kunniamaininta sarjassa "Valokuvataidetta päivässä".</>
+              )}
+            </li>
           </ul>
         </div>
         <div class="jd-about-section">
@@ -1162,7 +1221,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     </div>
     <div id="jd-about-bottom-nav">
       <div class="jd-about-nav-container" style="display:flex;align-items:center;gap:2.5rem;">
-        <span class="jd-bottom-btn" style="opacity:0.4;cursor:default;">{lang === 'en' ? 'Info & About' : 'Info & Ajatuksia'}</span>
+        <span class="jd-bottom-btn" style="opacity:0.4;cursor:default;">{lang === 'en' ? 'About' : 'Minusta'}</span>
         <button class="jd-bottom-btn" onclick="window.closeAboutPanel()">{lang === 'en' ? 'Close' : 'Sulje'}</button>
       </div>
     </div>
@@ -1184,6 +1243,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
             <div class="jd-thumbs-section-title">{catLabels[key] || key}</div>
             <div class="jd-thumbs-grid">
               {data.filter((item: any) => key === 'work4' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
+                const itemKey = item.kuva || (item.layout === 'diptych' && item.images ? item.images.map((i: any) => i.kuva).join('|') : (item.otsikko ? `text_${item.otsikko}` : `item_${idx}`));
                 if (item.tyyppi === 'teksti') {
                   const titleVal = item.otsikko || '';
                   const parseField = (val: any) => {
@@ -1197,7 +1257,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                   };
                   const tStr = parseField(titleVal);
                   return (
-                    <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                    <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={catLabels[key] || key} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <div class="jd-thumb-text-inner">
                         <h3>{tStr}</h3>
                       </div>
@@ -1213,7 +1273,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                     ? sub.kuva
                     : `/assets/thumbnails/${mob}`;
                   return (
-                    <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                    <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <img src={srcMob} loading="lazy" alt={sub.alt_text || ''}>
                     </div>
                   );
@@ -1224,7 +1284,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
                   ? item.kuva
                   : `/assets/thumbnails/${mob}`;
                 return (
-                  <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                  <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                     <img src={srcMob} loading="lazy" alt={item.alt_text || ''}>
                   </div>
                 );
@@ -1835,5 +1895,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); } });
   });
   </script>
+
+  {import.meta.env.DEV && <CreativeToolbar categorySlug={categorySlug} lang={lang} />}
 </body>
 </html>
