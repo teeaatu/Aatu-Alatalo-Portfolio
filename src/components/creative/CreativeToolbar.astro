@@ -1,0 +1,675 @@
+---
+import './creative.css';
+import categoriesData from '../../data/categories.yml';
+import tData from '../../data/t.yml';
+
+const { categorySlug = 'recent', lang = 'fi' } = Astro.props;
+
+// Labels map
+const catLabels = {
+  'recent': lang === 'en' ? 'Recent' : 'Uusimmat',
+  'work1': 'Work I',
+  'work2': 'Work II',
+  'work3': 'Work III',
+  'work4': 'Work IV',
+  'tapahtumat': lang === 'en' ? 'Events' : 'Tapahtumat',
+  'vari-ja-muoto': lang === 'en' ? 'Color and Form' : 'Väri ja muoto',
+  'raw': 'RAW',
+  'mustavalkoinen-sarja': lang === 'en' ? 'Black & White' : 'Mustavalkoinen',
+  'sisatilan-valo': lang === 'en' ? 'Interior Light' : 'Sisätilan valo',
+  'kiehtovat-rakennukset': lang === 'en' ? 'Buildings' : 'Kiehtovat rakennukset',
+  'luonto-ja-ymparisto': lang === 'en' ? 'Nature' : 'Luonto ja ympäristö',
+  'still-life': 'Still Life',
+  'elaimet': lang === 'en' ? 'Animals' : 'Eläimet',
+  'masters-2026': 'Hasselblad Masters 2026',
+  'kuvaprojekti-ajasta-v365': lang === 'en' ? 'Photo Project 365' : 'Kuvaprojekti ajasta v.365'
+};
+---
+
+<div id="creative-root" data-current-cat={categorySlug} data-lang={lang}>
+  <!-- Floating Pill Toolbar -->
+  <div class="creative-bar-container">
+    <div id="creative-toast-container"></div>
+
+    <div class="creative-bar" id="creative-bar">
+      <div class="creative-badge" id="creative-min-toggle" title="Klikkaa pienentääksesi tai avataksesi palkin">
+        <span class="creative-badge-dot"></span>
+        <span>Creative</span>
+      </div>
+
+      <div class="creative-bar-content" style="display:flex;align-items:center;gap:6px;">
+        <button id="creative-save-order-btn" class="creative-btn creative-btn-save" style="display: none;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span>Tallenna järjestys</span>
+          <span class="creative-unsaved-dot"></span>
+        </button>
+
+        <button id="creative-add-img-btn" class="creative-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Lisää kuva</span>
+        </button>
+
+        <button id="creative-cats-btn" class="creative-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span>Kategoriat</span>
+        </button>
+
+        <button id="creative-undo-btn" class="creative-btn" title="Palauta edellinen varmuuskopio">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          <span>Palauta</span>
+        </button>
+
+        <button id="creative-publish-btn" class="creative-btn creative-btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <span>Julkaise nettiin</span>
+        </button>
+
+        <button id="creative-toggle-btn" class="creative-btn" title="Kytke muokkaustila päälle/pois">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Reorder Modal -->
+  <div id="creative-cats-modal" class="creative-modal-overlay" style="display: none;">
+    <div class="creative-modal">
+      <div class="creative-modal-header">
+        <h3>Järjestä kategoriat</h3>
+        <button id="creative-cats-close" class="creative-btn">✕</button>
+      </div>
+      <div class="creative-modal-body">
+        <p style="font-size: 13px; color: #a1a1aa; margin: 0 0 10px 0;">Raahaa kategoriat haluamaasi järjestykseen.</p>
+        <ul id="creative-sortable-cats" class="creative-cat-list">
+          {categoriesData.map((cat: any) => (
+            <li class="creative-cat-item" data-id={cat.id}>
+              <span style="display:flex;align-items:center;gap:8px;">
+                <span style="color:#71717a;cursor:grab;">☰</span>
+                <strong>{catLabels[cat.id] || cat.id}</strong>
+              </span>
+              <span style="font-size:12px;color:#71717a;">{cat.id}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="creative-modal-footer">
+        <button id="creative-cats-cancel" class="creative-btn">Peruuta</button>
+        <button id="creative-cats-save" class="creative-btn creative-btn-primary">Tallenna järjestys</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Image Modal -->
+  <div id="creative-add-modal" class="creative-modal-overlay" style="display: none;">
+    <div class="creative-modal">
+      <div class="creative-modal-header">
+        <h3>Lisää kuva: <span id="creative-add-cat-name" style="color:#3b82f6;">{catLabels[categorySlug] || categorySlug}</span> <span id="creative-add-pos-label" style="font-size:13px;color:#a1a1aa;"></span></h3>
+        <button id="creative-add-close" class="creative-btn">✕</button>
+      </div>
+      <form id="creative-add-form" class="creative-modal-body" onsubmit="return false;">
+        <input type="hidden" id="creative-img-exact-pos" value="" />
+        <div class="creative-input-group">
+          <label>Kuvan suora R2 URL (tai tiedosto)</label>
+          <input type="text" id="creative-img-url" placeholder="https://media.aatualatalo.com/Photographs/..." class="creative-input" />
+        </div>
+        <div class="creative-input-group">
+          <label>Tai valitse paikallinen kuvatiedosto</label>
+          <input type="file" id="creative-img-file" accept="image/*" class="creative-input" />
+        </div>
+        <div class="creative-input-group">
+          <label>Otsikko (vapaaehtoinen)</label>
+          <input type="text" id="creative-img-title" placeholder="Two People / Kaksi ihmistä" class="creative-input" />
+        </div>
+        <div class="creative-input-group">
+          <label>Paikka ja vuosi (vapaaehtoinen)</label>
+          <input type="text" id="creative-img-place" placeholder="Oulu, Finland 2026" class="creative-input" />
+        </div>
+        <div class="creative-input-group">
+          <label>Alt-teksti (vapaaehtoinen)</label>
+          <input type="text" id="creative-img-alt" placeholder="Generoidaan tai kirjoita itse..." class="creative-input" />
+        </div>
+        <div class="creative-input-group" id="creative-img-pos-container">
+          <label>Sijainti galleriassa</label>
+          <select id="creative-img-pos" class="creative-input">
+            <option value="start">Gallerian alkuun (#1)</option>
+            <option value="end" selected>Gallerian loppuun</option>
+          </select>
+        </div>
+      </form>
+      <div class="creative-modal-footer">
+        <button id="creative-add-cancel" type="button" class="creative-btn">Peruuta</button>
+        <button id="creative-add-submit" type="button" class="creative-btn creative-btn-primary">Lisää kuva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Publish Confirmation Modal -->
+  <div id="creative-publish-modal" class="creative-modal-overlay" style="display: none;">
+    <div class="creative-modal">
+      <div class="creative-modal-header">
+        <h3>Julkaise sivusto nettiin</h3>
+        <button id="creative-publish-close" class="creative-btn">✕</button>
+      </div>
+      <div class="creative-modal-body" id="creative-publish-body">
+        <p style="margin: 0 0 10px 0;">Haluatko varmasti julkaista nykyiset kuvajärjestykset ja muutokset suoraan GitHubiin?</p>
+        <p style="font-size: 13px; color: #a1a1aa; margin: 0;">Järjestelmä ajaa ensin automaattisen testirakennuksen (`astro build`). Jos kaikki on kunnossa, muutokset viedään GitHubiin ja sivusto päivittyy verkkoon.</p>
+        <div id="creative-publish-spinner" style="display:none;margin-top:15px;align-items:center;gap:10px;color:#3b82f6;">
+          <svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          <span id="creative-publish-status-text">Rakennetaan ja tarkistetaan sivustoa...</span>
+        </div>
+      </div>
+      <div class="creative-modal-footer" id="creative-publish-footer">
+        <button id="creative-publish-cancel" class="creative-btn">Peruuta</button>
+        <button id="creative-publish-confirm" class="creative-btn creative-btn-primary">Kyllä, julkaise nyt 🚀</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+  import Sortable from 'sortablejs';
+
+  function initCreativeMode() {
+    const root = document.getElementById('creative-root');
+    if (!root) return;
+
+    const currentCat = root.dataset.currentCat || 'recent';
+    let isCreativeMode = localStorage.getItem('creative_mode_active') === 'true';
+
+    const toggleBtn = document.getElementById('creative-toggle-btn');
+    const toastContainer = document.getElementById('creative-toast-container');
+    const thumbsPanel = document.getElementById('jd-thumbs-panel');
+
+    function showToast(message, type = 'success') {
+      if (!toastContainer) return;
+      const toast = document.createElement('div');
+      toast.className = 'creative-toast';
+      const icon = type === 'success' ? '✓' : (type === 'error' ? '✕' : 'ℹ');
+      toast.innerHTML = `<strong style="color:${type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6')};">${icon}</strong> <span>${message}</span>`;
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function updateModeUI() {
+      if (isCreativeMode) {
+        document.body.classList.add('creative-mode-active');
+        if (toggleBtn) {
+          toggleBtn.className = 'creative-btn creative-btn-active';
+          toggleBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>Muokkaustila: <strong>PÄÄLLÄ</strong></span>`;
+        }
+        setupThumbGridSortable();
+      } else {
+        document.body.classList.remove('creative-mode-active');
+        if (toggleBtn) {
+          toggleBtn.className = 'creative-btn';
+          toggleBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>Esikatselu (Live)</span>`;
+        }
+        removeSortableControls();
+      }
+    }
+
+    let sortableInstances = [];
+    let hasUnsavedChanges = false;
+    let orderChanged = false;
+
+    const saveOrderBtn = document.getElementById('creative-save-order-btn');
+
+    function setupThumbGridSortable() {
+      // Clear previous sortable instances
+      sortableInstances.forEach(inst => inst.destroy());
+      sortableInstances = [];
+
+      const sections = document.querySelectorAll('.jd-thumbs-section');
+      sections.forEach(section => {
+        const catKey = section.id.replace('jd-thumbs-section-', '');
+        const grid = section.querySelector('.jd-thumbs-grid');
+        if (!grid) return;
+
+        // Add order numbers, delete buttons, and insert plus buttons to each item
+        const items = grid.querySelectorAll('.jd-thumb-global');
+        items.forEach((item, idx) => {
+          let badge = item.querySelector('.creative-card-badge');
+          if (!badge) {
+            badge = document.createElement('div');
+            badge.className = 'creative-card-badge';
+            item.appendChild(badge);
+          }
+          badge.textContent = `#${idx + 1}`;
+
+          let delBtn = item.querySelector('.creative-card-del-btn');
+          if (!delBtn) {
+            delBtn = document.createElement('button');
+            delBtn.className = 'creative-card-del-btn';
+            delBtn.title = 'Poista kuva';
+            delBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+            delBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              deleteImage(item, catKey);
+            });
+            item.appendChild(delBtn);
+          }
+
+          let insertBtn = item.querySelector('.creative-card-insert-btn');
+          if (!insertBtn) {
+            insertBtn = document.createElement('button');
+            insertBtn.className = 'creative-card-insert-btn';
+            insertBtn.title = 'Lisää kuva tähän väliin';
+            insertBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+            insertBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              openAddModalAtPosition(catKey, idx + 1);
+            });
+            item.appendChild(insertBtn);
+          }
+        });
+
+        // Add inline Add-card to current category grid if not present
+        if (catKey === currentCat) {
+          let addCard = grid.querySelector('.creative-add-card');
+          if (!addCard) {
+            addCard = document.createElement('div');
+            addCard.className = 'creative-add-card';
+            addCard.innerHTML = `
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              <span style="font-weight:600;font-size:14px;">Lisää uusi kuva</span>
+              <span style="font-size:12px;opacity:0.7;">Pudota tiedosto tähän tai klikkaa</span>
+            `;
+            addCard.addEventListener('click', () => {
+              openAddModalAtPosition(catKey, 'end');
+            });
+            
+            addCard.addEventListener('dragover', (e) => {
+              e.preventDefault();
+              addCard.classList.add('drag-over');
+            });
+            addCard.addEventListener('dragleave', () => {
+              addCard.classList.remove('drag-over');
+            });
+            addCard.addEventListener('drop', (e) => {
+              e.preventDefault();
+              addCard.classList.remove('drag-over');
+              if (e.dataTransfer?.files?.length) {
+                const fileInput = document.getElementById('creative-img-file') as HTMLInputElement;
+                if (fileInput) {
+                  fileInput.files = e.dataTransfer.files;
+                  openAddModalAtPosition(catKey, 'end');
+                }
+              }
+            });
+            grid.appendChild(addCard);
+          }
+        }
+
+        const inst = new Sortable(grid, {
+          draggable: '.jd-thumb-global',
+          filter: '.creative-card-del-btn, .creative-card-insert-btn',
+          preventOnFilter: false,
+          ghostClass: 'creative-sortable-ghost',
+          chosenClass: 'creative-sortable-chosen',
+          animation: 250,
+          onEnd: function () {
+            // Update badges and data-idx in this grid visually immediately
+            const currentItems = grid.querySelectorAll('.jd-thumb-global');
+            currentItems.forEach((it, idx) => {
+              const b = it.querySelector('.creative-card-badge');
+              if (b) b.textContent = `#${idx + 1}`;
+              it.setAttribute('data-idx', String(idx));
+              const catUrl = it.getAttribute('data-url')?.split('#')[0] || '';
+              if (catUrl) it.setAttribute('data-url', `${catUrl}#img-${idx}`);
+            });
+
+            // Mark unsaved and show Save button
+            hasUnsavedChanges = true;
+            if (saveOrderBtn) {
+              saveOrderBtn.style.display = 'inline-flex';
+            }
+          }
+        });
+        sortableInstances.push(inst);
+      });
+    }
+
+    function removeSortableControls() {
+      sortableInstances.forEach(inst => inst.destroy());
+      sortableInstances = [];
+      document.querySelectorAll('.creative-card-badge, .creative-card-del-btn, .creative-card-insert-btn, .creative-add-card').forEach(el => el.remove());
+      if (saveOrderBtn) saveOrderBtn.style.display = 'none';
+    }
+
+    // Save order handler
+    saveOrderBtn?.addEventListener('click', async () => {
+      const section = document.getElementById(`jd-thumbs-section-${currentCat}`);
+      if (!section) return;
+
+      const grid = section.querySelector('.jd-thumbs-grid');
+      if (!grid) return;
+
+      const currentItems = grid.querySelectorAll('.jd-thumb-global');
+      const orderKeys: string[] = [];
+      currentItems.forEach(it => {
+        const k = it.getAttribute('data-key') || '';
+        if (k) orderKeys.push(k);
+      });
+
+      saveOrderBtn.setAttribute('disabled', 'true');
+      saveOrderBtn.innerHTML = `<span>Tallennetaan...</span>`;
+
+      try {
+        const res = await fetch('/api/creative/save-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: currentCat,
+            order: orderKeys
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Kuvajärjestys tallennettu onnistuneesti!', 'success');
+          hasUnsavedChanges = false;
+          orderChanged = true;
+          saveOrderBtn.style.display = 'none';
+        } else {
+          showToast(`Tallennusvirhe: ${data.error}`, 'error');
+        }
+      } catch (err) {
+        showToast('Yhteysvirhe tallennuksessa', 'error');
+      } finally {
+        saveOrderBtn.removeAttribute('disabled');
+        saveOrderBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>Tallenna järjestys</span><span class="creative-unsaved-dot"></span>`;
+      }
+    });
+
+    // When closing thumbs view or clicking a thumbnail after reordering, reload to sync slideshow
+    const thumbsCloseBtn = document.getElementById('jd-thumbs-close');
+    thumbsCloseBtn?.addEventListener('click', () => {
+      if (orderChanged) {
+        window.location.reload();
+      }
+    });
+
+    document.querySelectorAll('.jd-thumb-global').forEach(th => {
+      th.addEventListener('click', () => {
+        if (orderChanged && th.getAttribute('data-cat') === currentCat) {
+          const idx = th.getAttribute('data-idx') || '0';
+          window.location.hash = `img-${idx}`;
+          window.location.reload();
+        }
+      });
+    });
+
+    async function deleteImage(item: HTMLElement, catKey: string) {
+      const key = item.getAttribute('data-key') || item.querySelector('img')?.src || '';
+      
+      if (!confirm('Haluatko varmasti poistaa tämän kuvan galleriasta?')) return;
+
+      try {
+        const res = await fetch('/api/creative/delete-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: catKey,
+            imageKey: key
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          item.remove();
+          showToast('Kuva poistettu ja YAML päivitetty!', 'success');
+          setupThumbGridSortable();
+          if (catKey === currentCat) {
+            orderChanged = true;
+          }
+        } else {
+          showToast(`Poistovirhe: ${data.error}`, 'error');
+        }
+      } catch (err) {
+        showToast('Yhteysvirhe poistettaessa', 'error');
+      }
+    }
+
+    // Minimize / collapse toolbar handler
+    const minToggle = document.getElementById('creative-min-toggle');
+    const barEl = document.getElementById('creative-bar');
+    minToggle?.addEventListener('click', () => {
+      barEl?.classList.toggle('is-minimized');
+    });
+
+    // Toggle button handler
+    toggleBtn?.addEventListener('click', () => {
+      isCreativeMode = !isCreativeMode;
+      localStorage.setItem('creative_mode_active', String(isCreativeMode));
+      updateModeUI();
+      showToast(isCreativeMode ? 'Muokkaustila kytketty PÄÄLLE' : 'Normaali esikatselu (Muokkaustila POIS)', 'info');
+    });
+
+    // Pikanäppäin: Cmd+Shift+E tai E (kun ei kirjoiteta tekstikentässä)
+    window.addEventListener('keydown', (e) => {
+      const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+
+      if ((e.metaKey && e.shiftKey && e.key.toLowerCase() === 'e') || (e.key === 'e' && !e.metaKey && !e.ctrlKey && !e.altKey)) {
+        isCreativeMode = !isCreativeMode;
+        localStorage.setItem('creative_mode_active', String(isCreativeMode));
+        updateModeUI();
+        showToast(isCreativeMode ? 'Creative Mode: PÄÄLLÄ (Paina E poistuaksesi)' : 'Normaali esikatselutila (Paina E avataksesi Creative Mode)', 'info');
+      }
+    });
+
+    // Categories Modal Sortable
+    const catsModal = document.getElementById('creative-cats-modal');
+    const catsBtn = document.getElementById('creative-cats-btn');
+    const catsClose = document.getElementById('creative-cats-close');
+    const catsCancel = document.getElementById('creative-cats-cancel');
+    const catsSave = document.getElementById('creative-cats-save');
+    const catsList = document.getElementById('creative-sortable-cats');
+
+    let catsSortable = null;
+    if (catsList) {
+      catsSortable = new Sortable(catsList, {
+        animation: 200,
+        ghostClass: 'creative-sortable-ghost'
+      });
+    }
+
+    catsBtn?.addEventListener('click', () => { catsModal.style.display = 'flex'; });
+    catsClose?.addEventListener('click', () => { catsModal.style.display = 'none'; });
+    catsCancel?.addEventListener('click', () => { catsModal.style.display = 'none'; });
+
+    catsSave?.addEventListener('click', async () => {
+      const ids = Array.from(catsList.querySelectorAll('.creative-cat-item')).map(li => (li as HTMLElement).dataset.id);
+      try {
+        const res = await fetch('/api/creative/save-categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ categoryOrder: ids })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Kategoriajärjestys tallennettu categories.yml -tiedostoon!', 'success');
+          catsModal.style.display = 'none';
+        } else {
+          showToast(`Virhe: ${data.error}`, 'error');
+        }
+      } catch (e) {
+        showToast('Yhteysvirhe kategorioita tallentaessa', 'error');
+      }
+    });
+
+    // Add Image Modal Helper
+    function openAddModalAtPosition(catKey: string, pos: string | number) {
+      const addModal = document.getElementById('creative-add-modal');
+      const modalCatName = document.getElementById('creative-add-cat-name');
+      const posLabel = document.getElementById('creative-add-pos-label');
+      const exactPosInput = document.getElementById('creative-img-exact-pos') as HTMLInputElement;
+      const posContainer = document.getElementById('creative-img-pos-container');
+      const urlInput = document.getElementById('creative-img-url') as HTMLInputElement;
+
+      if (modalCatName) modalCatName.textContent = catKey;
+
+      if (typeof pos === 'number') {
+        if (exactPosInput) exactPosInput.value = String(pos);
+        if (posLabel) posLabel.textContent = `(kohtaan #${pos + 1})`;
+        if (posContainer) posContainer.style.display = 'none';
+      } else {
+        if (exactPosInput) exactPosInput.value = '';
+        if (posLabel) posLabel.textContent = '';
+        if (posContainer) posContainer.style.display = 'flex';
+      }
+
+      if (urlInput) {
+        urlInput.value = '';
+        setTimeout(() => urlInput.focus(), 100);
+      }
+
+      if (addModal) addModal.style.display = 'flex';
+    }
+
+    // Add Image Modal
+    const addModal = document.getElementById('creative-add-modal');
+    const addBtn = document.getElementById('creative-add-img-btn');
+    const addClose = document.getElementById('creative-add-close');
+    const addCancel = document.getElementById('creative-add-cancel');
+    const addSubmit = document.getElementById('creative-add-submit');
+
+    addBtn?.addEventListener('click', () => { openAddModalAtPosition(currentCat, 'end'); });
+    addClose?.addEventListener('click', () => { if (addModal) addModal.style.display = 'none'; });
+    addCancel?.addEventListener('click', () => { if (addModal) addModal.style.display = 'none'; });
+
+    addSubmit?.addEventListener('click', async () => {
+      const fileInput = document.getElementById('creative-img-file') as HTMLInputElement;
+      const urlInput = document.getElementById('creative-img-url') as HTMLInputElement;
+      const titleInput = document.getElementById('creative-img-title') as HTMLInputElement;
+      const placeInput = document.getElementById('creative-img-place') as HTMLInputElement;
+      const altInput = document.getElementById('creative-img-alt') as HTMLInputElement;
+      const posSelect = document.getElementById('creative-img-pos') as HTMLSelectElement;
+      const exactPosInput = document.getElementById('creative-img-exact-pos') as HTMLInputElement;
+
+      const exactPos = exactPosInput?.value ? parseInt(exactPosInput.value, 10) : null;
+      const targetPos = exactPos !== null ? exactPos : (posSelect?.value || 'end');
+      const kuvaVal = urlInput?.value?.trim() || '';
+
+      if (!kuvaVal && !fileInput.files?.length) {
+        alert('Syötä kuvan R2 URL tai valitse kuvatiedosto.');
+        if (urlInput) urlInput.focus();
+        return;
+      }
+
+      showToast('Lisätään kuvaa ja päivitetään YAML...', 'info');
+      try {
+        const res = await fetch('/api/creative/upload-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: currentCat,
+            kuva: kuvaVal,
+            otsikko: titleInput.value,
+            paikka: placeInput.value,
+            alt_text: altInput.value,
+            position: targetPos
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Kuva lisätty onnistuneesti!', 'success');
+          if (addModal) addModal.style.display = 'none';
+          setTimeout(() => window.location.reload(), 600);
+        } else {
+          showToast(`Lisäysvirhe: ${data.error}`, 'error');
+        }
+      } catch (err) {
+        showToast('Virhe kuvaa lisättäessä', 'error');
+      }
+    });
+
+    // Undo / Restore
+    const undoBtn = document.getElementById('creative-undo-btn');
+    undoBtn?.addEventListener('click', async () => {
+      if (!confirm(`Haluatko palauttaa viimeisimmän varmuuskopion kategorialle "${currentCat}"?`)) return;
+      try {
+        const res = await fetch('/api/creative/restore-backup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category: currentCat })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          showToast(data.error, 'error');
+        }
+      } catch (e) {
+        showToast('Virhe varmuuskopiota palautettaessa', 'error');
+      }
+    });
+
+    // Publish Modal
+    const pubModal = document.getElementById('creative-publish-modal');
+    const pubBtn = document.getElementById('creative-publish-btn');
+    const pubClose = document.getElementById('creative-publish-close');
+    const pubCancel = document.getElementById('creative-publish-cancel');
+    const pubConfirm = document.getElementById('creative-publish-confirm');
+    const pubSpinner = document.getElementById('creative-publish-spinner');
+    const pubStatus = document.getElementById('creative-publish-status-text');
+
+    pubBtn?.addEventListener('click', () => { pubModal.style.display = 'flex'; });
+    pubClose?.addEventListener('click', () => { pubModal.style.display = 'none'; });
+    pubCancel?.addEventListener('click', () => { pubModal.style.display = 'none'; });
+
+    pubConfirm?.addEventListener('click', async () => {
+      pubConfirm.setAttribute('disabled', 'true');
+      if (pubSpinner) pubSpinner.style.display = 'flex';
+      if (pubStatus) pubStatus.textContent = 'Ajetaan build-testiä ja julkaistaan GitHubiin...';
+
+      try {
+        const res = await fetch('/api/creative/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `Creative Mode: Päivitetty kuvat ja järjestys (${currentCat})` })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (pubStatus) pubStatus.textContent = 'Valmis! Sivusto on julkaistu onnistuneesti.';
+          showToast('Sivusto julkaistu onnistuneesti GitHubiin! 🚀', 'success');
+          setTimeout(() => {
+            pubModal.style.display = 'none';
+            pubConfirm.removeAttribute('disabled');
+            if (pubSpinner) pubSpinner.style.display = 'none';
+          }, 2000);
+        } else {
+          if (pubStatus) pubStatus.textContent = `Julkaisu epäonnistui: ${data.error}`;
+          showToast(`Julkaisuvirhe: ${data.error}`, 'error');
+          pubConfirm.removeAttribute('disabled');
+        }
+      } catch (err) {
+        showToast('Yhteysvirhe julkaisussa', 'error');
+        pubConfirm.removeAttribute('disabled');
+      }
+    });
+
+    // Initial setup
+    updateModeUI();
+  }
+
+  // Initialize on load and on Astro page swaps
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCreativeMode);
+  } else {
+    initCreativeMode();
+  }
+  document.addEventListener('astro:page-load', initCreativeMode);
+</script>

@@ -1,101 +1,37 @@
----
-- kuva: https://media.aatualatalo.com/Photographs/Kaksiihmista.webp
-  width: 2249
-  height: 1500
-  otsikko: Two People / Kaksi ihmistä
-  paikka: Finland 2026 / Suomi 2026
-  alt_text: "Two young people standing in a crowd with motion blurred reflections surrounding them. One boy looks towards the left while another young man stands behind him."
-- kuva: https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp
-  width: 1500
-  height: 2100
-  otsikko: Work IV / Work 4
-  paikka: Hamina, Finland 2026
-  alt_text: "A small child walks near a pedestrian crosswalk in front of a white commercial building with large red signs. Sunlight illuminates the building's corner, while the street behind it is in deep shadow."
-  series: work4
-- kuva: https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp
-  width: 1500
-  height: 2100
-  otsikko: Work IV / Work 4
-  paikka: Porvoo, Finland 2026
-  alt_text: "A red car parked in Porvoo."
-  series: work4
-- kuva: https://media.aatualatalo.com/Photographs/halonen_kotka.webp
-  width: 1500
-  height: 2100
-  otsikko: Work IV / Work 4
-  paikka: Kotka, Finland 2026
-  alt_text: "The Halonen building facade in Kotka."
-  series: work4
-- kuva: https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp
-  width: 1500
-  height: 2100
-  otsikko: Work IV / Work 4
-  paikka: Kotka, Finland 2026
-  alt_text: "The City Hall building in Kotka."
-  series: work4
-- kuva: https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_10.webp
   width: 2100
   height: 1500
-  otsikko: Work IV / Work 4
-  paikka: Kotka, Finland 2026
-  alt_text: "A street lamp in Kotka."
-  series: work4
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A black and white view of a performer in a feathery outfit and
+    sunglasses holding long tassels up. The background has a starry, glittery
+    effect.
+  series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26_8.webp
   width: 2100
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
   alt_text: A view from the audience looking up at a performer in white on stage.
-    A large screen behind them displays the word OWN in red letters, and an audience
-    member's hand is raised in the foreground.
-  series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26_10.webp
-  width: 2100
-  height: 1500
-  otsikko: Qstock 2026 / Qstock 2026
-  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A black and white view of a performer in a feathery outfit and sunglasses
-    holding long tassels up. The background has a starry, glittery effect.
-  series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26_7.webp
-  width: 2100
-  height: 1500
-  otsikko: Qstock 2026 / Qstock 2026
-  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A blonde female singer smiling and speaking into a microphone on stage.
-    She is wearing a light-colored dress and large earrings under warm stage lights.
-  series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26_2.webp
-  width: 2100
-  height: 1500
-  otsikko: Qstock 2026 / Qstock 2026
-  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A female singer on stage wearing a blue outfit with feathers and blue
-    boots. Two backup dancers in black are visible behind her in the background.
-  series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26_9.webp
-  width: 2100
-  height: 1500
-  otsikko: Qstock 2026 / Qstock 2026
-  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A black and white view from behind a female singer with long blonde hair
-    on stage. She is facing bright stage lights with a microphone stand to her left.
+    A large screen behind them displays the word OWN in red letters, and an
+    audience member's hand is raised in the foreground.
   series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26_1.webp
   width: 1500
   height: 2100
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A side profile of a male singer on stage holding a microphone with both
-    hands. He is wearing a black tank top and dark jeans.
+  alt_text: A side profile of a male singer on stage holding a microphone with
+    both hands. He is wearing a black tank top and dark jeans.
   series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26_4.webp
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_9.webp
   width: 2100
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A blonde woman playing a violin on stage. She is wearing a light gold-colored
-    dress and thigh-high boots.
+  alt_text: A black and white view from behind a female singer with long blonde
+    hair on stage. She is facing bright stage lights with a microphone stand to
+    her left.
   series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26_3.webp
   width: 2100
@@ -105,30 +41,58 @@
   alt_text: A male singer with dark curly hair and sunglasses performing on stage.
     He is dressed in a black button-up shirt and black trousers.
   series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26_6.webp
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_4.webp
   width: 2100
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A male singer playing an electric guitar and singing into a microphone.
-    He is wearing a red sleeveless vest with green and red stage lights behind him.
+  alt_text: A blonde woman playing a violin on stage. She is wearing a light
+    gold-colored dress and thigh-high boots.
   series: qstock26
-- kuva: https://media.aatualatalo.com/Photographs/Qstock26.webp
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_2.webp
   width: 2100
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A male singer performing on stage with a microphone. He is wearing a black
-    tank top and is illuminated by red and white stage lights at Qstock 2026.
+  alt_text: A female singer on stage wearing a blue outfit with feathers and blue
+    boots. Two backup dancers in black are visible behind her in the background.
   series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26ismo.webp
   width: 2250
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A male singer playing an electric guitar and singing on stage. He is wearing
-    a red vest and black trousers, with a drummer and another guitarist visible in
-    the background behind him. A blurred head of an audience member is in the foreground.
+  alt_text: A male singer playing an electric guitar and singing on stage. He is
+    wearing a red vest and black trousers, with a drummer and another guitarist
+    visible in the background behind him. A blurred head of an audience member
+    is in the foreground.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A male singer performing on stage with a microphone. He is wearing a
+    black tank top and is illuminated by red and white stage lights at Qstock
+    2026.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_7.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A blonde female singer smiling and speaking into a microphone on
+    stage. She is wearing a light-colored dress and large earrings under warm
+    stage lights.
+  series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Qstock26_6.webp
+  width: 2100
+  height: 1500
+  otsikko: Qstock 2026 / Qstock 2026
+  paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
+  alt_text: A male singer playing an electric guitar and singing into a
+    microphone. He is wearing a red sleeveless vest with green and red stage
+    lights behind him.
   series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26_5.webp
   width: 2100
@@ -136,6 +100,68 @@
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
   alt_text: A male singer performing on stage, singing into a microphone with his
-    right arm raised. He is wearing a grey jacket over a red vest under bright stage
-    lights.
+    right arm raised. He is wearing a grey jacket over a red vest under bright
+    stage lights.
   series: qstock26
+- kuva: https://media.aatualatalo.com/Photographs/Valot_kaupungissa.webp
+  width: 2070
+  height: 1479
+  otsikko: City Lights / Valot kaupungissa
+  paikka: Helsinki, Finland 2026
+  alt_text: Traffic lights showing red and a white "S" tram signal on a street in
+    Helsinki. Multi-story apartment buildings line the street behind them on a
+    hazy day with overhead tram wires crossing the sky.
+- kuva: https://media.aatualatalo.com/Photographs/Ratikassa.webp
+  width: 2100
+  height: 1500
+  otsikko: In the Tram / Ratikassa
+  paikka: Helsinki, Finland 2026
+  alt_text: A view from inside a tram looking out through the windows onto a
+    street in Helsinki. The front window frames tram tracks leading towards a
+    tunnel between city buildings, while the tram driver is seen in silhouette
+    on the left.
+- kuva: https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Hamina, Finland 2026
+  alt_text: A small child walks near a pedestrian crosswalk in front of a white
+    commercial building with large red signs. Sunlight illuminates the
+    building's corner, while the street behind it is in deep shadow.
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/Kaksiihmista.webp
+  width: 2249
+  height: 1500
+  otsikko: Two People / Kaksi ihmistä
+  paikka: Finland 2026 / Suomi 2026
+  alt_text: Two young people standing in a crowd with motion blurred reflections
+    surrounding them. One boy looks towards the left while another young man
+    stands behind him.
+- kuva: https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Kotka, Finland 2026
+  alt_text: The City Hall building in Kotka.
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Porvoo, Finland 2026
+  alt_text: A red car parked in Porvoo.
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/halonen_kotka.webp
+  width: 1500
+  height: 2100
+  otsikko: Work IV / Work 4
+  paikka: Kotka, Finland 2026
+  alt_text: The Halonen building facade in Kotka.
+  series: work4
+- kuva: https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp
+  width: 2100
+  height: 1500
+  otsikko: Work IV / Work 4
+  paikka: Kotka, Finland 2026
+  alt_text: A street lamp in Kotka.
+  series: work4

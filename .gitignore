@@ -23,3 +23,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 # macOS resource forks
 ._*
+
+# creative backups
+src/data/.backup/
+Portfolio-Uploads/
