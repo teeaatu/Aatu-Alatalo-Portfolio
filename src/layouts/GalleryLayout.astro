@@ -1544,7 +1544,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     });
 
-    function goToRelative(step) {
+    function goToRelative(step, allowCategorySwitch = true) {
       if (visibleTotal === 0) return;
       let cvi = visibleIndices.indexOf(current);
       if (cvi === -1) cvi = 0;
@@ -1552,11 +1552,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (nvi >= 0 && nvi < visibleTotal) {
         goToAbsolute(visibleIndices[nvi]);
       } else if (nvi >= visibleTotal) {
-        const nextUrl = document.getElementById('jd-next-url');
-        if (nextUrl) goToCategory(nextUrl.textContent, nextUrl.getAttribute('data-cat-label') || '');
+        if (allowCategorySwitch) {
+          const nextUrl = document.getElementById('jd-next-url');
+          if (nextUrl) goToCategory(nextUrl.textContent, nextUrl.getAttribute('data-cat-label') || '');
+        }
       } else {
-        const prevUrl = document.getElementById('jd-prev-url');
-        if (prevUrl) goToCategory(prevUrl.textContent, prevUrl.getAttribute('data-cat-label') || '');
+        if (allowCategorySwitch) {
+          const prevUrl = document.getElementById('jd-prev-url');
+          if (prevUrl) goToCategory(prevUrl.textContent, prevUrl.getAttribute('data-cat-label') || '');
+        }
       }
     }
 
@@ -1617,7 +1621,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (e.target.closest('.jd-postcard-map')) return;
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
-      e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
+
+      const isTouchOrMobile = window.innerWidth <= 800 || ('ontouchstart' in window);
+      if (isTouchOrMobile) {
+        if (e.clientX < window.innerWidth * 0.38) {
+          goToRelative(-1, false);
+        } else {
+          goToRelative(1, true);
+        }
+      } else {
+        e.clientX > window.innerWidth / 2 ? goToRelative(1, true) : goToRelative(-1, true);
+      }
     });
 
     document.querySelectorAll('.jd-hint-arrow.left').forEach(el => {
