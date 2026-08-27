@@ -20,10 +20,34 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# jetbrains setting folder
-# macOS resource forks
+# macOS resource forks (AppleDouble)
 ._*
+**/._.*/
+**/._*
 
 # creative backups
 src/data/.backup/
 Portfolio-Uploads/
+design-system/
+scratch/
+
+# AI-agenttikonfiguraatiot ja -ohjeet (vain paikalliseen käyttöön)
+.agents/
+.cursorrules
+AGENTS.md
+CLAUDE.md
+
+# Yksityiset muistiinpanot ja luonnokset
+_muistiinpanot.md
+context.md
+Untitled.txt
+
+# Kehitysapuskriptit (vanhentuneet)
+dev_scripts/
+
+# Dokumentaatio (sisäinen)
+docs/
+
+# LLM-syötteet
+llms.txt
+llms-full.txt
