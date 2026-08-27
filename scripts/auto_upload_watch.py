@@ -96,33 +96,46 @@ def process_and_upload(file_path: Path, s3=None):
         enhancer = ImageEnhance.Sharpness(img)
         sharpened_img = enhancer.enhance(1.15)
 
-        # 3. Älykäs WebP-tallennus (tavoite max ~450 KB, säilyttäen terävyyden)
+        # 3. Älykäs WebP-tallennus (tavoiteikkuna 200–500 KB, dynaaminen laadunhaku)
         master_webp_path = file_path.parent / f"{base_name}.webp"
-        target_quality = 86
-        while target_quality >= 75:
+        
+        best_data = None
+        best_quality = 94
+        best_size_kb = 0
+        
+        # Etsitään optimaalinen laatu väliltä 96 -> 76
+        for q in range(96, 74, -2):
             buf = io.BytesIO()
-            sharpened_img.save(buf, format='WEBP', quality=target_quality, method=6)
+            sharpened_img.save(buf, format='WEBP', quality=q, method=6)
             size_kb = len(buf.getvalue()) / 1024
-            if size_kb <= 460 or target_quality <= 76:
-                with open(master_webp_path, 'wb') as f_out:
-                    f_out.write(buf.getvalue())
-                print(f"  ✓ Paikallinen WebP luotu: {master_webp_path.name} ({width}x{height}px, {int(size_kb)} KB, laatu {target_quality})")
-                break
-            target_quality -= 2
+            
+            # Jos koko mahtuu max 500 KB rajaan
+            if size_kb <= 500:
+                best_data = buf.getvalue()
+                best_quality = q
+                best_size_kb = size_kb
+                # Jos koko on vähintään 200 KB tai ollaan jo huippulaadussa, tämä on paras mahdollinen laatu
+                if size_kb >= 200 or q >= 94:
+                    break
+                    
+        if best_data:
+            with open(master_webp_path, 'wb') as f_out:
+                f_out.write(best_data)
+            print(f"  ✓ Paikallinen WebP luotu: {master_webp_path.name} ({width}x{height}px, {int(best_size_kb)} KB, laatu {best_quality})")
 
         # 4. Generoidaan pikkukuvat muistiin
-        # Desktop thumb (max 1600px, quality 75)
+        # Desktop thumb (max 1600px, korkealuokkainen laatu 88 ilman porrastumista)
         desktop_img = sharpened_img.copy()
         desktop_img.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
         desktop_io = io.BytesIO()
-        desktop_img.save(desktop_io, format='WEBP', quality=75, method=6)
+        desktop_img.save(desktop_io, format='WEBP', quality=88, method=6)
         desktop_io.seek(0)
 
-        # Mobile thumb (max 600px, quality 75)
+        # Mobile thumb (max 600px, laatu 82)
         mobile_img = sharpened_img.copy()
         mobile_img.thumbnail((600, 600), Image.Resampling.LANCZOS)
         mobile_io = io.BytesIO()
-        mobile_img.save(mobile_io, format='WEBP', quality=75, method=6)
+        mobile_img.save(mobile_io, format='WEBP', quality=82, method=6)
         mobile_io.seek(0)
 
     # 5. Ladataan Cloudflare R2:een

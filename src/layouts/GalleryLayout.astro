@@ -425,7 +425,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       width: auto; height: auto; object-fit: contain; display: block;
     }
     .jd-diptych-slide { flex-direction: row; gap: 30px; width: 100vw; }
-    .jd-diptych-slide img { max-width: calc(50% - 75px) !important; }
+    .jd-diptych-slide img { max-width: calc(50% - 75px) !important; max-height: calc(100vh - 180px) !important; max-height: calc(100dvh - 180px) !important; }
 
     /* ─── TEXT SLIDES ───────────────────────────────── */
     .jd-text-slide { flex-direction: column; width: 100%; height: 100%; }
@@ -777,7 +777,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       transform: translateX(4px);
     }
     .jd-count { font-size: 0.9em; font-family: var(--jd-font-serif); font-style: italic; }
-    .jd-index-link.active span:first-child { font-style: italic; }
+    .jd-index-link.active span:first-child { font-style: normal; }
     .jd-mobile-close { display: none; }
 
     /* ─── THUMBS PANEL ───────────────────────────────── */
@@ -955,18 +955,37 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
     }
+
     @media (max-width: 800px) {
       html { background: #000 !important; }
       html, body { position: fixed !important; height: 100dvh !important; overscroll-behavior: none !important; min-height: 0 !important; }
-      #jd-main, #jd-slideshow { position: fixed !important; }
+      #jd-main, #jd-slideshow { position: fixed !important; padding-bottom: 0 !important; }
+      .jd-slide { padding-bottom: 0 !important; }
       body.is-entering-ready .jd-curtain-primary { transform: translateY(100%); }
       body.index-is-open #jd-counter, body.index-is-open #jd-bottom-nav,
       body.about-is-open #jd-counter, body.about-is-open #jd-bottom-nav,
-      body.about-is-open #jd-hint-arrows, body.about-is-open .jd-filter-dropdown-container {
+      body.about-is-open #jd-hint-arrows, body.about-is-open .jd-filter-dropdown-container,
+      body.about-is-open #jd-about-bottom-nav {
         opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity 0.3s ease;
       }
-      .jd-slide img { width: 100%; height: 100%; max-width: calc(100% - 28px); max-height: 100%; object-fit: contain; }
+      .jd-image-wrap {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .jd-slide img, .jd-image-wrap img { 
+        width: 100% !important; 
+        height: 100% !important; 
+        max-width: calc(100% - 28px) !important; 
+        max-height: 100% !important; 
+        object-fit: contain !important; 
+      }
       .jd-diptych-slide { flex-direction: column; gap: 15px; }
+      .jd-diptych-slide .jd-image-wrap { max-width: 100% !important; height: auto !important; }
       .jd-diptych-slide img { max-width: calc(100% - 28px) !important; max-height: calc(50dvh - 75px) !important; }
       #jd-bottom-nav { bottom: auto; top: 25px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: max-content; max-width: 95vw; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
       #jd-normal-nav { gap: 2.2rem !important; }
@@ -993,7 +1012,36 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         to { transform: scale(0.85); color: rgba(26,26,24,0.4); }
       }
       #jd-slideshow { top: 90px; bottom: 60px; height: calc(100dvh - 150px); }
-      #jd-counter { display: flex; align-items: center; justify-content: center; height: auto; width: max-content; max-width: 95vw; padding: 0; position: fixed; bottom: 35px; left: 50%; right: auto; transform: translateX(-50%); text-align: center; color: #1a1a18 !important; font-family: var(--jd-font); font-size: 1rem; letter-spacing: 0.02em; text-transform: none; z-index: 100000; pointer-events: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; white-space: nowrap; }
+      #jd-counter { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        height: auto; 
+        width: max-content; 
+        max-width: 90vw; 
+        padding: 0; 
+        position: fixed; 
+        bottom: 25px; 
+        left: 50%; 
+        right: auto; 
+        transform: translateX(-50%); 
+        text-align: center; 
+        color: rgba(26, 26, 24, 0.6) !important; 
+        font-family: var(--jd-font); 
+        font-size: 0.94rem; 
+        letter-spacing: 0.03em; 
+        text-transform: none; 
+        z-index: 100000; 
+        pointer-events: auto; 
+        background: none; 
+        backdrop-filter: none; 
+        -webkit-backdrop-filter: none; 
+        border: none; 
+        box-shadow: none; 
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       #jd-counter span { white-space: nowrap; }
       #jd-cursor-custom { display: none !important; }
 
@@ -1477,8 +1525,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       let vi = visibleIndices.indexOf(current);
       if (vi === -1) vi = 0;
       const n = vi + 1;
+
+      const catSpan = document.getElementById('jd-counter-cat');
+      if (catSpan) {
+        catSpan.textContent = catLabel;
+        catSpan.style.opacity = '1';
+      }
+
       if (document.getElementById('jd-counter-num')) document.getElementById('jd-counter-num').textContent = n;
       if (document.getElementById('jd-counter-tot')) document.getElementById('jd-counter-tot').textContent = visibleTotal;
+      const restSpan = document.getElementById('jd-counter-rest');
+      if (restSpan) restSpan.style.opacity = '1';
 
       const cursorText = document.getElementById('jd-cursor-text');
       if (cursorText) cursorText.textContent = `${catLabel} — ${n} / ${visibleTotal}`;
