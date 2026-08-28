@@ -222,12 +222,14 @@ const enTransUrl = translationUrl || (lang === 'fi' ? `/en${currentUrl}` : curre
 const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 ---
 <!DOCTYPE html>
-<html lang={lang}>
+<html lang={lang} translate="no" class="notranslate">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light">
+  <meta name="google" content="notranslate">
+  <meta name="format-detection" content="telephone=no">
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <meta name="robots" content="index, follow">
