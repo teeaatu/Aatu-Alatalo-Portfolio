@@ -131,7 +131,12 @@ def process_and_upload(file_path: Path, s3=None):
         desktop_img.save(desktop_io, format='WEBP', quality=88, method=6)
         desktop_io.seek(0)
 
-        # Mobile thumb (max 600px, laatu 82)
+        # Desktop AVIF thumb (sama resoluutio 1600px, quality 70 — ~26% pienempi kuin WebP)
+        desktop_avif_io = io.BytesIO()
+        desktop_img.save(desktop_avif_io, format='AVIF', quality=70)
+        desktop_avif_io.seek(0)
+
+        # Mobile thumb (max 600px, laatu 82) — vain WebP, AVIF ei tuo merkittavaa hyotya
         mobile_img = sharpened_img.copy()
         mobile_img.thumbnail((600, 600), Image.Resampling.LANCZOS)
         mobile_io = io.BytesIO()
@@ -140,9 +145,10 @@ def process_and_upload(file_path: Path, s3=None):
 
     # 5. Ladataan Cloudflare R2:een
     print("  🚀 Ladataan Cloudflare R2:een...")
-    master_r2_key = f"Photographs/{base_name}.webp"
-    desktop_r2_key = f"Photographs/thumbs/{base_name}_desktop.webp"
-    mobile_r2_key = f"Photographs/thumbs/{base_name}_mobile.webp"
+    master_r2_key        = f"Photographs/{base_name}.webp"
+    desktop_r2_key       = f"Photographs/thumbs/{base_name}_desktop.webp"
+    desktop_avif_r2_key  = f"Photographs/thumbs/{base_name}_desktop.avif"
+    mobile_r2_key        = f"Photographs/thumbs/{base_name}_mobile.webp"
 
     # Master
     with open(master_webp_path, 'rb') as f:
@@ -154,8 +160,10 @@ def process_and_upload(file_path: Path, s3=None):
         )
 
     # Thumbs
-    s3.put_object(Bucket=R2_BUCKET_NAME, Key=desktop_r2_key, Body=desktop_io, ContentType='image/webp')
-    s3.put_object(Bucket=R2_BUCKET_NAME, Key=mobile_r2_key, Body=mobile_io, ContentType='image/webp')
+    s3.put_object(Bucket=R2_BUCKET_NAME, Key=desktop_r2_key,      Body=desktop_io,      ContentType='image/webp')
+    s3.put_object(Bucket=R2_BUCKET_NAME, Key=desktop_avif_r2_key, Body=desktop_avif_io, ContentType='image/avif',
+                  CacheControl='public, max-age=31536000, immutable')
+    s3.put_object(Bucket=R2_BUCKET_NAME, Key=mobile_r2_key,       Body=mobile_io,       ContentType='image/webp')
 
     cdn_url = f"{PUBLIC_CDN_BASE}/{base_name}.webp"
     print(f"  ✨ Valmis! R2 URL: {cdn_url}")
