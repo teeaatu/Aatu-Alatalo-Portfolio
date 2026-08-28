@@ -230,6 +230,27 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <meta name="color-scheme" content="light">
   <meta name="google" content="notranslate">
   <meta name="format-detection" content="telephone=no">
+
+  <!-- Language preference & device detection guard -->
+  <script is:inline>
+    (function() {
+      try {
+        const userChoice = localStorage.getItem('userLangChoice');
+        const isEnPage = window.location.pathname.startsWith('/en');
+        const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        const isFiDevice = navLang.startsWith('fi');
+
+        // Jos suomenkielinen laite ilman nimenomaista valintaa englantia tai valinta on suomi:
+        if ((isFiDevice && userChoice !== 'en' && isEnPage) || (userChoice === 'fi' && isEnPage)) {
+          const fiPath = window.location.pathname.replace(/^\/en(\/|$)/, '/');
+          window.location.replace(fiPath || '/');
+        } else if (userChoice === 'en' && !isEnPage) {
+          const enPath = '/en' + (window.location.pathname === '/' ? '' : window.location.pathname);
+          window.location.replace(enPath);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <meta name="robots" content="index, follow">
@@ -758,6 +779,22 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       padding: 12px 0; margin: -12px 0;
       min-height: 44px; display: inline-flex; align-items: center;
     }
+    .jd-lang-toggle {
+      font-style: normal;
+      color: rgba(26, 26, 24, 0.65) !important;
+      border: 1px solid rgba(26, 26, 24, 0.2);
+      border-radius: 999px;
+      padding: 4px 14px !important;
+      margin: -4px 0 !important;
+      font-size: 0.88rem !important;
+      letter-spacing: 0.03em;
+      transition: all 0.25s ease;
+    }
+    .jd-lang-toggle:hover {
+      color: rgba(26, 26, 24, 1) !important;
+      border-color: rgba(26, 26, 24, 0.6);
+      background: rgba(26, 26, 24, 0.03);
+    }
     .jd-index-list {
       list-style: none;
       margin-bottom: 3rem;
@@ -1172,8 +1209,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         </a>
         <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener">Instagram</a>
         <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href={switchLangUrl} onclick={`localStorage.setItem('langPref','${lang === 'fi' ? 'en' : 'fi'}')`}>
-          {lang === 'fi' ? 'EN' : 'FI'}
+        <a href={switchLangUrl} class="jd-lang-toggle" onclick={`localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}')`}>
+          {lang === 'fi' ? 'In English' : 'Suomeksi'}
         </a>
       </div>
     </div>
@@ -1642,9 +1679,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     /* Touch */
-    let touchStartX = 0, touchStartY = 0, hasSwiped = false, isDraggingMenu = false, menuCurrentDrag = 0, swipeIntentDetermined = false;
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0, hasSwiped = false, isDraggingMenu = false, menuCurrentDrag = 0, swipeIntentDetermined = false;
     slideshow.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; hasSwiped = false;
+      touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartTime = Date.now(); hasSwiped = false;
       swipeIntentDetermined = false; isDraggingMenu = false; menuCurrentDrag = 0;
       if (touchStartX < 30) return; // Allow Safari edge swipe
       document.body.classList.add('user-has-interacted');
@@ -1670,14 +1707,21 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
       
-      if (Math.abs(dx) > 40 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
-        dx < 0 ? goToRelative(1) : goToRelative(-1);
+      if (Math.abs(dx) > 45 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
+        dx < 0 ? goToRelative(1, true) : goToRelative(-1, true);
       }
     }, { passive: true });
 
     slideshow.addEventListener('click', e => {
       if (hasSwiped) { hasSwiped = false; return; }
       if (e.target.closest('.jd-postcard-map')) return;
+      
+      // If finger was resting on screen for longer (> 350ms), ignore accidental tap
+      if (touchStartTime && (Date.now() - touchStartTime > 350)) {
+        touchStartTime = 0;
+        return;
+      }
+      
       document.body.classList.add('user-has-interacted');
       if (thumbsOpen) return;
 
@@ -1686,10 +1730,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         if (e.clientX < window.innerWidth * 0.38) {
           goToRelative(-1, false);
         } else {
-          goToRelative(1, true);
+          goToRelative(1, false);
         }
       } else {
-        e.clientX > window.innerWidth / 2 ? goToRelative(1, true) : goToRelative(-1, true);
+        e.clientX > window.innerWidth / 2 ? goToRelative(1, false) : goToRelative(-1, false);
       }
     });
 
