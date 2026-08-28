@@ -62,8 +62,9 @@ function resolveImagePaths(kuva: string) {
   const fn = kuva.split('/').pop()!.split('.')[0];
   const mob    = `${fn}_mobile.webp`;
   const dsk    = `${fn}_desktop.webp`;
-  const avifDsk = `${fn}_desktop.avif`;
+  
   if (kuva.includes('http')) {
+    const avifDsk = `${fn}_desktop.avif`;
     const fnext = kuva.split('/').pop()!;
     const bpath = kuva.replace(fnext, '');
     return {
@@ -75,7 +76,7 @@ function resolveImagePaths(kuva: string) {
   }
   return {
     src: `/assets/thumbnails/${dsk}`,
-    srcAvif: `/assets/thumbnails/${avifDsk}`,
+    srcAvif: null, // Lokaaleilla kuville (kuten Louhos.jpg) ei ole generoitu AVIF-thumbeja
     srcMob: `/assets/thumbnails/${mob}`,
     full: `/assets/images/${kuva}`
   };
@@ -164,7 +165,7 @@ const enBase = (slug: string, enSlug?: string) => `/en/${enSlug || slug}`;
 
 const getCatUrl = (key: string, l: string) => {
   return l === 'en'
-    ? `/en/${key === 'kuvaprojekti-ajasta-v365' ? 'photo-project-time-v365' : key === 'tapahtumat' ? 'events' : key === 'vari-ja-muoto' ? 'color-and-form' : key === 'mustavalkoinen-sarja' ? 'black-and-white-series' : key === 'sisatilan-valo' ? 'interior-light' : key === 'kiehtovat-rakennukset' ? 'buildings' : key === 'luonto-ja-ymparisto' ? 'nature' : key}`
+    ? `/en/${key === 'kuvaprojekti-ajasta-v365' ? 'photo-project-time-v365' : key === 'tapahtumat' ? 'events' : key === 'vari-ja-muoto' ? 'color-and-form' : key === 'mustavalkoinen-sarja' ? 'black-and-white-series' : key === 'sisatilan-valo' ? 'interior-light' : key === 'kiehtovat-rakennukset' ? 'buildings' : key === 'luonto-ja-ymparisto' ? 'nature' : key === 'elaimet' ? 'animals' : key}`
     : `/${key}`;
 };
 
@@ -453,6 +454,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0; transition: opacity 0.8s ease; pointer-events: none;
     }
     .jd-slide.active { opacity: 1; pointer-events: auto; }
+    .jd-slide picture { display: contents; }
     .jd-slide img {
       max-width: calc(100% - 120px);
       max-height: calc(100vh - 180px); max-height: calc(100dvh - 180px);
@@ -1500,7 +1502,16 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         slide.className += ' jd-diptych-slide';
         item.images.forEach(imgData => {
           const picture = document.createElement('picture');
-          // AVIF vain desktopilla (>800px) – mobiili saa WebP
+          
+          // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
+          // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
+          const retinaSrc = document.createElement('source');
+          retinaSrc.type = 'image/webp';
+          retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
+          retinaSrc.srcset = imgData.full;
+          picture.appendChild(retinaSrc);
+
+          // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) ladataan uusi nopea 1600px AVIF
           if (imgData.srcAvif) {
             const avifSrc = document.createElement('source');
             avifSrc.type = 'image/avif';
@@ -1508,22 +1519,34 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
             avifSrc.srcset = imgData.srcAvif;
             picture.appendChild(avifSrc);
           }
+          
+          // 3. Fallback & mobiililaitteet: selaimen automaattisesti valitsema koko 
           const webpSrc = document.createElement('source');
           webpSrc.type = 'image/webp';
           webpSrc.srcset = imgData.srcset;
           webpSrc.sizes = '(max-width: 768px) 100vw, 50vw';
           picture.appendChild(webpSrc);
+          
           const img = document.createElement('img');
           img.src = imgData.src;
           img.alt = imgData.alt || '';
           img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
-          img.onerror = () => { img.srcset = ''; img.src = imgData.full; };
+          img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = imgData.full; };
           picture.appendChild(img);
           slide.appendChild(picture);
         });
       } else {
         const picture = document.createElement('picture');
-        // AVIF vain desktopilla (>800px) – mobiili saa WebP
+        
+        // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
+        // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
+        const retinaSrc = document.createElement('source');
+        retinaSrc.type = 'image/webp';
+        retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
+        retinaSrc.srcset = item.full;
+        picture.appendChild(retinaSrc);
+
+        // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) ladataan uusi nopea 1600px AVIF
         if (item.srcAvif) {
           const avifSrc = document.createElement('source');
           avifSrc.type = 'image/avif';
@@ -1531,11 +1554,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           avifSrc.srcset = item.srcAvif;
           picture.appendChild(avifSrc);
         }
+        
+        // 3. Fallback & mobiililaitteet: selaimen automaattisesti valitsema koko 
         const webpSrc = document.createElement('source');
         webpSrc.type = 'image/webp';
         webpSrc.srcset = item.srcset;
         webpSrc.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
         picture.appendChild(webpSrc);
+        
         const img = document.createElement('img');
         img.src = item.src;
         img.alt = item.alt || '';
@@ -1767,7 +1793,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
       
       if (Math.abs(dx) > 45 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
-        dx < 0 ? goToRelative(1, false) : goToRelative(-1, false);
+        dx < 0 ? goToRelative(1) : goToRelative(-1);
       }
     }, { passive: true });
 
@@ -1787,12 +1813,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const isTouchOrMobile = window.innerWidth <= 800 || ('ontouchstart' in window);
       if (isTouchOrMobile) {
         if (e.clientX < window.innerWidth * 0.38) {
-          goToRelative(-1, false);
+          goToRelative(-1);
         } else {
-          goToRelative(1, false);
+          goToRelative(1);
         }
       } else {
-        e.clientX > window.innerWidth / 2 ? goToRelative(1, false) : goToRelative(-1, false);
+        e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
       }
     });
 
