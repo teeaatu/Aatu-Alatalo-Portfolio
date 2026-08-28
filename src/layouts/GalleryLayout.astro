@@ -1692,7 +1692,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const dx = Math.abs(e.touches[0].clientX - touchStartX);
       const dy = Math.abs(e.touches[0].clientY - touchStartY);
       
-      if (!swipeIntentDetermined && (dx > 10 || dy > 10)) {
+      // Vasta selkeä liike (> 25px) tulkitaan pyyhkäisyksi, jottei pieni sormen värähdys estä napautusta
+      if (!swipeIntentDetermined && (dx > 25 || dy > 25)) {
         swipeIntentDetermined = true;
         hasSwiped = true;
       }
@@ -1708,7 +1709,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
       
       if (Math.abs(dx) > 45 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
-        dx < 0 ? goToRelative(1, true) : goToRelative(-1, true);
+        dx < 0 ? goToRelative(1, false) : goToRelative(-1, false);
       }
     }, { passive: true });
 
@@ -1716,8 +1717,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (hasSwiped) { hasSwiped = false; return; }
       if (e.target.closest('.jd-postcard-map')) return;
       
-      // If finger was resting on screen for longer (> 350ms), ignore accidental tap
-      if (touchStartTime && (Date.now() - touchStartTime > 350)) {
+      // Napautuksen aikaraja 450ms: sormen lepuutus ruudulla (> 450ms) ei vaihda kuvaa
+      if (touchStartTime && (Date.now() - touchStartTime > 450)) {
         touchStartTime = 0;
         return;
       }
