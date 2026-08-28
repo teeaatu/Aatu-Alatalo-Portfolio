@@ -60,14 +60,25 @@ const allCats = [
 
 function resolveImagePaths(kuva: string) {
   const fn = kuva.split('/').pop()!.split('.')[0];
-  const mob = `${fn}_mobile.webp`;
-  const dsk = `${fn}_desktop.webp`;
+  const mob    = `${fn}_mobile.webp`;
+  const dsk    = `${fn}_desktop.webp`;
+  const avifDsk = `${fn}_desktop.avif`;
   if (kuva.includes('http')) {
     const fnext = kuva.split('/').pop()!;
     const bpath = kuva.replace(fnext, '');
-    return { src: `${bpath}thumbs/${dsk}`, srcMob: `${bpath}thumbs/${mob}`, full: kuva };
+    return {
+      src: `${bpath}thumbs/${dsk}`,
+      srcAvif: `${bpath}thumbs/${avifDsk}`,
+      srcMob: `${bpath}thumbs/${mob}`,
+      full: kuva
+    };
   }
-  return { src: `/assets/thumbnails/${dsk}`, srcMob: `/assets/thumbnails/${mob}`, full: `/assets/images/${kuva}` };
+  return {
+    src: `/assets/thumbnails/${dsk}`,
+    srcAvif: `/assets/thumbnails/${avifDsk}`,
+    srcMob: `/assets/thumbnails/${mob}`,
+    full: `/assets/images/${kuva}`
+  };
 }
 
 let jdIdx = 0;
@@ -100,8 +111,8 @@ for (const item of dataset) {
   }
   if (item.layout === 'diptych' && item.images) {
     const images = item.images.map((sub: any) => {
-      const { src, srcMob, full } = resolveImagePaths(sub.kuva);
-      return { src, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob, alt: sub.alt_text || '' };
+      const { src, srcAvif, srcMob, full } = resolveImagePaths(sub.kuva);
+      return { src, srcAvif, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob, alt: sub.alt_text || '' };
     });
     galleryData.push({
       i: jdIdx++, layout: 'diptych', images,
@@ -110,9 +121,9 @@ for (const item of dataset) {
       series: item.series || 'all',
     });
   } else {
-    const { src, srcMob, full } = resolveImagePaths(item.kuva);
+    const { src, srcAvif, srcMob, full } = resolveImagePaths(item.kuva);
     galleryData.push({
-      i: jdIdx++, src, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob,
+      i: jdIdx++, src, srcAvif, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob,
       alt: item.alt_text || '',
       title: parseField(titleVal),
       place: parseField(placeVal),
@@ -1488,22 +1499,50 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       } else if (item.layout === 'diptych' && item.images) {
         slide.className += ' jd-diptych-slide';
         item.images.forEach(imgData => {
+          const picture = document.createElement('picture');
+          // AVIF vain desktopilla (>800px) – mobiili saa WebP
+          if (imgData.srcAvif) {
+            const avifSrc = document.createElement('source');
+            avifSrc.type = 'image/avif';
+            avifSrc.media = '(min-width: 801px)';
+            avifSrc.srcset = imgData.srcAvif;
+            picture.appendChild(avifSrc);
+          }
+          const webpSrc = document.createElement('source');
+          webpSrc.type = 'image/webp';
+          webpSrc.srcset = imgData.srcset;
+          webpSrc.sizes = '(max-width: 768px) 100vw, 50vw';
+          picture.appendChild(webpSrc);
           const img = document.createElement('img');
-          img.src = imgData.src; img.srcset = imgData.srcset;
-          img.sizes = '(max-width: 768px) 100vw, 50vw';
+          img.src = imgData.src;
           img.alt = imgData.alt || '';
           img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
           img.onerror = () => { img.srcset = ''; img.src = imgData.full; };
-          slide.appendChild(img);
+          picture.appendChild(img);
+          slide.appendChild(picture);
         });
       } else {
+        const picture = document.createElement('picture');
+        // AVIF vain desktopilla (>800px) – mobiili saa WebP
+        if (item.srcAvif) {
+          const avifSrc = document.createElement('source');
+          avifSrc.type = 'image/avif';
+          avifSrc.media = '(min-width: 801px)';
+          avifSrc.srcset = item.srcAvif;
+          picture.appendChild(avifSrc);
+        }
+        const webpSrc = document.createElement('source');
+        webpSrc.type = 'image/webp';
+        webpSrc.srcset = item.srcset;
+        webpSrc.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
+        picture.appendChild(webpSrc);
         const img = document.createElement('img');
-        img.src = item.src; img.srcset = item.srcset;
-        img.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
+        img.src = item.src;
         img.alt = item.alt || '';
         img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
-        img.onerror = () => { img.srcset = ''; img.src = item.full; };
-        slide.appendChild(img);
+        img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = item.full; };
+        picture.appendChild(img);
+        slide.appendChild(picture);
       }
       return slide;
     }
@@ -1672,9 +1711,28 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       updateCounter();
       let vi = visibleIndices.indexOf(current);
       if (vi !== -1) {
-        const ni = visibleIndices[(vi + 1) % visibleTotal];
-        const pi = visibleIndices[(vi - 1 + visibleTotal) % visibleTotal];
-        [ni, pi].forEach(ix => { const img = slides[ix] ? slides[ix].querySelector('img') : null; if (img && !img.complete) img.loading = 'eager'; });
+        // Puskurointi: 2 eteenpäin + 1 taaksepäin
+        const preloadIdxs = [
+          visibleIndices[(vi + 1) % visibleTotal],
+          visibleIndices[(vi + 2) % visibleTotal],
+          visibleIndices[(vi - 1 + visibleTotal) % visibleTotal],
+        ].filter(ix => ix !== undefined);
+        preloadIdxs.forEach(ix => {
+          const slide = slides[ix];
+          if (!slide) return;
+          const img = slide.querySelector('img');
+          if (!img) return;
+          // Aseta eager jos ei vielä ladattu
+          if (!img.complete) img.loading = 'eager';
+          // Käytetään currentSrc (selaimen valitsema formaatti) || src varalogiikkana:
+          // Jos slide on piilossa (display:none), selain ei välttämättä ole asettanut
+          // currentSrc-kenttää vielä – tässä tapauksessa img.src toimii varalogiikkana.
+          const targetSrc = img.currentSrc || img.src;
+          if (targetSrc && !slide.dataset.preloaded) {
+            fetch(targetSrc, { priority: 'low' }).catch(() => {});
+            slide.dataset.preloaded = '1';
+          }
+        });
       }
     }
 
@@ -1944,6 +2002,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         });
       }
 
+      // Ennakkolataus: fetch() toimii kaikissa selaimissa, myös Safarissa
+      // (link rel="prefetch" ei tue Safari – käytetään fetch()-pohjaista ratkaisua)
+      function prefetchPage(url) {
+        if (!url || url.startsWith('#')) return;
+        if (document.querySelector(`link[data-prefetched="${CSS.escape(url)}"]`)) return;
+        const marker = document.createElement('link');
+        marker.dataset.prefetched = url;
+        document.head.appendChild(marker);
+        fetch(url, { priority: 'low' }).catch(() => {});
+      }
+
       indexLinks.forEach(link => {
         const src = link.getAttribute('data-preview-src');
         if (src) {
@@ -1961,7 +2030,16 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
               setPreviewImage(targetSrc);
             }, 80);
           }
+          // HTML-sivun ennakkolataus hover-hetkellä
+          const href = link.getAttribute('href');
+          if (href) prefetchPage(href);
         });
+
+        // Mobiili: touchstart – sormi osuu linkkiin
+        link.addEventListener('touchstart', () => {
+          const href = link.getAttribute('href');
+          if (href) prefetchPage(href);
+        }, { passive: true });
       });
 
       indexPanel?.addEventListener('mouseleave', () => {
