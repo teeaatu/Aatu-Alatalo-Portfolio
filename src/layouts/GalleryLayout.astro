@@ -587,7 +587,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       gap: 3.5rem !important;
       pointer-events: auto !important;
     }
-    body.index-is-open #jd-bottom-nav {
+    body.index-is-open #jd-bottom-nav,
+    body.index-is-open #jd-counter,
+    body.index-is-open #jd-hint-arrows,
+    body.index-is-open .jd-filter-dropdown-container {
       opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
@@ -1107,9 +1110,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-main, #jd-slideshow { position: fixed !important; padding-bottom: 0 !important; }
       .jd-slide { padding-bottom: 0 !important; height: 100% !important; max-height: 100% !important; }
       body.is-entering-ready .jd-curtain-primary { transform: translateY(100%); }
-      body.index-is-open #jd-counter, body.index-is-open #jd-bottom-nav,
-      body.about-is-open #jd-counter, body.about-is-open #jd-bottom-nav,
-      body.about-is-open #jd-hint-arrows, body.about-is-open .jd-filter-dropdown-container,
+      body.index-is-open #jd-counter, 
+      body.index-is-open #jd-bottom-nav,
+      body.index-is-open #jd-hint-arrows,
+      body.index-is-open .jd-filter-dropdown-container,
+      body.about-is-open #jd-counter, 
+      body.about-is-open #jd-bottom-nav,
+      body.about-is-open #jd-hint-arrows, 
+      body.about-is-open .jd-filter-dropdown-container,
       body.about-is-open #jd-about-bottom-nav {
         opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity 0.3s ease;
       }
