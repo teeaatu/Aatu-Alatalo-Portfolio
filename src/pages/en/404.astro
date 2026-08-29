@@ -1,0 +1,92 @@
+---
+const pageTitle = "404 — Page Not Found | Aatu Alatalo";
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>{pageTitle}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --jd-bg: #ffffff;
+      --jd-text: #1a1a18;
+      --jd-dimmed: #888880;
+      --jd-font: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
+    }
+
+    body {
+      width: 100vw; height: 100vh; height: 100dvh;
+      display: flex; flex-direction: column; justify-content: space-between;
+      align-items: center; padding: 2.5rem 2rem;
+      background: var(--jd-bg); color: var(--jd-text);
+      font-family: var(--jd-font); text-align: center;
+      user-select: none; -webkit-user-select: none;
+    }
+
+    header {
+      font-size: 1.1rem; letter-spacing: 0.05em; font-weight: 500;
+    }
+
+    header a {
+      color: var(--jd-text); text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    header a:hover { opacity: 0.6; }
+
+    main {
+      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+      max-width: 480px; margin: auto 0;
+    }
+
+    h1 {
+      font-size: 3rem; font-weight: 400; letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+
+    p {
+      font-size: 1.15rem; line-height: 1.6; color: rgba(26, 26, 24, 0.75);
+    }
+
+    .jd-404-links {
+      display: flex; gap: 1.8rem; margin-top: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+
+    .jd-404-btn {
+      font-size: 1.05rem; color: var(--jd-text);
+      text-decoration: underline; text-underline-offset: 5px;
+      transition: opacity 0.2s ease;
+    }
+    .jd-404-btn:hover { opacity: 0.5; }
+
+    footer {
+      font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      opacity: 0.45;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/en/">Aatu Alatalo</a>
+  </header>
+
+  <main>
+    <h1>404</h1>
+    <p>The page you are looking for does not exist or has been moved.</p>
+    <div class="jd-404-links">
+      <a href="/en/" class="jd-404-btn">Return to Works</a>
+      <a href="/" class="jd-404-btn">Suomeksi</a>
+    </div>
+  </main>
+
+  <footer>
+    © Aatu Alatalo
+  </footer>
+</body>
+</html>
