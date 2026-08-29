@@ -789,70 +789,95 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       transform: rotate(90deg) scale(0.92);
     }
     .jd-top-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 3rem;
-      padding-bottom: 1.2rem;
-      border-bottom: 1px solid rgba(26, 26, 24, 0.08);
-      font-family: var(--jd-font);
-      font-size: 0.95rem;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      flex-wrap: nowrap !important;
+      width: 100% !important;
+      margin-bottom: 2.8rem !important;
+      padding-bottom: 1.2rem !important;
+      border-bottom: 1px solid rgba(26, 26, 24, 0.08) !important;
+      font-family: var(--jd-font) !important;
+      font-size: 1rem !important;
+      box-sizing: border-box !important;
     }
     .jd-top-nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.8rem;
+      display: flex !important;
+      align-items: center !important;
+      gap: 1.4rem !important;
+      flex-wrap: nowrap !important;
+      white-space: nowrap !important;
     }
     .jd-top-nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      margin-left: auto;
+      display: flex !important;
+      align-items: center !important;
+      gap: 1.4rem !important;
+      margin-left: auto !important;
+      flex-wrap: nowrap !important;
+      white-space: nowrap !important;
     }
     .jd-top-nav a {
       color: #1a1a18 !important;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 0;
-      transition: opacity 0.2s ease;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      background: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      outline: none !important;
+      white-space: nowrap !important;
+      transition: opacity 0.2s ease !important;
     }
     .jd-top-nav a:hover {
-      opacity: 0.6;
+      opacity: 0.55 !important;
     }
     .jd-top-nav-social {
-      display: flex;
-      align-items: center;
-      gap: 1.1rem;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.85rem !important;
+      flex-wrap: nowrap !important;
     }
     .jd-social-icon-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
       color: #1a1a18 !important;
-      opacity: 0.75;
-      padding: 4px;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      opacity: 0.75 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      line-height: 1 !important;
+      border: none !important;
+      background: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      transition: opacity 0.2s ease, transform 0.2s ease !important;
     }
     .jd-social-icon-link:hover {
       opacity: 1 !important;
-      transform: translateY(-1px);
+      transform: translateY(-1px) !important;
     }
     .jd-social-icon-link svg {
-      width: 17px;
-      height: 17px;
-      display: block;
+      width: 17px !important;
+      height: 17px !important;
+      display: block !important;
     }
     .jd-lang-toggle {
-      font-style: normal;
+      font-style: normal !important;
       color: #1a1a18 !important;
-      opacity: 0.75;
+      opacity: 0.75 !important;
       border: none !important;
       background: none !important;
-      padding: 4px 0 !important;
-      font-size: 0.92rem !important;
-      letter-spacing: 0.03em;
-      transition: opacity 0.2s ease;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      font-size: 0.95rem !important;
+      letter-spacing: 0.02em !important;
+      white-space: nowrap !important;
+      transition: opacity 0.2s ease !important;
     }
     .jd-lang-toggle:hover {
       opacity: 1 !important;
@@ -1182,33 +1207,41 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         align-items: center !important;
         justify-content: space-between !important; 
         margin-bottom: 2rem !important; 
-        padding-bottom: 1.1rem !important;
-        gap: 1rem !important;
+        padding-bottom: 1rem !important;
+        gap: 0.8rem !important;
+        flex-wrap: nowrap !important;
       }
       .jd-top-nav-links { 
         display: flex !important;
         align-items: center !important;
-        gap: 1.4rem !important; 
+        gap: 1.1rem !important; 
         font-size: 0.95rem !important; 
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
       }
       .jd-top-nav-actions {
         display: flex !important;
         align-items: center !important;
-        gap: 1.8rem !important;
+        gap: 1.2rem !important;
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
       }
       .jd-top-nav-social {
         display: flex !important;
         align-items: center !important;
-        gap: 1rem !important;
+        gap: 0.75rem !important;
+        flex-wrap: nowrap !important;
       }
       .jd-social-icon-link {
-        padding: 4px !important;
+        padding: 0 !important;
         margin: 0 !important;
       }
       .jd-lang-toggle {
         border: none !important;
         background: none !important;
-        padding: 4px 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
         margin: 0 !important;
         font-size: 0.92rem !important;
       }
