@@ -995,6 +995,24 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-about-section ul { list-style: none; padding: 0; margin: 0; }
     .jd-about-section li { font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.6rem; max-width: 540px; }
 
+    #jd-about-close-btn {
+      position: fixed !important;
+      top: 2rem;
+      right: 2rem;
+      z-index: 400;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    @media (max-width: 800px) {
+      #jd-about-close-btn {
+        top: 1.2rem !important;
+        right: 1.2rem !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      }
+    }
+
     /* Kun About-paneeli on auki: normaali kursori ja piilotetaan kaikki taustan alareunatekstit ja navit */
     body.about-is-open, body.about-is-open * {
       cursor: auto !important;
