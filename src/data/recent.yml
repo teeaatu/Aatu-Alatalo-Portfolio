@@ -1,9 +1,3 @@
-- kuva: https://media.aatualatalo.com/Photographs/lohi_norja.webp
-  width: 2100
-  height: 1500
-  otsikko: Fishermen by the Fjord / Kalastajat vuonolla
-  paikka: Alta, Norway 2026
-  alt_text: "Kaksi kahluuhousuihin pukeutunutta kalastajaa pitelee ja tutkii saalista merenrannalla Alta-vuonolla tyynen veden ja kaukana siintävien vuorten edustalla."
 - kuva: https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp
   width: 1500
   height: 1875
@@ -12,6 +6,12 @@
   alt_text: A bouquet of red and orange tulips in a clear glass vase displayed in
     a window in Helsinki. White candles, a dark wine bottle, and a small potted
     plant sit alongside the flowers against a dark interior background.
+- kuva: https://media.aatualatalo.com/Photographs/lohi_norja.webp
+  width: 2100
+  height: 1500
+  otsikko: Fishermen by the Fjord / Kalastajat vuonolla
+  paikka: Alta, Norway 2026
+  alt_text: "Kaksi kahluuhousuihin pukeutunutta kalastajaa pitelee ja tutkii saalista merenrannalla Alta-vuonolla tyynen veden ja kaukana siintävien vuorten edustalla."
 - kuva: https://media.aatualatalo.com/Photographs/lapsetainola.webp
   width: 1500
   height: 2100
