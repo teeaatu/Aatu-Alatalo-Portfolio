@@ -471,14 +471,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* Photo location label below image (Desktop) */
     .jd-slide-location {
       position: fixed;
-      bottom: 24px;
+      bottom: 34px;
       top: auto;
       left: 50%;
       transform: translateX(-50%);
       font-family: var(--jd-font);
       font-size: 0.95rem;
       letter-spacing: 0.04em;
-      color: rgba(26, 26, 24, 0.60);
+      color: rgba(26, 26, 24, 0.76);
       pointer-events: none;
       user-select: none;
       white-space: nowrap;
@@ -624,17 +624,18 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-bottom-btn {
       background: none; border: none;
-      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
+      color: rgba(26, 26, 24, 0.72) !important; -webkit-text-fill-color: rgba(26, 26, 24, 0.72) !important;
       font-family: var(--jd-font);
       font-size: 0.95rem; font-weight: 500; letter-spacing: 0.04em; text-transform: none !important;
       cursor: pointer !important; pointer-events: auto;
       padding: 8px 0;
       min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-      transition: opacity 0.25s ease, transform 0.2s ease;
+      transition: opacity 0.25s ease, transform 0.2s ease, color 0.2s ease;
       white-space: nowrap;
     }
     .jd-bottom-btn:hover {
-      opacity: 0.55 !important;
+      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
+      opacity: 1 !important;
     }
     .jd-nav-divider { display: none !important; }
     #jd-counter { display: none; }
