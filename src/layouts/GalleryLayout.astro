@@ -451,7 +451,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-slide {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.8s ease; pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      will-change: opacity;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .jd-slide.active { opacity: 1; pointer-events: auto; }
     .jd-slide picture { display: contents; }
