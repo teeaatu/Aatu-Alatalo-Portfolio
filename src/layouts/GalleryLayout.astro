@@ -373,7 +373,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       --jd-font:     'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
       --jd-font-serif: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
       --jd-font-garamond: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
-      --jd-panel-w:  50vw;
+      --jd-panel-w:  min(500px, 42vw);
     }
 
     html, body {
@@ -791,11 +791,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-top-nav {
       display: flex !important;
       align-items: center !important;
-      justify-content: space-between !important;
+      justify-content: flex-start !important;
       flex-wrap: nowrap !important;
       width: 100% !important;
       margin-bottom: 2.8rem !important;
       padding-bottom: 1.2rem !important;
+      padding-right: 50px !important;
       border-bottom: 1px solid rgba(26, 26, 24, 0.08) !important;
       font-family: var(--jd-font) !important;
       font-size: 1rem !important;
@@ -804,15 +805,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-top-nav-links {
       display: flex !important;
       align-items: center !important;
-      gap: 1.4rem !important;
-      flex-wrap: nowrap !important;
-      white-space: nowrap !important;
-    }
-    .jd-top-nav-actions {
-      display: flex !important;
-      align-items: center !important;
-      gap: 1.4rem !important;
-      margin-left: auto !important;
+      gap: 1.6rem !important;
       flex-wrap: nowrap !important;
       white-space: nowrap !important;
     }
@@ -833,12 +826,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-top-nav a:hover {
       opacity: 0.55 !important;
-    }
-    .jd-top-nav-social {
-      display: flex !important;
-      align-items: center !important;
-      gap: 0.85rem !important;
-      flex-wrap: nowrap !important;
     }
     .jd-social-icon-link {
       display: inline-flex !important;
@@ -893,36 +880,38 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       margin: 0;
       padding: 0;
     }
-    @media (hover: hover) and (pointer: fine) {
-      .jd-index-list:hover .jd-index-link {
-        opacity: 0.45;
-        transition: opacity 0.2s ease;
-      }
-      .jd-index-list:hover .jd-index-link:hover {
-        opacity: 1;
-        transform: translateX(4px);
-      }
-    }
     .jd-index-link {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-family: var(--jd-font);
-      font-size: 0.95rem;
-      letter-spacing: 0.03em;
-      padding: 0.7rem 0;
-      min-height: 42px;
+      font-size: 0.98rem;
+      letter-spacing: 0.02em;
+      padding: 0.75rem 0;
+      min-height: 44px;
       color: #1a1a18 !important;
       -webkit-text-fill-color: #1a1a18 !important;
+      opacity: 1 !important;
       border-bottom: 1px solid rgba(26, 26, 24, 0.06);
       text-decoration: none;
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
+    .jd-index-link span {
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+      opacity: 1 !important;
+    }
     .jd-index-link.active {
       font-weight: 600;
     }
+    @media (hover: hover) and (pointer: fine) {
+      .jd-index-link:hover {
+        opacity: 0.55 !important;
+        transform: translateX(4px);
+      }
+    }
     .jd-count {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-family: var(--jd-font-serif);
       font-style: italic;
       color: #1a1a18 !important;
@@ -1205,10 +1194,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-top-nav { 
         display: flex !important;
         align-items: center !important;
-        justify-content: space-between !important; 
+        justify-content: flex-start !important; 
         margin-bottom: 2rem !important; 
         padding-bottom: 1rem !important;
-        gap: 0.8rem !important;
+        padding-right: 48px !important;
+        gap: 1.1rem !important;
         flex-wrap: nowrap !important;
       }
       .jd-top-nav-links { 
@@ -1218,19 +1208,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         font-size: 0.95rem !important; 
         flex-wrap: nowrap !important;
         white-space: nowrap !important;
-      }
-      .jd-top-nav-actions {
-        display: flex !important;
-        align-items: center !important;
-        gap: 1.2rem !important;
-        flex-wrap: nowrap !important;
-        white-space: nowrap !important;
-      }
-      .jd-top-nav-social {
-        display: flex !important;
-        align-items: center !important;
-        gap: 0.75rem !important;
-        flex-wrap: nowrap !important;
       }
       .jd-social-icon-link {
         padding: 0 !important;
@@ -1546,27 +1523,23 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
           {lang === 'en' ? 'About' : 'Minusta'}
         </a>
-      </div>
-      <div class="jd-top-nav-actions">
         <a href={switchLangUrl} class="jd-lang-toggle" onclick={`localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}')`}>
           {lang === 'fi' ? 'In English' : 'Suomeksi'}
         </a>
-        <div class="jd-top-nav-social">
-          <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener" aria-label="LinkedIn" class="jd-social-icon-link">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-              <rect x="2" y="9" width="4" height="12"></rect>
-              <circle cx="4" cy="4" r="2"></circle>
-            </svg>
-          </a>
-        </div>
+        <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener" aria-label="LinkedIn" class="jd-social-icon-link">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
       </div>
     </div>
 
