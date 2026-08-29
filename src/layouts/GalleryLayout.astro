@@ -468,10 +468,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-diptych-slide { flex-direction: row; gap: 30px; width: 100vw; }
     .jd-diptych-slide img { max-width: calc(50% - 75px) !important; max-height: calc(100vh - 180px) !important; max-height: calc(100dvh - 180px) !important; }
 
-    /* Photo location label above image (Desktop) */
+    /* Photo location label below image (Desktop) */
     .jd-slide-location {
       position: fixed;
-      top: 2.35rem;
+      bottom: 24px;
+      top: auto;
       left: 50%;
       transform: translateX(-50%);
       font-family: var(--jd-font);
@@ -599,9 +600,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-thumb-text-inner h3 { font-family: var(--jd-font-serif); font-size: 1.1rem; margin-bottom: 1rem; font-weight: normal; color: #1a1a18; line-height: 1.2; z-index: 2; }
     .jd-thumb-text-inner p { font-family: var(--jd-font); font-size: 0.85rem; color: #555; z-index: 2; }
 
-    /* ─── BOTTOM NAV ─────────────────────────────────── */
+    /* ─── NAV BUTTONS (Desktop: Top / Mobile: Top) ──── */
     #jd-bottom-nav {
-      position: fixed; bottom: 24px; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
+      position: fixed; top: 24px; bottom: auto; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
       display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: center !important;
       z-index: 100000; pointer-events: auto; cursor: auto;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
