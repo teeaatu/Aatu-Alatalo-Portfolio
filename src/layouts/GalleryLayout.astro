@@ -1092,19 +1092,54 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       pointer-events: none !important;
     }
 
-    /* ─── MOBILE ─────────────────────────────────────── */
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
       :root { --jd-panel-w: 100%; }
-      #jd-index-panel { width: 100%; left: 0; right: 0; padding: 4.5rem 1.5rem 3rem; text-align: center; }
-      .jd-index-close-btn { top: 1.2rem; right: 1.2rem; }
-      .jd-top-nav { justify-content: center; margin-bottom: 2.5rem; }
-      .jd-top-nav-links { justify-content: center; gap: 0.8rem 1.4rem; font-size: 0.95rem; }
-      .jd-index-link { justify-content: center; font-size: 0.9rem; padding: 0.45rem 0; gap: 0.8rem; border-bottom: 1px solid rgba(26,26,24,0.05); }
+      #jd-index-panel { 
+        width: 100% !important; 
+        left: 0 !important; 
+        right: 0 !important; 
+        padding: 4.5rem 1.75rem 3.5rem !important; 
+        text-align: left !important; 
+      }
+      .jd-index-close-btn { 
+        position: fixed !important;
+        top: 1.2rem !important; 
+        right: 1.2rem !important; 
+        z-index: 550 !important;
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      }
+      .jd-top-nav { 
+        justify-content: flex-start !important; 
+        margin-bottom: 2.2rem !important; 
+      }
+      .jd-top-nav-links { 
+        justify-content: flex-start !important; 
+        gap: 0.75rem 1.4rem !important; 
+        font-size: 0.95rem !important; 
+      }
+      .jd-index-list {
+        margin-bottom: 2rem !important;
+      }
+      .jd-index-link { 
+        justify-content: space-between !important; 
+        font-size: 0.95rem !important; 
+        padding: 0.65rem 0 !important; 
+        gap: 1rem !important;
+        border-bottom: 1px solid rgba(26, 26, 24, 0.06) !important; 
+      }
+      .jd-index-link span:first-child {
+        text-align: left !important;
+      }
+      .jd-count {
+        font-size: 0.9rem !important;
+        opacity: 0.6 !important;
+        margin-left: auto !important;
+      }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
-    }
-
-    @media (max-width: 800px) {
       html { background: #000 !important; }
       html, body { position: fixed !important; height: 100dvh !important; overscroll-behavior: none !important; min-height: 0 !important; }
       #jd-main, #jd-slideshow { position: fixed !important; padding-bottom: 0 !important; }
