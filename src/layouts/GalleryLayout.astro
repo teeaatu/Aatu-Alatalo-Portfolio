@@ -41,6 +41,7 @@ const mainDesc = description || (lang === 'fi'
 // Build gallery data JSON from dataset
 const allCats = [
   { key: 'recent', data: recent },
+  { key: 'masters-2026', data: masters },
   { key: 'work1', data: work1 },
   { key: 'work2', data: work2 },
   { key: 'work3', data: work3 },
@@ -54,7 +55,6 @@ const allCats = [
   { key: 'luonto-ja-ymparisto', data: luontoJaYmparisto },
   { key: 'still-life', data: stillLife },
   { key: 'elaimet', data: elaimet },
-  { key: 'masters-2026', data: masters },
   { key: 'kuvaprojekti-ajasta-v365', data: v365 },
 ];
 
@@ -190,6 +190,7 @@ if (currentIndex !== -1) {
 
 const navItems = [
   { fi: 'recent', en: 'recent', label: lang === 'fi' ? 'Uusimmat' : 'Recent' },
+  { fi: 'masters-2026', en: 'masters-2026', label: 'Hasselblad Masters 2026' },
   { fi: 'work1', en: 'work1', label: lang === 'fi' ? 'Työ I' : 'Work I' },
   { fi: 'work2', en: 'work2', label: lang === 'fi' ? 'Työ II' : 'Work II' },
   { fi: 'work3', en: 'work3', label: lang === 'fi' ? 'Työ III' : 'Work III' },
@@ -207,7 +208,6 @@ const catNavItems = [
   { fi: 'elaimet', en: 'animals', label: t.animals[lang] },
 ];
 const projectNavItems = [
-  { fi: 'masters-2026', en: 'masters-2026', label: 'Hasselblad Masters 2026' },
   { fi: 'kuvaprojekti-ajasta-v365', en: 'photo-project-time-v365', label: t.v365[lang] },
 ];
 
