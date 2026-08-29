@@ -994,6 +994,55 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-about-section ul { list-style: none; padding: 0; margin: 0; }
     .jd-about-section li { font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.6rem; max-width: 540px; }
 
+    .jd-about-badge-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 0.5rem 1.1rem 0.5rem 0.5rem;
+      background: #0d0d0d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      text-decoration: none !important;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      max-width: 100%;
+    }
+    .jd-about-badge-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+      opacity: 0.92;
+    }
+    .jd-about-badge-img {
+      width: 64px;
+      height: auto;
+      border-radius: 2px;
+      display: block;
+      flex-shrink: 0;
+    }
+    .jd-about-badge-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .jd-about-badge-title {
+      font-family: var(--jd-font-serif);
+      font-size: 1rem;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+    .jd-about-badge-sub {
+      font-family: var(--jd-font);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #d4af37;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
     #jd-about-close-btn {
       position: fixed !important;
       top: 2rem;
@@ -1398,6 +1447,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
               )}
             </li>
           </ul>
+          <a href="https://www.hasselblad.com/inspiration/masters/2026/" target="_blank" rel="noopener noreferrer" class="jd-about-badge-link" aria-label="Hasselblad Masters 2026 Finalist">
+            <img src="/assets/thumbnails/badge_desktop.webp" alt="Hasselblad Masters 2026 Finalist" class="jd-about-badge-img" loading="lazy" width="128" height="106" />
+            <div class="jd-about-badge-text">
+              <span class="jd-about-badge-title">Hasselblad Masters 2026</span>
+              <span class="jd-about-badge-sub">Project//21 Finalist ↗</span>
+            </div>
+          </a>
         </div>
         <div class="jd-about-section">
           <h2>{lang === 'en' ? 'Exhibitions & Projects' : 'Näyttelyt ja projektit'}</h2>
