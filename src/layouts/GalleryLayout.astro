@@ -94,7 +94,7 @@ for (const item of dataset) {
     const str = String(val);
     if (str.includes(' / ')) {
       const parts = str.split(' / ');
-      return lang === 'fi' ? parts[0]?.trim() : parts.slice(1).join(' / ').trim();
+      return lang === 'fi' ? (parts[1]?.trim() || parts[0]?.trim()) : (parts[0]?.trim() || parts[1]?.trim());
     }
     return str;
   };
@@ -467,6 +467,33 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-diptych-slide { flex-direction: row; gap: 30px; width: 100vw; }
     .jd-diptych-slide img { max-width: calc(50% - 75px) !important; max-height: calc(100vh - 180px) !important; max-height: calc(100dvh - 180px) !important; }
+
+    /* Photo location label above image (Desktop) */
+    .jd-slide-location {
+      position: fixed;
+      top: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--jd-font);
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      color: rgba(26, 26, 24, 0.45);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      text-align: center;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .jd-slide.active .jd-slide-location {
+      opacity: 1;
+    }
+    body.index-is-open .jd-slide-location,
+    body.about-is-open .jd-slide-location,
+    body.thumbs-is-open .jd-slide-location {
+      opacity: 0 !important;
+    }
 
     /* ─── TEXT SLIDES ───────────────────────────────── */
     .jd-text-slide { flex-direction: column; width: 100%; height: 100%; }
@@ -1874,6 +1901,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           picture.appendChild(img);
           slide.appendChild(picture);
         });
+        if (item.place) {
+          const locEl = document.createElement('div');
+          locEl.className = 'jd-slide-location';
+          locEl.textContent = item.place;
+          slide.appendChild(locEl);
+        }
       } else {
         const picture = document.createElement('picture');
         
@@ -1908,6 +1941,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = item.full; };
         picture.appendChild(img);
         slide.appendChild(picture);
+
+        if (item.place) {
+          const locEl = document.createElement('div');
+          locEl.className = 'jd-slide-location';
+          locEl.textContent = item.place;
+          slide.appendChild(locEl);
+        }
       }
       return slide;
     }
