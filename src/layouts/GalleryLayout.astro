@@ -1393,37 +1393,56 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
       #jd-slideshow { top: 80px !important; bottom: 80px !important; height: calc(100dvh - 160px) !important; }
       #jd-counter { 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        height: 32px; 
-        line-height: 32px; 
-        width: max-content; 
-        max-width: calc(100vw - 120px); 
-        padding: 0; 
-        position: fixed; 
-        bottom: 25px; 
-        left: 50%; 
-        right: auto; 
-        transform: translateX(-50%); 
-        text-align: center; 
+        display: flex !important; 
+        flex-direction: column !important;
+        align-items: center !important; 
+        justify-content: center !important; 
+        height: auto !important;
+        min-height: 38px !important;
+        width: auto !important; 
+        max-width: calc(100vw - 100px) !important; 
+        padding: 0 !important; 
+        position: fixed !important; 
+        bottom: 22px !important; 
+        left: 50% !important; 
+        right: auto !important; 
+        transform: translateX(-50%) !important; 
+        text-align: center !important; 
         color: #1a1a18 !important; 
         -webkit-text-fill-color: #1a1a18 !important; 
-        font-family: var(--jd-font); 
-        font-size: 0.94rem; 
-        font-weight: 500; 
-        letter-spacing: 0.03em; 
-        text-transform: none; 
-        z-index: 100000; 
-        pointer-events: auto; 
-        background: none; 
-        backdrop-filter: none; 
-        -webkit-backdrop-filter: none; 
-        border: none; 
-        box-shadow: none; 
-        white-space: nowrap; 
-        overflow: hidden; 
-        text-overflow: ellipsis; 
+        font-family: var(--jd-font) !important; 
+        z-index: 100000 !important; 
+        pointer-events: auto !important; 
+        background: none !important; 
+        backdrop-filter: none !important; 
+        -webkit-backdrop-filter: none !important; 
+        border: none !important; 
+        box-shadow: none !important; 
+      }
+      .jd-counter-top {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 0.92rem !important; 
+        font-weight: 500 !important; 
+        letter-spacing: 0.03em !important; 
+        line-height: 1.3 !important;
+        white-space: nowrap !important;
+      }
+      .jd-counter-place {
+        display: block !important;
+        font-size: 0.76rem !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.03em !important;
+        color: rgba(26, 26, 24, 0.52) !important;
+        -webkit-text-fill-color: rgba(26, 26, 24, 0.52) !important;
+        margin-top: 2px !important;
+        line-height: 1.2 !important;
+        max-width: calc(100vw - 100px) !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        transition: opacity 0.25s ease !important;
       }
       #jd-counter span { white-space: nowrap; }
       #jd-cursor-custom { display: none !important; }
@@ -1510,7 +1529,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   )}
 
   <!-- Mobile counter -->
-  <div id="jd-counter"><span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span></div>
+  <div id="jd-counter">
+    <div class="jd-counter-top">
+      <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span>
+    </div>
+    <div id="jd-counter-place" class="jd-counter-place"></div>
+  </div>
 
 
 
@@ -2020,6 +2044,18 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (document.getElementById('jd-counter-tot')) document.getElementById('jd-counter-tot').textContent = visibleTotal;
       const restSpan = document.getElementById('jd-counter-rest');
       if (restSpan) restSpan.style.opacity = '1';
+
+      const placeEl = document.getElementById('jd-counter-place');
+      if (placeEl) {
+        const curItem = data[current];
+        if (curItem && curItem.place) {
+          placeEl.textContent = curItem.place;
+          placeEl.style.display = 'block';
+        } else {
+          placeEl.textContent = '';
+          placeEl.style.display = 'none';
+        }
+      }
 
       const cursorText = document.getElementById('jd-cursor-text');
       if (cursorText) cursorText.textContent = `${catLabel} — ${n} / ${visibleTotal}`;
