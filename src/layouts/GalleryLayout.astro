@@ -801,8 +801,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-top-nav-links {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 1.8rem;
+    }
+    .jd-top-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-left: auto;
     }
     .jd-top-nav a {
       color: #1a1a18 !important;
@@ -818,7 +823,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-top-nav-social {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.1rem;
     }
     .jd-social-icon-link {
       display: inline-flex;
@@ -1173,19 +1178,28 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
       }
       .jd-top-nav { 
+        display: flex !important;
+        align-items: center !important;
         justify-content: space-between !important; 
         margin-bottom: 2rem !important; 
-        padding-bottom: 1rem !important;
-        gap: 0.8rem !important;
+        padding-bottom: 1.1rem !important;
+        gap: 1rem !important;
       }
       .jd-top-nav-links { 
-        justify-content: flex-start !important; 
+        display: flex !important;
         align-items: center !important;
-        gap: 1.2rem !important; 
+        gap: 1.4rem !important; 
         font-size: 0.95rem !important; 
       }
+      .jd-top-nav-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 1.8rem !important;
+      }
       .jd-top-nav-social {
-        gap: 0.9rem !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 1rem !important;
       }
       .jd-social-icon-link {
         padding: 4px !important;
@@ -1499,25 +1513,27 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
           {lang === 'en' ? 'About' : 'Minusta'}
         </a>
+      </div>
+      <div class="jd-top-nav-actions">
         <a href={switchLangUrl} class="jd-lang-toggle" onclick={`localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}')`}>
           {lang === 'fi' ? 'In English' : 'Suomeksi'}
         </a>
-      </div>
-      <div class="jd-top-nav-social">
-        <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-          </svg>
-        </a>
-        <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener" aria-label="LinkedIn" class="jd-social-icon-link">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-            <rect x="2" y="9" width="4" height="12"></rect>
-            <circle cx="4" cy="4" r="2"></circle>
-          </svg>
-        </a>
+        <div class="jd-top-nav-social">
+          <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener" aria-label="LinkedIn" class="jd-social-icon-link">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
 
