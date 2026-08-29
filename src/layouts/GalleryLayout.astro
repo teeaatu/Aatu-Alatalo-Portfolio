@@ -1081,32 +1081,59 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
       #jd-hint-arrows.show-hints { animation: none; }
-      #jd-hint-arrows { display: flex !important; top: auto; bottom: 25px; transform: none; padding: 0 15px; animation: none; height: 24px; align-items: center; z-index: 100001; }
+      #jd-hint-arrows { 
+        display: flex !important; 
+        position: fixed; 
+        top: auto; 
+        bottom: 25px; 
+        left: 0; 
+        right: 0; 
+        transform: none; 
+        padding: 0 16px; 
+        animation: none; 
+        height: 32px; 
+        align-items: center; 
+        justify-content: space-between; 
+        z-index: 100001; 
+        pointer-events: none; 
+      }
       .jd-hint-arrow { 
-        background: none; backdrop-filter: none; width: auto; height: auto; color: #1a1a18; 
-        animation: pulseArrowMobile 2.5s 3 ease-in-out, mobileShrink 0.5s 7.5s forwards;
-        pointer-events: auto; cursor: pointer; padding: 10px; margin: -10px;
-        transition: transform 0.1s ease, color 0.1s ease;
+        background: none; 
+        backdrop-filter: none; 
+        width: 32px; 
+        height: 32px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        color: #1a1a18; 
+        opacity: 0.95; 
+        animation: mobileArrowFade 3.5s ease-out forwards; 
+        pointer-events: auto; 
+        cursor: pointer; 
+        padding: 0; 
+        margin: 0; 
+        transition: opacity 0.3s ease, transform 0.15s ease; 
       }
-      .jd-hint-arrow:active { transform: scale(0.65) !important; }
-      .jd-hint-arrow.left { animation-delay: 0s, 0s; }
-      .jd-hint-arrow.right { animation-delay: 1.25s, 0s; }
-      .jd-hint-arrow svg { width: 22px; height: 22px; }
-      @keyframes pulseArrowMobile {
-        0%, 100% { opacity: 0.4; transform: scale(0.85); }
-        50% { opacity: 1; transform: scale(1.05); }
+      .jd-hint-arrow:active { transform: scale(0.75) !important; opacity: 1 !important; }
+      .jd-hint-arrow.left { transform: none; }
+      .jd-hint-arrow.right { transform: none; }
+      .jd-hint-arrow svg { width: 22px; height: 22px; stroke-width: 1.6; }
+      
+      @keyframes mobileArrowFade {
+        0% { opacity: 0.95; }
+        35% { opacity: 0.95; }
+        100% { opacity: 0.65; }
       }
-      @keyframes mobileShrink {
-        to { transform: scale(0.85); color: #1a1a18; opacity: 0.75; }
-      }
+
       #jd-slideshow { top: 90px; bottom: 60px; height: calc(100dvh - 150px); }
       #jd-counter { 
         display: flex; 
         align-items: center; 
         justify-content: center; 
-        height: auto; 
+        height: 32px; 
+        line-height: 32px; 
         width: max-content; 
-        max-width: 90vw; 
+        max-width: calc(100vw - 120px); 
         padding: 0; 
         position: fixed; 
         bottom: 25px; 
@@ -1115,10 +1142,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         transform: translateX(-50%); 
         text-align: center; 
         color: #1a1a18 !important; 
-        -webkit-text-fill-color: #1a1a18 !important;
+        -webkit-text-fill-color: #1a1a18 !important; 
         font-family: var(--jd-font); 
         font-size: 0.94rem; 
-        font-weight: 500;
+        font-weight: 500; 
         letter-spacing: 0.03em; 
         text-transform: none; 
         z-index: 100000; 
@@ -1129,8 +1156,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         border: none; 
         box-shadow: none; 
         white-space: nowrap; 
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: hidden; 
+        text-overflow: ellipsis; 
       }
       #jd-counter span { white-space: nowrap; }
       #jd-cursor-custom { display: none !important; }
