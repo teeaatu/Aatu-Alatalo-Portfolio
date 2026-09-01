@@ -462,16 +462,16 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-slide picture { display: contents; }
     .jd-slide img {
       max-width: calc(100% - 120px);
-      max-height: calc(100vh - 180px); max-height: calc(100dvh - 180px);
+      max-height: calc(100vh - 148px); max-height: calc(100dvh - 148px);
       width: auto; height: auto; object-fit: contain; display: block;
     }
     .jd-diptych-slide { flex-direction: row; gap: 30px; width: 100vw; }
-    .jd-diptych-slide img { max-width: calc(50% - 75px) !important; max-height: calc(100vh - 180px) !important; max-height: calc(100dvh - 180px) !important; }
+    .jd-diptych-slide img { max-width: calc(50% - 75px) !important; max-height: calc(100vh - 148px) !important; max-height: calc(100dvh - 148px) !important; }
 
     /* Photo location label below image (Desktop) */
     .jd-slide-location {
       position: fixed;
-      bottom: 34px;
+      bottom: 28px;
       top: auto;
       left: 50%;
       transform: translateX(-50%);
@@ -791,31 +791,64 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     /* Index panel inner styles */
-    .jd-index-close-btn {
-      position: absolute;
-      top: 2rem;
-      right: 2rem;
-      background: none;
-      border: none;
-      color: rgba(26, 26, 24, 0.45);
-      cursor: pointer;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border-radius: 50%;
-      transition: color 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
-      z-index: 10;
+    /* ─── FLOATING CLOSE BUTTON (THUMB ZONE - VALIKKO & KUVASTO) ─── */
+    .jd-floating-close-btn {
+      position: fixed !important;
+      bottom: calc(22px + env(safe-area-inset-bottom, 0px)) !important;
+      right: 20px !important;
+      top: auto !important;
+      left: auto !important;
+      width: 48px !important;
+      height: 48px !important;
+      border-radius: 50% !important;
+      background: rgba(255, 255, 255, 0.94) !important;
+      backdrop-filter: blur(16px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+      border: 1px solid rgba(26, 26, 24, 0.1) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+      color: #1a1a18 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      z-index: 100002 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(0.85);
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.25s ease,
+                  background-color 0.2s ease,
+                  box-shadow 0.2s ease !important;
+      -webkit-tap-highlight-color: transparent !important;
     }
-    .jd-index-close-btn:hover {
-      color: rgba(26, 26, 24, 1);
-      transform: rotate(90deg) scale(1.1);
-      background-color: rgba(26, 26, 24, 0.04);
+    body.index-is-open #jd-index-close-btn,
+    #jd-index-panel.is-open #jd-index-close-btn {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: scale(1) !important;
     }
-    .jd-index-close-btn:active {
-      transform: rotate(90deg) scale(0.92);
+    body.thumbs-is-open #jd-thumbs-close-btn,
+    #jd-thumbs-panel.is-open #jd-thumbs-close-btn {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: scale(1) !important;
+    }
+    .jd-floating-close-btn:hover {
+      background: #ffffff !important;
+      color: #000000 !important;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16) !important;
+      transform: scale(1.06) !important;
+    }
+    .jd-floating-close-btn:active {
+      transform: scale(0.92) !important;
+      opacity: 0.65 !important;
+      transition: transform 0.05s ease, opacity 0.05s ease !important;
     }
     .jd-top-nav {
       display: flex !important;
@@ -1208,18 +1241,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         width: 100% !important; 
         left: 0 !important; 
         right: 0 !important; 
-        padding: 4.5rem 1.75rem 3.5rem !important; 
+        padding: 4.5rem 1.75rem calc(84px + env(safe-area-inset-bottom, 0px)) !important; 
         text-align: left !important; 
-      }
-      .jd-index-close-btn { 
-        position: fixed !important;
-        top: 1.2rem !important; 
-        right: 1.2rem !important; 
-        z-index: 550 !important;
-        background: rgba(255, 255, 255, 0.85) !important;
-        backdrop-filter: blur(8px) !important;
-        -webkit-backdrop-filter: blur(8px) !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
       }
       .jd-top-nav { 
         display: flex !important;
@@ -1314,7 +1337,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-slide img, .jd-image-wrap img { 
         width: auto !important; 
         height: auto !important; 
-        max-width: calc(100% - 28px) !important; 
+        max-width: calc(100% - 20px) !important; 
         max-height: 100% !important; 
         object-fit: contain !important; 
       }
@@ -1394,7 +1417,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         100% { opacity: 0.65; }
       }
 
-      #jd-slideshow { top: 80px !important; bottom: 80px !important; height: calc(100dvh - 160px) !important; }
+      #jd-slideshow { top: 80px !important; bottom: 74px !important; height: calc(100dvh - 154px) !important; }
       #jd-counter { 
         display: flex !important; 
         flex-direction: column !important;
@@ -1439,6 +1462,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         letter-spacing: 0.03em !important; 
         line-height: 1.3 !important;
         white-space: nowrap !important;
+      }
+      .jd-counter-chevron {
+        display: inline-block !important;
+        margin-left: 5px !important;
+        vertical-align: middle !important;
+        opacity: 0.45 !important;
+        position: relative !important;
+        top: -1px !important;
+        transition: transform 0.2s ease, opacity 0.2s ease !important;
+      }
+      #jd-counter:active .jd-counter-chevron {
+        transform: translateY(1.5px) !important;
+        opacity: 0.8 !important;
       }
       .jd-counter-place {
         display: block !important;
@@ -1539,31 +1575,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         color: #1a1a18;
         font-weight: 500;
       }
-      .jd-thumbs-close-top-btn {
-        background: none;
-        border: none;
-        color: rgba(26, 26, 24, 0.45);
-        cursor: pointer;
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        border-radius: 50%;
-        transition: color 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .jd-thumbs-close-top-btn:hover {
-        color: rgba(26, 26, 24, 1);
-        transform: rotate(90deg) scale(1.1);
-        background-color: rgba(26, 26, 24, 0.04);
-      }
-      .jd-thumbs-close-top-btn:active {
-        transform: rotate(90deg) scale(0.92);
+      body.thumbs-is-open .jd-filter-dropdown-container {
+        display: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
       }
       #jd-thumbs-panel {
         padding-top: calc(52px + env(safe-area-inset-top, 0px) + 2rem) !important;
+        padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
       }
     }
   </style>
@@ -1612,7 +1631,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <!-- Mobile counter -->
   <div id="jd-counter" role="button" tabindex="0" aria-label={lang === 'fi' ? 'Avaa valikko' : 'Open menu'}>
     <div class="jd-counter-top">
-      <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span>
+      <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> - <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span><svg class="jd-counter-chevron" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
     </div>
     <div id="jd-counter-place" class="jd-counter-place"></div>
   </div>
@@ -1641,12 +1660,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <!-- Index panel -->
   <div id="jd-index-overlay"></div>
   <nav id="jd-index-panel">
-    <button id="jd-index-close-btn" class="jd-index-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'}>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
 
     <div class="jd-top-nav">
       <div class="jd-top-nav-links">
@@ -1707,9 +1720,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         </li>
       ))}
     </ul>
-  </nav>
 
-  <div id="jd-index-overlay"></div>
+    <!-- Floating close button for Valikko (Index) -->
+    <button id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
 
   <!-- About panel -->
   <div id="jd-about-panel">
@@ -1809,12 +1828,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <div id="jd-thumbs-header" class="jd-thumbs-header" aria-hidden="true">
     <div class="jd-thumbs-header-inner">
       <span class="jd-thumbs-header-title">{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</span>
-      <button id="jd-thumbs-close-top" class="jd-thumbs-close-top-btn" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
     </div>
   </div>
 
@@ -1880,6 +1893,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       })}
     </div>
   </div>
+
+  <!-- Floating close button for Kuvasto (Thumbs) -->
+  <button id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'}>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
 
   <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
@@ -2460,6 +2481,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
     document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
+    document.getElementById('jd-thumbs-close-btn')?.addEventListener('click', closeThumbsView);
     document.getElementById('jd-thumbs-close-top')?.addEventListener('click', closeThumbsView);
 
     /* Index button */
