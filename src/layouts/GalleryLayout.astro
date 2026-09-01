@@ -1401,10 +1401,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         align-items: center !important; 
         justify-content: center !important; 
         height: auto !important;
-        min-height: 38px !important;
+        min-height: 40px !important;
         width: auto !important; 
         max-width: calc(100vw - 100px) !important; 
-        padding: 0 !important; 
+        padding: 4px 14px !important; 
         position: fixed !important; 
         bottom: 22px !important; 
         left: 50% !important; 
@@ -1421,6 +1421,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         -webkit-backdrop-filter: none !important; 
         border: none !important; 
         box-shadow: none !important; 
+        cursor: pointer !important;
+        -webkit-tap-highlight-color: transparent !important;
+        user-select: none !important;
+        transition: opacity 0.2s ease, transform 0.15s ease !important;
+      }
+      #jd-counter:active {
+        opacity: 0.55 !important;
+        transform: translateX(-50%) scale(0.97) !important;
       }
       .jd-counter-top {
         display: inline-flex !important;
@@ -1602,7 +1610,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   )}
 
   <!-- Mobile counter -->
-  <div id="jd-counter">
+  <div id="jd-counter" role="button" tabindex="0" aria-label={lang === 'fi' ? 'Avaa valikko' : 'Open menu'}>
     <div class="jd-counter-top">
       <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> — <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span>
     </div>
@@ -2460,6 +2468,22 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (typeof window.openIndexPanel === 'function') {
         const panel = document.getElementById('jd-index-panel');
         panel?.classList.contains('is-open') ? window.closeIndexPanel() : window.openIndexPanel();
+      }
+    });
+
+    /* Mobile counter click/tap to open menu */
+    const counterEl = document.getElementById('jd-counter');
+    counterEl?.addEventListener('click', e => {
+      e.stopPropagation();
+      if (typeof window.openIndexPanel === 'function') {
+        const panel = document.getElementById('jd-index-panel');
+        panel?.classList.contains('is-open') ? window.closeIndexPanel() : window.openIndexPanel();
+      }
+    });
+    counterEl?.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
       }
     });
 
