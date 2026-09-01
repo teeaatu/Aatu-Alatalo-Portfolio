@@ -1006,6 +1006,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0 !important;
       visibility: hidden !important;
     }
+    .jd-thumbs-header { display: none; }
 
     /* ─── FILTER ─────────────────────────────────────── */
     .jd-filter-dropdown-container { 
@@ -1486,6 +1487,72 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-about-bottom-nav { display: none !important; }
       .jd-about-content { flex-direction: column; padding-top: 4.5rem; gap: 2.5rem; }
       .jd-about-text h1 { font-size: 2.2rem; }
+
+      body.thumbs-is-open #jd-bottom-nav { display: none !important; }
+      .jd-thumbs-header {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: calc(52px + env(safe-area-inset-top, 0px));
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-left: 1.5rem;
+        padding-right: 1rem;
+        box-sizing: border-box;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border-bottom: 1px solid rgba(26, 26, 24, 0.07);
+        z-index: 350;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+      }
+      body.thumbs-is-open .jd-thumbs-header {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+      .jd-thumbs-header-inner {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .jd-thumbs-header-title {
+        font-family: var(--jd-font);
+        font-size: 1.02rem;
+        letter-spacing: 0.03em;
+        color: #1a1a18;
+        font-weight: 500;
+      }
+      .jd-thumbs-close-top-btn {
+        background: none;
+        border: none;
+        color: #1a1a18;
+        cursor: pointer;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border-radius: 50%;
+        transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .jd-thumbs-close-top-btn:active {
+        transform: scale(0.92);
+        background-color: rgba(26, 26, 24, 0.05);
+      }
+      #jd-thumbs-panel {
+        padding-top: calc(52px + env(safe-area-inset-top, 0px) + 2rem) !important;
+      }
     }
   </style>
 </head>
@@ -1725,6 +1792,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     <div class="jd-curtain-primary"></div>
   </div>
   <div class="jd-shutter-title">{catLabel}</div>
+
+  <!-- Mobile thumbs top bar -->
+  <div id="jd-thumbs-header" class="jd-thumbs-header" aria-hidden="true">
+    <div class="jd-thumbs-header-inner">
+      <span class="jd-thumbs-header-title">{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</span>
+      <button id="jd-thumbs-close-top" class="jd-thumbs-close-top-btn" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
 
   <!-- Global thumbs panel (all categories) -->
   <div id="jd-thumbs-panel">
@@ -2299,7 +2379,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         }
         
         const target = e.target;
-        const isNav = target.closest('#jd-bottom-nav') || target.closest('#jd-index-panel') || target.closest('#jd-thumbs-close');
+        const isNav = target.closest('#jd-bottom-nav') || target.closest('#jd-index-panel') || target.closest('#jd-thumbs-close') || target.closest('#jd-thumbs-header');
         const nearBottom = e.clientY > window.innerHeight - 100;
         
         if (isNav || nearBottom) { 
@@ -2344,6 +2424,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
       const hintArrows = document.getElementById('jd-hint-arrows');
       if (hintArrows) hintArrows.style.opacity = '0';
+      const thumbsHeader = document.getElementById('jd-thumbs-header');
+      if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'false');
     }
     
     function closeThumbsView() {
@@ -2361,9 +2443,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       
       const hintArrows = document.getElementById('jd-hint-arrows');
       if (hintArrows) hintArrows.style.opacity = '1';
+      const thumbsHeader = document.getElementById('jd-thumbs-header');
+      if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'true');
     }
     document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
     document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
+    document.getElementById('jd-thumbs-close-top')?.addEventListener('click', closeThumbsView);
 
     /* Index button */
     document.getElementById('jd-index-btn-bottom')?.addEventListener('click', e => {
@@ -2574,7 +2659,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     indexOverlay?.addEventListener('click', () => window.closeIndexPanel());
     jdMain?.addEventListener('click', e => { if (e.target.closest('#jd-bottom-nav')) return; if (document.body.classList.contains('index-is-open')) window.closeIndexPanel(); });
     document.querySelectorAll('#jd-index-panel .jd-index-link.active').forEach(link => { link.addEventListener('click', e => { e.preventDefault(); window.closeIndexPanel(); }); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); closeThumbsView(); } });
   });
   </script>
 
