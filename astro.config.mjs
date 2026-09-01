@@ -26,6 +26,9 @@ export default defineConfig({
   prefetch: {
     defaultStrategy: 'hover'
   },
+  server: {
+    host: true
+  },
   devToolbar: { enabled: false },
   vite: {
     plugins: [yaml(), creativeDevPlugin()]
