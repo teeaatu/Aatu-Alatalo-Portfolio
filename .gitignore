@@ -51,3 +51,6 @@ docs/
 # LLM-syötteet
 llms.txt
 llms-full.txt
+
+# Paikalliset aikajanat ja infografiikat
+aikajana_kehityshistoria.*
