@@ -3,8 +3,6 @@ import t from '../data/t.yml';
 import recent from '../data/recent.yml';
 import work1 from '../data/work1.yml';
 import work2 from '../data/work2.yml';
-import work3 from '../data/work3.yml';
-import work4 from '../data/work4.yml';
 import tapahtumat from '../data/tapahtumat.yml';
 import variJaMuoto from '../data/vari-ja-muoto.yml';
 import raw from '../data/raw.yml';
@@ -44,8 +42,6 @@ const allCats = [
   { key: 'masters-2026', data: masters },
   { key: 'work1', data: work1 },
   { key: 'work2', data: work2 },
-  { key: 'work3', data: work3 },
-  { key: 'work4', data: work4 },
   { key: 'tapahtumat', data: tapahtumat },
   { key: 'vari-ja-muoto', data: variJaMuoto },
   { key: 'raw', data: raw },
@@ -100,7 +96,7 @@ for (const item of dataset) {
   };
 
   if (item.tyyppi === 'teksti') {
-    if (categorySlug !== 'work4') continue;
+    if (categorySlug !== 'work1') continue;
     galleryData.push({
       i: jdIdx++, type: 'text',
       title: parseField(titleVal),
@@ -138,8 +134,6 @@ const catLabels: Record<string, string> = {
   recent: lang === 'fi' ? 'Uusimmat' : 'Recent',
   work1: lang === 'fi' ? 'Työ I' : 'Work I',
   work2: lang === 'fi' ? 'Työ II' : 'Work II',
-  work3: lang === 'fi' ? 'Työ III' : 'Work III',
-  work4: lang === 'fi' ? 'Työ IV' : 'Work IV',
   'masters-2026': 'Hasselblad Masters 2026',
   'kuvaprojekti-ajasta-v365': t.v365[lang],
   'tapahtumat': t.events[lang],
@@ -193,8 +187,6 @@ const navItems = [
   { fi: 'masters-2026', en: 'masters-2026', label: 'Hasselblad Masters 2026' },
   { fi: 'work1', en: 'work1', label: lang === 'fi' ? 'Työ I' : 'Work I' },
   { fi: 'work2', en: 'work2', label: lang === 'fi' ? 'Työ II' : 'Work II' },
-  { fi: 'work3', en: 'work3', label: lang === 'fi' ? 'Työ III' : 'Work III' },
-  { fi: 'work4', en: 'work4', label: lang === 'fi' ? 'Työ IV' : 'Work IV' },
 ];
 const catNavItems = [
   { fi: 'tapahtumat', en: 'events', label: t.events[lang] },
@@ -1833,7 +1825,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           <div class="jd-thumbs-section" id={`jd-thumbs-section-${key}`}>
             <div class="jd-thumbs-section-title">{catLabels[key] || key}</div>
             <div class="jd-thumbs-grid">
-              {data.filter((item: any) => key === 'work4' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
+              {data.filter((item: any) => key === 'work1' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
                 const itemKey = item.kuva || (item.layout === 'diptych' && item.images ? item.images.map((i: any) => i.kuva).join('|') : (item.otsikko ? `text_${item.otsikko}` : `item_${idx}`));
                 if (item.tyyppi === 'teksti') {
                   const titleVal = item.otsikko || '';

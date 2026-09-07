@@ -1,11 +1,3 @@
 ---
-import GalleryLayout from '../../layouts/GalleryLayout.astro';
-import dataset from '../../data/work4.yml';
+return Astro.redirect('/en/work1', 301);
 ---
-<GalleryLayout 
-  lang="en" 
-  dataset={dataset} 
-  categoryTitle="Work IV" 
-  activeNav="work4" categorySlug="work4" 
-  translationUrl="/work4" 
-/>

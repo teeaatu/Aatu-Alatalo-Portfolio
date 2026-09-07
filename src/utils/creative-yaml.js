@@ -10,8 +10,6 @@ const SLUG_TO_FILE = {
   'recent': 'recent.yml',
   'work1': 'work1.yml',
   'work2': 'work2.yml',
-  'work3': 'work3.yml',
-  'work4': 'work4.yml',
   'masters-2026': 'masters-2026.yml',
   'kuvaprojekti-ajasta-v365': 'kuvaprojekti_ajasta_v365.yml',
   'tapahtumat': 'tapahtumat.yml',
