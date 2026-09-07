@@ -651,30 +651,40 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-shutter-title {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      color: #1a1a18; z-index: 99999999;
-      font-family: var(--jd-font); font-size: 1.5rem; letter-spacing: 0.03em; text-transform: none;
-      opacity: 0; pointer-events: none;
+      color: white; mix-blend-mode: difference; z-index: 99999999;
+      font-family: var(--jd-font); font-size: 2rem; letter-spacing: 0.02em; text-transform: none;
+      opacity: 1; pointer-events: none;
       white-space: nowrap;
-      transition: opacity 0.25s ease;
     }
-    body.show-shutter-title .jd-shutter-title { opacity: 1; }
-    body.is-leaving .jd-shutter-title { opacity: 1; }
-    body.is-entering-ready .jd-shutter-title { opacity: 0; transition: opacity 0.3s ease; }
+    @keyframes titleEnter {
+      0% { top: 53%; opacity: 0; }
+      100% { top: 50%; opacity: 1; }
+    }
+    .trigger-title-enter {
+      animation: titleEnter 0.6s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    body.is-entering-ready .jd-shutter-title { 
+      top: var(--target-y, -10%);
+      left: var(--target-x, 50%);
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transition: top 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
+                  left 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
+                  font-size 1.2s 1.6s cubic-bezier(0.16,1,0.3,1),
+                  letter-spacing 1.2s 1.6s cubic-bezier(0.16,1,0.3,1),
+                  opacity 0.6s 2.2s ease;
+    }
+    @media (min-width: 769px) {
+      body.is-entering-ready .jd-shutter-title {
+        letter-spacing: 0.02em;
+      }
+    }
     body.hide-shutter-title .jd-shutter-title { opacity: 0 !important; transition: none !important; }
-
-    /* Verhon tilat */
-    body.is-entering-ready .jd-curtain-primary { 
-      transform: translateY(-100%); 
-      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); 
-    }
-    body.prepare-leave .jd-curtain-primary { 
-      transform: translateY(100%); 
-      transition: none !important; 
-    }
-    body.is-leaving .jd-curtain-primary { 
-      transform: translateY(0); 
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); 
-    }
+    body.is-leaving .jd-shutter-title, body.prepare-leave .jd-shutter-title { transition: none !important; }
+    body.is-entering-ready .jd-curtain-primary { transition: transform 1800ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(-150vh); }
+    body.prepare-leave .jd-curtain-primary { transition: none !important; transform: translateY(150vh) !important; }
+    body.is-leaving .jd-curtain-primary { transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
 
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-overlay {
@@ -2192,7 +2202,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           }
         };
         if (shutter) shutter.addEventListener('transitionend', onDone, { once: true });
-        setTimeout(onDone, 400);
+        setTimeout(onDone, 1500);
       });
     }
 
@@ -2386,6 +2396,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       document.addEventListener('mousemove', e => {
         sessionStorage.setItem('jdLastMouseX', e.clientX);
         sessionStorage.setItem('jdLastMouseY', e.clientY);
+        if (window.jdCursorFrozen) return;
 
         if (document.body.classList.contains('index-is-open') || document.body.classList.contains('about-is-open') || thumbsOpen) { 
           if (cursor) cursor.style.opacity = '0'; 
@@ -2493,19 +2504,56 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* Page entrance animation */
     function startPageOpen() {
-      requestAnimationFrame(() => {
+      if (shutterTitle) {
+        const isMobile = window.innerWidth <= 800;
+        if (!isMobile) {
+          const lastX = sessionStorage.getItem('jdLastMouseX');
+          const lastY = sessionStorage.getItem('jdLastMouseY');
+          if (lastX && lastY && cursor) { 
+            cursor.style.left = lastX + 'px'; cursor.style.top = lastY + 'px'; 
+            cursor.style.opacity = '0'; document.body.style.cursor = 'none'; 
+            shutterTitle.style.setProperty('--target-x', lastX + 'px');
+            shutterTitle.style.setProperty('--target-y', lastY + 'px');
+            window.jdCursorFrozen = true;
+            setTimeout(() => {
+              window.jdCursorFrozen = false;
+              cursor.style.opacity = '1';
+            }, 2800);
+          }
+        } else {
+          const catSpan = document.getElementById('jd-counter-cat');
+          const counterRest = document.getElementById('jd-counter-rest');
+          if (catSpan && counterRest) {
+            const rect = catSpan.getBoundingClientRect();
+            if (rect.width > 0) {
+              const targetX = rect.left + rect.width / 2;
+              const targetY = rect.top + rect.height / 2;
+              shutterTitle.style.setProperty('--target-x', targetX + 'px');
+              shutterTitle.style.setProperty('--target-y', targetY + 'px');
+            } else {
+              shutterTitle.style.setProperty('--target-x', '50%');
+              shutterTitle.style.setProperty('--target-y', 'calc(100dvh - 59px)');
+            }
+            setTimeout(() => {
+              catSpan.style.transition = 'opacity 0.6s ease';
+              catSpan.style.opacity = '1';
+              counterRest.style.transition = 'opacity 0.6s ease';
+              counterRest.style.opacity = '1';
+            }, 2200);
+          }
+        }
+      }
+      setTimeout(() => {
         document.body.classList.add('is-entering-ready');
-        setTimeout(() => {
-          document.body.classList.remove('show-shutter-title');
-        }, 300);
         if (!sessionStorage.getItem('jd-hints-seen')) {
           const hintArrows = document.getElementById('jd-hint-arrows');
           if (hintArrows) hintArrows.classList.add('show-hints');
           sessionStorage.setItem('jd-hints-seen', 'true');
         }
-      });
+      }, 50);
     }
 
+    document.body.classList.add('show-shutter-title');
     let hasOpened = false;
     function tryOpen() {
       if (!hasOpened) {
@@ -2514,13 +2562,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     }
 
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-      tryOpen();
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(tryOpen, 100);
     } else {
-      document.addEventListener('DOMContentLoaded', tryOpen);
+      document.addEventListener('DOMContentLoaded', () => setTimeout(tryOpen, 100));
     }
     window.addEventListener('load', tryOpen);
-    setTimeout(tryOpen, 400);
+    setTimeout(tryOpen, 1000);
 
     /* Index panel open/close (global) */
     const indexPanel = document.getElementById('jd-index-panel');
