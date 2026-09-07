@@ -103,25 +103,35 @@ def process_and_upload(file_path: Path, s3=None):
         best_quality = 94
         best_size_kb = 0
         
-        # Etsitään optimaalinen laatu väliltä 96 -> 76
-        for q in range(96, 74, -2):
+        # Etsitään optimaalinen laatu väliltä 94 -> 70
+        last_buf_data = None
+        last_q = 75
+        last_kb = 0
+        for q in range(94, 68, -2):
             buf = io.BytesIO()
             sharpened_img.save(buf, format='WEBP', quality=q, method=6)
             size_kb = len(buf.getvalue()) / 1024
+            last_buf_data = buf.getvalue()
+            last_q = q
+            last_kb = size_kb
             
-            # Jos koko mahtuu max 500 KB rajaan
-            if size_kb <= 500:
+            # Jos koko mahtuu 550 KB rajaan
+            if size_kb <= 550:
                 best_data = buf.getvalue()
                 best_quality = q
                 best_size_kb = size_kb
-                # Jos koko on vähintään 200 KB tai ollaan jo huippulaadussa, tämä on paras mahdollinen laatu
-                if size_kb >= 200 or q >= 94:
+                if size_kb >= 200 or q >= 90:
                     break
                     
-        if best_data:
-            with open(master_webp_path, 'wb') as f_out:
-                f_out.write(best_data)
-            print(f"  ✓ Paikallinen WebP luotu: {master_webp_path.name} ({width}x{height}px, {int(best_size_kb)} KB, laatu {best_quality})")
+        # Varalogiikka: jos kuva on poikkeuksellisen yksityiskohtainen eikä alita 550 KB laadulla 70, käytetään parasta saavutettua
+        if best_data is None:
+            best_data = last_buf_data
+            best_quality = last_q
+            best_size_kb = last_kb
+
+        with open(master_webp_path, 'wb') as f_out:
+            f_out.write(best_data)
+        print(f"  ✓ Paikallinen WebP luotu: {master_webp_path.name} ({width}x{height}px, {int(best_size_kb)} KB, laatu {best_quality})")
 
         # 4. Generoidaan pikkukuvat muistiin
         # Desktop thumb (max 1600px, korkealuokkainen laatu 88 ilman porrastumista)
