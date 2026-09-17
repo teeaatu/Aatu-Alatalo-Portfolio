@@ -824,6 +824,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       pointer-events: auto !important;
       transform: scale(1) !important;
     }
+    @media (min-width: 801px) {
+      #jd-index-close-btn,
+      #jd-thumbs-close-btn,
+      #jd-about-close-btn {
+        top: 24px !important;
+        right: 24px !important;
+        bottom: auto !important;
+        left: auto !important;
+      }
+      body.thumbs-is-open #jd-bottom-nav {
+        display: none !important;
+      }
+    }
     body.thumbs-is-open #jd-thumbs-close-btn,
     #jd-thumbs-panel.is-open #jd-thumbs-close-btn {
       opacity: 1 !important;
