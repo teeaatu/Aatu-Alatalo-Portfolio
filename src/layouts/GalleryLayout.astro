@@ -439,6 +439,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-main {
       position: absolute !important;
       inset: 0 !important;
+      background: var(--jd-bg);
     }
 
     /* ─── SLIDESHOW ─────────────────────────────────── */
@@ -646,7 +647,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-curtain-primary {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 9999998; background: #080807; transform: translateY(0);
+      z-index: 9999998; background: var(--jd-bg); transform: translateY(0);
       will-change: transform; pointer-events: none;
     }
     .jd-shutter-title {
@@ -1313,9 +1314,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
-      html { background: #000 !important; }
+      html, body { background: #080807 !important; }
       html, body { position: fixed !important; height: 100dvh !important; overscroll-behavior: none !important; min-height: 0 !important; }
-      #jd-main, #jd-slideshow { position: fixed !important; padding-bottom: 0 !important; }
+      #jd-main, #jd-slideshow { position: fixed !important; padding-bottom: 0 !important; background: var(--jd-bg) !important; }
       .jd-slide { padding-bottom: 0 !important; height: 100% !important; max-height: 100% !important; }
       .jd-slide-location { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
       body.index-is-open #jd-counter, 
