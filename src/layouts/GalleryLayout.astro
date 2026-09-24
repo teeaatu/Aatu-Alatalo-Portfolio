@@ -230,7 +230,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#080807">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="color-scheme" content="light">
   <meta name="google" content="notranslate">
   <meta name="format-detection" content="telephone=no">
@@ -254,6 +255,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         }
       } catch (e) {}
     })();
+
+    // Splash screen session guard: prevent flash on repeated page navigation
+    try {
+      if (sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(window.location.search).has('splash')) {
+        document.documentElement.classList.add('jd-no-splash');
+      }
+    } catch (e) {}
   </script>
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
@@ -1581,9 +1589,129 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
       }
     }
+
+    /* ─── CINEMATIC EDITORIAL SPLASH SCREEN ────────────── */
+    .jd-no-splash #jd-splash {
+      display: none !important;
+    }
+    /* Estetään kategoriaotsikon (Uusimmat) ja vanhan verhon näkyminen splashin päällä */
+    html:not(.jd-no-splash) .jd-shutter-title,
+    html:not(.jd-no-splash) #jd-shutter-container {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    .jd-splash-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw; height: 100vh;
+      background: #080807;
+      z-index: 2147483647 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      transition: transform 0.68s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .jd-splash-screen.jd-splash-dismissed {
+      transform: translate3d(0, -100%, 0) !important;
+      pointer-events: none !important;
+    }
+    .jd-splash-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 1.5rem;
+      box-sizing: border-box;
+      will-change: transform, opacity;
+      transform: translate3d(0, 0, 0);
+      transition: transform 0.62s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.4s ease;
+    }
+    /* Teksti ampaisee ensin ylös */
+    .jd-splash-screen.jd-splash-text-exit .jd-splash-inner {
+      transform: translate3d(0, -115vh, 0) !important;
+      opacity: 0.15 !important;
+    }
+    .jd-splash-title-wrap {
+      overflow: hidden;
+      padding: 0.15em 0;
+      display: flex;
+      justify-content: center;
+    }
+    .jd-splash-title {
+      margin: 0;
+      padding: 0;
+      font-family: var(--jd-font);
+      font-size: clamp(2.1rem, 5.8vw, 4.8rem);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      line-height: 1.1;
+      color: #f7f7f5;
+      text-transform: uppercase;
+      white-space: nowrap;
+      will-change: transform, opacity, filter;
+      opacity: 0;
+      filter: blur(12px);
+      transform: translate3d(0, 20px, 0);
+      animation: jdSplashFocusIn 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s forwards;
+    }
+    .jd-splash-subtitle-wrap {
+      overflow: hidden;
+      margin-top: 1.2rem;
+      padding: 0.15em 0;
+    }
+    .jd-splash-subtitle {
+      display: inline-block;
+      font-family: var(--jd-font);
+      font-size: clamp(0.7rem, 1.3vw, 0.95rem);
+      font-weight: 400;
+      letter-spacing: 0.42em;
+      color: rgba(247, 247, 245, 0.52);
+      text-transform: uppercase;
+      will-change: transform, opacity, filter;
+      opacity: 0;
+      filter: blur(8px);
+      transform: translate3d(0, 14px, 0);
+      animation: jdSplashFocusIn 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+    }
+
+    @keyframes jdSplashFocusIn {
+      0% {
+        opacity: 0;
+        filter: blur(12px);
+        transform: translate3d(0, 20px, 0);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: translate3d(0, 0, 0);
+      }
+    }
   </style>
 </head>
 <body ontouchstart="">
+
+  <!-- Cinematic Editorial Splash Screen -->
+  <div id="jd-splash" class="jd-splash-screen" aria-hidden="true">
+    <div class="jd-splash-inner">
+      <div class="jd-splash-title-wrap">
+        <h1 class="jd-splash-title">AATU ALATALO</h1>
+      </div>
+      <div class="jd-splash-subtitle-wrap">
+        <span class="jd-splash-subtitle">PHOTOGRAPHER</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Main slideshow area -->
   <main id="jd-main">
@@ -1902,6 +2030,49 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
+    // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
+    const splashEl = document.getElementById('jd-splash');
+    if (splashEl) {
+      const isSplashSkipped = document.documentElement.classList.contains('jd-no-splash');
+      if (isSplashSkipped) {
+        splashEl.remove();
+      } else {
+        try { sessionStorage.setItem('jd_splash_seen', 'true'); } catch (e) {}
+
+        let splashDismissed = false;
+        function dismissSplash() {
+          if (splashDismissed) return;
+          splashDismissed = true;
+
+          // 1. Teksti ampaisee heti ylös ruudun yli
+          splashEl.classList.add('jd-splash-text-exit');
+
+          // 2. Musta verho seuraa 150ms perässä ylös
+          setTimeout(function() {
+            splashEl.classList.add('jd-splash-dismissed');
+          }, 150);
+
+          // 3. Poistetaan elementti kun verho on ylhäällä
+          setTimeout(function() {
+            splashEl.remove();
+          }, 850);
+        }
+
+        // Automatic reveal: teksti ampaisee ylös 2.4s kohdalla
+        const autoTimer = setTimeout(dismissSplash, 2400);
+
+        // Instant dismiss on click, touch or keydown
+        splashEl.addEventListener('click', function() {
+          clearTimeout(autoTimer);
+          dismissSplash();
+        });
+        window.addEventListener('keydown', function() {
+          clearTimeout(autoTimer);
+          dismissSplash();
+        }, { once: true });
+      }
+    }
+
     const metaEl = document.getElementById('jd-meta');
     const meta = metaEl ? JSON.parse(metaEl.textContent) : {};
     const { catLabel, categorySlug, isEventsCategory } = meta;
