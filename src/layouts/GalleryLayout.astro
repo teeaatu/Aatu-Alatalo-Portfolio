@@ -1697,10 +1697,53 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         filter: blur(0px);
         transform: translate3d(0, 0, 0);
       }
+    @media (max-width: 768px) {
+      #jd-bar-keeper {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #080807;
+        z-index: 2147483646;
+        pointer-events: none;
+        opacity: 1;
+        transition: opacity 0.18s ease-out;
+      }
+      .jd-safari-anchor {
+        position: fixed;
+        left: 0; right: 0;
+        height: 1px;
+        background: #080807;
+        z-index: 99999999;
+        pointer-events: none;
+      }
+      .jd-safari-top { top: 0; }
+      .jd-safari-bottom { bottom: 0; }
+    }
+    @media (min-width: 769px) {
+      #jd-bar-keeper, .jd-safari-anchor {
+        display: none !important;
+      }
     }
   </style>
 </head>
 <body ontouchstart="">
+
+  <!-- Safari mobile status bar & bottom bar keeper -->
+  <div id="jd-bar-keeper" aria-hidden="true"></div>
+  <div class="jd-safari-anchor jd-safari-top" aria-hidden="true"></div>
+  <div class="jd-safari-anchor jd-safari-bottom" aria-hidden="true"></div>
+  <script is:inline>
+    (function() {
+      requestAnimationFrame(function() {
+        var k = document.getElementById('jd-bar-keeper');
+        if (k) {
+          k.style.opacity = '0';
+          setTimeout(function() { if (k && k.parentNode) k.parentNode.removeChild(k); }, 220);
+        }
+      });
+    })();
+  </script>
 
   <!-- Cinematic Editorial Splash Screen -->
   <div id="jd-splash" class="jd-splash-screen" aria-hidden="true">
