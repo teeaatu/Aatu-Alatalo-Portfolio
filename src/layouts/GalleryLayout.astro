@@ -229,7 +229,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 <html lang={lang} translate="no" class="notranslate">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#080807">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="color-scheme" content="light">
@@ -646,7 +646,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-curtain-primary {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 9999998; background: var(--jd-bg); transform: translateY(0);
+      z-index: 9999998; background: #080807; transform: translateY(0);
       will-change: transform; pointer-events: none;
     }
     .jd-shutter-title {
@@ -1708,8 +1708,25 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         <h1 class="jd-splash-title">AATU ALATALO</h1>
       </div>
       <div class="jd-splash-subtitle-wrap">
-        <span class="jd-splash-subtitle">PHOTOGRAPHER</span>
+        <span class="jd-splash-subtitle" id="jd-splash-subtitle">{lang === 'fi' ? 'VALOKUVAAJA' : 'PHOTOGRAPHER'}</span>
       </div>
+      <script is:inline>
+        (function() {
+          try {
+            var sub = document.getElementById('jd-splash-subtitle');
+            if (!sub) return;
+            var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            var isEnPage = window.location.pathname.startsWith('/en');
+            var userChoice = localStorage.getItem('userLangChoice');
+
+            if (userChoice === 'en' || (navLang.startsWith('en') && userChoice !== 'fi') || (isEnPage && userChoice !== 'fi')) {
+              sub.textContent = 'PHOTOGRAPHER';
+            } else {
+              sub.textContent = 'VALOKUVAAJA';
+            }
+          } catch (e) {}
+        })();
+      </script>
     </div>
   </div>
 
