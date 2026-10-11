@@ -470,21 +470,31 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: 20px;
+      gap: 24px;
       width: 100%;
       height: 100%;
       box-sizing: border-box;
-      padding: 0 40px;
+      padding: 0 clamp(40px, 6vw, 80px);
     }
-    .jd-diptych-slide picture { display: contents; }
+    .jd-diptych-slide picture {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 0 1 calc(50% - 12px) !important;
+      max-width: calc(50% - 12px) !important;
+      max-height: calc(100vh - 148px) !important;
+      max-height: calc(100dvh - 148px) !important;
+      height: auto !important;
+      min-width: 0 !important;
+    }
     .jd-diptych-slide img {
-      max-width: calc(50% - 10px) !important;
-      max-height: calc(100vh - 136px) !important;
-      max-height: calc(100dvh - 136px) !important;
+      max-width: 100% !important;
+      max-height: calc(100vh - 148px) !important;
+      max-height: calc(100dvh - 148px) !important;
       width: auto !important;
       height: auto !important;
       object-fit: contain !important;
-      display: block;
+      display: block !important;
     }
 
     /* Photo location label below image (Desktop) */
