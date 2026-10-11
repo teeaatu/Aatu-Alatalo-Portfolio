@@ -84,8 +84,15 @@ def process_and_upload(file_path: Path, s3=None):
     if s3 is None:
         s3 = get_s3_client()
 
-    base_name = file_path.stem
-    print(f"\n📸 Käsitellään kuva: {file_path.name}")
+    import unicodedata
+    raw_stem = unicodedata.normalize('NFC', file_path.stem)
+    base_name = (
+        raw_stem.replace('ä', 'a').replace('Ä', 'A')
+        .replace('ö', 'o').replace('Ö', 'O')
+        .replace('å', 'a').replace('Å', 'A')
+        .replace(' ', '_')
+    )
+    print(f"\n📸 Käsitellään kuva: {file_path.name} -> {base_name}.webp")
 
     # 1. Avataan ja muunnetaan värit
     with Image.open(file_path) as raw_img:
