@@ -466,8 +466,26 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       max-height: calc(100vh - 148px); max-height: calc(100dvh - 148px);
       width: auto; height: auto; object-fit: contain; display: block;
     }
-    .jd-diptych-slide { flex-direction: row; gap: 30px; width: 100vw; }
-    .jd-diptych-slide img { max-width: calc(50% - 75px) !important; max-height: calc(100vh - 148px) !important; max-height: calc(100dvh - 148px) !important; }
+    .jd-diptych-slide {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0 40px;
+    }
+    .jd-diptych-slide picture { display: contents; }
+    .jd-diptych-slide img {
+      max-width: calc(50% - 10px) !important;
+      max-height: calc(100vh - 136px) !important;
+      max-height: calc(100dvh - 136px) !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important;
+      display: block;
+    }
 
     /* Photo location label below image (Desktop) */
     .jd-slide-location {
@@ -2242,7 +2260,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
           // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
           const retinaSrc = document.createElement('source');
-          retinaSrc.type = 'image/webp';
+          retinaSrc.type = (imgData.full && imgData.full.endsWith('.webp')) ? 'image/webp' : 'image/jpeg';
           retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
           retinaSrc.srcset = imgData.full;
           picture.appendChild(retinaSrc);
