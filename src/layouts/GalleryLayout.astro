@@ -1393,9 +1393,78 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
       html, body { background: #000000 !important; }
-      html, body { position: fixed !important; height: 100dvh !important; overscroll-behavior: none !important; min-height: 0 !important; }
-      #jd-main, #jd-slideshow { position: fixed !important; padding-bottom: 0 !important; background: var(--jd-bg) !important; }
-      .jd-slide { padding-bottom: 0 !important; height: 100% !important; max-height: 100% !important; }
+      /* One native vertical scroll surface. Stable page sizes avoid reflow
+         while Safari expands or retracts its browser controls. */
+      html {
+        position: relative !important;
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-x: clip !important;
+        overflow-y: auto !important;
+        overscroll-behavior-y: auto !important;
+        scroll-behavior: auto !important;
+        scrollbar-width: none;
+        scroll-snap-type: y mandatory;
+      }
+      html::-webkit-scrollbar { display: none; }
+      body {
+        position: relative !important;
+        height: auto !important;
+        min-height: 100svh !important;
+        overflow: visible !important;
+        overscroll-behavior-y: auto !important;
+      }
+      html.jd-mobile-panel-open { overflow-y: hidden !important; }
+      #jd-main {
+        position: relative !important;
+        inset: auto !important;
+        height: auto !important;
+        padding: calc((100lvh - 100svh) / 2) 0 !important;
+        background: var(--jd-bg) !important;
+      }
+      #jd-slideshow {
+        position: relative !important;
+        inset: auto !important;
+        height: auto !important;
+        display: block;
+        background: var(--jd-bg) !important;
+      }
+      #jd-slideshow > .jd-slide {
+        position: relative;
+        inset: auto;
+        height: 100svh !important;
+        max-height: none !important;
+        padding: 80px 0 74px !important;
+        opacity: 1 !important;
+        pointer-events: auto;
+        transition: none;
+        will-change: auto;
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+      }
+      #jd-slideshow > .jd-slide.is-filtered-out { display: none !important; }
+      #jd-main::before, #jd-main::after {
+        content: '';
+        position: fixed;
+        left: 0; right: 0;
+        background: rgba(255, 255, 255, 0.94);
+        -webkit-backdrop-filter: blur(6px) saturate(110%);
+        backdrop-filter: blur(6px) saturate(110%);
+        pointer-events: none;
+        z-index: 100;
+      }
+      #jd-main::before {
+        top: 0;
+        height: 92px;
+        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+        mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+      }
+      #jd-main::after {
+        bottom: 0;
+        height: 86px;
+        -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 24px), transparent);
+        mask-image: linear-gradient(to top, #000 calc(100% - 24px), transparent);
+      }
       .jd-slide-location { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
       body.index-is-open #jd-counter, 
       body.index-is-open #jd-bottom-nav,
@@ -1500,7 +1569,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         100% { opacity: 0.65; }
       }
 
-      #jd-slideshow { top: 80px !important; bottom: 74px !important; height: calc(100dvh - 154px) !important; }
+
       #jd-counter { 
         display: flex !important; 
         flex-direction: column !important;
@@ -2431,6 +2500,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       visibleIndices = [];
       data.forEach((item, i) => { if (filter === 'all' || item.series === filter) visibleIndices.push(i); });
       visibleTotal = visibleIndices.length;
+      slides.forEach((slide, index) => slide.classList.toggle('is-filtered-out', !visibleIndices.includes(index)));
       document.querySelectorAll('.jd-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
       let newCurrent = visibleIndices.includes(current) ? current : visibleIndices[0];
       if (newCurrent === undefined) newCurrent = 0;
@@ -2772,7 +2842,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }, { passive: false, capture: true });
     window.addEventListener('resize', cancelWheelMotion);
 
-    function goToAbsolute(idx, skipFilterCheck = false) {
+    function goToAbsolute(idx, skipFilterCheck = false, fromNativeScroll = false) {
       if (visibleTotal === 0) return;
       if (!skipFilterCheck && !visibleIndices.includes(idx)) applyFilter('all');
       if (!wheelCommitting) cancelWheelMotion();
@@ -2784,6 +2854,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (slides[current]) slides[current].classList.add('active');
       if (localThumbs[current]) localThumbs[current].classList.add('is-active');
       updateCounter();
+      if (window.innerWidth <= 800 && !fromNativeScroll) alignMobileSlide(idx);
       if (window.history && window.history.replaceState) {
         const newUrl = idx === 0 
           ? window.location.pathname + window.location.search 
@@ -2817,40 +2888,135 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     }
 
-    /* Touch */
-    let touchStartX = 0, touchStartY = 0, touchStartTime = 0, hasSwiped = false, isDraggingMenu = false, menuCurrentDrag = 0, swipeIntentDetermined = false;
-    slideshow.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; touchStartTime = Date.now(); hasSwiped = false;
-      swipeIntentDetermined = false; isDraggingMenu = false; menuCurrentDrag = 0;
-      if (touchStartX < 30) return; // Allow Safari edge swipe
-      document.body.classList.add('user-has-interacted');
+    /* Mobile uses native root scrolling and CSS snap, with no JS transforms. */
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0, hasSwiped = false;
+    let swipeIntentDetermined = false;
+    let mobileTouch = null;
+    let touchGestureIgnored = false;
+    let mobileScrollFrame = 0;
+    let mobileScrollReady = false;
+    let mobilePanelOpen = false;
+
+    function alignMobileSlide(index, behavior = reducedMotion.matches ? 'instant' : 'smooth') {
+      if (window.innerWidth > 800 || !slides[index]) return;
+      slides[index].scrollIntoView({ block: 'center', inline: 'nearest', behavior });
+    }
+
+    function syncMobileSlide() {
+      mobileScrollFrame = 0;
+      if (!mobileScrollReady || window.innerWidth > 800 || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
+      const centre = window.innerHeight / 2;
+      let nearest = current;
+      let nearestDistance = Infinity;
+      visibleIndices.forEach(index => {
+        const rect = slides[index].getBoundingClientRect();
+        const distance = Math.abs(rect.top + rect.height / 2 - centre);
+        if (distance < nearestDistance) { nearestDistance = distance; nearest = index; }
+      });
+      if (nearest !== current) goToAbsolute(nearest, false, true);
+    }
+    window.addEventListener('scroll', () => {
+      if (mobileScrollReady && window.innerWidth <= 800 && !mobileScrollFrame) {
+        mobileScrollFrame = requestAnimationFrame(syncMobileSlide);
+      }
     }, { passive: true });
-    
+    window.addEventListener('scrollend', syncMobileSlide, { passive: true });
+    const mobilePanelObserver = new MutationObserver(() => {
+      const open = document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open');
+      document.documentElement.classList.toggle('jd-mobile-panel-open', open);
+      if (mobilePanelOpen && !open) requestAnimationFrame(() => alignMobileSlide(current, 'instant'));
+      mobilePanelOpen = open;
+    });
+    mobilePanelObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    requestAnimationFrame(() => {
+      alignMobileSlide(current, 'instant');
+      requestAnimationFrame(() => {
+        mobileScrollReady = true;
+        syncMobileSlide();
+      });
+    });
+
+    slideshow.addEventListener('touchstart', e => {
+      mobileTouch = null;
+      touchGestureIgnored = e.touches.length !== 1;
+      if (touchGestureIgnored) return;
+      const finger = e.touches[0];
+      touchStartX = finger.clientX; touchStartY = finger.clientY;
+      touchStartTime = Date.now(); hasSwiped = false; swipeIntentDetermined = false;
+      if (touchStartX < 30) return;
+      document.body.classList.add('user-has-interacted');
+      if (window.innerWidth <= 800 && touchStartX < window.innerWidth - 30
+        && !document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')
+        && !e.target.closest('.jd-postcard-map')) {
+        const rect = slides[current].getBoundingClientRect();
+        mobileTouch = {
+          id: finger.identifier, axis: null, startIndex: current,
+          settled: Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2) < 3
+        };
+      }
+    }, { passive: true });
+
     slideshow.addEventListener('touchmove', e => {
       if (touchStartX < 30) return;
-      const dx = Math.abs(e.touches[0].clientX - touchStartX);
-      const dy = Math.abs(e.touches[0].clientY - touchStartY);
-      
-      // Vasta selkeä liike (> 25px) tulkitaan pyyhkäisyksi, jottei pieni sormen värähdys estä napautusta
-      if (!swipeIntentDetermined && (dx > 25 || dy > 25)) {
+      if (e.touches.length !== 1) {
+        mobileTouch = null;
+        touchGestureIgnored = true;
+        hasSwiped = true;
+        return;
+      }
+      const finger = e.touches[0];
+      const dx = finger.clientX - touchStartX;
+      const dy = finger.clientY - touchStartY;
+      if (mobileTouch) {
+        if (!mobileTouch.axis && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+          mobileTouch.axis = Math.abs(dy) > Math.abs(dx) ? 'vertical' : 'horizontal';
+        }
+        if (mobileTouch.axis === 'vertical') {
+          hasSwiped = true;
+          return; // Safari owns the drag, momentum, toolbar motion and snap.
+        }
+      }
+      if (!swipeIntentDetermined && (Math.abs(dx) > 25 || Math.abs(dy) > 25)) {
         swipeIntentDetermined = true;
         hasSwiped = true;
       }
-      
-      if (swipeIntentDetermined && dx > dy) {
-        if (e.cancelable) e.preventDefault();
-      }
+      if (swipeIntentDetermined && Math.abs(dx) > Math.abs(dy) && e.cancelable) e.preventDefault();
     }, { passive: false });
-    
+
     slideshow.addEventListener('touchend', e => {
-      if (touchStartX < 30) return;
+      if (touchStartX < 30 || touchGestureIgnored) return;
+      const gesture = mobileTouch;
+      mobileTouch = null;
+      if (gesture?.axis === 'vertical') {
+        hasSwiped = true;
+        const finger = Array.from(e.changedTouches).find(touch => touch.identifier === gesture.id);
+        if (!finger) return;
+        const dy = finger.clientY - touchStartY;
+        const direction = dy < 0 ? 1 : -1;
+        const index = visibleIndices.indexOf(gesture.startIndex);
+        const outward = direction > 0 ? index === visibleTotal - 1 : index === 0;
+        // A gesture arriving at the first/last work cannot leave its category.
+        if (gesture.settled && outward && current === gesture.startIndex && Math.abs(dy) >= 60) {
+          goToRelative(direction);
+        }
+        return;
+      }
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
-      
       if (Math.abs(dx) > 45 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
         dx < 0 ? goToRelative(1) : goToRelative(-1);
       }
     }, { passive: true });
+
+    slideshow.addEventListener('touchcancel', () => {
+      mobileTouch = null;
+      touchGestureIgnored = true;
+      hasSwiped = true;
+    }, { passive: true });
+    window.addEventListener('orientationchange', () => {
+      mobileTouch = null;
+      requestAnimationFrame(() => alignMobileSlide(current, 'instant'));
+    });
 
     slideshow.addEventListener('click', e => {
       if (hasSwiped) { hasSwiped = false; return; }
@@ -2953,6 +3119,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     /* Thumbs view */
     function openThumbsView() {
       cancelWheelMotion();
+      mobileTouch = null;
       if (thumbsOpen) return;
       
       thumbsOpen = true; 
@@ -3179,6 +3346,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     window.openIndexPanel = function() {
       cancelWheelMotion();
+      mobileTouch = null;
       if (typeof closeThumbsView === 'function') closeThumbsView();
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
@@ -3211,6 +3379,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     window.openAboutPanel = function() {
       cancelWheelMotion();
+      mobileTouch = null;
       const p = document.getElementById('jd-about-panel'); 
       if (p) { 
         p.classList.add('is-open'); 
