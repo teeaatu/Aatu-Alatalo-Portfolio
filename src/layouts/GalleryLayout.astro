@@ -170,8 +170,9 @@ let computedNextLabel = '';
 let computedPrevLabel = '';
 
 if (currentIndex !== -1) {
-  if (!computedNextUrl && currentIndex < allCats.length - 1) {
-    const nextCat = allCats[currentIndex + 1];
+  if (!computedNextUrl) {
+    // The final project continues to Recent; the first category's back edge stays unchanged.
+    const nextCat = allCats[(currentIndex + 1) % allCats.length];
     computedNextUrl = getCatUrl(nextCat.key, lang);
     computedNextLabel = catLabels[nextCat.key] || nextCat.key;
   }
@@ -263,6 +264,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         skip = !!sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(location.search).has('splash');
       } catch (e) {}
       document.documentElement.classList.add(skip ? 'jd-no-splash' : 'jd-splash-active');
+      document.documentElement.style.colorScheme = skip ? 'light' : 'dark';
+      document.documentElement.style.backgroundColor = skip ? '#ffffff' : '#000000';
+      document.querySelector('meta[name="color-scheme"]').setAttribute('content', skip ? 'light' : 'dark');
       document.querySelector('meta[name="theme-color"]').setAttribute('content', skip ? '#ffffff' : '#000000');
     })();
   </script>
@@ -1832,6 +1836,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       transform: translate3d(0, -115vh, 0) !important;
       opacity: 0.15 !important;
     }
+    @media (max-width: 800px) {
+      /* Fade the entire intro together: lifting a curtain exposes a white band
+         while Safari's translucent bottom toolbar is still sampling black. */
+      .jd-splash-screen { transition: opacity 0.24s ease-out; will-change: opacity; }
+      .jd-splash-screen.jd-splash-dismissed { transform: none !important; opacity: 0; }
+      .jd-splash-screen.jd-splash-text-exit .jd-splash-inner {
+        transform: translate3d(0, -10px, 0) !important;
+        opacity: 0 !important;
+        transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+      }
+    }
     .jd-splash-title-wrap {
       overflow: hidden;
       padding: 0.15em 0;
@@ -2249,6 +2264,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       splashEl?.remove();
       splashRoot.classList.remove('jd-splash-active');
       splashRoot.classList.add('jd-no-splash');
+      splashRoot.style.colorScheme = 'light';
+      splashRoot.style.backgroundColor = '#ffffff';
+      document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', 'light');
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#ffffff');
       window.dispatchEvent(new Event('jd:splash-dismissed'));
     }
@@ -2264,15 +2282,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           splashDismissed = true;
           clearTimeout(autoTimer);
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
+          const fadeIntro = window.innerWidth <= 800;
           splashEl.classList.add('jd-splash-text-exit');
-          setTimeout(() => splashEl.classList.add('jd-splash-dismissed'), 150);
+          if (fadeIntro) splashEl.classList.add('jd-splash-dismissed');
+          else setTimeout(() => splashEl.classList.add('jd-splash-dismissed'), 150);
           // Prefer completion of the actual curtain; timer covers interrupted transitions.
           splashEl.addEventListener('transitionend', event => {
-            if (event.target !== splashEl || event.propertyName !== 'transform') return;
+            if (event.target !== splashEl || event.propertyName !== (fadeIntro ? 'opacity' : 'transform')) return;
             clearTimeout(removalTimer);
             finishSplash();
           });
-          removalTimer = setTimeout(finishSplash, 900);
+          removalTimer = setTimeout(finishSplash, fadeIntro ? 350 : 900);
         }
         const autoTimer = setTimeout(dismissSplash, 2400);
         splashEl.addEventListener('click', dismissSplash);
