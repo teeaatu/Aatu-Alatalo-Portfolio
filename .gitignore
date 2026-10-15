@@ -34,7 +34,6 @@ scratch/
 # AI-agenttikonfiguraatiot ja -ohjeet (vain paikalliseen käyttöön)
 .agents/
 .cursorrules
-AGENTS.md
 CLAUDE.md
 
 # Yksityiset muistiinpanot ja luonnokset
