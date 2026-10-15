@@ -1789,6 +1789,34 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-mobile-edge { display: none; }
     @media (max-width: 800px) { .jd-mobile-edge { display: block; } }
 
+    /* Safari 26 samples the frontmost fixed edge's computed background,
+       not just theme-color. Keep these empty: text clipping leaves no visible
+       stripe while preserving an opaque colour for WebKit's edge sampler.
+       Both dimensions must exceed its 10px computed-colour shortcut cutoff.
+       Reference: WebKit LocalFrameView::fixedContainerEdges / primaryBackgroundColorForRenderer. */
+    .jd-safari-tint { display: none; }
+    @supports (-webkit-touch-callout: none) {
+      @media (max-width: 800px) {
+        .jd-safari-tint {
+          display: block;
+          position: fixed;
+          left: 0; right: 0;
+          height: 11px;
+          z-index: 2147483647;
+          pointer-events: none;
+          background-color: #000000;
+          -webkit-background-clip: text;
+          background-clip: text;
+          border: 0;
+          box-shadow: none;
+          transition: none;
+        }
+        .jd-safari-tint-top { top: 0; }
+        .jd-safari-tint-bottom { bottom: 0; }
+        html[data-jd-tint-refresh] .jd-safari-tint { height: 12px; }
+      }
+    }
+
     /* ─── CINEMATIC EDITORIAL SPLASH SCREEN ────────────── */
     .jd-no-splash #jd-splash {
       display: none !important;
@@ -1848,10 +1876,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
        backdrop filters can still affect Safari's obscured-edge colour sampling.
        Visibility preserves gallery geometry for direct image links. */
     html.jd-splash-active:not(.jd-splash-revealing) { --jd-bg: #000000; }
-    html.jd-splash-active:not(.jd-splash-revealing) body > :not(#jd-splash) {
+    html.jd-splash-active:not(.jd-splash-revealing) body > :not(#jd-splash):not(.jd-safari-tint) {
       visibility: hidden !important;
     }
-    html.jd-splash-active:not(.jd-splash-revealing) body > :not(#jd-splash) * {
+    html.jd-splash-active:not(.jd-splash-revealing) body > :not(#jd-splash):not(.jd-safari-tint) * {
       visibility: hidden !important;
     }
     html.jd-splash-active #jd-index-panel,
@@ -1925,6 +1953,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   </style>
 </head>
 <body ontouchstart="">
+
+  <div class="jd-safari-tint jd-safari-tint-top" aria-hidden="true"></div>
+  <div class="jd-safari-tint jd-safari-tint-bottom" aria-hidden="true"></div>
 
   <div class="jd-mobile-edge jd-mobile-edge-top" aria-hidden="true"></div>
   <div class="jd-mobile-edge jd-mobile-edge-bottom" aria-hidden="true"></div>
@@ -2278,6 +2309,30 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
+    // Invalidate Safari's cached edge colour after navigation, viewport changes,
+    // and overlays. A two-frame geometry pulse paints no pixels and never scrolls.
+    if (CSS.supports('-webkit-touch-callout', 'none')) {
+      let tintFrame = 0;
+      const refreshTint = () => {
+        cancelAnimationFrame(tintFrame);
+        if (!matchMedia('(max-width: 800px)').matches) {
+          document.documentElement.removeAttribute('data-jd-tint-refresh');
+          return;
+        }
+        document.documentElement.setAttribute('data-jd-tint-refresh', '');
+        tintFrame = requestAnimationFrame(() => {
+          tintFrame = requestAnimationFrame(() => {
+            document.documentElement.removeAttribute('data-jd-tint-refresh');
+            tintFrame = 0;
+          });
+        });
+      };
+      window.addEventListener('pageshow', refreshTint);
+      window.addEventListener('resize', refreshTint);
+      window.addEventListener('jd:splash-dismissed', refreshTint);
+      new MutationObserver(refreshTint).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      refreshTint();
+    }
     // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
     const splashEl = document.getElementById('jd-splash');
     const splashRoot = document.documentElement;
