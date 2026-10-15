@@ -1410,7 +1410,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
       html, body { background: var(--jd-bg) !important; }
-      html.jd-splash-active, html.jd-splash-active body { background: #000000 !important; }
+      html.jd-splash-active:not(.jd-splash-revealing), html.jd-splash-active:not(.jd-splash-revealing) body { background: #000000 !important; }
       /* One native vertical scroll surface. Stable page sizes avoid reflow
          while Safari expands or retracts its browser controls. */
       html {
@@ -1479,12 +1479,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         background: rgba(255, 255, 255, 0.94);
         -webkit-backdrop-filter: blur(6px) saturate(110%);
         backdrop-filter: blur(6px) saturate(110%);
-      }
-      .jd-splash-active .jd-mobile-edge { background: #000000; }
-      .jd-splash-active .jd-mobile-edge::after {
-        background: #000000;
-        -webkit-backdrop-filter: none;
-        backdrop-filter: none;
       }
       .jd-mobile-edge-top {
         top: calc(0px - env(safe-area-inset-top, 0px));
@@ -1781,7 +1775,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     @media (max-width: 800px) { .jd-mobile-edge { display: block; } }
 
     /* ─── CINEMATIC EDITORIAL SPLASH SCREEN ────────────── */
-    .jd-no-splash #jd-splash, .jd-no-splash #jd-splash-safe-top {
+    .jd-no-splash #jd-splash {
       display: none !important;
     }
     /* Estetään kategoriaotsikon (Uusimmat) ja vanhan verhon näkyminen splashin päällä */
@@ -1794,13 +1788,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-splash-screen {
       position: fixed;
-      /* Overscan the screen edges; Safari can temporarily report zero safe-area
-         insets while its browser controls are being laid out. */
-      top: calc(-64px - env(safe-area-inset-top, 0px));
-      left: 0; right: 0;
+      /* Keep the initial opaque surface on the actual viewport edges so
+         Safari can sample it without an offscreen transformed cover. */
+      inset: 0;
       width: 100%;
-      height: calc(100vh + 128px + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
-      height: calc(100lvh + 128px + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+      height: 100%;
       background: #000000;
       z-index: 2147483647 !important;
       display: flex;
@@ -1812,8 +1804,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       user-select: none;
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
-      will-change: transform;
-      transform: translate3d(0, 0, 0);
+      transform: none;
       transition: transform 0.9s cubic-bezier(0.65, 0, 0.25, 1);
       touch-action: none;
     }
@@ -1838,19 +1829,28 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       transform: translate3d(0, -115vh, 0) !important;
       opacity: 0.15 !important;
     }
-    #jd-splash-safe-top { display: none; }
-    @media (max-width: 800px) {
-      /* Keep the status-area paint independent of the transformed curtain. */
-      html.jd-splash-active #jd-splash-safe-top {
-        display: block;
-        position: fixed;
-        top: calc(-64px - env(safe-area-inset-top, 0px));
-        left: 0; right: 0;
-        height: calc(96px + env(safe-area-inset-top, 0px));
-        background: #000000;
-        z-index: 2147483647;
-        pointer-events: none;
-      }
+    /* A single paint source during the intro. Opacity-zero fixed panels and
+       backdrop filters can still affect Safari's obscured-edge colour sampling.
+       Visibility preserves gallery geometry for direct image links. */
+    html.jd-splash-active:not(.jd-splash-revealing) { --jd-bg: #000000; }
+    html.jd-splash-active:not(.jd-splash-revealing) body > :not(#jd-splash) {
+      visibility: hidden !important;
+    }
+    html.jd-splash-active:not(.jd-splash-revealing) body > :not(#jd-splash) * {
+      visibility: hidden !important;
+    }
+    html.jd-splash-active #jd-index-panel,
+    html.jd-splash-active #jd-index-overlay,
+    html.jd-splash-active #jd-thumbs-panel,
+    html.jd-splash-active .jd-floating-close-btn,
+    html.jd-splash-active .jd-thumbs-header {
+      display: none !important;
+    }
+    html.jd-splash-active body *,
+    html.jd-splash-active body *::before,
+    html.jd-splash-active body *::after {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
     }
     .jd-splash-title-wrap {
       overflow: hidden;
@@ -1914,7 +1914,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <div class="jd-mobile-edge jd-mobile-edge-top" aria-hidden="true"></div>
   <div class="jd-mobile-edge jd-mobile-edge-bottom" aria-hidden="true"></div>
 
-  <div id="jd-splash-safe-top" aria-hidden="true"></div>
 
   <!-- Cinematic Editorial Splash Screen -->
   <div id="jd-splash" class="jd-splash-screen" aria-hidden="true">
@@ -2267,15 +2266,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
     const splashEl = document.getElementById('jd-splash');
     const splashRoot = document.documentElement;
-    function finishSplash() {
-      splashEl?.remove();
-      document.getElementById('jd-splash-safe-top')?.remove();
-      splashRoot.classList.remove('jd-splash-active');
-      splashRoot.classList.add('jd-no-splash');
+    function restoreGalleryTheme() {
       splashRoot.style.colorScheme = 'light';
       splashRoot.style.backgroundColor = '#ffffff';
       document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', 'light');
       document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#ffffff');
+    }
+    function finishSplash() {
+      splashEl?.remove();
+      splashRoot.classList.remove('jd-splash-active', 'jd-splash-revealing');
+      splashRoot.classList.add('jd-no-splash');
+      restoreGalleryTheme();
       window.dispatchEvent(new Event('jd:splash-dismissed'));
     }
     if (splashEl) {
@@ -2291,7 +2292,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           clearTimeout(autoTimer);
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
           splashEl.classList.add('jd-splash-text-exit');
-          setTimeout(() => splashEl.classList.add('jd-splash-dismissed'), 100);
+          setTimeout(() => {
+            // Reveal a fully light gallery, including its edge masks. The black
+            // curtain alone travels upward; no black bars remain beneath it.
+            splashRoot.classList.add('jd-splash-revealing');
+            restoreGalleryTheme();
+            splashEl.classList.add('jd-splash-dismissed');
+          }, 100);
           // Prefer completion of the actual curtain; timer covers interrupted transitions.
           splashEl.addEventListener('transitionend', event => {
             if (event.target !== splashEl || event.propertyName !== 'transform') return;
