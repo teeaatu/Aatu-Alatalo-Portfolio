@@ -740,7 +740,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       100% { top: 50%; opacity: 1; }
     }
     .trigger-title-enter {
-      animation: titleEnter 0.6s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: titleEnter 0.18s 0s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
     body.is-entering-ready .jd-shutter-title { 
       top: var(--target-y, -10%);
@@ -748,11 +748,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       font-size: 1rem;
       letter-spacing: 0.02em;
       opacity: 0;
-      transition: top 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
-                  left 1.2s 1.6s cubic-bezier(0.16,1,0.3,1), 
-                  font-size 1.2s 1.6s cubic-bezier(0.16,1,0.3,1),
-                  letter-spacing 1.2s 1.6s cubic-bezier(0.16,1,0.3,1),
-                  opacity 0.6s 2.2s ease;
+      transition: top 0.6s 0s cubic-bezier(0.16,1,0.3,1),
+                  left 0.6s 0s cubic-bezier(0.16,1,0.3,1),
+                  font-size 0.6s 0s cubic-bezier(0.16,1,0.3,1),
+                  letter-spacing 0.6s 0s cubic-bezier(0.16,1,0.3,1),
+                  opacity 0.2s 0.4s ease;
     }
     @media (min-width: 769px) {
       body.is-entering-ready .jd-shutter-title {
@@ -761,9 +761,19 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     body.hide-shutter-title .jd-shutter-title { opacity: 0 !important; transition: none !important; }
     body.is-leaving .jd-shutter-title, body.prepare-leave .jd-shutter-title { transition: none !important; }
-    body.is-entering-ready .jd-curtain-primary { transition: transform 1800ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(-150vh); }
+    body.is-entering-ready .jd-curtain-primary { transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(-150vh); }
     body.prepare-leave .jd-curtain-primary { transition: none !important; transform: translateY(150vh) !important; }
-    body.is-leaving .jd-curtain-primary { transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
+    body.is-leaving .jd-curtain-primary { transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .jd-slide, .jd-curtain-primary, .jd-shutter-title,
+      body.is-entering-ready .jd-curtain-primary,
+      body.is-entering-ready .jd-shutter-title,
+      body.is-leaving #jd-cursor-custom {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
 
     /* ─── INDEX PANEL ────────────────────────────────── */
     #jd-index-overlay {
@@ -1180,7 +1190,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     body.is-leaving #jd-cursor-custom {
       transform: translate(-50%, calc(-50% - 60px));
-      transition: transform 1400ms 0ms cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
+      transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
     }
     #jd-cursor-arrow { font-size: 14px; letter-spacing: 0; line-height: 1; margin-top: -2px; }
 
@@ -2471,6 +2481,36 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       slides.push(slide);
     });
 
+    // Cache gallery references; scrolling only updates changed text and nearby slides.
+    const localThumbs = Array.from(document.querySelectorAll(`.jd-thumb-global[data-cat="${categorySlug}"]`));
+    const slideImages = slides.map(slide => Array.from(slide.querySelectorAll('img')));
+    const counterUI = Object.fromEntries(['jd-wheel-counter', 'jd-counter-cat', 'jd-counter-num',
+      'jd-counter-tot', 'jd-counter-rest', 'jd-counter-place', 'jd-cursor-text']
+      .map(id => [id, document.getElementById(id)]));
+    let displayedIndex = current;
+    let counterSignature = '';
+    const preparedImages = new WeakMap();
+
+    function prepareNearbyImages(index) {
+      const vi = visibleIndices.indexOf(index);
+      if (vi < 0) return;
+      // No wraparound: prepare only actual neighbours, including both diptych images.
+      [vi, vi + 1, vi + 2, vi - 1].forEach(position => {
+        const target = visibleIndices[position];
+        if (target === undefined) return;
+        slideImages[target].forEach(img => {
+          img.loading = 'eager';
+          const source = img.currentSrc || img.src;
+          if (!source || preparedImages.get(img) === source) return;
+          preparedImages.set(img, source);
+          if (typeof img.decode === 'function') img.decode().catch(() => {
+            // A source change or failed download must never block navigation.
+            preparedImages.delete(img);
+          });
+        });
+      });
+    }
+
     /* Filter */
     const filterContainer = document.getElementById('jd-filter-dropdown-container');
     const filterToggle = document.getElementById('jd-filter-toggle');
@@ -2502,8 +2542,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       visibleTotal = visibleIndices.length;
       slides.forEach((slide, index) => slide.classList.toggle('is-filtered-out', !visibleIndices.includes(index)));
       document.querySelectorAll('.jd-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
-      let newCurrent = visibleIndices.includes(current) ? current : visibleIndices[0];
+      const filterBase = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+      let newCurrent = visibleIndices.includes(filterBase) ? filterBase : visibleIndices[0];
       if (newCurrent === undefined) newCurrent = 0;
+      rebuildMobileCentres();
       goToAbsolute(newCurrent, true);
     }
 
@@ -2519,46 +2561,34 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       });
     });
 
-    function updateCounter() {
-      desktopLocation.textContent = data[current]?.place || '';
-      desktopLocation.hidden = !desktopLocation.textContent;
-      let vi = visibleIndices.indexOf(current);
-      if (vi === -1) vi = 0;
+    function updateCounter(index = current) {
+      const vi = Math.max(0, visibleIndices.indexOf(index));
       const n = vi + 1;
-      const wheelCounter = document.getElementById('jd-wheel-counter');
-      if (wheelCounter) wheelCounter.textContent = `${n} / ${visibleTotal}`;
-
-      const catSpan = document.getElementById('jd-counter-cat');
-      if (catSpan) {
-        catSpan.textContent = catLabel;
-        catSpan.style.opacity = '1';
-      }
-
-      if (document.getElementById('jd-counter-num')) document.getElementById('jd-counter-num').textContent = n;
-      if (document.getElementById('jd-counter-tot')) document.getElementById('jd-counter-tot').textContent = visibleTotal;
-      const restSpan = document.getElementById('jd-counter-rest');
-      if (restSpan) restSpan.style.opacity = '1';
-
-      const placeEl = document.getElementById('jd-counter-place');
-      if (placeEl) {
-        const curItem = data[current];
-        if (curItem && curItem.place) {
-          placeEl.textContent = curItem.place;
-          placeEl.style.display = 'block';
-        } else {
-          placeEl.textContent = '';
-          placeEl.style.display = 'none';
-        }
-      }
-
-      const cursorText = document.getElementById('jd-cursor-text');
-      if (cursorText) cursorText.textContent = `${catLabel} — ${n} / ${visibleTotal}`;
+      const place = data[index]?.place || '';
+      const signature = `${index}|${visibleTotal}|${currentFilter}`;
+      if (signature === counterSignature) return;
+      counterSignature = signature;
+      desktopLocation.textContent = place;
+      desktopLocation.hidden = !place;
+      const setText = (id, text) => {
+        const element = counterUI[id];
+        if (element && element.textContent !== String(text)) element.textContent = text;
+      };
+      setText('jd-wheel-counter', `${n} / ${visibleTotal}`);
+      setText('jd-counter-cat', catLabel);
+      setText('jd-counter-num', n);
+      setText('jd-counter-tot', visibleTotal);
+      setText('jd-counter-place', place);
+      setText('jd-cursor-text', `${catLabel} — ${n} / ${visibleTotal}`);
+      if (counterUI['jd-counter-place']) counterUI['jd-counter-place'].style.display = place ? 'block' : 'none';
     }
     updateCounter();
+    prepareNearbyImages(current);
 
     /* Navigation */
     function goToCategory(url, titleText = '') {
       if (document.body.classList.contains('is-leaving')) return;
+      if (reducedMotion.matches) { window.location.href = url; return; }
 
       if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
       if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel();
@@ -2587,7 +2617,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           }
         };
         if (shutter) shutter.addEventListener('transitionend', onDone, { once: true });
-        setTimeout(onDone, 1500);
+        setTimeout(onDone, 700);
       });
     }
 
@@ -2616,7 +2646,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     function goToRelative(step, allowCategorySwitch = true) {
       if (visibleTotal === 0) return;
-      let cvi = visibleIndices.indexOf(current);
+      const base = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+      let cvi = visibleIndices.indexOf(base);
       if (cvi === -1) cvi = 0;
       const nvi = cvi + step;
       if (nvi >= 0 && nvi < visibleTotal) {
@@ -2675,39 +2706,46 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       wheelMotion = null;
     }
 
-    // Match the existing cubic-bezier(0.22, 1, 0.36, 1) snap easing.
-    function wheelEase(progress) {
-      let low = 0, high = 1;
-      for (let i = 0; i < 12; i++) {
-        const t = (low + high) / 2;
-        const x = 3 * (1 - t) ** 2 * t * 0.22 + 3 * (1 - t) * t ** 2 * 0.36 + t ** 3;
-        if (x < progress) low = t;
-        else high = t;
-      }
-      return 1 - (1 - (low + high) / 2) ** 3;
-    }
-
-    function wheelPositionAt(now) {
+    // Critical damping: carry both position and velocity into every new target.
+    // omega=28 settles a full-slide change in approximately 360 ms.
+    const wheelSpringOmega = 28;
+    let wheelWidth = slideshow.clientWidth;
+    function sampleWheelMotion(now) {
       const motion = wheelMotion;
-      const progress = reducedMotion.matches || motion.duration === 0 ? 1 : Math.min(1, (now - motion.started) / motion.duration);
-      return progress >= 1 ? motion.target : motion.from + (motion.target - motion.from) * wheelEase(progress);
+      if (reducedMotion.matches || motion.duration === 0) return { position: motion.target, velocity: 0 };
+      const t = Math.max(0, now - motion.started) / 1000;
+      const displacement = motion.from - motion.target;
+      const c = motion.velocity + wheelSpringOmega * displacement;
+      const decay = Math.exp(-wheelSpringOmega * t);
+      const offset = (displacement + c * t) * decay;
+      const velocity = (motion.velocity - wheelSpringOmega * c * t) * decay;
+      // Very fast interrupted motion must still land without crossing its target.
+      if (displacement && Math.sign(offset) !== Math.sign(displacement)) return { position: motion.target, velocity: 0 };
+      if (Math.abs(offset * wheelWidth) < 0.5 && Math.abs(velocity * wheelWidth) < 12) return { position: motion.target, velocity: 0 };
+      return { position: motion.target + offset, velocity };
     }
+    function wheelPositionAt(now) { return sampleWheelMotion(now).position; }
 
     function paintWheelMotion(now) {
       const motion = wheelMotion;
       if (!motion) return;
       const position = wheelPositionAt(now);
-      const width = slideshow.clientWidth;
-      slides.forEach((slide, index) => {
-        const visibleIndex = visibleIndices.indexOf(index);
-        const distance = visibleIndex - position;
-        const nearViewport = visibleIndex !== -1 && Math.abs(distance) < 1.25;
-        slide.classList.add('wheel-motion');
-        slide.style.visibility = nearViewport ? 'visible' : 'hidden';
-        slide.style.willChange = nearViewport ? 'transform' : 'auto';
-        slide.style.transform = `translate3d(${distance * width}px, 0, 0)`;
+      const near = new Set();
+      const first = Math.max(0, Math.floor(position) - 1);
+      const last = Math.min(visibleTotal - 1, Math.ceil(position) + 1);
+      for (let vi = first; vi <= last; vi++) {
+        if (Math.abs(vi - position) >= 1.25) continue;
+        const slide = slides[visibleIndices[vi]];
+        near.add(slide);
+        slide.style.visibility = 'visible';
+        slide.style.willChange = 'transform';
+        slide.style.transform = `translate3d(${(vi - position) * wheelWidth}px, 0, 0)`;
+      }
+      motion.painted.forEach(slide => {
+        if (!near.has(slide)) { slide.style.visibility = 'hidden'; slide.style.willChange = 'auto'; }
       });
-      if (Math.abs(position - motion.target) > 0.0001) {
+      motion.painted = near;
+      if (position !== motion.target) {
         motion.frame = requestAnimationFrame(paintWheelMotion);
       } else if (wheelDelta === 0) {
         cancelWheelMotion();
@@ -2720,11 +2758,21 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const now = performance.now();
       if (!wheelMotion) {
         const position = visibleIndices.indexOf(current);
-        wheelMotion = { from: position, target: position, started: now, duration, frame: 0 };
+        wheelMotion = { from: position, target: position, velocity: 0, started: now, duration: 0, frame: 0, painted: new Set() };
+        slides.forEach(slide => {
+          slide.classList.add('wheel-motion');
+          slide.style.visibility = 'hidden';
+        });
       }
-      const position = wheelPositionAt(now);
-      wheelMotion.from = position;
+      const sample = sampleWheelMotion(now);
+      // Direct finger preview has no easing. Its measured velocity seeds release.
+      const elapsed = Math.max(1, now - wheelMotion.started) / 1000;
+      const velocity = duration === 0
+        ? Math.max(-8, Math.min(8, (target - sample.position) / elapsed))
+        : wheelMotion.duration === 0 ? wheelMotion.velocity : sample.velocity;
+      wheelMotion.from = sample.position;
       wheelMotion.target = target;
+      wheelMotion.velocity = Math.abs(target - sample.position) < 0.000001 ? 0 : velocity;
       wheelMotion.started = now;
       wheelMotion.duration = duration;
       if (duration === 0) {
@@ -2837,55 +2885,36 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       // Before committing a photo change, follow the fingers directly.
       // Once committed, retain the existing 360 ms snap to the exact centre.
       const snapInProgress = wheelMotion && wheelMotion.duration > 0
-        && now - wheelMotion.started < wheelMotion.duration;
+        && wheelPositionAt(now) !== wheelMotion.target;
       retargetWheelMotion(target, wheelGestureHasCommitted || snapInProgress ? wheelSnapDuration : 0);
     }, { passive: false, capture: true });
-    window.addEventListener('resize', cancelWheelMotion);
+    window.addEventListener('resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
 
     function goToAbsolute(idx, skipFilterCheck = false, fromNativeScroll = false) {
       if (visibleTotal === 0) return;
       if (!skipFilterCheck && !visibleIndices.includes(idx)) applyFilter('all');
+      if (window.innerWidth <= 800 && !fromNativeScroll) {
+        mobileRequestedIndex = idx;
+        prepareNearbyImages(idx);
+        alignMobileSlide(idx);
+        return;
+      }
       if (!wheelCommitting) cancelWheelMotion();
       const outgoingSlide = slides[current];
       if (outgoingSlide) outgoingSlide.classList.remove('active');
-      const localThumbs = document.querySelectorAll(`.jd-thumb-global[data-cat="${categorySlug}"]`);
       if (localThumbs[current]) localThumbs[current].classList.remove('is-active');
       current = idx;
       if (slides[current]) slides[current].classList.add('active');
       if (localThumbs[current]) localThumbs[current].classList.add('is-active');
-      updateCounter();
-      if (window.innerWidth <= 800 && !fromNativeScroll) alignMobileSlide(idx);
+      displayedIndex = idx;
+      updateCounter(idx);
       if (window.history && window.history.replaceState) {
         const newUrl = idx === 0 
           ? window.location.pathname + window.location.search 
           : `${window.location.pathname}${window.location.search}#img-${idx}`;
         window.history.replaceState(null, '', newUrl);
       }
-      let vi = visibleIndices.indexOf(current);
-      if (vi !== -1) {
-        // Puskurointi: 2 eteenpäin + 1 taaksepäin
-        const preloadIdxs = [
-          visibleIndices[(vi + 1) % visibleTotal],
-          visibleIndices[(vi + 2) % visibleTotal],
-          visibleIndices[(vi - 1 + visibleTotal) % visibleTotal],
-        ].filter(ix => ix !== undefined);
-        preloadIdxs.forEach(ix => {
-          const slide = slides[ix];
-          if (!slide) return;
-          const img = slide.querySelector('img');
-          if (!img) return;
-          // Aseta eager jos ei vielä ladattu
-          if (!img.complete) img.loading = 'eager';
-          // Käytetään currentSrc (selaimen valitsema formaatti) || src varalogiikkana:
-          // Jos slide on piilossa (display:none), selain ei välttämättä ole asettanut
-          // currentSrc-kenttää vielä – tässä tapauksessa img.src toimii varalogiikkana.
-          const targetSrc = img.currentSrc || img.src;
-          if (targetSrc && !slide.dataset.preloaded) {
-            fetch(targetSrc, { priority: 'low' }).catch(() => {});
-            slide.dataset.preloaded = '1';
-          }
-        });
-      }
+      prepareNearbyImages(idx);
     }
 
     /* Mobile uses native root scrolling and CSS snap, with no JS transforms. */
@@ -2896,48 +2925,145 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     let mobileScrollFrame = 0;
     let mobileScrollReady = false;
     let mobilePanelOpen = false;
+    let mobileRequestedIndex = null;
+    let mobileFingerDown = false;
+    let mobileCentres = [];
+    let mobileGeometryFrame = 0;
+    let mobileSettleTimer = 0;
+    let mobileSettleFrame = 0;
+    let lastMobileScrollAt = -Infinity;
+    let mobileViewportActive = window.innerWidth <= 800;
 
+    function rebuildMobileCentres() {
+      mobileGeometryFrame = 0;
+      if (window.innerWidth > 800) { mobileCentres = []; return; }
+      const y = window.scrollY;
+      mobileCentres = visibleIndices.map(index => {
+        const rect = slides[index].getBoundingClientRect();
+        return { index, centre: rect.top + y + rect.height / 2 };
+      });
+    }
+    function scheduleMobileGeometry() {
+      if (!mobileGeometryFrame) mobileGeometryFrame = requestAnimationFrame(() => {
+        rebuildMobileCentres();
+        if (mobileScrollReady) { syncMobileSlide(); scheduleMobileSettle(); }
+      });
+    }
+    function nearestMobilePosition() {
+      const centre = window.scrollY + window.innerHeight / 2;
+      let low = 0, high = mobileCentres.length - 1;
+      while (low < high) {
+        const mid = (low + high) >> 1;
+        if (centre > (mobileCentres[mid].centre + mobileCentres[mid + 1].centre) / 2) low = mid + 1;
+        else high = mid;
+      }
+      return low;
+    }
+    function mobileNavigationIndex() {
+      if (mobileRequestedIndex !== null) return mobileRequestedIndex;
+      return mobileCentres[nearestMobilePosition()]?.index ?? current;
+    }
     function alignMobileSlide(index, behavior = reducedMotion.matches ? 'instant' : 'smooth') {
       if (window.innerWidth > 800 || !slides[index]) return;
       slides[index].scrollIntoView({ block: 'center', inline: 'nearest', behavior });
+      scheduleMobileSettle(); // Also handles an already-centred target with no scroll event.
     }
-
+    function mobileScrollBlocked() {
+      return !mobileScrollReady || window.innerWidth > 800 || !mobileCentres.length
+        || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving');
+    }
     function syncMobileSlide() {
       mobileScrollFrame = 0;
-      if (!mobileScrollReady || window.innerWidth > 800 || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
-      const centre = window.innerHeight / 2;
-      let nearest = current;
-      let nearestDistance = Infinity;
-      visibleIndices.forEach(index => {
-        const rect = slides[index].getBoundingClientRect();
-        const distance = Math.abs(rect.top + rect.height / 2 - centre);
-        if (distance < nearestDistance) { nearestDistance = distance; nearest = index; }
-      });
-      if (nearest !== current) goToAbsolute(nearest, false, true);
+      if (mobileScrollBlocked()) return;
+      const centre = window.scrollY + window.innerHeight / 2;
+      let position = mobileCentres.findIndex(item => item.index === displayedIndex);
+      if (position < 0) position = nearestMobilePosition();
+      // Hysteresis: 60% forward, 60% back. Read cached centres, not every slide's layout.
+      while (position < mobileCentres.length - 1
+        && centre > mobileCentres[position].centre + 0.6 * (mobileCentres[position + 1].centre - mobileCentres[position].centre)) position++;
+      while (position > 0
+        && centre < mobileCentres[position].centre - 0.6 * (mobileCentres[position].centre - mobileCentres[position - 1].centre)) position--;
+      const index = mobileCentres[position].index;
+      if (index !== displayedIndex) { displayedIndex = index; updateCounter(index); }
+    }
+    function commitMobileSlide() {
+      if (mobileScrollBlocked() || mobileFingerDown) return;
+      const index = mobileCentres[nearestMobilePosition()].index;
+      mobileRequestedIndex = null;
+      if (index !== current) goToAbsolute(index, false, true);
+      else { displayedIndex = index; updateCounter(index); }
+    }
+    function scheduleMobileSettle() {
+      clearTimeout(mobileSettleTimer);
+      cancelAnimationFrame(mobileSettleFrame);
+      mobileSettleTimer = setTimeout(() => {
+        if (mobileScrollBlocked() || mobileFingerDown) return;
+        let previous = window.scrollY, stable = 0;
+        const check = () => {
+          if (mobileScrollBlocked() || mobileFingerDown) return;
+          const y = window.scrollY;
+          stable = Math.abs(y - previous) < 0.5 ? stable + 1 : 0;
+          previous = y;
+          if (performance.now() - lastMobileScrollAt < 120) return;
+          if (stable >= 3) commitMobileSlide();
+          else mobileSettleFrame = requestAnimationFrame(check);
+        };
+        mobileSettleFrame = requestAnimationFrame(check);
+      }, 120);
     }
     window.addEventListener('scroll', () => {
-      if (mobileScrollReady && window.innerWidth <= 800 && !mobileScrollFrame) {
-        mobileScrollFrame = requestAnimationFrame(syncMobileSlide);
-      }
+      if (!mobileScrollReady || window.innerWidth > 800) return;
+      lastMobileScrollAt = performance.now();
+      if (!mobileScrollFrame) mobileScrollFrame = requestAnimationFrame(syncMobileSlide);
+      scheduleMobileSettle();
     }, { passive: true });
-    window.addEventListener('scrollend', syncMobileSlide, { passive: true });
+    window.addEventListener('scrollend', () => {
+      // Some Safari versions emit an old scrollend when smooth scrolling is retargeted.
+      const requested = mobileCentres.find(item => item.index === mobileRequestedIndex);
+      if (requested && Math.abs(requested.centre - window.scrollY - window.innerHeight / 2) >= 3) return;
+      commitMobileSlide();
+    }, { passive: true });
     const mobilePanelObserver = new MutationObserver(() => {
       const open = document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open');
       document.documentElement.classList.toggle('jd-mobile-panel-open', open);
-      if (mobilePanelOpen && !open) requestAnimationFrame(() => alignMobileSlide(current, 'instant'));
+      if (!mobilePanelOpen && open) {
+        mobileRequestedIndex = mobileCentres[nearestMobilePosition()]?.index ?? current;
+      }
+      if (mobilePanelOpen && !open) requestAnimationFrame(() => {
+        rebuildMobileCentres();
+        alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
+      });
       mobilePanelOpen = open;
     });
     mobilePanelObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    new ResizeObserver(scheduleMobileGeometry).observe(slideshow);
+    window.addEventListener('resize', () => {
+      const active = window.innerWidth <= 800;
+      if (active !== mobileViewportActive) {
+        mobileViewportActive = active;
+        mobileRequestedIndex = null;
+        mobileFingerDown = false;
+        rebuildMobileCentres();
+        if (active) alignMobileSlide(current, 'instant');
+      }
+      scheduleMobileGeometry();
+    }, { passive: true });
     requestAnimationFrame(() => {
+      rebuildMobileCentres();
       alignMobileSlide(current, 'instant');
       requestAnimationFrame(() => {
         mobileScrollReady = true;
         syncMobileSlide();
+        scheduleMobileSettle();
       });
     });
 
     slideshow.addEventListener('touchstart', e => {
       mobileTouch = null;
+      mobileFingerDown = true;
+      mobileRequestedIndex = null;
+      clearTimeout(mobileSettleTimer);
+      cancelAnimationFrame(mobileSettleFrame);
       touchGestureIgnored = e.touches.length !== 1;
       if (touchGestureIgnored) return;
       const finger = e.touches[0];
@@ -2948,10 +3074,10 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (window.innerWidth <= 800 && touchStartX < window.innerWidth - 30
         && !document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')
         && !e.target.closest('.jd-postcard-map')) {
-        const rect = slides[current].getBoundingClientRect();
+        const item = mobileCentres[nearestMobilePosition()];
         mobileTouch = {
-          id: finger.identifier, axis: null, startIndex: current,
-          settled: Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2) < 3
+          id: finger.identifier, axis: null, startIndex: item?.index ?? current,
+          settled: item && Math.abs(item.centre - window.scrollY - window.innerHeight / 2) < 3
         };
       }
     }, { passive: true });
@@ -2984,6 +3110,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }, { passive: false });
 
     slideshow.addEventListener('touchend', e => {
+      mobileFingerDown = e.touches.length > 0;
+      scheduleMobileSettle();
       if (touchStartX < 30 || touchGestureIgnored) return;
       const gesture = mobileTouch;
       mobileTouch = null;
@@ -2996,7 +3124,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         const index = visibleIndices.indexOf(gesture.startIndex);
         const outward = direction > 0 ? index === visibleTotal - 1 : index === 0;
         // A gesture arriving at the first/last work cannot leave its category.
-        if (gesture.settled && outward && current === gesture.startIndex && Math.abs(dy) >= 60) {
+        if (gesture.settled && outward && mobileNavigationIndex() === gesture.startIndex && Math.abs(dy) >= 60) {
           goToRelative(direction);
         }
         return;
@@ -3009,13 +3137,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }, { passive: true });
 
     slideshow.addEventListener('touchcancel', () => {
+      mobileFingerDown = false;
+      scheduleMobileSettle();
       mobileTouch = null;
       touchGestureIgnored = true;
       hasSwiped = true;
     }, { passive: true });
     window.addEventListener('orientationchange', () => {
       mobileTouch = null;
-      requestAnimationFrame(() => alignMobileSlide(current, 'instant'));
+      requestAnimationFrame(() => { rebuildMobileCentres(); alignMobileSlide(displayedIndex, 'instant'); });
     });
 
     slideshow.addEventListener('click', e => {
@@ -3138,7 +3268,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
       const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
       if (currentCatSection) {
-        const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[current];
+        const selected = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+        const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[selected];
         if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
         currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
       }
@@ -3212,7 +3343,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
             setTimeout(() => {
               window.jdCursorFrozen = false;
               cursor.style.opacity = '1';
-            }, 2800);
+            }, reducedMotion.matches ? 0 : 600);
           }
         } else {
           const catSpan = document.getElementById('jd-counter-cat');
@@ -3233,7 +3364,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
               catSpan.style.opacity = '1';
               counterRest.style.transition = 'opacity 0.6s ease';
               counterRest.style.opacity = '1';
-            }, 2200);
+            }, reducedMotion.matches ? 0 : 600);
           }
         }
       }
