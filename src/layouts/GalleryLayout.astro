@@ -256,12 +256,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       } catch (e) {}
     })();
 
-    // Splash screen session guard: prevent flash on repeated page navigation
-    try {
-      if (sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(window.location.search).has('splash')) {
-        document.documentElement.classList.add('jd-no-splash');
-      }
-    } catch (e) {}
+    // Establish the canvas and Safari tint before the first paint.
+    (function () {
+      var skip = false;
+      try {
+        skip = !!sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(location.search).has('splash');
+      } catch (e) {}
+      document.documentElement.classList.add(skip ? 'jd-no-splash' : 'jd-splash-active');
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', skip ? '#ffffff' : '#000000');
+    })();
   </script>
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
@@ -1402,7 +1405,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
-      html, body { background: #000000 !important; }
+      html, body { background: var(--jd-bg) !important; }
+      html.jd-splash-active, html.jd-splash-active body { background: #000000 !important; }
+      html.jd-splash-active { overflow-y: hidden !important; }
       /* One native vertical scroll surface. Stable page sizes avoid reflow
          while Safari expands or retracts its browser controls. */
       html {
@@ -1453,27 +1458,48 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         scroll-snap-stop: always;
       }
       #jd-slideshow > .jd-slide.is-filtered-out { display: none !important; }
-      #jd-main::before, #jd-main::after {
-        content: '';
+      /* Opaque safe-area coverage; blur only the inner edge so Safari samples
+         a stable canvas colour instead of photos behind a full-bar filter. */
+      .jd-mobile-edge {
+        display: block;
         position: fixed;
         left: 0; right: 0;
-        background: rgba(255, 255, 255, 0.94);
-        -webkit-backdrop-filter: blur(6px) saturate(110%);
-        backdrop-filter: blur(6px) saturate(110%);
+        background: var(--jd-bg);
         pointer-events: none;
         z-index: 100;
       }
-      #jd-main::before {
-        top: 0;
-        height: 92px;
-        -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
-        mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+      .jd-mobile-edge::after {
+        content: '';
+        position: absolute;
+        left: 0; right: 0;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.94);
+        -webkit-backdrop-filter: blur(6px) saturate(110%);
+        backdrop-filter: blur(6px) saturate(110%);
       }
-      #jd-main::after {
-        bottom: 0;
-        height: 86px;
-        -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 24px), transparent);
-        mask-image: linear-gradient(to top, #000 calc(100% - 24px), transparent);
+      .jd-splash-active .jd-mobile-edge { background: #000000; }
+      .jd-splash-active .jd-mobile-edge::after {
+        background: #000000;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+      .jd-mobile-edge-top {
+        top: calc(0px - env(safe-area-inset-top, 0px));
+        height: calc(68px + env(safe-area-inset-top, 0px));
+      }
+      .jd-mobile-edge-top::after {
+        top: 100%;
+        -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+        mask-image: linear-gradient(to bottom, #000, transparent);
+      }
+      .jd-mobile-edge-bottom {
+        bottom: calc(0px - env(safe-area-inset-bottom, 0px));
+        height: calc(62px + env(safe-area-inset-bottom, 0px));
+      }
+      .jd-mobile-edge-bottom::after {
+        bottom: 100%;
+        -webkit-mask-image: linear-gradient(to top, #000, transparent);
+        mask-image: linear-gradient(to top, #000, transparent);
       }
       .jd-slide-location { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
       body.index-is-open #jd-counter, 
@@ -1748,6 +1774,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     }
 
+    .jd-mobile-edge { display: none; }
+    @media (max-width: 800px) { .jd-mobile-edge { display: block; } }
+
     /* ─── CINEMATIC EDITORIAL SPLASH SCREEN ────────────── */
     .jd-no-splash #jd-splash {
       display: none !important;
@@ -1762,8 +1791,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-splash-screen {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      width: 100vw; height: 100vh;
+      top: calc(0px - env(safe-area-inset-top, 0px));
+      left: 0; right: 0;
+      width: 100%;
+      height: calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+      height: calc(100lvh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
       background: #000000;
       z-index: 2147483647 !important;
       display: flex;
@@ -1854,53 +1886,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         filter: blur(0px);
         transform: translate3d(0, 0, 0);
       }
-    @media (max-width: 768px) {
-      #jd-bar-keeper {
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #000000;
-        z-index: 2147483646;
-        pointer-events: none;
-        opacity: 1;
-        transition: opacity 0.18s ease-out;
-      }
-      .jd-safari-anchor {
-        position: fixed;
-        left: 0; right: 0;
-        height: 1px;
-        background: #000000;
-        z-index: 99999999;
-        pointer-events: none;
-      }
-      .jd-safari-top { top: 0; }
-      .jd-safari-bottom { bottom: 0; }
-    }
-    @media (min-width: 769px) {
-      #jd-bar-keeper, .jd-safari-anchor {
-        display: none !important;
-      }
     }
   </style>
 </head>
 <body ontouchstart="">
 
-  <!-- Safari mobile status bar & bottom bar keeper -->
-  <div id="jd-bar-keeper" aria-hidden="true"></div>
-  <div class="jd-safari-anchor jd-safari-top" aria-hidden="true"></div>
-  <div class="jd-safari-anchor jd-safari-bottom" aria-hidden="true"></div>
-  <script is:inline>
-    (function() {
-      requestAnimationFrame(function() {
-        var k = document.getElementById('jd-bar-keeper');
-        if (k) {
-          k.style.opacity = '0';
-          setTimeout(function() { if (k && k.parentNode) k.parentNode.removeChild(k); }, 220);
-        }
-      });
-    })();
-  </script>
+  <div class="jd-mobile-edge jd-mobile-edge-top" aria-hidden="true"></div>
+  <div class="jd-mobile-edge jd-mobile-edge-bottom" aria-hidden="true"></div>
 
   <!-- Cinematic Editorial Splash Screen -->
   <div id="jd-splash" class="jd-splash-screen" aria-hidden="true">
@@ -2252,44 +2244,39 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   document.addEventListener('DOMContentLoaded', function () {
     // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
     const splashEl = document.getElementById('jd-splash');
+    const splashRoot = document.documentElement;
+    function finishSplash() {
+      splashEl?.remove();
+      splashRoot.classList.remove('jd-splash-active');
+      splashRoot.classList.add('jd-no-splash');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#ffffff');
+      window.dispatchEvent(new Event('jd:splash-dismissed'));
+    }
     if (splashEl) {
-      const isSplashSkipped = document.documentElement.classList.contains('jd-no-splash');
-      if (isSplashSkipped) {
-        splashEl.remove();
+      if (splashRoot.classList.contains('jd-no-splash')) {
+        finishSplash();
       } else {
         try { sessionStorage.setItem('jd_splash_seen', 'true'); } catch (e) {}
-
         let splashDismissed = false;
+        let removalTimer;
         function dismissSplash() {
           if (splashDismissed) return;
           splashDismissed = true;
-
-          // 1. Teksti ampaisee heti ylös ruudun yli
+          clearTimeout(autoTimer);
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
           splashEl.classList.add('jd-splash-text-exit');
-
-          // 2. Musta verho seuraa 150ms perässä ylös
-          setTimeout(function() {
-            splashEl.classList.add('jd-splash-dismissed');
-          }, 150);
-
-          // 3. Poistetaan elementti kun verho on ylhäällä
-          setTimeout(function() {
-            splashEl.remove();
-          }, 850);
+          setTimeout(() => splashEl.classList.add('jd-splash-dismissed'), 150);
+          // Prefer completion of the actual curtain; timer covers interrupted transitions.
+          splashEl.addEventListener('transitionend', event => {
+            if (event.target !== splashEl || event.propertyName !== 'transform') return;
+            clearTimeout(removalTimer);
+            finishSplash();
+          });
+          removalTimer = setTimeout(finishSplash, 900);
         }
-
-        // Automatic reveal: teksti ampaisee ylös 2.4s kohdalla
         const autoTimer = setTimeout(dismissSplash, 2400);
-
-        // Instant dismiss on click, touch or keydown
-        splashEl.addEventListener('click', function() {
-          clearTimeout(autoTimer);
-          dismissSplash();
-        });
-        window.addEventListener('keydown', function() {
-          clearTimeout(autoTimer);
-          dismissSplash();
-        }, { once: true });
+        splashEl.addEventListener('click', dismissSplash);
+        window.addEventListener('keydown', dismissSplash, { once: true });
       }
     }
 
@@ -2970,6 +2957,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     function mobileScrollBlocked() {
       return !mobileScrollReady || window.innerWidth > 800 || !mobileCentres.length
+        || document.documentElement.classList.contains('jd-splash-active')
         || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving');
     }
     function syncMobileSlide() {
@@ -3036,6 +3024,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       mobilePanelOpen = open;
     });
     mobilePanelObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('jd:splash-dismissed', () => {
+      if (window.innerWidth > 800) return;
+      requestAnimationFrame(() => {
+        rebuildMobileCentres();
+        alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
+      });
+    });
     new ResizeObserver(scheduleMobileGeometry).observe(slideshow);
     window.addEventListener('resize', () => {
       const active = window.innerWidth <= 800;
