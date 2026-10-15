@@ -264,10 +264,21 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         skip = !!sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(location.search).has('splash');
       } catch (e) {}
       document.documentElement.classList.add(skip ? 'jd-no-splash' : 'jd-splash-active');
-      document.documentElement.style.colorScheme = skip ? 'light' : 'dark';
-      document.documentElement.style.backgroundColor = skip ? '#ffffff' : '#000000';
-      document.querySelector('meta[name="color-scheme"]').setAttribute('content', skip ? 'light' : 'dark');
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', skip ? '#ffffff' : '#000000');
+      // Browser canvas is independent of the light gallery and splash history.
+      // Every static category load must establish the same mobile chrome theme.
+      window.jdSyncBrowserTheme = function () {
+        var darkCanvas = window.matchMedia('(max-width: 800px)').matches
+          || (document.documentElement.classList.contains('jd-splash-active')
+            && !document.documentElement.classList.contains('jd-splash-revealing'));
+        var scheme = darkCanvas ? 'dark' : 'light';
+        var colour = darkCanvas ? '#000000' : '#ffffff';
+        document.documentElement.style.colorScheme = scheme;
+        document.documentElement.style.backgroundColor = colour;
+        document.querySelector('meta[name="color-scheme"]').setAttribute('content', scheme);
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', colour);
+      };
+      window.jdSyncBrowserTheme();
+      window.matchMedia('(max-width: 800px)').addEventListener('change', window.jdSyncBrowserTheme);
     })();
   </script>
   <title>{pageTitle}</title>
@@ -390,6 +401,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       color: var(--jd-text);
       font-family: var(--jd-font);
     }
+
+    /* The gallery stays light even when the browser canvas uses a dark theme. */
+    body { color-scheme: light; }
 
     a { color: inherit; text-decoration: none; }
     img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; pointer-events: none; }
@@ -1409,7 +1423,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
       #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
-      html, body { background: var(--jd-bg) !important; }
+      html { background: #000000 !important; color-scheme: dark; }
+      body { background: var(--jd-bg) !important; color-scheme: light; }
       html.jd-splash-active:not(.jd-splash-revealing), html.jd-splash-active:not(.jd-splash-revealing) body { background: #000000 !important; }
       /* One native vertical scroll surface. Stable page sizes avoid reflow
          while Safari expands or retracts its browser controls. */
@@ -2267,10 +2282,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     const splashEl = document.getElementById('jd-splash');
     const splashRoot = document.documentElement;
     function restoreGalleryTheme() {
-      splashRoot.style.colorScheme = 'light';
-      splashRoot.style.backgroundColor = '#ffffff';
-      document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', 'light');
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#ffffff');
+      window.jdSyncBrowserTheme();
     }
     function finishSplash() {
       splashEl?.remove();
