@@ -1411,7 +1411,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-index-overlay.is-open { width: 100%; }
       html, body { background: var(--jd-bg) !important; }
       html.jd-splash-active, html.jd-splash-active body { background: #000000 !important; }
-      html.jd-splash-active { overflow-y: hidden !important; }
       /* One native vertical scroll surface. Stable page sizes avoid reflow
          while Safari expands or retracts its browser controls. */
       html {
@@ -1782,7 +1781,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     @media (max-width: 800px) { .jd-mobile-edge { display: block; } }
 
     /* ─── CINEMATIC EDITORIAL SPLASH SCREEN ────────────── */
-    .jd-no-splash #jd-splash {
+    .jd-no-splash #jd-splash, .jd-no-splash #jd-splash-safe-top {
       display: none !important;
     }
     /* Estetään kategoriaotsikon (Uusimmat) ja vanhan verhon näkyminen splashin päällä */
@@ -1795,11 +1794,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-splash-screen {
       position: fixed;
-      top: calc(0px - env(safe-area-inset-top, 0px));
+      /* Overscan the screen edges; Safari can temporarily report zero safe-area
+         insets while its browser controls are being laid out. */
+      top: calc(-64px - env(safe-area-inset-top, 0px));
       left: 0; right: 0;
       width: 100%;
-      height: calc(100vh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
-      height: calc(100lvh + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+      height: calc(100vh + 128px + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
+      height: calc(100lvh + 128px + env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px));
       background: #000000;
       z-index: 2147483647 !important;
       display: flex;
@@ -1813,7 +1814,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       -webkit-tap-highlight-color: transparent;
       will-change: transform;
       transform: translate3d(0, 0, 0);
-      transition: transform 0.68s cubic-bezier(0.76, 0, 0.24, 1);
+      transition: transform 0.9s cubic-bezier(0.65, 0, 0.25, 1);
+      touch-action: none;
     }
     .jd-splash-screen.jd-splash-dismissed {
       transform: translate3d(0, -100%, 0) !important;
@@ -1829,22 +1831,25 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       box-sizing: border-box;
       will-change: transform, opacity;
       transform: translate3d(0, 0, 0);
-      transition: transform 0.62s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.4s ease;
+      transition: transform 0.78s cubic-bezier(0.65, 0, 0.25, 1), opacity 0.45s ease;
     }
     /* Teksti ampaisee ensin ylös */
     .jd-splash-screen.jd-splash-text-exit .jd-splash-inner {
       transform: translate3d(0, -115vh, 0) !important;
       opacity: 0.15 !important;
     }
+    #jd-splash-safe-top { display: none; }
     @media (max-width: 800px) {
-      /* Fade the entire intro together: lifting a curtain exposes a white band
-         while Safari's translucent bottom toolbar is still sampling black. */
-      .jd-splash-screen { transition: opacity 0.24s ease-out; will-change: opacity; }
-      .jd-splash-screen.jd-splash-dismissed { transform: none !important; opacity: 0; }
-      .jd-splash-screen.jd-splash-text-exit .jd-splash-inner {
-        transform: translate3d(0, -10px, 0) !important;
-        opacity: 0 !important;
-        transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+      /* Keep the status-area paint independent of the transformed curtain. */
+      html.jd-splash-active #jd-splash-safe-top {
+        display: block;
+        position: fixed;
+        top: calc(-64px - env(safe-area-inset-top, 0px));
+        left: 0; right: 0;
+        height: calc(96px + env(safe-area-inset-top, 0px));
+        background: #000000;
+        z-index: 2147483647;
+        pointer-events: none;
       }
     }
     .jd-splash-title-wrap {
@@ -1908,6 +1913,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
   <div class="jd-mobile-edge jd-mobile-edge-top" aria-hidden="true"></div>
   <div class="jd-mobile-edge jd-mobile-edge-bottom" aria-hidden="true"></div>
+
+  <div id="jd-splash-safe-top" aria-hidden="true"></div>
 
   <!-- Cinematic Editorial Splash Screen -->
   <div id="jd-splash" class="jd-splash-screen" aria-hidden="true">
@@ -2262,6 +2269,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     const splashRoot = document.documentElement;
     function finishSplash() {
       splashEl?.remove();
+      document.getElementById('jd-splash-safe-top')?.remove();
       splashRoot.classList.remove('jd-splash-active');
       splashRoot.classList.add('jd-no-splash');
       splashRoot.style.colorScheme = 'light';
@@ -2282,17 +2290,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           splashDismissed = true;
           clearTimeout(autoTimer);
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
-          const fadeIntro = window.innerWidth <= 800;
           splashEl.classList.add('jd-splash-text-exit');
-          if (fadeIntro) splashEl.classList.add('jd-splash-dismissed');
-          else setTimeout(() => splashEl.classList.add('jd-splash-dismissed'), 150);
+          setTimeout(() => splashEl.classList.add('jd-splash-dismissed'), 100);
           // Prefer completion of the actual curtain; timer covers interrupted transitions.
           splashEl.addEventListener('transitionend', event => {
-            if (event.target !== splashEl || event.propertyName !== (fadeIntro ? 'opacity' : 'transform')) return;
+            if (event.target !== splashEl || event.propertyName !== 'transform') return;
             clearTimeout(removalTimer);
             finishSplash();
           });
-          removalTimer = setTimeout(finishSplash, fadeIntro ? 350 : 900);
+          removalTimer = setTimeout(finishSplash, 1150);
         }
         const autoTimer = setTimeout(dismissSplash, 2400);
         splashEl.addEventListener('click', dismissSplash);
