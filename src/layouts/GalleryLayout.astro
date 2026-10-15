@@ -1572,6 +1572,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-bottom-nav .jd-bottom-btn { padding: 8px 0 !important; font-size: 0.92rem !important; font-weight: 500 !important; letter-spacing: 0.04em !important; color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important; white-space: nowrap; }
       .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
       .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
+      #jd-hint-arrows { transition: opacity 450ms ease-out; }
+      body.mobile-has-scrolled #jd-hint-arrows { opacity: 0 !important; }
+      body.mobile-has-scrolled #jd-hint-arrows .jd-hint-arrow { pointer-events: none; }
+      @media (prefers-reduced-motion: reduce) {
+        #jd-hint-arrows { transition: none; }
+      }
       #jd-hint-arrows.show-hints { animation: none; }
       #jd-hint-arrows { 
         display: flex !important; 
@@ -3193,6 +3199,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           mobileTouch.axis = Math.abs(dy) > Math.abs(dx) ? 'vertical' : 'horizontal';
         }
         if (mobileTouch.axis === 'vertical') {
+          document.body.classList.add('mobile-has-scrolled');
           hasSwiped = true;
           return; // Safari owns the drag, momentum, toolbar motion and snap.
         }
