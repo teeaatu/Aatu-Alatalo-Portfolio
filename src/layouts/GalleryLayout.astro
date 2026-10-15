@@ -460,6 +460,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       -webkit-backface-visibility: hidden;
     }
     .jd-slide.active { opacity: 1; pointer-events: auto; }
+    @media (min-width: 801px) {
+      .jd-slide { transition-duration: 0.22s; }
+      .jd-slide.wheel-motion {
+        opacity: 1 !important;
+        transition: none !important;
+        pointer-events: none;
+      }
+    }
     .jd-slide picture { display: contents; }
     .jd-slide img {
       max-width: calc(100% - 120px);
@@ -516,7 +524,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0;
       transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .jd-slide.active .jd-slide-location {
+    .jd-current-location {
       opacity: 1;
     }
     body.index-is-open .jd-slide-location,
@@ -651,6 +659,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
+    @media (min-width: 801px) {
+      body.index-is-open #jd-bottom-nav {
+        left: calc((100vw - var(--jd-panel-w)) / 2) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease;
+      }
+    }
     .jd-bottom-btn {
       background: none; border: none;
       color: rgba(26, 26, 24, 0.72) !important; -webkit-text-fill-color: rgba(26, 26, 24, 0.72) !important;
@@ -668,6 +685,39 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-nav-divider { display: none !important; }
     #jd-counter { display: none; }
+
+    #jd-wheel-counter { display: none; }
+    @media (min-width: 801px) {
+      #jd-wheel-counter {
+        position: fixed;
+        top: 24px;
+        right: 60px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        font-family: var(--jd-font);
+        font-size: 0.95rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.04em;
+        color: rgba(26, 26, 24, 0.72);
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+        z-index: 100000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-4px);
+        transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+      }
+      body.is-wheel-browsing:not(.index-is-open):not(.thumbs-is-open):not(.about-is-open):not(.is-leaving) #jd-wheel-counter {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #jd-wheel-counter { transition: none; transform: none; }
+    }
 
     /* ─── SHUTTER / CURTAIN ─────────────────────────── */
     #jd-shutter-container {
@@ -1841,6 +1891,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     </div>
   )}
 
+  <span id="jd-wheel-counter" aria-hidden="true">1 / {galleryData.length}</span>
+
   <!-- Mobile counter -->
   <div id="jd-counter" role="button" tabindex="0" aria-label={lang === 'fi' ? 'Avaa valikko' : 'Open menu'}>
     <div class="jd-counter-top">
@@ -2299,12 +2351,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           picture.appendChild(img);
           slide.appendChild(picture);
         });
-        if (item.place) {
-          const locEl = document.createElement('div');
-          locEl.className = 'jd-slide-location';
-          locEl.textContent = item.place;
-          slide.appendChild(locEl);
-        }
+
       } else {
         const picture = document.createElement('picture');
         
@@ -2340,15 +2387,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         picture.appendChild(img);
         slide.appendChild(picture);
 
-        if (item.place) {
-          const locEl = document.createElement('div');
-          locEl.className = 'jd-slide-location';
-          locEl.textContent = item.place;
-          slide.appendChild(locEl);
-        }
+
       }
       return slide;
     }
+
+    const desktopLocation = document.createElement('div');
+    desktopLocation.className = 'jd-slide-location jd-current-location';
+    document.body.appendChild(desktopLocation);
 
     data.forEach((item, i) => {
       const slide = createSlide(item, i);
@@ -2404,9 +2450,13 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     });
 
     function updateCounter() {
+      desktopLocation.textContent = data[current]?.place || '';
+      desktopLocation.hidden = !desktopLocation.textContent;
       let vi = visibleIndices.indexOf(current);
       if (vi === -1) vi = 0;
       const n = vi + 1;
+      const wheelCounter = document.getElementById('jd-wheel-counter');
+      if (wheelCounter) wheelCounter.textContent = `${n} / ${visibleTotal}`;
 
       const catSpan = document.getElementById('jd-counter-cat');
       if (catSpan) {
@@ -2514,10 +2564,220 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     }
 
+    function setWheelCounterVisible(visible) {
+      document.body.classList.toggle('is-wheel-browsing', visible);
+      document.getElementById('jd-wheel-counter')?.setAttribute('aria-hidden', String(!visible));
+    }
+    document.addEventListener('pointerdown', () => setWheelCounterVisible(false), { capture: true });
+
+    /* Desktop wheel browsing: one photo per continuous gesture. */
+    let wheelMotion = null;
+    let wheelIdleTimer;
+    let wheelDelta = 0;
+    let wheelCommitting = false;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const wheelStep = 360;
+    const wheelSnapDuration = 360;
+    let lastWheelEventAt = -Infinity;
+    let wheelInputDirection = 0;
+    let wheelInputPeak = 0;
+    let wheelInputValley = Infinity;
+    let wheelInputPrevious = 0;
+    let wheelInputDecelerated = false;
+    let wheelBoundaryDirection = 0;
+    let wheelGestureHasCommitted = false;
+
+    function cancelWheelMotion() {
+      clearTimeout(wheelIdleTimer);
+      wheelDelta = 0;
+      if (!wheelMotion) return;
+      cancelAnimationFrame(wheelMotion.frame);
+      slides.forEach(slide => {
+        slide.style.transition = 'none';
+        slide.classList.remove('wheel-motion');
+        slide.style.removeProperty('transform');
+        slide.style.removeProperty('visibility');
+        slide.style.removeProperty('will-change');
+      });
+      // Restore the active slide without fading old slides back through it.
+      void slideshow.offsetWidth;
+      slides.forEach(slide => slide.style.removeProperty('transition'));
+      wheelMotion = null;
+    }
+
+    // Match the existing cubic-bezier(0.22, 1, 0.36, 1) snap easing.
+    function wheelEase(progress) {
+      let low = 0, high = 1;
+      for (let i = 0; i < 12; i++) {
+        const t = (low + high) / 2;
+        const x = 3 * (1 - t) ** 2 * t * 0.22 + 3 * (1 - t) * t ** 2 * 0.36 + t ** 3;
+        if (x < progress) low = t;
+        else high = t;
+      }
+      return 1 - (1 - (low + high) / 2) ** 3;
+    }
+
+    function wheelPositionAt(now) {
+      const motion = wheelMotion;
+      const progress = reducedMotion.matches || motion.duration === 0 ? 1 : Math.min(1, (now - motion.started) / motion.duration);
+      return progress >= 1 ? motion.target : motion.from + (motion.target - motion.from) * wheelEase(progress);
+    }
+
+    function paintWheelMotion(now) {
+      const motion = wheelMotion;
+      if (!motion) return;
+      const position = wheelPositionAt(now);
+      const width = slideshow.clientWidth;
+      slides.forEach((slide, index) => {
+        const visibleIndex = visibleIndices.indexOf(index);
+        const distance = visibleIndex - position;
+        const nearViewport = visibleIndex !== -1 && Math.abs(distance) < 1.25;
+        slide.classList.add('wheel-motion');
+        slide.style.visibility = nearViewport ? 'visible' : 'hidden';
+        slide.style.willChange = nearViewport ? 'transform' : 'auto';
+        slide.style.transform = `translate3d(${distance * width}px, 0, 0)`;
+      });
+      if (Math.abs(position - motion.target) > 0.0001) {
+        motion.frame = requestAnimationFrame(paintWheelMotion);
+      } else if (wheelDelta === 0) {
+        cancelWheelMotion();
+      } else {
+        motion.frame = 0;
+      }
+    }
+
+    function retargetWheelMotion(target, duration = wheelSnapDuration) {
+      const now = performance.now();
+      if (!wheelMotion) {
+        const position = visibleIndices.indexOf(current);
+        wheelMotion = { from: position, target: position, started: now, duration, frame: 0 };
+      }
+      const position = wheelPositionAt(now);
+      wheelMotion.from = position;
+      wheelMotion.target = target;
+      wheelMotion.started = now;
+      wheelMotion.duration = duration;
+      if (duration === 0) {
+        cancelAnimationFrame(wheelMotion.frame);
+        wheelMotion.frame = 0;
+        paintWheelMotion(now);
+      } else if (!wheelMotion.frame) {
+        wheelMotion.frame = requestAnimationFrame(paintWheelMotion);
+      }
+    }
+
+    // Wheel events do not expose finger lifts. Recognise the next input burst
+    // from a short gap, a deliberate reversal, or a new push after deceleration.
+    function startsNewWheelGesture(delta, now) {
+      const magnitude = Math.abs(delta);
+      const direction = Math.sign(delta);
+      const renewedPush = wheelInputDecelerated
+        && magnitude >= Math.max(18, wheelInputPeak * 0.35, wheelInputValley * 2.2)
+        && magnitude > wheelInputPrevious;
+      const fresh = now - lastWheelEventAt > 90
+        || (direction !== wheelInputDirection && magnitude >= 6)
+        || renewedPush;
+      if (fresh) {
+        wheelInputDirection = direction;
+        wheelInputPeak = magnitude;
+        wheelInputValley = magnitude;
+        wheelInputDecelerated = false;
+      } else {
+        wheelInputPeak = Math.max(wheelInputPeak, magnitude);
+        if (magnitude < wheelInputPeak * 0.55) wheelInputDecelerated = true;
+        if (wheelInputDecelerated) wheelInputValley = Math.min(wheelInputValley, magnitude);
+      }
+      wheelInputPrevious = magnitude;
+      lastWheelEventAt = now;
+      return fresh;
+    }
+
+    // Listen independently of the moving slides and the custom cursor.
+    document.addEventListener('wheel', e => {
+      if (window.innerWidth <= 800 || e.ctrlKey || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
+      if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const scale = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? window.innerHeight : 1;
+      const delta = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * scale;
+      if (!delta || !visibleTotal) return;
+      e.preventDefault();
+      document.body.classList.add('user-has-interacted');
+      if (cursor) cursor.style.opacity = '0';
+      setWheelCounterVisible(true);
+      clearTimeout(wheelIdleTimer);
+      const now = performance.now();
+      const inputDirection = Math.sign(delta);
+      // Category boundaries require actual silence, not merely the acceleration
+      // or reversal that can start a new gesture within the current category.
+      const boundaryPause = now - lastWheelEventAt >= 280;
+      if (startsNewWheelGesture(delta, now)) {
+        wheelGestureHasCommitted = false;
+        const index = visibleIndices.indexOf(current);
+        const boundarySettled = !wheelMotion || Math.abs(wheelPositionAt(now) - index) < 0.001;
+        const atBoundary = (inputDirection > 0 && index === visibleTotal - 1)
+          || (inputDirection < 0 && index === 0);
+        // Once a swipe starts after stopping at the boundary, keep its
+        // permission and accumulated distance through acceleration changes.
+        const continuingBoundarySwipe = !boundaryPause && atBoundary
+          && wheelBoundaryDirection === inputDirection;
+        if (!continuingBoundarySwipe) wheelDelta = 0;
+        if (boundaryPause) {
+          wheelBoundaryDirection = boundarySettled && atBoundary ? inputDirection : 0;
+        } else if (!continuingBoundarySwipe) {
+          wheelBoundaryDirection = 0;
+        }
+      }
+      wheelIdleTimer = setTimeout(() => {
+        wheelDelta = 0;
+        if (wheelMotion && !wheelGestureHasCommitted) {
+          retargetWheelMotion(visibleIndices.indexOf(current));
+        }
+      }, 180);
+      // Momentum cannot select another photo; a new input burst can retarget
+      // the rail immediately, even while the previous snap is still moving.
+      if (wheelGestureHasCommitted) return;
+      if (!wheelMotion) retargetWheelMotion(visibleIndices.indexOf(current));
+      if (Math.sign(wheelDelta) !== Math.sign(delta)) wheelDelta = 0;
+      wheelDelta += delta;
+
+      if (Math.abs(wheelDelta) >= wheelStep) {
+        const direction = Math.sign(wheelDelta);
+        wheelDelta = 0;
+        wheelGestureHasCommitted = true;
+        const targetIndex = visibleIndices.indexOf(current) + direction;
+        if (targetIndex < 0 || targetIndex >= visibleTotal) {
+          wheelDelta = 0;
+          if (wheelBoundaryDirection === direction) {
+            wheelBoundaryDirection = 0;
+            cancelWheelMotion();
+            goToRelative(direction);
+            return;
+          }
+          retargetWheelMotion(visibleIndices.indexOf(current));
+          return;
+        }
+        wheelCommitting = true;
+        goToAbsolute(visibleIndices[targetIndex]);
+        wheelCommitting = false;
+      }
+      // Preview the beginning of a gesture, then land exactly on the chosen
+      // slide. Leftover wheel momentum must not pull it past the centre.
+      const index = visibleIndices.indexOf(current);
+      const preview = reducedMotion.matches || wheelGestureHasCommitted ? 0 : wheelDelta / wheelStep * 0.1;
+      const target = Math.max(0, Math.min(visibleTotal - 1, index + preview));
+      // Before committing a photo change, follow the fingers directly.
+      // Once committed, retain the existing 360 ms snap to the exact centre.
+      const snapInProgress = wheelMotion && wheelMotion.duration > 0
+        && now - wheelMotion.started < wheelMotion.duration;
+      retargetWheelMotion(target, wheelGestureHasCommitted || snapInProgress ? wheelSnapDuration : 0);
+    }, { passive: false, capture: true });
+    window.addEventListener('resize', cancelWheelMotion);
+
     function goToAbsolute(idx, skipFilterCheck = false) {
       if (visibleTotal === 0) return;
       if (!skipFilterCheck && !visibleIndices.includes(idx)) applyFilter('all');
-      if (slides[current]) slides[current].classList.remove('active');
+      if (!wheelCommitting) cancelWheelMotion();
+      const outgoingSlide = slides[current];
+      if (outgoingSlide) outgoingSlide.classList.remove('active');
       const localThumbs = document.querySelectorAll(`.jd-thumb-global[data-cat="${categorySlug}"]`);
       if (localThumbs[current]) localThumbs[current].classList.remove('is-active');
       current = idx;
@@ -2659,6 +2919,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       document.body.style.cursor = 'none';
       
       document.addEventListener('mousemove', e => {
+        setWheelCounterVisible(false);
         sessionStorage.setItem('jdLastMouseX', e.clientX);
         sessionStorage.setItem('jdLastMouseY', e.clientY);
         if (window.jdCursorFrozen) return;
@@ -2691,6 +2952,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* Thumbs view */
     function openThumbsView() {
+      cancelWheelMotion();
       if (thumbsOpen) return;
       
       thumbsOpen = true; 
@@ -2916,6 +3178,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     window.openIndexPanel = function() {
+      cancelWheelMotion();
       if (typeof closeThumbsView === 'function') closeThumbsView();
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
@@ -2946,7 +3209,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     };
 
-    window.openAboutPanel = function() { 
+    window.openAboutPanel = function() {
+      cancelWheelMotion();
       const p = document.getElementById('jd-about-panel'); 
       if (p) { 
         p.classList.add('is-open'); 
