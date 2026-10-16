@@ -483,6 +483,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-slide.active { opacity: 1; pointer-events: auto; }
     @media (min-width: 801px) {
       .jd-slide { transition-duration: 0.22s; }
+      #jd-slideshow.wheel-browsing .jd-slide {
+        opacity: 0;
+        visibility: hidden;
+        transition: none !important;
+      }
+      #jd-slideshow.wheel-restoring .jd-slide { transition: none !important; }
       .jd-slide.wheel-motion {
         opacity: 1 !important;
         transition: none !important;
@@ -2766,6 +2772,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* Desktop wheel browsing: one photo per continuous gesture. */
     let wheelMotion = null;
+    let wheelRestoreFrame = 0;
     let wheelIdleTimer;
     let wheelDelta = 0;
     let wheelCommitting = false;
@@ -2786,16 +2793,21 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       wheelDelta = 0;
       if (!wheelMotion) return;
       cancelAnimationFrame(wheelMotion.frame);
-      slides.forEach(slide => {
-        slide.style.transition = 'none';
+      slideshow.classList.add('wheel-restoring');
+      wheelMotion.painted.forEach(slide => {
         slide.classList.remove('wheel-motion');
         slide.style.removeProperty('transform');
         slide.style.removeProperty('visibility');
         slide.style.removeProperty('will-change');
       });
-      // Restore the active slide without fading old slides back through it.
-      void slideshow.offsetWidth;
-      slides.forEach(slide => slide.style.removeProperty('transition'));
+      slideshow.classList.remove('wheel-browsing');
+      cancelAnimationFrame(wheelRestoreFrame);
+      wheelRestoreFrame = requestAnimationFrame(() => {
+        wheelRestoreFrame = requestAnimationFrame(() => {
+          slideshow.classList.remove('wheel-restoring');
+          wheelRestoreFrame = 0;
+        });
+      });
       wheelMotion = null;
     }
 
@@ -2830,18 +2842,24 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         if (Math.abs(vi - position) >= 1.25) continue;
         const slide = slides[visibleIndices[vi]];
         near.add(slide);
-        slide.style.visibility = 'visible';
-        slide.style.willChange = 'transform';
+        if (!motion.painted.has(slide)) {
+          slide.classList.add('wheel-motion');
+          slide.style.visibility = 'visible';
+          slide.style.willChange = 'transform';
+        }
         slide.style.transform = `translate3d(${(vi - position) * wheelWidth}px, 0, 0)`;
       }
       motion.painted.forEach(slide => {
-        if (!near.has(slide)) { slide.style.visibility = 'hidden'; slide.style.willChange = 'auto'; }
+        if (!near.has(slide)) {
+          slide.classList.remove('wheel-motion');
+          slide.style.removeProperty('visibility');
+          slide.style.removeProperty('will-change');
+          slide.style.removeProperty('transform');
+        }
       });
       motion.painted = near;
       if (position !== motion.target) {
         motion.frame = requestAnimationFrame(paintWheelMotion);
-      } else if (wheelDelta === 0) {
-        cancelWheelMotion();
       } else {
         motion.frame = 0;
       }
@@ -2852,10 +2870,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       if (!wheelMotion) {
         const position = visibleIndices.indexOf(current);
         wheelMotion = { from: position, target: position, velocity: 0, started: now, duration: 0, frame: 0, painted: new Set() };
-        slides.forEach(slide => {
-          slide.classList.add('wheel-motion');
-          slide.style.visibility = 'hidden';
-        });
+        cancelAnimationFrame(wheelRestoreFrame);
+        slideshow.classList.remove('wheel-restoring');
+        slideshow.classList.add('wheel-browsing');
       }
       const sample = sampleWheelMotion(now);
       // Direct finger preview has no easing. Its measured velocity seeds release.
@@ -2868,11 +2885,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       wheelMotion.velocity = Math.abs(target - sample.position) < 0.000001 ? 0 : velocity;
       wheelMotion.started = now;
       wheelMotion.duration = duration;
-      if (duration === 0) {
-        cancelAnimationFrame(wheelMotion.frame);
-        wheelMotion.frame = 0;
-        paintWheelMotion(now);
-      } else if (!wheelMotion.frame) {
+      // Event handlers update physics only. Paint at most once per display frame.
+      if (!wheelMotion.frame) {
         wheelMotion.frame = requestAnimationFrame(paintWheelMotion);
       }
     }
@@ -2973,13 +2987,17 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       // Preview the beginning of a gesture, then land exactly on the chosen
       // slide. Leftover wheel momentum must not pull it past the centre.
       const index = visibleIndices.indexOf(current);
-      const preview = reducedMotion.matches || wheelGestureHasCommitted ? 0 : wheelDelta / wheelStep * 0.1;
+      const preview = reducedMotion.matches || wheelGestureHasCommitted ? 0 : wheelDelta / wheelStep * 0.3;
       const target = Math.max(0, Math.min(visibleTotal - 1, index + preview));
       // Before committing a photo change, follow the fingers directly.
       // Once committed, retain the existing 360 ms snap to the exact centre.
       const snapInProgress = wheelMotion && wheelMotion.duration > 0
         && wheelPositionAt(now) !== wheelMotion.target;
-      retargetWheelMotion(target, wheelGestureHasCommitted || snapInProgress ? wheelSnapDuration : 0);
+      // Line/page events and large integer pixel steps are commonly mouse wheels.
+      // Smooth those steps; fine touchpad input follows directly before snapping.
+      const steppedInput = e.deltaMode !== WheelEvent.DOM_DELTA_PIXEL
+        || (Math.abs(delta) >= 80 && Number.isInteger(delta));
+      retargetWheelMotion(target, wheelGestureHasCommitted || snapInProgress || steppedInput ? wheelSnapDuration : 0);
     }, { passive: false, capture: true });
     window.addEventListener('resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
 
