@@ -2775,14 +2775,12 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     let wheelDelta = 0;
     let wheelCommitting = false;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const wheelStep = 360;
+    const wheelStep = 24;
+    const wheelBoundaryStep = 360;
     const wheelSnapDuration = 360;
     let lastWheelEventAt = -Infinity;
     let wheelInputDirection = 0;
-    let wheelInputPeak = 0;
-    let wheelInputValley = Infinity;
-    let wheelInputPrevious = 0;
-    let wheelInputDecelerated = false;
+    let wheelReverseDelta = 0;
     let wheelBoundaryDirection = 0;
     let wheelGestureHasCommitted = false;
 
@@ -2889,28 +2887,18 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       }
     }
 
-    // Wheel events do not expose finger lifts. Recognise the next input burst
-    // from a short gap, a deliberate reversal, or a new push after deceleration.
+    // Wheel events have no finger-up signal. Rearm after a quiet interval or
+    // a sustained reversal, never from acceleration inside a momentum tail.
     function startsNewWheelGesture(delta, now) {
-      const magnitude = Math.abs(delta);
       const direction = Math.sign(delta);
-      const renewedPush = wheelInputDecelerated
-        && magnitude >= Math.max(18, wheelInputPeak * 0.35, wheelInputValley * 2.2)
-        && magnitude > wheelInputPrevious;
-      const fresh = now - lastWheelEventAt > 90
-        || (direction !== wheelInputDirection && magnitude >= 6)
-        || renewedPush;
+      const quiet = now - lastWheelEventAt >= 180;
+      if (direction !== wheelInputDirection) wheelReverseDelta += Math.abs(delta);
+      else wheelReverseDelta = 0;
+      const fresh = quiet || wheelReverseDelta >= 32;
       if (fresh) {
         wheelInputDirection = direction;
-        wheelInputPeak = magnitude;
-        wheelInputValley = magnitude;
-        wheelInputDecelerated = false;
-      } else {
-        wheelInputPeak = Math.max(wheelInputPeak, magnitude);
-        if (magnitude < wheelInputPeak * 0.55) wheelInputDecelerated = true;
-        if (wheelInputDecelerated) wheelInputValley = Math.min(wheelInputValley, magnitude);
+        wheelReverseDelta = 0;
       }
-      wheelInputPrevious = magnitude;
       lastWheelEventAt = now;
       return fresh;
     }
@@ -2949,20 +2937,16 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
           wheelBoundaryDirection = 0;
         }
       }
-      wheelIdleTimer = setTimeout(() => {
-        wheelDelta = 0;
-        if (wheelMotion && !wheelGestureHasCommitted) {
-          retargetWheelMotion(visibleIndices.indexOf(current));
-        }
-      }, 180);
-      // Momentum cannot select another photo; a new input burst can retarget
-      // the rail immediately, even while the previous snap is still moving.
+      wheelIdleTimer = setTimeout(() => { wheelDelta = 0; }, 180);
       if (wheelGestureHasCommitted) return;
-      if (!wheelMotion) retargetWheelMotion(visibleIndices.indexOf(current));
       if (Math.sign(wheelDelta) !== Math.sign(delta)) wheelDelta = 0;
       wheelDelta += delta;
-
-      if (Math.abs(wheelDelta) >= wheelStep) {
+      const indexBeforeCommit = visibleIndices.indexOf(current);
+      const outward = inputDirection > 0 ? indexBeforeCommit === visibleTotal - 1 : indexBeforeCommit === 0;
+      const threshold = outward ? wheelBoundaryStep : wheelStep;
+      // No provisional displacement: once movement starts, it completes a step.
+      if (Math.abs(wheelDelta) >= threshold) {
+        if (!wheelMotion) retargetWheelMotion(indexBeforeCommit);
         const direction = Math.sign(wheelDelta);
         wheelDelta = 0;
         wheelGestureHasCommitted = true;
@@ -2982,20 +2966,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         goToAbsolute(visibleIndices[targetIndex]);
         wheelCommitting = false;
       }
-      // Preview the beginning of a gesture, then land exactly on the chosen
-      // slide. Leftover wheel momentum must not pull it past the centre.
-      const index = visibleIndices.indexOf(current);
-      const preview = reducedMotion.matches || wheelGestureHasCommitted ? 0 : wheelDelta / wheelStep * 0.3;
-      const target = Math.max(0, Math.min(visibleTotal - 1, index + preview));
-      // Before committing a photo change, follow the fingers directly.
-      // Once committed, retain the existing 360 ms snap to the exact centre.
-      const snapInProgress = wheelMotion && wheelMotion.duration > 0
-        && wheelPositionAt(now) !== wheelMotion.target;
-      // Line/page events and large integer pixel steps are commonly mouse wheels.
-      // Smooth those steps; fine touchpad input follows directly before snapping.
-      const steppedInput = e.deltaMode !== WheelEvent.DOM_DELTA_PIXEL
-        || (Math.abs(delta) >= 80 && Number.isInteger(delta));
-      retargetWheelMotion(target, wheelGestureHasCommitted || snapInProgress || steppedInput ? wheelSnapDuration : 0);
+      if (wheelGestureHasCommitted) {
+        retargetWheelMotion(visibleIndices.indexOf(current));
+      }
     }, { passive: false, capture: true });
     window.addEventListener('resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
 
