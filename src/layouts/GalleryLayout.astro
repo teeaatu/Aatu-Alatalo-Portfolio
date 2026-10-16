@@ -238,7 +238,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <meta name="format-detection" content="telephone=no">
 
   <!-- Language preference & device detection guard -->
-  <script is:inline>
+  <script is:inline data-translation-url={translationUrl}>
     (function() {
       try {
         const userChoice = localStorage.getItem('userLangChoice');
@@ -246,13 +246,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
         const isFiDevice = navLang.startsWith('fi');
 
-        // Jos suomenkielinen laite ilman nimenomaista valintaa englantia tai valinta on suomi:
-        if ((isFiDevice && userChoice !== 'en' && isEnPage) || (userChoice === 'fi' && isEnPage)) {
-          const fiPath = window.location.pathname.replace(/^\/en(\/|$)/, '/');
-          window.location.replace(fiPath || '/');
-        } else if (userChoice === 'en' && !isEnPage) {
-          const enPath = '/en' + (window.location.pathname === '/' ? '' : window.location.pathname);
-          window.location.replace(enPath);
+        const translatedPath = document.currentScript?.dataset.translationUrl;
+        const needsFinnish = isEnPage && (userChoice === 'fi' || (isFiDevice && userChoice !== 'en'));
+        const needsEnglish = !isEnPage && userChoice === 'en';
+        if (translatedPath && (needsFinnish || needsEnglish)) {
+          window.location.replace(translatedPath + window.location.search + window.location.hash);
         }
       } catch (e) {}
     })();
