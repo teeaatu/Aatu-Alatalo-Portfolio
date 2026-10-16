@@ -40,3 +40,16 @@ Kun käyttäjä pyytää lisäämään kuvan:
 - **Kehityspalvelin:** `npm run dev` (avautuu osoitteessa http://localhost:4321)
 - **Käännöstesti:** `npm run build`
 - **Kuvavahti:** `python3 scripts/auto_upload_watch.py`
+
+## 5. Jatkotilanne 16.10.2026 — Mac-Safarin vieritys
+- Nykyinen kehityshaara: `codex/mac-safari-scroll`. Tämän haaran uusia muutoksia ei ole julkaistu; julkaisu vaatii käyttäjän uuden pyynnön.
+- Mainin viimeisin julkaistu versio: `29eb441e` (15.10.2026). Käyttäjän iPhonella toimivaksi vahvistaman puhelinversion palautustunniste: `mobile-safari-working-2026-10-15`.
+- Työn kohde on tietokoneen Safari, tavallinen hiiren rulla ja Macin touchpad. Puhelimen selaus on käyttäjän mukaan toimiva.
+- `src/layouts/GalleryLayout.astro`: työpöydän piirtäminen kerran requestAnimationFrame-ruudussa, vain lähikuvien käsittely, ei pakotettua asettelulaskentaa kuvanvaihdon lopussa. Liikerata säilyy valmiina vaihtojen välillä.
+- Palautuva esiliike poistettu. Kuvanvaihto käynnistyy 24 normalisoidun vieritysyksikön jälkeen; kategorian rajalla raja on 360. Momentum ei käynnistä uutta elettä kiihtymisen perusteella: uusi ele tunnistetaan 180 ms tauosta tai 32 yksikön suunnanvaihdosta. Kategorianvaihto vaatii lisäksi 280 ms tauon ja paikalleen asettumisen.
+- Käyttäjä piti viimeisintä vaihtoa muuten hyvänä mutta nopeana. Jousen omega hidastettiin 28 → 24 (noin 17 % pidempi liike).
+- Tietokoneen Index/Thumbs-valikkoa nostettiin 9 px (top 24 → 15 px). Mobiilin oma top-arvo säilyy.
+- Kieliohjaus korjattu käyttämään sivun translationUrl-arvoa. Käännettyjen kategoriapolkujen tulee säilyttää query ja kuvan hash; pelkkä /en-etuliitteen poisto ei toimi.
+- Viimeisin toteutuscommit ennen tätä muistiota: `334b94b7`. Viimeisin npm run build onnistui. Käyttäjä kokeilee itse tässä selaimessa ja Safarissa; hän pyysi, ettei agentti tee selainkokeita.
+- Kehityspalvelin: `npm run dev -- --host 0.0.0.0`, Mac-linkki `http://localhost:4321/en/interior-light#img-1`. Puhelimen verkko-osoite on tarkistettava nykyisestä verkosta ennen sen antamista.
+- Seuraava askel: jatka käyttäjän palautteesta tässä haarassa. Mainiin yhdistäminen ja git push vain erillisestä pyynnöstä.
