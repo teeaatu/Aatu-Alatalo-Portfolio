@@ -2777,7 +2777,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const wheelStep = 24;
     const wheelBoundaryStep = 360;
-    const wheelSnapDuration = 360;
+    const wheelSnapDuration = 420;
     let lastWheelEventAt = -Infinity;
     let wheelInputDirection = 0;
     let wheelReverseDelta = 0;
@@ -2808,8 +2808,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     // Critical damping: carry both position and velocity into every new target.
-    // omega=28 settles a full-slide change in approximately 360 ms.
-    const wheelSpringOmega = 28;
+    // A softer spring gives desktop changes about 17% more settling time.
+    const wheelSpringOmega = 24;
     let wheelWidth = slideshow.clientWidth;
     function sampleWheelMotion(now) {
       const motion = wheelMotion;
