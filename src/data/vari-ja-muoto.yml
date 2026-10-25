@@ -53,48 +53,31 @@
   height: 1500
   otsikko: Punainen viiva / Red Line
   paikka: Tyrnävä, Finland 2025
-  alt_text: A long exposure photograph at dusk showing a bright red streak of
-    light trailing across a dark road against a moody dark blue evening sky in
-    Tyrnävä, Finland.
+  alt_text: "A long red light trail crosses a dark road at dusk in Tyrnävä, beneath a blue evening sky."
 - kuva: https://media.aatualatalo.com/Photographs/sinisethousut.jpg
   width: 2500
   height: 1786
   otsikko: Rennot farkut / Relaxed Jeans
   paikka: Oulu, Finland 2026
-  alt_text: A person viewed from behind walking across a pedestrian crosswalk on a
-    sunny city street. They are wearing very baggy light blue jeans with a
-    distinct brown patch on the back of the right leg, a black jacket, and a
-    black Vans backpack. Sharp shadows are cast onto the textured asphalt.
+  alt_text: "A person in a black jacket, loose jeans with a brown patch, and a Vans backpack crosses a sunny street."
 - kuva: https://media.aatualatalo.com/Photographs/mersu.jpg
   width: 3000
   height: 2250
   otsikko: Mersu / Mercedes-Benz
   paikka: Tyrnävä, Finland 2026
-  alt_text: A classic red Mercedes-Benz sedan parked diagonally in a sunlit,
-    slightly wet parking lot. In the background, a pale yellow wooden building
-    with a 'TAKSI' sign above its door stands under a bright blue sky with
-    scattered white clouds.
+  alt_text: "A red Mercedes is parked in a wet lot beside a pale yellow building with a TAKSI sign."
 - kuva: Kinogrilli.jpg
   width: 3000
   height: 2250
   otsikko: Kinogrilli / Kinogrill
   paikka: Oulu, Finland 2026
-  alt_text: A sunlit street scene featuring a classic Finnish fast-food kiosk
-    named 'KINO GRILLI' with its distinctive red and yellow sign. A person
-    wearing a red jacket walks on the sidewalk past the kiosk's glass windows,
-    which display advertisements for various burgers. A traditional light green
-    wooden building stands in the background.
+  alt_text: "A person in a red jacket walks past the KINO GRILLI kiosk in Oulu; burger signs fill its windows, with a light green wooden building behind it."
 - kuva: Prinsessa.jpg
   width: 3000
   height: 2143
   otsikko: Kaksi naista selin / Two Women from Behind
   paikka: Oulu, Finland 2026
-  alt_text: A golden hour street photograph taken from behind two women walking
-    arm-in-arm down a cobblestone sidewalk in Oulu, Finland, in 2026. Warm
-    evening sunlight illuminates the women—one wearing a white dress and a red
-    flower crown, being gently escorted by her companion in a pink skirt—while a
-    dark pillar in the foreground casts a dramatic silhouette onto a vibrant
-    pink 'Olo' sign.
+  alt_text: "Two women walk arm in arm along a cobbled street in Oulu. One wears a white dress and flower crown, the other a pink skirt; a dark pillar partly covers the Olo sign."
   pinned: true
 - kuva: bilbao.jpg
   width: 1920
@@ -110,19 +93,13 @@
   height: 1333
   otsikko: Katse onnikasta / Bus Window
   paikka: Oulu, Finland 2026
-  alt_text: A winter street scene viewed through a frosty bus window. Condensation
-    or frost on the glass spells a word in reverse. Outside, under a clear blue
-    sky, frost-covered trees line the street next to a traffic light. In the
-    background stands an apartment building topped with a red neon sign reading
-    'LEIJONA' next to a lion logo.
+  alt_text: "A reversed word is visible in frost on a bus window; outside, frost-covered trees and a traffic light stand before an apartment building with a red LEIJONA sign."
 - kuva: Aallot.jpg
   width: 1920
   height: 1280
   otsikko: Yksin / Alone
   paikka: Bilbao, España 2024
-  alt_text: An expansive, slightly desaturated, high-angle photograph of a sandy
-    beach. A single, solitary figure in dark clothing walks along the shoreline
-    where foamy waves gently meet the sand, creating a sense of quiet isolation.
+  alt_text: "A lone person in dark clothing walks along a sandy shoreline as waves reach the beach."
 - kuva: bilbaorak.jpg
   width: 1920
   height: 2880
@@ -137,19 +114,13 @@
   height: 1000
   otsikko: Lautaset / Plates
   paikka: Oulu, Finland 2026
-  alt_text: A close-up photograph of vintage red and orange plastic tableware for
-    sale at a flea market. Stacks of plates and bowls, along with glasses and
-    spoons, are arranged on a dark, glossy table. Small handwritten price tags
-    in Finnish are taped to the items.
+  alt_text: "Red and orange plastic plates, bowls, glasses, and spoons are stacked on a flea-market table with handwritten Finnish price tags."
 - kuva: ainolanpuisto.webp
   width: 6048
   height: 4032
   otsikko: Ainolanpuisto / Ainola Park
   paikka: Oulu, Finland 2026
-  alt_text: A peaceful park scene at dusk framed by dark tree leaves. Rose bushes
-    dot the green lawn in the foreground. In the midground, two people sit on a
-    bench beside a bicycle along a curving paved path, illuminated by soft
-    golden evening light.
+  alt_text: "Two people sit on a bench beside a bicycle on a curved park path at dusk, with rose bushes and tree branches around them."
 - kuva: Prisma.jpg
   width: 1500
   height: 1000
@@ -162,16 +133,10 @@
   height: 3867
   otsikko: Kansallismaisema Kylmälänkylä / National Landscape Kylmälänkylä
   paikka: Muhos, Finland 2025
-  alt_text: A classic Finnish rural landscape featuring a vast, golden field of
-    tall grass. In the center stands a solitary weathered wooden barn. A dark
-    green forest line spans the horizon beneath a dramatic sky filled with
-    bright white and grey clouds.
+  alt_text: "A weathered wooden barn stands in a field of tall grass, with a forest and cloudy sky on the horizon."
 - kuva: DSC9492.jpg
   width: 5261
   height: 3507
   otsikko: Punainen lehti / Red Leaf
   paikka: Tyrnävä, Finland 2025
-  alt_text: An abstract, extreme close-up photograph of autumn leaves. The
-    foreground is heavily blurred into soft washes of deep red and brown colors,
-    with a few textured red leaves partially visible in the background,
-    conveying a warm, autumnal mood.
+  alt_text: "A close-up of red and brown autumn leaves, with the foreground out of focus."

@@ -3,7 +3,7 @@
   height: 1500
   otsikko: Parking Garage / Pysäköintihalli
   paikka: Oulu, Finland 2026 / Oulu 2026
-  alt_text: "Nuori mies farkkutakissa, farkuissa, nahkasaappaissa ja otsahuivissa istuu matalalla betonipollarilla nojaten valkoiseksi kaakeloituun pysäköintihallin ulkoseinään Oulussa. Seinässä toistuvat tummat metalliritilät ja kulmikas laatoitus kivipäällysteisen jalkakäytävän reunalla."
+  alt_text: "A young man in a denim jacket, jeans, boots, and a headscarf sits against the tiled wall of a parking garage in Oulu."
 - kuva: https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp
   width: 1500
   height: 1875
@@ -17,13 +17,13 @@
   height: 1500
   otsikko: Fishermen by the Fjord / Kalastajat vuonolla
   paikka: Alta, Norway 2026
-  alt_text: "Kaksi kahluuhousuihin pukeutunutta kalastajaa pitelee ja tutkii saalista merenrannalla Alta-vuonolla tyynen veden ja kaukana siintävien vuorten edustalla."
+  alt_text: "Two anglers in waders examine their catch on the shore of Alta Fjord, with calm water and mountains behind them."
 - kuva: https://media.aatualatalo.com/Photographs/lapsetainola.webp
   width: 1500
   height: 2100
   otsikko: Untitled / Nimetön
   paikka: Ainola Park, Oulu, Finland 2026 / Ainolanpuisto, Oulu, Suomi 2026
-  alt_text: "Two children in a park near a body of water under a large leafy tree. In the foreground, a barefoot toddler with curly hair walks on a paved path, with their sandals left on the grass nearby. Further back, an older child stands on the grassy bank looking towards the water."
+  alt_text: "A barefoot toddler walks along a park path while an older child stands by the water beneath a leafy tree."
 - kuva: https://media.aatualatalo.com/Photographs/kuu_kolilla.webp
   width: 1500
   height: 2000
@@ -100,10 +100,7 @@
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: A male singer playing an electric guitar and singing on stage. He is
-    wearing a red vest and black trousers, with a drummer and another guitarist
-    visible in the background behind him. A blurred head of an audience member
-    is in the foreground.
+  alt_text: "A singer in a red vest plays guitar onstage, with a drummer and another guitarist behind him."
   series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26.webp
   width: 2100
@@ -154,10 +151,7 @@
   height: 1500
   otsikko: In the Tram / Ratikassa
   paikka: Helsinki, Finland 2026
-  alt_text: A view from inside a tram looking out through the windows onto a
-    street in Helsinki. The front window frames tram tracks leading towards a
-    tunnel between city buildings, while the tram driver is seen in silhouette
-    on the left.
+  alt_text: "From inside a tram, tracks lead toward a tunnel through a rainy Helsinki street; the driver appears in silhouette."
 - kuva: https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp
   width: 1500
   height: 2100
