@@ -222,8 +222,8 @@ function isActive(item: { fi: string }) {
 }
 
 const currentUrl = Astro.url.pathname;
-const fiTransUrl = translationUrl || (lang === 'en' ? currentUrl.replace(/^\/en\//, '/') : currentUrl);
-const enTransUrl = translationUrl || (lang === 'fi' ? `/en${currentUrl}` : currentUrl);
+const fiTransUrl = lang === 'fi' ? currentUrl : translationUrl;
+const enTransUrl = lang === 'en' ? currentUrl : translationUrl;
 const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
 ---
 <!DOCTYPE html>
@@ -237,22 +237,23 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <meta name="google" content="notranslate">
   <meta name="format-detection" content="telephone=no">
 
-  <!-- Language preference & device detection guard -->
-  <script is:inline data-translation-url={translationUrl}>
+  <!-- Only the unprefixed home page negotiates language; explicit URLs keep theirs. -->
+  <script is:inline>
     (function() {
-      try {
-        const userChoice = localStorage.getItem('userLangChoice');
-        const isEnPage = window.location.pathname.startsWith('/en');
-        const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-        const isFiDevice = navLang.startsWith('fi');
+      if (window.location.pathname !== '/') return;
 
-        const translatedPath = document.currentScript?.dataset.translationUrl;
-        const needsFinnish = isEnPage && (userChoice === 'fi' || (isFiDevice && userChoice !== 'en'));
-        const needsEnglish = !isEnPage && userChoice === 'en';
-        if (translatedPath && (needsFinnish || needsEnglish)) {
-          window.location.replace(translatedPath + window.location.search + window.location.hash);
-        }
-      } catch (e) {}
+      let userChoice;
+      try { userChoice = localStorage.getItem('userLangChoice'); } catch (e) {}
+      const preferredLanguages = navigator.languages?.length
+        ? navigator.languages
+        : [navigator.language || ''];
+      const browserChoice = preferredLanguages
+        .map(value => value.toLowerCase().split('-')[0])
+        .find(value => value === 'fi' || value === 'en') || 'en';
+      const language = userChoice === 'fi' || userChoice === 'en' ? userChoice : browserChoice;
+      if (language === 'en') {
+        window.location.replace('/en/' + window.location.search + window.location.hash);
+      }
     })();
 
     // Establish the canvas and Safari tint before the first paint.
@@ -1980,23 +1981,6 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       <div class="jd-splash-subtitle-wrap">
         <span class="jd-splash-subtitle" id="jd-splash-subtitle">{lang === 'fi' ? 'VALOKUVAAJA' : 'PHOTOGRAPHER'}</span>
       </div>
-      <script is:inline>
-        (function() {
-          try {
-            var sub = document.getElementById('jd-splash-subtitle');
-            if (!sub) return;
-            var navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-            var isEnPage = window.location.pathname.startsWith('/en');
-            var userChoice = localStorage.getItem('userLangChoice');
-
-            if (userChoice === 'en' || (navLang.startsWith('en') && userChoice !== 'fi') || (isEnPage && userChoice !== 'fi')) {
-              sub.textContent = 'PHOTOGRAPHER';
-            } else {
-              sub.textContent = 'VALOKUVAAJA';
-            }
-          } catch (e) {}
-        })();
-      </script>
     </div>
   </div>
 
@@ -2082,7 +2066,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
           {lang === 'en' ? 'About' : 'Minusta'}
         </a>
-        <a href={switchLangUrl} class="jd-lang-toggle" onclick={`localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}')`}>
+        <a href={switchLangUrl} class="jd-lang-toggle" onclick={`try { localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}'); } catch (e) {} this.href = this.pathname + window.location.search + window.location.hash;`}>
           {lang === 'fi' ? 'In English' : 'Suomeksi'}
         </a>
         <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link">
