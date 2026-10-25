@@ -30,8 +30,7 @@
   height: 3000
   otsikko: Unto Välikatto (Hannu Suorsa)
   paikka: Piippola, Finland 2026
-  alt_text: A black and white portrait photograph of a seated man wearing a bowler
-    hat, looking to his left with a thoughtful expression.
+  alt_text: "A seated man in a bowler hat looks to his left against a dark background."
 - kuva: potret1.jpg
   width: 1500
   height: 2000
@@ -46,17 +45,12 @@
   height: 1000
   otsikko: Leila Palmu at the Torikatu Gallery / Leila Palmu Torikadun galleriassa
   paikka: Oulu, Finland 2025
-  alt_text: Leila Palmu, the widow of Finnish artist Juhani Palmu, sitting on a wooden
-    stool inside the Torikatu gallery in Oulu, 2025. Warm evening sunlight crosses
-    the wooden floor and illuminates her pink sweater. Framed paintings hang on the
-    dark green walls behind her.
+  alt_text: "Leila Palmu sits on a wooden stool in the Torikatu gallery in Oulu. Evening light falls across the wooden floor and her pink sweater; paintings hang behind her."
   pinned: true
 - kuva: DSC2284.jpg
   width: 3024
   height: 4536
   otsikko: Graduate Portrait / Ylioppilas
   paikka: Oulu, Finland 2025
-  alt_text: A full-body black and white portrait of a recent graduate in a traditional
-    Finnish graduation cap and a dark suit. They stand on a muddy dirt path in an
-    open landscape with bare trees and overhead power lines under a cloudy sky.
+  alt_text: "A recent graduate in a dark suit and Finnish graduation cap stands on a muddy path beneath bare trees and power lines."
   pinned: true

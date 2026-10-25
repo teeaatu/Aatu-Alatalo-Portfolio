@@ -3,37 +3,25 @@
   height: 2143
   otsikko: Horses and Ponies in a Field / Hevoset ja ponit pellolla
   paikka: Kylmälänkylä, Finland 2026
-  alt_text: A wide landscape photograph of six horses walking in a loose line across
-    a lush, bright green field. The horses vary in color, including brown, tan, and
-    one prominent white horse in the middle. Behind them stretches a dense, dark green
-    forest under a soft, slightly hazy sky.
+  alt_text: "Six horses walk across a field in front of a forest, including brown, tan, and white horses."
 - kuva: Dalmatialainen.webp
   width: 3000
   height: 2250
   otsikko: Dalmatian / Dalmaatialainen
   paikka: Oulu, Finland 2026
-  alt_text: A high-contrast black and white street photograph of a Dalmatian dog sitting
-    obediently on a sidewalk next to its owner. The dog looks up attentively at the
-    person, who is holding a leash. A pedestrian crosswalk is visible on the street
-    in the background.
+  alt_text: "A Dalmatian sits beside its owner on a sidewalk, looking up at the person holding its leash; a crosswalk is visible behind them."
 - kuva: lumipaakku.jpg
   width: 3000
   height: 2250
   otsikko: Winter Thing / Talvinen asia
   paikka: Oulu, Karjasilta 2026
-  alt_text: A black and white photograph of a person walking a small, scruffy terrier
-    dog on a leash. The dog has stopped to investigate some large chunks of melting
-    snow on the wet asphalt street. In the background, a white picket fence and a
-    snowy yard are visible in Oulu's Karjasilta neighborhood.
+  alt_text: "A small terrier on a leash investigates melting snow on a wet street in Oulu's Karjasilta, beside a white fence and snowy yard."
 - kuva: Kissakahvila.jpeg
   width: 1333
   height: 2000
   otsikko: Cat Café / Kissakahvila
   paikka: Kamppi, Helsinki 2026
-  alt_text: An artistic black and white photograph taken from outside a window of
-    a cat café in Kamppi, Helsinki. Inside, a white cat rests comfortably, looking
-    out. The window glass reflects a person walking on the street and the surrounding
-    architecture, creating an intriguing double-exposure effect.
+  alt_text: "A white cat looks out from a café window in Kamppi, Helsinki, while the glass reflects a passerby and nearby buildings."
 - kuva: lofootit.webp
   width: 5518
   height: 3679
@@ -46,9 +34,7 @@
   height: 1500
   otsikko: Ball / Pallo
   paikka: Muhos, Finland 2026
-  alt_text: A close-up photograph of a black dog lying on a striped rug. The dog is
-    looking up intensely towards the camera with a pleading expression. In the foreground,
-    slightly out of focus, rests a red spiky rubber toy ball.
+  alt_text: "A black dog lies on a striped rug beside a red spiked toy, looking up toward the viewer."
 - kuva: DSC4276.jpg
   width: 3028
   height: 1704
@@ -62,16 +48,10 @@
   height: 3024
   otsikko: Dogs / Koirat
   paikka: Oulu, Finland 2025
-  alt_text: A tight, high-contrast black and white close-up photograph of two dogs.
-    The main focus is on the dog on the right, looking up thoughtfully with expressive
-    eyes. Another dog is partially visible on the bottom left, creating an intimate,
-    moody portrait.
+  alt_text: "Two dogs sit close together against a dark background; the dog on the right looks upward while the other is partly visible."
 - kuva: DSC0336.jpg
   width: 3269
   height: 2179
   otsikko: Cats / Kissat
   paikka: Oulu, Finland 2025
-  alt_text: A black and white photograph of two striped tabby cats resting closely
-    together behind the dark backrest of a couch. They are both looking intently in
-    the same direction to the right side of the frame, with the dark foreground framing
-    their focused expressions.
+  alt_text: "Two tabby cats rest behind a sofa, both looking to the right."
