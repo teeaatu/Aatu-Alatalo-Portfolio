@@ -247,9 +247,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const preferredLanguages = navigator.languages?.length
         ? navigator.languages
         : [navigator.language || ''];
-      const browserChoice = preferredLanguages
-        .map(value => value.toLowerCase().split('-')[0])
-        .find(value => value === 'fi' || value === 'en') || 'en';
+      const primaryLanguage = (preferredLanguages[0] || '').toLowerCase().split('-')[0];
+      const browserChoice = primaryLanguage === 'fi' ? 'fi' : 'en';
       const language = userChoice === 'fi' || userChoice === 'en' ? userChoice : browserChoice;
       if (language === 'en') {
         window.location.replace('/en/' + window.location.search + window.location.hash);
