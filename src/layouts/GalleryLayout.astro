@@ -530,6 +530,58 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       display: block !important;
     }
 
+    #jd-masters-info-button {
+      position: absolute; top: 10px; right: 10px; z-index: 5;
+      display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+      border: 0; border-radius: 50%; background: transparent; color: #242421;
+      font: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer;
+      pointer-events: auto; -webkit-tap-highlight-color: transparent;
+      box-shadow: none;
+    }
+    #jd-masters-info-button::before {
+      content: ""; position: absolute; inset: 2px;
+      border: 1px solid rgba(26, 26, 24, .22); border-radius: 50%;
+      background: rgba(250, 250, 248, .92); box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+      transition: background-color .18s ease;
+    }
+    #jd-masters-info-button:hover::before { background: #fff; }
+    #jd-masters-info-button:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; }
+    #jd-masters-info-button span { position: relative; z-index: 1; }
+    #jd-masters-info-button[hidden] { display: none; }
+    .jd-masters-image-frame {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      width: fit-content; height: fit-content; max-width: calc(100vw - 120px);
+      max-height: calc(100dvh - 148px);
+    }
+    .jd-masters-image-frame img { max-width: calc(100vw - 120px); max-height: calc(100dvh - 148px); }
+    @keyframes jdMastersInfoReveal { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+    .jd-masters-info-trigger:not([hidden]) { animation: jdMastersInfoReveal .2s ease-out both; }
+    @media (prefers-reduced-motion: reduce) { .jd-masters-info-trigger:not([hidden]) { animation: none; } }
+    body.index-is-open #jd-masters-info-button, body.thumbs-is-open #jd-masters-info-button,
+    body.about-is-open #jd-masters-info-button, html.jd-splash-active #jd-masters-info-button { visibility: hidden; }
+    body:has(#jd-masters-info[open]) #jd-cursor-custom { display: none; }
+    #jd-masters-info {
+      margin: auto;
+      width: min(520px, calc(100vw - 40px)); max-height: calc(100dvh - 48px);
+      box-sizing: border-box; padding: 38px; border: 1px solid #e5e5e1;
+      background: #fafaf8; color: #242421; overflow: auto; overscroll-behavior: contain;
+      font-family: var(--jd-font); line-height: 1.6; text-align: left; cursor: auto;
+    }
+    #jd-masters-info::backdrop { background: rgb(0 0 0 / .35); }
+    #jd-masters-info h2 { font-family: var(--jd-font-serif); font-size: 1.8rem; font-weight: normal; line-height: 1.2; margin: 12px 0 20px; }
+    #jd-masters-info h3 { font-size: 1rem; margin: 24px 0 8px; }
+    #jd-masters-info p { font-size: .95rem; }
+    #jd-masters-info .jd-masters-eyebrow { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #666; }
+    #jd-masters-info a { color: inherit; font-size: .85rem; text-underline-offset: 4px; }
+    .jd-external-link-arrow { width: .8em; height: .8em; margin-inline-start: .28em; vertical-align: -.08em; }
+    #jd-masters-info-close { position: absolute; right: 8px; top: 8px; width: 44px; height: 44px; border: 0; background: transparent; color: inherit; font-size: 26px; cursor: pointer; }
+    @media (max-width: 800px) {
+      .jd-masters-image-frame { max-width: calc(100vw - 20px); max-height: calc(100svh - 154px); }
+      .jd-masters-image-frame img { max-width: calc(100vw - 20px) !important; max-height: calc(100svh - 154px) !important; }
+      #jd-masters-info-button { top: 8px; right: 8px; }
+      #jd-masters-info { padding: 30px 24px; }
+    }
+
     /* Photo location label below image (Desktop) */
     .jd-slide-location {
       position: fixed;
@@ -1213,6 +1265,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       will-change: left, top, opacity, transform;
       transition: transform 0.2s ease, opacity 0.4s ease;
     }
+    #jd-cursor-text { transition: opacity .12s ease; }
+    body:has(.jd-masters-info-trigger:hover) #jd-cursor-text { opacity: 0; }
     body.is-leaving #jd-cursor-custom {
       transform: translate(-50%, calc(-50% - 60px));
       transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
@@ -1544,6 +1598,11 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         max-width: calc(100% - 20px) !important; 
         max-height: 100% !important; 
         object-fit: contain !important; 
+      }
+      /* Keep the badge frame and its top-right info control aligned to the rendered image. */
+      .jd-slide .jd-masters-image-frame img {
+        max-width: calc(100vw - 20px) !important;
+        max-height: calc(100svh - 154px) !important;
       }
       .jd-diptych-slide { 
         flex-direction: column !important; 
@@ -1983,6 +2042,24 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     </div>
   </div>
 
+  {categorySlug === 'masters-2026' && <>
+    <button id="jd-masters-info-button" class="jd-masters-info-trigger" aria-haspopup="dialog" aria-controls="jd-masters-info" aria-label={lang === 'fi' ? 'Tietoa Hasselblad Masters -kilpailusta' : 'About the Hasselblad Masters competition'} hidden>
+      <span aria-hidden="true">?</span>
+    </button>
+    <dialog id="jd-masters-info" aria-labelledby="jd-masters-info-title">
+      <button id="jd-masters-info-close" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>×</button>
+      <p class="jd-masters-eyebrow">Hasselblad Masters 2026</p>
+      <h2 id="jd-masters-info-title">{lang === 'fi' ? 'Mikä tämä kilpailu on?' : 'What is the competition?'}</h2>
+      <p>{lang === 'fi'
+        ? 'Hasselblad Masters on vuonna 2001 perustettu kansainvälinen valokuvauskilpailu. Se nostaa esiin valokuvaajia, joiden työssä yhdistyvät oma näkemys, luovuus ja tekninen taito.'
+        : 'Hasselblad Masters is an international photography competition established in 2001. It recognises photographers whose work combines a distinctive vision, creativity and technical skill.'}</p>
+      <p>{lang === 'fi'
+        ? 'Vuoden 2026 kilpailuun lähetettiin yli 108 000 teosta yli 160 maasta ja alueelta. Kansainvälinen asiantuntijaraati valitsi 70 finalistia. Olen yksi Project//21-kategorian finalisteista.'
+        : 'The 2026 competition received more than 108,000 images from over 160 countries and territories. An international expert jury selected 70 finalists. I am one of the finalists in the Project//21 category.'}</p>
+      <a href="https://www.hasselblad.com/inspiration/masters/2026/" target="_blank" rel="noopener noreferrer">{lang === 'fi' ? 'Tutustu kilpailuun Hasselbladin sivulla' : 'Explore the competition at Hasselblad'} <svg class="jd-external-link-arrow" aria-hidden="true" viewBox="0 0 12 12" fill="none"><path d="M3 9 9 3M4 3h5v5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/></svg></a>
+    </dialog>
+  </>}
+
   <!-- Main slideshow area -->
   <main id="jd-main">
     <div id="jd-slideshow"></div>
@@ -2380,6 +2457,23 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
     const data = JSON.parse(document.getElementById('jd-data').textContent);
     const total = data.length;
 
+    const mastersInfo = document.getElementById('jd-masters-info');
+    const mastersInfoButton = document.getElementById('jd-masters-info-button');
+    document.querySelectorAll('.jd-masters-info-trigger').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        mastersInfo?.showModal();
+      });
+    });
+    document.getElementById('jd-masters-info-close')?.addEventListener('click', () => mastersInfo.close());
+    mastersInfo?.addEventListener('click', event => {
+      event.stopPropagation();
+      const bounds = mastersInfo.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) mastersInfo.close();
+    });
+    mastersInfo?.addEventListener('keydown', event => event.stopPropagation());
+    mastersInfo?.addEventListener('wheel', event => event.stopPropagation());
+
     const slideshow = document.getElementById('jd-slideshow');
     const thumbsPanel = document.getElementById('jd-thumbs-panel');
     const counterNum = document.getElementById('jd-counter-num');
@@ -2544,7 +2638,15 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
         img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = item.full; };
         picture.appendChild(img);
-        slide.appendChild(picture);
+        if (categorySlug === 'masters-2026' && i === 0) {
+          const frame = document.createElement('div');
+          frame.className = 'jd-masters-image-frame';
+          frame.appendChild(picture);
+          if (mastersInfoButton) frame.appendChild(mastersInfoButton);
+          slide.appendChild(frame);
+        } else {
+          slide.appendChild(picture);
+        }
 
 
       }
@@ -2645,11 +2747,14 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       const vi = Math.max(0, visibleIndices.indexOf(index));
       const n = vi + 1;
       const place = data[index]?.place || '';
+      const caption = place;
+      const mastersInfoButton = document.getElementById('jd-masters-info-button');
+      if (mastersInfoButton) mastersInfoButton.hidden = index !== 0;
       const signature = `${index}|${visibleTotal}|${currentFilter}`;
       if (signature === counterSignature) return;
       counterSignature = signature;
-      desktopLocation.textContent = place;
-      desktopLocation.hidden = !place;
+      desktopLocation.textContent = caption;
+      desktopLocation.hidden = !caption;
       const setText = (id, text) => {
         const element = counterUI[id];
         if (element && element.textContent !== String(text)) element.textContent = text;
@@ -2658,9 +2763,9 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
       setText('jd-counter-cat', catLabel);
       setText('jd-counter-num', n);
       setText('jd-counter-tot', visibleTotal);
-      setText('jd-counter-place', place);
+      setText('jd-counter-place', caption);
       setText('jd-cursor-text', `${catLabel} — ${n} / ${visibleTotal}`);
-      if (counterUI['jd-counter-place']) counterUI['jd-counter-place'].style.display = place ? 'block' : 'none';
+      if (counterUI['jd-counter-place']) counterUI['jd-counter-place'].style.display = caption ? 'block' : 'none';
     }
     updateCounter();
     prepareNearbyImages(current);

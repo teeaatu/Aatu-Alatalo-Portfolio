@@ -1,9 +1,24 @@
+- kuva: https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp
+  width: 2100
+  height: 1500
+  otsikko: Green Jacket / Vihreä takki
+  paikka: Oulu, Finland 2026 / Oulu 2026
+  alt_text: A man in a green jacket walks along a blue wall in Oulu. A low concrete wall and a young tree with autumn leaves fill the foreground.
+- kuva: https://media.aatualatalo.com/Photographs/Katse_muualle_Kemi_2026.webp
+  width: 2000
+  height: 1500
+  otsikko: Looking Away / Katse muualle
+  paikka: Kemi, Finland 2026 / Kemi 2026
+  alt_text: In Kemi, a younger person in a dark jacket and an older person in a
+    light coat and cap stand at a street corner, looking in different
+    directions.
 - kuva: https://media.aatualatalo.com/Photographs/Pysakointihalli_OULU_2026.webp
   width: 2100
   height: 1500
   otsikko: Parking Garage / Pysäköintihalli
   paikka: Oulu, Finland 2026 / Oulu 2026
-  alt_text: "A young man in a denim jacket, jeans, boots, and a headscarf sits against the tiled wall of a parking garage in Oulu."
+  alt_text: A young man in a denim jacket, jeans, boots, and a headscarf sits
+    against the tiled wall of a parking garage in Oulu.
 - kuva: https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp
   width: 1500
   height: 1875
@@ -17,25 +32,30 @@
   height: 1500
   otsikko: Fishermen by the Fjord / Kalastajat vuonolla
   paikka: Alta, Norway 2026
-  alt_text: "Two anglers in waders examine their catch on the shore of Alta Fjord, with calm water and mountains behind them."
+  alt_text: Two anglers in waders examine their catch on the shore of Alta Fjord,
+    with calm water and mountains behind them.
 - kuva: https://media.aatualatalo.com/Photographs/lapsetainola.webp
   width: 1500
   height: 2100
   otsikko: Untitled / Nimetön
   paikka: Ainola Park, Oulu, Finland 2026 / Ainolanpuisto, Oulu, Suomi 2026
-  alt_text: "A barefoot toddler walks along a park path while an older child stands by the water beneath a leafy tree."
+  alt_text: A barefoot toddler walks along a park path while an older child stands
+    by the water beneath a leafy tree.
 - kuva: https://media.aatualatalo.com/Photographs/kuu_kolilla.webp
   width: 1500
   height: 2000
   otsikko: Moon over Koli / Kuu Kolilla
   paikka: Koli National Park, Finland 2026 / Kolin kansallispuisto 2026
-  alt_text: A tranquil twilight landscape looking out over Lake Pielinen from Koli, with silhouetted forested islands on dark blue water under an evening sky with the moon.
+  alt_text: A tranquil twilight landscape looking out over Lake Pielinen from
+    Koli, with silhouetted forested islands on dark blue water under an evening
+    sky with the moon.
 - kuva: https://media.aatualatalo.com/Photographs/Untitled1_Ylivieska.webp
   width: 2000
   height: 1500
   otsikko: Untitled / Nimetön
   paikka: Ylivieska, Finland 2026
-  alt_text: "Two young people walking and playing with their dogs on the lawn of an apartment building in bright spring sunlight in Ylivieska, Finland."
+  alt_text: Two young people walking and playing with their dogs on the lawn of an
+    apartment building in bright spring sunlight in Ylivieska, Finland.
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26_10.webp
   width: 2100
   height: 1500
@@ -100,7 +120,8 @@
   height: 1500
   otsikko: Qstock 2026 / Qstock 2026
   paikka: Qstock, Oulu 2026 / Qstock, Oulu 2026
-  alt_text: "A singer in a red vest plays guitar onstage, with a drummer and another guitarist behind him."
+  alt_text: A singer in a red vest plays guitar onstage, with a drummer and
+    another guitarist behind him.
   series: qstock26
 - kuva: https://media.aatualatalo.com/Photographs/Qstock26.webp
   width: 2100
@@ -146,12 +167,6 @@
   alt_text: Traffic lights showing red and a white "S" tram signal on a street in
     Helsinki. Multi-story apartment buildings line the street behind them on a
     hazy day with overhead tram wires crossing the sky.
-- kuva: https://media.aatualatalo.com/Photographs/Ratikassa.webp
-  width: 2100
-  height: 1500
-  otsikko: In the Tram / Ratikassa
-  paikka: Helsinki, Finland 2026
-  alt_text: "From inside a tram, tracks lead toward a tunnel through a rainy Helsinki street; the driver appears in silhouette."
 - kuva: https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp
   width: 1500
   height: 2100
