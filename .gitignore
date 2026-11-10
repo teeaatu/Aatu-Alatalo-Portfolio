@@ -1,55 +1,39 @@
-# build output
-dist/
-# generated types
-.astro/
+# Astro and Node.js build output
+/dist/
+/.astro/
+/node_modules/
 
-# dependencies
-node_modules/
-
-# logs
+# Package manager logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local environment files; commit only a sanitized example
+/.env*
+!/.env.example
 
-# environment variables
-.env
-.env.production
-
-# macOS-specific files
+# macOS metadata and resource forks
 .DS_Store
-
-# macOS resource forks (AppleDouble)
 ._*
-**/._.*/
-**/._*
 
-# creative backups
-src/data/.backup/
-Portfolio-Uploads/
-design-system/
-scratch/
+# Local media, prototypes, and generated work
+/src/data/.backup/
+/Portfolio-Uploads/
+/design-system/
+/scratch/
+/tmp/
+/output/
+/aikajana_kehityshistoria.*
 
-# AI-agenttikonfiguraatiot ja -ohjeet (vain paikalliseen käyttöön)
-.agents/
-.cursorrules
-CLAUDE.md
+# AI editor and agent instructions kept local
+/.agents/
+/.cursorrules
+/AGENTS.md
+/CODEX.md
+/CLAUDE.md
 
-# Yksityiset muistiinpanot ja luonnokset
-_muistiinpanot.md
-context.md
-Untitled.txt
-
-# Kehitysapuskriptit (vanhentuneet)
-dev_scripts/
-
-# Dokumentaatio (sisäinen)
-docs/
-
-# LLM-syötteet
-llms.txt
-llms-full.txt
-
-# Paikalliset aikajanat ja infografiikat
-aikajana_kehityshistoria.*
+# Private notes and internal documentation
+/_muistiinpanot.md
+/context.md
+/docs/
