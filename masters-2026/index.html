@@ -1,0 +1,1389 @@
+<!DOCTYPE html><html lang="fi" translate="no" class="notranslate"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#000000"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="color-scheme" content="light"><meta name="google" content="notranslate"><meta name="format-detection" content="telephone=no"><!-- Only the unprefixed home page negotiates language; explicit URLs keep theirs. --><script>
+    (function() {
+      if (window.location.pathname !== '/') return;
+
+      let userChoice;
+      try { userChoice = localStorage.getItem('userLangChoice'); } catch (e) {}
+      const preferredLanguages = navigator.languages?.length
+        ? navigator.languages
+        : [navigator.language || ''];
+      const primaryLanguage = (preferredLanguages[0] || '').toLowerCase().split('-')[0];
+      const browserChoice = primaryLanguage === 'fi' ? 'fi' : 'en';
+      const language = userChoice === 'fi' || userChoice === 'en' ? userChoice : browserChoice;
+      if (language === 'en') {
+        window.location.replace('/en/' + window.location.search + window.location.hash);
+      }
+    })();
+
+    // Establish the canvas and Safari tint before the first paint.
+    (function () {
+      var skip = false;
+      try {
+        skip = !!sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(location.search).has('splash');
+      } catch (e) {}
+      document.documentElement.classList.add(skip ? 'jd-no-splash' : 'jd-splash-active');
+      // Browser canvas is independent of the light gallery and splash history.
+      // Every static category load must establish the same mobile chrome theme.
+      window.jdSyncBrowserTheme = function () {
+        var darkCanvas = window.matchMedia('(max-width: 800px)').matches
+          || (document.documentElement.classList.contains('jd-splash-active')
+            && !document.documentElement.classList.contains('jd-splash-revealing'));
+        var scheme = darkCanvas ? 'dark' : 'light';
+        var colour = darkCanvas ? '#000000' : '#ffffff';
+        document.documentElement.style.colorScheme = scheme;
+        document.documentElement.style.backgroundColor = colour;
+        document.querySelector('meta[name="color-scheme"]').setAttribute('content', scheme);
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', colour);
+      };
+      window.jdSyncBrowserTheme();
+      window.matchMedia('(max-width: 800px)').addEventListener('change', window.jdSyncBrowserTheme);
+    })();
+  </script><title>Hasselblad Masters 2026 — Aatu Alatalo</title><meta name="description" content="Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti."><meta name="robots" content="index, follow"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicon-192x192.png"><link rel="apple-touch-icon" href="/assets/images/favicon-192x192.png"><!-- Open Graph --><meta property="og:title" content="Hasselblad Masters 2026 — Aatu Alatalo"><meta property="og:description" content="Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti."><meta property="og:type" content="website"><meta property="og:image" content="https://aatualatalo.com/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg"><meta property="og:url" content="https://aatualatalo.com/masters-2026/"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Hasselblad Masters 2026 — Aatu Alatalo"><meta name="twitter:description" content="Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti."><meta name="twitter:image" content="https://aatualatalo.com/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg"><link rel="alternate" hreflang="fi" href="https://aatualatalo.com/masters-2026/"><link rel="alternate" hreflang="en" href="https://aatualatalo.com/en/masters-2026"><!-- Schema.org Structured Data for Google Knowledge Graph & SEO --><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://aatualatalo.com/#person","name":"Aatu Elias Alatalo","alternateName":["Aatu Alatalo","Teeaatu"],"jobTitle":"Valokuvaaja","description":"Suomalainen valokuvaaja ja Hasselblad Masters 2026 -finalisti (Project//21).","url":"https://aatualatalo.com","image":"https://aatualatalo.com/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg","birthDate":"2005-01-25","birthPlace":{"@type":"Place","name":"Tyrnävä, Finland"},"homeLocation":{"@type":"Place","name":"Oulu, Finland"},"nationality":{"@type":"Country","name":"Finland"},"alumniOf":[{"@type":"EducationalOrganization","name":"Jokilaaksojen koulutuskuntayhtymä Jedu"},{"@type":"EducationalOrganization","name":"Oulun ammattikorkeakoulu"}],"award":["Hasselblad Masters 2026 Finalist (Project//21)","SAKUstars 2023 Honorable Mention (Photographic Art in a Day)"],"sameAs":["https://www.instagram.com/teeaatu/","https://www.linkedin.com/in/aatu-alatalo-b67274304/","https://www.hasselblad.com/inspiration/masters/2026/"],"knowsAbout":["Photography","Fine Art Photography","Portrait Photography","Street Photography","Landscape Photography","Documentary Photography"]},{"@type":"WebSite","@id":"https://aatualatalo.com/#website","url":"https://aatualatalo.com","name":"Aatu Alatalo Portfolio","description":"Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti.","publisher":{"@id":"https://aatualatalo.com/#person"},"inLanguage":["fi","en"]}]}</script><!-- Fonts preload & CSS --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://media.aatualatalo.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400..600&family=Lora:ital@0;1&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script><link rel="stylesheet" href="/_astro/GalleryLayout.CH2emf_8.css"><script type="module" src="/_astro/page.CZh4tvAt.js"></script></head><body ontouchstart=""><div class="jd-safari-tint jd-safari-tint-top" aria-hidden="true"></div><div class="jd-safari-tint jd-safari-tint-bottom" aria-hidden="true"></div><div class="jd-mobile-edge jd-mobile-edge-top" aria-hidden="true"></div><div class="jd-mobile-edge jd-mobile-edge-bottom" aria-hidden="true"></div><!-- Cinematic Editorial Splash Screen --><div id="jd-splash" class="jd-splash-screen" aria-hidden="true"><div class="jd-splash-inner"><div class="jd-splash-title-wrap"><h1 class="jd-splash-title">AATU ALATALO</h1></div><div class="jd-splash-subtitle-wrap"><span class="jd-splash-subtitle" id="jd-splash-subtitle">VALOKUVAAJA</span></div></div></div><button id="jd-masters-info-button" class="jd-masters-info-trigger" aria-haspopup="dialog" aria-controls="jd-masters-info" aria-label="Tietoa Hasselblad Masters -kilpailusta" hidden><span aria-hidden="true">?</span></button><dialog id="jd-masters-info" aria-labelledby="jd-masters-info-title"><button id="jd-masters-info-close" aria-label="Sulje">×</button><p class="jd-masters-eyebrow">Hasselblad Masters 2026</p><h2 id="jd-masters-info-title">Mikä tämä kilpailu on?</h2><p>Hasselblad Masters on vuonna 2001 perustettu kansainvälinen valokuvauskilpailu. Se nostaa esiin valokuvaajia, joiden työssä yhdistyvät oma näkemys, luovuus ja tekninen taito.</p><p>Vuoden 2026 kilpailuun lähetettiin yli 108 000 teosta yli 160 maasta ja alueelta. Kansainvälinen asiantuntijaraati valitsi 70 finalistia. Olen yksi Project//21-kategorian finalisteista.</p><a href="https://www.hasselblad.com/inspiration/masters/2026/" target="_blank" rel="noopener noreferrer">Tutustu kilpailuun Hasselbladin sivulla <svg class="jd-external-link-arrow" aria-hidden="true" viewBox="0 0 12 12" fill="none"><path d="M3 9 9 3M4 3h5v5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"></path></svg></a></dialog><!-- Main slideshow area --><main id="jd-main"><div id="jd-slideshow"></div></main><!-- Gallery data for JS --><script id="jd-data" type="application/json">[{"i":0,"src":"/assets/thumbnails/badge_desktop.webp","srcAvif":null,"srcset":"/assets/thumbnails/badge_mobile.webp 800w, /assets/thumbnails/badge_desktop.webp 1600w, /assets/images/badge.jpg 3000w","full":"/assets/images/badge.jpg","thumb":"/assets/thumbnails/badge_mobile.webp","alt":"Mustapohjainen Hasselblad Masters 2026 Finalist -tunnus kultaisella linssiheijastuksella ja typografialla.","title":"Hasselblad Masters 2026 Finalist","place":"Project//21","series":"all"},{"i":1,"src":"/assets/thumbnails/Hasselblad Masters 2026_desktop.webp","srcAvif":null,"srcset":"/assets/thumbnails/Hasselblad Masters 2026_mobile.webp 800w, /assets/thumbnails/Hasselblad Masters 2026_desktop.webp 1600w, /assets/images/Hasselblad Masters 2026.jpg 3000w","full":"/assets/images/Hasselblad Masters 2026.jpg","thumb":"/assets/thumbnails/Hasselblad Masters 2026_mobile.webp","alt":"A scarecrow-like figure stands with outstretched arms in a frosty field, with a dark forest and faint green light behind it.","title":"Series I","place":"2025","series":"all"},{"i":2,"src":"/assets/thumbnails/Hasselblad Masters 2026 1_desktop.webp","srcAvif":null,"srcset":"/assets/thumbnails/Hasselblad Masters 2026 1_mobile.webp 800w, /assets/thumbnails/Hasselblad Masters 2026 1_desktop.webp 1600w, /assets/images/Hasselblad Masters 2026 1.jpg 3000w","full":"/assets/images/Hasselblad Masters 2026 1.jpg","thumb":"/assets/thumbnails/Hasselblad Masters 2026 1_mobile.webp","alt":"A large farm building is silhouetted against a starry night sky, with a few distant lights.","title":"Series II","place":"2025","series":"all"},{"i":3,"src":"/assets/thumbnails/Hasselblad Masters 2026 2_desktop.webp","srcAvif":null,"srcset":"/assets/thumbnails/Hasselblad Masters 2026 2_mobile.webp 800w, /assets/thumbnails/Hasselblad Masters 2026 2_desktop.webp 1600w, /assets/images/Hasselblad Masters 2026 2.jpg 3000w","full":"/assets/images/Hasselblad Masters 2026 2.jpg","thumb":"/assets/thumbnails/Hasselblad Masters 2026 2_mobile.webp","alt":"A small wooden house stands in a frosty field at night. Light from its window falls across the ground beside a lit Christmas tree.","title":"Series III","place":"2025","series":"all"}]</script><script id="jd-meta" type="application/json">{"catLabel":"Hasselblad Masters 2026","categorySlug":"masters-2026","isEventsCategory":false,"lang":"fi"}</script><!-- Hint arrows --><div id="jd-hint-arrows"><div class="jd-hint-arrow left" aria-label="Edellinen kuva / Previous image" role="button" tabindex="0"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"></path></svg></div><div class="jd-hint-arrow right" aria-label="Seuraava kuva / Next image" role="button" tabindex="0"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"></path></svg></div></div><!-- Bottom nav --><div id="jd-bottom-nav"><div id="jd-normal-nav"><button class="jd-bottom-btn" id="jd-index-btn-bottom">Valikko</button><button class="jd-bottom-btn" id="jd-thumbs-btn">Kuvasto</button></div><div id="jd-thumbs-nav"><button class="jd-bottom-btn" id="jd-thumbs-close">Sulje</button></div></div><span id="jd-wheel-counter" aria-hidden="true">1 / 4</span><!-- Mobile counter --><div id="jd-counter" role="button" tabindex="0" aria-label="Avaa valikko"><div class="jd-counter-top"><span id="jd-counter-cat" style="opacity:0;">Hasselblad Masters 2026</span><span id="jd-counter-rest" style="opacity:0;"> - <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">4</span><svg class="jd-counter-chevron" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div><div id="jd-counter-place" class="jd-counter-place"></div></div><!-- Custom cursor --><div id="jd-cursor-custom"><div id="jd-cursor-text">Hasselblad Masters 2026 — 1 / 4</div><div id="jd-cursor-arrow"></div></div><!-- Next/prev urls for gallery-to-gallery navigation --><div id="jd-next-url" style="display:none" data-cat-label="Työ I">/work1</div><div id="jd-prev-url" style="display:none" data-cat-label="Uusimmat">/recent</div><!-- Index hover preview for desktop (Dual Layer Smooth Crossfade) --><div id="jd-index-preview-container" aria-hidden="true"><div id="jd-index-preview-wrapper"><img id="jd-index-preview-img-a" class="jd-preview-layer" src="" alt="" loading="eager" draggable="false"><img id="jd-index-preview-img-b" class="jd-preview-layer" src="" alt="" loading="eager" draggable="false"></div></div><!-- Index panel --><div id="jd-index-overlay"></div><nav id="jd-index-panel"><div class="jd-top-nav"><div class="jd-top-nav-links"><a href="/recent" style="text-decoration: underline; text-underline-offset: 4px; font-weight: 500;">Kategoriat</a><a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">Minusta</a><a href="/en/masters-2026" class="jd-lang-toggle" onclick="try { localStorage.setItem('userLangChoice','en'); } catch (e) {} this.href = this.pathname + window.location.search + window.location.hash;">In English</a><a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a><a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener" aria-label="LinkedIn" class="jd-social-icon-link"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a></div></div><ul class="jd-index-list"><li><a href="/recent" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp"><span>Uusimmat</span><span class="jd-count">27</span></a></li><li><a href="/masters-2026" class="jd-index-link active" data-preview-src="/assets/thumbnails/badge_desktop.webp"><span>Hasselblad Masters 2026</span><span class="jd-count">4</span></a></li><li><a href="/work1" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/Untitled1_Ylivieska.webp"><span>Työ I</span><span class="jd-count">7</span></a></li><li><a href="/work2" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/mies_varjo_oulu_2026.webp"><span>Työ II</span><span class="jd-count">4</span></a></li></ul><ul class="jd-index-list"><li><a href="/tapahtumat" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/misfortnute_3.webp"><span>Tapahtumat</span><span class="jd-count">19</span></a></li><li><a href="/vari-ja-muoto" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp"><span>Väri ja muoto</span><span class="jd-count">22</span></a></li><li><a href="/raw" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/kaijonharju.webp"><span>Muotokuvia</span><span class="jd-count">7</span></a></li><li><a href="/mustavalkoinen-sarja" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/Katse_muualle_Kemi_2026.webp"><span>Mustavalkoinen</span><span class="jd-count">24</span></a></li><li><a href="/sisatilan-valo" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/lamppu.webp"><span>Valo sisällä</span><span class="jd-count">3</span></a></li><li><a href="/kiehtovat-rakennukset" class="jd-index-link " data-preview-src="/assets/thumbnails/navetta_desktop.webp"><span>Arkkitehtuuri</span><span class="jd-count">5</span></a></li><li><a href="/luonto-ja-ymparisto" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/kuu_kolilla.webp"><span>Maisema</span><span class="jd-count">8</span></a></li><li><a href="/still-life" class="jd-index-link " data-preview-src="/assets/thumbnails/Hedelmat1_desktop.webp"><span>Asetelmat</span><span class="jd-count">3</span></a></li><li><a href="/elaimet" class="jd-index-link " data-preview-src="https://media.aatualatalo.com/Photographs/hevoset.webp"><span>Eläimet</span><span class="jd-count">9</span></a></li></ul><ul class="jd-index-list"><li><a href="/kuvaprojekti-ajasta-v365" class="jd-index-link " data-preview-src="/assets/thumbnails/Vuosikuvaus1 1_desktop.webp"><span>V365</span></a></li></ul></nav><!-- Floating close button for Valikko (Index) --><button id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label="Sulje valikko"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button><!-- About panel --><div id="jd-about-panel"><div class="jd-about-content"><div class="jd-about-image"><picture><source srcset="/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_mobile.webp 600w, /assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp 1200w" type="image/webp" sizes="(max-width:768px) 100vw, 50vw"><img src="/assets/thumbnails/aatu-alatalo-valokuvaaja-oulu_desktop.webp" alt="Aatu Alatalo - Photographer" loading="lazy" width="1080" height="1440" draggable="false" oncontextmenu="return false;"></picture></div><div class="jd-about-text"><header><h1>Aatu Alatalo</h1><div class="jd-about-subtitle">Valokuvaaja Oulu &amp; Hasselblad Masters -finalisti</div></header><div class="jd-about-bio"><p>Olen 21-vuotias valokuvaaja, joka on varttunut Tyrnävän Lakeuden seudulla ja asuu nykyään Oulussa. Opiskelen tällä hetkellä medianomiksi Oulun ammattikorkeakoulussa. Aloitin valokuvauksen vuonna 2014, ja vuosikymmenen aikana kamerasta on tullut erottamaton osa arkeani.</p><p style="margin-top: 0.85rem;">Kuvaustyylini ammentaa orgaanisista sävyistä, luonnonvalosta ja analogisen ajattoman estetiikan yhdistämisestä digitaaliseen ilmaisuun. Työskentelen erityisesti dokumentaarisen katukuvauksen, muotokuvien ja taidekuvauksen parissa sekä taltioin tapahtumia (kuten Qstock-festivaalia). Oman kuvaamiseni ohella opastan ja autan mielelläni muita valokuvauksen ja kameratekniikan parissa.</p></div><div class="jd-about-section"><h2>Palkinnot ja tunnustukset</h2><ul><li><strong>Hasselblad Masters 2026</strong>: Finalisti Project//21 -kategoriassa.</li><li><strong>SAKUstars 2023</strong>: Kunniamaininta sarjassa "Valokuvataidetta päivässä".</li></ul><a href="https://www.hasselblad.com/inspiration/masters/2026/" target="_blank" rel="noopener noreferrer" class="jd-about-badge-link" aria-label="Hasselblad Masters 2026 Finalist"><img src="/assets/thumbnails/badge_desktop.webp" alt="Hasselblad Masters 2026 Finalist" class="jd-about-badge-img" loading="lazy" width="128" height="106"><div class="jd-about-badge-text"><span class="jd-about-badge-title">Hasselblad Masters 2026</span><span class="jd-about-badge-sub">Project//21 Finalist<svg class="jd-badge-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span></div></a></div><div class="jd-about-section"><h2>Näyttelyt ja projektit</h2><ul><li><strong>Näyttelyt</strong>: Teoksiani on ollut esillä Piippolan Könkkölässä sekä Kestilän kirjastossa vuosina 2023 ja 2024.</li></ul></div><div class="jd-about-section jd-about-contact"><h2>Yhteydenotto &amp; Tiedustelut</h2><p style="font-size: 1.05rem; margin-bottom: 0.4rem;"><a href="mailto:info@aatualatalo.com" style="text-decoration: underline; text-underline-offset: 4px; font-weight: 500;">info@aatualatalo.com</a></p><p style="font-size: 0.92rem; opacity: 0.75; margin: 0; line-height: 1.5;">Oulu &amp; Pohjois-Pohjanmaa — Saatavilla toimeksiantoihin, opetukseen ja yhteistöihin myös valtakunnallisesti sopimuksen mukaan.</p></div></div></div></div><!-- Floating close button for About --><button id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label="Sulje"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button><!-- Shutter curtain --><div id="jd-shutter-container"><div class="jd-curtain-primary"></div></div><div class="jd-shutter-title">Hasselblad Masters 2026</div><!-- Mobile thumbs top bar --><div id="jd-thumbs-header" class="jd-thumbs-header" aria-hidden="true"><div class="jd-thumbs-header-inner"><span class="jd-thumbs-header-title">Kuvasto</span></div></div><!-- Global thumbs panel (all categories) --><div id="jd-thumbs-panel"><div class="jd-thumbs-inner"><div class="jd-thumbs-section" id="jd-thumbs-section-recent"><div class="jd-thumbs-section-title">Uusimmat</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp" data-idx="0" data-url="/recent#img-0"><img src="https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp" loading="lazy" alt="A man in a green jacket walks along a blue wall in Oulu. A low concrete wall and a young tree with autumn leaves fill the foreground."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Katse_muualle_Kemi_2026.webp" data-idx="1" data-url="/recent#img-1"><img src="https://media.aatualatalo.com/Photographs/Katse_muualle_Kemi_2026.webp" loading="lazy" alt="In Kemi, a younger person in a dark jacket and an older person in a light coat and cap stand at a street corner, looking in different directions."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Pysakointihalli_OULU_2026.webp" data-idx="2" data-url="/recent#img-2"><img src="https://media.aatualatalo.com/Photographs/Pysakointihalli_OULU_2026.webp" loading="lazy" alt="A young man in a denim jacket, jeans, boots, and a headscarf sits against the tiled wall of a parking garage in Oulu."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp" data-idx="3" data-url="/recent#img-3"><img src="https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp" loading="lazy" alt="A bouquet of red and orange tulips in a clear glass vase displayed in a window in Helsinki. White candles, a dark wine bottle, and a small potted plant sit alongside the flowers against a dark interior background."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/lohi_norja.webp" data-idx="4" data-url="/recent#img-4"><img src="https://media.aatualatalo.com/Photographs/lohi_norja.webp" loading="lazy" alt="Two anglers in waders examine their catch on the shore of Alta Fjord, with calm water and mountains behind them."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/lapsetainola.webp" data-idx="5" data-url="/recent#img-5"><img src="https://media.aatualatalo.com/Photographs/lapsetainola.webp" loading="lazy" alt="A barefoot toddler walks along a park path while an older child stands by the water beneath a leafy tree."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/kuu_kolilla.webp" data-idx="6" data-url="/recent#img-6"><img src="https://media.aatualatalo.com/Photographs/kuu_kolilla.webp" loading="lazy" alt="A tranquil twilight landscape looking out over Lake Pielinen from Koli, with silhouetted forested islands on dark blue water under an evening sky with the moon."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Untitled1_Ylivieska.webp" data-idx="7" data-url="/recent#img-7"><img src="https://media.aatualatalo.com/Photographs/Untitled1_Ylivieska.webp" loading="lazy" alt="Two young people walking and playing with their dogs on the lawn of an apartment building in bright spring sunlight in Ylivieska, Finland."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_10.webp" data-idx="8" data-url="/recent#img-8"><img src="https://media.aatualatalo.com/Photographs/Qstock26_10.webp" loading="lazy" alt="A black and white view of a performer in a feathery outfit and sunglasses holding long tassels up. The background has a starry, glittery effect."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_8.webp" data-idx="9" data-url="/recent#img-9"><img src="https://media.aatualatalo.com/Photographs/Qstock26_8.webp" loading="lazy" alt="A view from the audience looking up at a performer in white on stage. A large screen behind them displays the word OWN in red letters, and an audience member's hand is raised in the foreground."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_1.webp" data-idx="10" data-url="/recent#img-10"><img src="https://media.aatualatalo.com/Photographs/Qstock26_1.webp" loading="lazy" alt="A side profile of a male singer on stage holding a microphone with both hands. He is wearing a black tank top and dark jeans."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_9.webp" data-idx="11" data-url="/recent#img-11"><img src="https://media.aatualatalo.com/Photographs/Qstock26_9.webp" loading="lazy" alt="A black and white view from behind a female singer with long blonde hair on stage. She is facing bright stage lights with a microphone stand to her left."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_3.webp" data-idx="12" data-url="/recent#img-12"><img src="https://media.aatualatalo.com/Photographs/Qstock26_3.webp" loading="lazy" alt="A male singer with dark curly hair and sunglasses performing on stage. He is dressed in a black button-up shirt and black trousers."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_4.webp" data-idx="13" data-url="/recent#img-13"><img src="https://media.aatualatalo.com/Photographs/Qstock26_4.webp" loading="lazy" alt="A blonde woman playing a violin on stage. She is wearing a light gold-colored dress and thigh-high boots."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_2.webp" data-idx="14" data-url="/recent#img-14"><img src="https://media.aatualatalo.com/Photographs/Qstock26_2.webp" loading="lazy" alt="A female singer on stage wearing a blue outfit with feathers and blue boots. Two backup dancers in black are visible behind her in the background."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26ismo.webp" data-idx="15" data-url="/recent#img-15"><img src="https://media.aatualatalo.com/Photographs/Qstock26ismo.webp" loading="lazy" alt="A singer in a red vest plays guitar onstage, with a drummer and another guitarist behind him."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26.webp" data-idx="16" data-url="/recent#img-16"><img src="https://media.aatualatalo.com/Photographs/Qstock26.webp" loading="lazy" alt="A male singer performing on stage with a microphone. He is wearing a black tank top and is illuminated by red and white stage lights at Qstock 2026."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_7.webp" data-idx="17" data-url="/recent#img-17"><img src="https://media.aatualatalo.com/Photographs/Qstock26_7.webp" loading="lazy" alt="A blonde female singer smiling and speaking into a microphone on stage. She is wearing a light-colored dress and large earrings under warm stage lights."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_6.webp" data-idx="18" data-url="/recent#img-18"><img src="https://media.aatualatalo.com/Photographs/Qstock26_6.webp" loading="lazy" alt="A male singer playing an electric guitar and singing into a microphone. He is wearing a red sleeveless vest with green and red stage lights behind him."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_5.webp" data-idx="19" data-url="/recent#img-19"><img src="https://media.aatualatalo.com/Photographs/Qstock26_5.webp" loading="lazy" alt="A male singer performing on stage, singing into a microphone with his right arm raised. He is wearing a grey jacket over a red vest under bright stage lights."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Valot_kaupungissa.webp" data-idx="20" data-url="/recent#img-20"><img src="https://media.aatualatalo.com/Photographs/Valot_kaupungissa.webp" loading="lazy" alt="Traffic lights showing red and a white &quot;S&quot; tram signal on a street in Helsinki. Multi-story apartment buildings line the street behind them on a hazy day with overhead tram wires crossing the sky."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp" data-idx="21" data-url="/recent#img-21"><img src="https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp" loading="lazy" alt="A small child walks near a pedestrian crosswalk in front of a white commercial building with large red signs. Sunlight illuminates the building's corner, while the street behind it is in deep shadow."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/Kaksiihmista.webp" data-idx="22" data-url="/recent#img-22"><img src="https://media.aatualatalo.com/Photographs/Kaksiihmista.webp" loading="lazy" alt="Two young people standing in a crowd with motion blurred reflections surrounding them. One boy looks towards the left while another young man stands behind him."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp" data-idx="23" data-url="/recent#img-23"><img src="https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp" loading="lazy" alt="The City Hall building in Kotka."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp" data-idx="24" data-url="/recent#img-24"><img src="https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp" loading="lazy" alt="A red car parked in Porvoo."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/halonen_kotka.webp" data-idx="25" data-url="/recent#img-25"><img src="https://media.aatualatalo.com/Photographs/halonen_kotka.webp" loading="lazy" alt="The Halonen building facade in Kotka."></div><div class="jd-thumb-global" data-cat="recent" data-cat-label="Uusimmat" data-key="https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp" data-idx="26" data-url="/recent#img-26"><img src="https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp" loading="lazy" alt="A street lamp in Kotka."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-masters-2026"><div class="jd-thumbs-section-title">Hasselblad Masters 2026</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="masters-2026" data-cat-label="Hasselblad Masters 2026" data-key="badge.jpg" data-idx="0" data-url="/masters-2026#img-0"><img src="/assets/thumbnails/badge_mobile.webp" loading="lazy" alt="Mustapohjainen Hasselblad Masters 2026 Finalist -tunnus kultaisella linssiheijastuksella ja typografialla."></div><div class="jd-thumb-global" data-cat="masters-2026" data-cat-label="Hasselblad Masters 2026" data-key="Hasselblad Masters 2026.jpg" data-idx="1" data-url="/masters-2026#img-1"><img src="/assets/thumbnails/Hasselblad Masters 2026_mobile.webp" loading="lazy" alt="A scarecrow-like figure stands with outstretched arms in a frosty field, with a dark forest and faint green light behind it."></div><div class="jd-thumb-global" data-cat="masters-2026" data-cat-label="Hasselblad Masters 2026" data-key="Hasselblad Masters 2026 1.jpg" data-idx="2" data-url="/masters-2026#img-2"><img src="/assets/thumbnails/Hasselblad Masters 2026 1_mobile.webp" loading="lazy" alt="A large farm building is silhouetted against a starry night sky, with a few distant lights."></div><div class="jd-thumb-global" data-cat="masters-2026" data-cat-label="Hasselblad Masters 2026" data-key="Hasselblad Masters 2026 2.jpg" data-idx="3" data-url="/masters-2026#img-3"><img src="/assets/thumbnails/Hasselblad Masters 2026 2_mobile.webp" loading="lazy" alt="A small wooden house stands in a frosty field at night. Light from its window falls across the ground beside a lit Christmas tree."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-work1"><div class="jd-thumbs-section-title">Työ I</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/Untitled1_Ylivieska.webp" data-idx="0" data-url="/work1#img-0"><img src="https://media.aatualatalo.com/Photographs/Untitled1_Ylivieska.webp" loading="lazy" alt="Two young people walking and playing with their dogs on the lawn of an apartment building in bright spring sunlight in Ylivieska, Finland."></div><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp" data-idx="1" data-url="/work1#img-1"><img src="https://media.aatualatalo.com/Photographs/lapsikaupanedessa.webp" loading="lazy" alt="A small child walks near a pedestrian crosswalk in front of a white commercial building with large red signs. Sunlight illuminates the building's corner, while the street behind it is in deep shadow."></div><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp" data-idx="2" data-url="/work1#img-2"><img src="https://media.aatualatalo.com/Photographs/auto_punainen_porvoo.webp" loading="lazy" alt="A red car parked in Porvoo."></div><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/halonen_kotka.webp" data-idx="3" data-url="/work1#img-3"><img src="https://media.aatualatalo.com/Photographs/halonen_kotka.webp" loading="lazy" alt="The Halonen building facade in Kotka."></div><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp" data-idx="4" data-url="/work1#img-4"><img src="https://media.aatualatalo.com/Photographs/kotka_kaupungintalo.webp" loading="lazy" alt="The City Hall building in Kotka."></div><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp" data-idx="5" data-url="/work1#img-5"><img src="https://media.aatualatalo.com/Photographs/lamppu_kotkasta.webp" loading="lazy" alt="A street lamp in Kotka."></div><div class="jd-thumb-global" data-cat="work1" data-cat-label="Työ I" data-key="https://media.aatualatalo.com/Photographs/lohi_norja.webp" data-idx="6" data-url="/work1#img-6"><img src="https://media.aatualatalo.com/Photographs/lohi_norja.webp" loading="lazy" alt="Two anglers in waders examine their catch on the shore of Alta Fjord, with calm water and mountains behind them."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-work2"><div class="jd-thumbs-section-title">Työ II</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="work2" data-cat-label="Työ II" data-key="https://media.aatualatalo.com/Photographs/mies_varjo_oulu_2026.webp" data-idx="0" data-url="/work2#img-0"><img src="https://media.aatualatalo.com/Photographs/mies_varjo_oulu_2026.webp" loading="lazy" alt="An older fair-haired man in a dark coat walks beside a pale wall in low sunlight. A 3.6-metre height-limit sign and his sharp shadow are visible on the wall."></div><div class="jd-thumb-global" data-cat="work2" data-cat-label="Työ II" data-key="https://media.aatualatalo.com/Photographs/auto_sisapihalla_oulu_2026.webp" data-idx="1" data-url="/work2#img-1"><img src="https://media.aatualatalo.com/Photographs/auto_sisapihalla_oulu_2026.webp" loading="lazy" alt="A green and white classic car is parked in a paved courtyard beside apartment buildings and a dark tiled pillar."></div><div class="jd-thumb-global" data-cat="work2" data-cat-label="Työ II" data-key="https://media.aatualatalo.com/Photographs/Ratikassa.webp" data-idx="2" data-url="/work2#img-2"><img src="https://media.aatualatalo.com/Photographs/Ratikassa.webp" loading="lazy" alt="From inside a tram, tracks lead through heavy rain and twilight toward a tunnel in Helsinki; raindrops cover the front window."></div><div class="jd-thumb-global" data-cat="work2" data-cat-label="Työ II" data-key="https://media.aatualatalo.com/Photographs/Valot_kaupungissa.webp" data-idx="3" data-url="/work2#img-3"><img src="https://media.aatualatalo.com/Photographs/Valot_kaupungissa.webp" loading="lazy" alt="Apartment buildings line a wet Helsinki street, seen through a tram window at twilight."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-tapahtumat"><div class="jd-thumbs-section-title">Tapahtumat</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute_3.webp" data-idx="0" data-url="/tapahtumat#img-0"><img src="https://media.aatualatalo.com/Photographs/misfortnute_3.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute_2.webp" data-idx="1" data-url="/tapahtumat#img-1"><img src="https://media.aatualatalo.com/Photographs/misfortnute_2.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute_4.webp" data-idx="2" data-url="/tapahtumat#img-2"><img src="https://media.aatualatalo.com/Photographs/misfortnute_4.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute_6.webp" data-idx="3" data-url="/tapahtumat#img-3"><img src="https://media.aatualatalo.com/Photographs/misfortnute_6.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute.webp" data-idx="4" data-url="/tapahtumat#img-4"><img src="https://media.aatualatalo.com/Photographs/misfortnute.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute_1.webp" data-idx="5" data-url="/tapahtumat#img-5"><img src="https://media.aatualatalo.com/Photographs/misfortnute_1.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/misfortnute_5.webp" data-idx="6" data-url="/tapahtumat#img-6"><img src="https://media.aatualatalo.com/Photographs/misfortnute_5.webp" loading="lazy" alt="A black and white gig photo of a band performing live on stage. The musicians are captured in action with stage lighting illuminating them."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_10.webp" data-idx="7" data-url="/tapahtumat#img-7"><img src="https://media.aatualatalo.com/Photographs/Qstock26_10.webp" loading="lazy" alt="A black and white view of a performer in a feathery outfit and sunglasses holding long tassels up. The background has a starry, glittery effect."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_4.webp" data-idx="8" data-url="/tapahtumat#img-8"><img src="https://media.aatualatalo.com/Photographs/Qstock26_4.webp" loading="lazy" alt="A blonde woman playing a violin on stage. She is wearing a light gold-colored dress and thigh-high boots."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_8.webp" data-idx="9" data-url="/tapahtumat#img-9"><img src="https://media.aatualatalo.com/Photographs/Qstock26_8.webp" loading="lazy" alt="A view from the audience looking up at a performer in white on stage. A large screen behind them displays the word OWN in red letters, and an audience member's hand is raised in the foreground."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_3.webp" data-idx="10" data-url="/tapahtumat#img-10"><img src="https://media.aatualatalo.com/Photographs/Qstock26_3.webp" loading="lazy" alt="A male singer with dark curly hair and sunglasses performing on stage. He is dressed in a black button-up shirt and black trousers."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26.webp" data-idx="11" data-url="/tapahtumat#img-11"><img src="https://media.aatualatalo.com/Photographs/Qstock26.webp" loading="lazy" alt="A male singer performing on stage with a microphone. He is wearing a black tank top and is illuminated by red and white stage lights at Qstock 2026."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_2.webp" data-idx="12" data-url="/tapahtumat#img-12"><img src="https://media.aatualatalo.com/Photographs/Qstock26_2.webp" loading="lazy" alt="A female singer on stage wearing a blue outfit with feathers and blue boots. Two backup dancers in black are visible behind her in the background."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_1.webp" data-idx="13" data-url="/tapahtumat#img-13"><img src="https://media.aatualatalo.com/Photographs/Qstock26_1.webp" loading="lazy" alt="A side profile of a male singer on stage holding a microphone with both hands. He is wearing a black tank top and dark jeans."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_7.webp" data-idx="14" data-url="/tapahtumat#img-14"><img src="https://media.aatualatalo.com/Photographs/Qstock26_7.webp" loading="lazy" alt="A blonde female singer smiling and speaking into a microphone on stage. She is wearing a light-colored dress and large earrings under warm stage lights."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_9.webp" data-idx="15" data-url="/tapahtumat#img-15"><img src="https://media.aatualatalo.com/Photographs/Qstock26_9.webp" loading="lazy" alt="A black and white view from behind a female singer with long blonde hair on stage. She is facing bright stage lights with a microphone stand to her left."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_6.webp" data-idx="16" data-url="/tapahtumat#img-16"><img src="https://media.aatualatalo.com/Photographs/Qstock26_6.webp" loading="lazy" alt="A male singer playing an electric guitar and singing into a microphone. He is wearing a red sleeveless vest with green and red stage lights behind him."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26ismo.webp" data-idx="17" data-url="/tapahtumat#img-17"><img src="https://media.aatualatalo.com/Photographs/Qstock26ismo.webp" loading="lazy" alt="A singer in a red vest plays guitar onstage, with a drummer and another guitarist behind him."></div><div class="jd-thumb-global" data-cat="tapahtumat" data-cat-label="Tapahtumat" data-key="https://media.aatualatalo.com/Photographs/Qstock26_5.webp" data-idx="18" data-url="/tapahtumat#img-18"><img src="https://media.aatualatalo.com/Photographs/Qstock26_5.webp" loading="lazy" alt="A male singer performing on stage, singing into a microphone with his right arm raised. He is wearing a grey jacket over a red vest under bright stage lights."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-vari-ja-muoto"><div class="jd-thumbs-section-title">Väri ja muoto</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp" data-idx="0" data-url="/vari-ja-muoto#img-0"><img src="https://media.aatualatalo.com/Photographs/vihrea_takki_oulu_2026.webp" loading="lazy" alt="A man in a green jacket walks along a blue wall in Oulu. A low concrete wall and a young tree with autumn leaves fill the foreground."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp" data-idx="1" data-url="/vari-ja-muoto#img-1"><img src="https://media.aatualatalo.com/Photographs/Kukatikkunassa.webp" loading="lazy" alt="A bouquet of red and orange tulips in a clear glass vase displayed in a window in Helsinki. White candles, a dark wine bottle, and a small potted plant sit alongside the flowers against a dark interior background."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/oldlemoon.webp" data-idx="2" data-url="/vari-ja-muoto#img-2"><img src="https://media.aatualatalo.com/Photographs/oldlemoon.webp" loading="lazy" alt="An urban street scene in Oulu featuring a brown concrete building facade, Oulun Pantti pawn shop, a yellow awning for Old Le Moon restaurant, and orange traffic cones on the asphalt."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/oranssi_kana.webp" data-idx="3" data-url="/vari-ja-muoto#img-3"><img src="https://media.aatualatalo.com/Photographs/oranssi_kana.webp" loading="lazy" alt="A brown and orange hen foraging in green grass and white wildflowers with its head down."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/vihrearakennus.webp" data-idx="4" data-url="/vari-ja-muoto#img-4"><img src="https://media.aatualatalo.com/Photographs/vihrearakennus.webp" loading="lazy" alt="An empty asphalt yard surrounded by industrial buildings. A green corrugated overhang casts deep, diagonal shadows across the ground in bright daylight. Oulu, 2026."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/alikulku_oulu.webp" data-idx="5" data-url="/vari-ja-muoto#img-5"><img src="https://media.aatualatalo.com/Photographs/alikulku_oulu.webp" loading="lazy" alt="An underpass entrance at Oulu railway station. A blue sign points to tracks 1–3. Concrete walls and frosted glass panels in the shadow."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/miesjaolut.webp" data-idx="6" data-url="/vari-ja-muoto#img-6"><img src="https://media.aatualatalo.com/Photographs/miesjaolut.webp" loading="lazy" alt="A man in a dark suit sits alone at an outdoor table outside Michael Guinness pub in Oulu, reading a newspaper. A beer glass and an ashtray are on the table. A thick tree trunk fills the foreground."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/lehti.webp" data-idx="7" data-url="/vari-ja-muoto#img-7"><img src="https://media.aatualatalo.com/Photographs/lehti.webp" loading="lazy" alt="A large butterbur leaf shot close up against a dark background. The veins and surface texture stand out clearly."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/punainenvalo.webp" data-idx="8" data-url="/vari-ja-muoto#img-8"><img src="https://media.aatualatalo.com/Photographs/punainenvalo.webp" loading="lazy" alt="A long red light trail crosses a dark road at dusk in Tyrnävä, beneath a blue evening sky."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/sinisethousut.jpg" data-idx="9" data-url="/vari-ja-muoto#img-9"><img src="https://media.aatualatalo.com/Photographs/sinisethousut.jpg" loading="lazy" alt="A person in a black jacket, loose jeans with a brown patch, and a Vans backpack crosses a sunny street."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="https://media.aatualatalo.com/Photographs/mersu.jpg" data-idx="10" data-url="/vari-ja-muoto#img-10"><img src="https://media.aatualatalo.com/Photographs/mersu.jpg" loading="lazy" alt="A red Mercedes is parked in a wet lot beside a pale yellow building with a TAKSI sign."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="Kinogrilli.jpg" data-idx="11" data-url="/vari-ja-muoto#img-11"><img src="/assets/thumbnails/Kinogrilli_mobile.webp" loading="lazy" alt="A person in a red jacket walks past the KINO GRILLI kiosk in Oulu; burger signs fill its windows, with a light green wooden building behind it."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="Prinsessa.jpg" data-idx="12" data-url="/vari-ja-muoto#img-12"><img src="/assets/thumbnails/Prinsessa_mobile.webp" loading="lazy" alt="Two women walk arm in arm along a cobbled street in Oulu. One wears a white dress and flower crown, the other a pink skirt; a dark pillar partly covers the Olo sign."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="bilbao.jpg" data-idx="13" data-url="/vari-ja-muoto#img-13"><img src="/assets/thumbnails/bilbao_mobile.webp" loading="lazy" alt="A crowd walking down a wet street in the rain. A dark pink umbrella covered in raindrops stands out in the foreground, with a person in a yellow raincoat and another in a red polka-dot coat visible further back."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="Bussinikkuna.jpg" data-idx="14" data-url="/vari-ja-muoto#img-14"><img src="/assets/thumbnails/Bussinikkuna_mobile.webp" loading="lazy" alt="A reversed word is visible in frost on a bus window; outside, frost-covered trees and a traffic light stand before an apartment building with a red LEIJONA sign."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="Aallot.jpg" data-idx="15" data-url="/vari-ja-muoto#img-15"><img src="/assets/thumbnails/Aallot_mobile.webp" loading="lazy" alt="A lone person in dark clothing walks along a sandy shoreline as waves reach the beach."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="bilbaorak.jpg" data-idx="16" data-url="/vari-ja-muoto#img-16"><img src="/assets/thumbnails/bilbaorak_mobile.webp" loading="lazy" alt="A grey apartment building in Bilbao with a grid of windows. Red, green and orange laundry hangs from one open window on an otherwise bare concrete facade."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="DSC5481-2.jpg" data-idx="17" data-url="/vari-ja-muoto#img-17"><img src="/assets/thumbnails/DSC5481-2_mobile.webp" loading="lazy" alt="Red and orange plastic plates, bowls, glasses, and spoons are stacked on a flea-market table with handwritten Finnish price tags."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="ainolanpuisto.webp" data-idx="18" data-url="/vari-ja-muoto#img-18"><img src="/assets/thumbnails/ainolanpuisto_mobile.webp" loading="lazy" alt="Two people sit on a bench beside a bicycle on a curved park path at dusk, with rose bushes and tree branches around them."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="Prisma.jpg" data-idx="19" data-url="/vari-ja-muoto#img-19"><img src="/assets/thumbnails/Prisma_mobile.webp" loading="lazy" alt="Prisma supermarket at night. The glass facade glows green from inside, and the light reflects off the wet street in front of the building."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="kansallismaisema.webp" data-idx="20" data-url="/vari-ja-muoto#img-20"><img src="/assets/thumbnails/kansallismaisema_mobile.webp" loading="lazy" alt="A weathered wooden barn stands in a field of tall grass, with a forest and cloudy sky on the horizon."></div><div class="jd-thumb-global" data-cat="vari-ja-muoto" data-cat-label="Väri ja muoto" data-key="DSC9492.jpg" data-idx="21" data-url="/vari-ja-muoto#img-21"><img src="/assets/thumbnails/DSC9492_mobile.webp" loading="lazy" alt="A close-up of red and brown autumn leaves, with the foreground out of focus."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-raw"><div class="jd-thumbs-section-title">Muotokuvia</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="https://media.aatualatalo.com/Photographs/kaijonharju.webp" data-idx="0" data-url="/raw#img-0"><img src="https://media.aatualatalo.com/Photographs/kaijonharju.webp" loading="lazy" alt="A red-bearded man in a green beanie and olive jacket standing on a paved square in front of a weathered brick building with teal pillars and graffiti in Kaijonharju, Oulu. Other people pass in the background."></div><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="NeaYO.jpg" data-idx="1" data-url="/raw#img-1"><img src="/assets/thumbnails/NeaYO_mobile.webp" loading="lazy" alt="Close-up portrait of a person wearing a traditional Finnish graduation cap (Ylioppilaslakki) and a black outfit, standing outdoors. In the background, the Oulu dam is visible in soft focus, situated near the subject"></div><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="MG_9039.jpg" data-idx="2" data-url="/raw#img-2"><img src="/assets/thumbnails/MG_9039_mobile.webp" loading="lazy" alt="A black and white portrait of a young person outdoors. A light leak or lens flare partially covers their face. They look to the side, standing between an open field and a bare bush."></div><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="https://media.aatualatalo.com/Photographs/unto_valikatto.webp" data-idx="3" data-url="/raw#img-3"><img src="https://media.aatualatalo.com/Photographs/unto_valikatto.webp" loading="lazy" alt="A seated man in a bowler hat looks to his left against a dark background."></div><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="potret1.jpg" data-idx="4" data-url="/raw#img-4"><img src="/assets/thumbnails/potret1_mobile.webp" loading="lazy" alt="Black and white studio portrait of a young man with glasses wearing a dark knitted sweater. He looks to his right, lit by strong side lighting against a black background."></div><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="Leila.jpg" data-idx="5" data-url="/raw#img-5"><img src="/assets/thumbnails/Leila_mobile.webp" loading="lazy" alt="Leila Palmu sits on a wooden stool in the Torikatu gallery in Oulu. Evening light falls across the wooden floor and her pink sweater; paintings hang behind her."></div><div class="jd-thumb-global" data-cat="raw" data-cat-label="Muotokuvia" data-key="DSC2284.jpg" data-idx="6" data-url="/raw#img-6"><img src="/assets/thumbnails/DSC2284_mobile.webp" loading="lazy" alt="A recent graduate in a dark suit and Finnish graduation cap stands on a muddy path beneath bare trees and power lines."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-mustavalkoinen-sarja"><div class="jd-thumbs-section-title">Mustavalkoinen</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/Katse_muualle_Kemi_2026.webp" data-idx="0" data-url="/mustavalkoinen-sarja#img-0"><img src="https://media.aatualatalo.com/Photographs/Katse_muualle_Kemi_2026.webp" loading="lazy" alt="In Kemi, a younger person in a dark jacket and an older person in a light coat and cap stand at a street corner, looking in different directions."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/Pysakointihalli_OULU_2026.webp" data-idx="1" data-url="/mustavalkoinen-sarja#img-1"><img src="https://media.aatualatalo.com/Photographs/Pysakointihalli_OULU_2026.webp" loading="lazy" alt="A young man in a denim jacket, jeans, leather boots, and a headscarf sits against the tiled wall of a parking garage in Oulu."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/kaksikko_helsinki_2026.webp" data-idx="2" data-url="/mustavalkoinen-sarja#img-2"><img src="https://media.aatualatalo.com/Photographs/kaksikko_helsinki_2026.webp" loading="lazy" alt="Two figures stand on the fog-covered steps of Helsinki Cathedral beneath a streetlamp."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/nuoriso_2026_piippola.webp" data-idx="3" data-url="/mustavalkoinen-sarja#img-3"><img src="https://media.aatualatalo.com/Photographs/nuoriso_2026_piippola.webp" loading="lazy" alt="A road-damage warning sign stands in a concrete underpass, where a group of young people appear as silhouettes."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/kaksi_kissaa_punkaharju.webp" data-idx="4" data-url="/mustavalkoinen-sarja#img-4"><img src="https://media.aatualatalo.com/Photographs/kaksi_kissaa_punkaharju.webp" loading="lazy" alt="Two white cats look out through an open window of a traditional wooden house in Punkaharju, framed by leaves."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/Koli_2026.webp" data-idx="5" data-url="/mustavalkoinen-sarja#img-5"><img src="https://media.aatualatalo.com/Photographs/Koli_2026.webp" loading="lazy" alt="A pine tree and three people stand on the rocky summit of Koli beneath a cloudy sky."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/Sabrina.webp" data-idx="6" data-url="/mustavalkoinen-sarja#img-6"><img src="https://media.aatualatalo.com/Photographs/Sabrina.webp" loading="lazy" alt="A small child sits in a stroller on a wet cobblestone street in Helsinki, with a railing in the foreground and the Sabrina shop behind."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/Kaksiihmista.webp" data-idx="7" data-url="/mustavalkoinen-sarja#img-7"><img src="https://media.aatualatalo.com/Photographs/Kaksiihmista.webp" loading="lazy" alt="Two young people stand in a crowd amid blurred reflections; one looks left while the other stands behind him."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/lapsetainola.webp" data-idx="8" data-url="/mustavalkoinen-sarja#img-8"><img src="https://media.aatualatalo.com/Photographs/lapsetainola.webp" loading="lazy" alt="A barefoot toddler walks along a park path while an older child stands by the water beneath a leafy tree."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/minaitse.webp" data-idx="9" data-url="/mustavalkoinen-sarja#img-9"><img src="https://media.aatualatalo.com/Photographs/minaitse.webp" loading="lazy" alt="A person holding a camera appears in a slatted mirror, with tree prints and papers around the reflection."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/kirjastomies.webp" data-idx="10" data-url="/mustavalkoinen-sarja#img-10"><img src="https://media.aatualatalo.com/Photographs/kirjastomies.webp" loading="lazy" alt="A man stands on a modern library staircase in Oulu, framed by geometric lines and contrasting light."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/poznan.webp" data-idx="11" data-url="/mustavalkoinen-sarja#img-11"><img src="https://media.aatualatalo.com/Photographs/poznan.webp" loading="lazy" alt="A person in a dark coat walks along a paved sidewalk, seen from a low angle."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/rajapintahelsinki.webp" data-idx="12" data-url="/mustavalkoinen-sarja#img-12"><img src="https://media.aatualatalo.com/Photographs/rajapintahelsinki.webp" loading="lazy" alt="A blonde woman checks her phone beside a textured stone wall in Helsinki."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="https://media.aatualatalo.com/Photographs/nainenkahvilassa.webp" data-idx="13" data-url="/mustavalkoinen-sarja#img-13"><img src="https://media.aatualatalo.com/Photographs/nainenkahvilassa.webp" loading="lazy" alt="A young woman sits in a café with a mug and tray, against patterned wallpaper and wooden paneling."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="Mysteeri.jpg" data-idx="14" data-url="/mustavalkoinen-sarja#img-14"><img src="/assets/thumbnails/Mysteeri_mobile.webp" loading="lazy" alt="A person walks along a Helsinki street as a puddle reflects them and the buildings; melting snow lines the road."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="suutelu.jpg" data-idx="15" data-url="/mustavalkoinen-sarja#img-15"><img src="/assets/thumbnails/suutelu_mobile.webp" loading="lazy" alt="A couple kisses on a wet Helsinki street beneath neon signs, one holding a bouquet."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="Yhteiselo.webp" data-idx="16" data-url="/mustavalkoinen-sarja#img-16"><img src="/assets/thumbnails/Yhteiselo_mobile.webp" loading="lazy" alt="People walk across the snow-covered steps of Helsinki Cathedral in thick fog; a couple shares an umbrella."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC5474-1.jpg" data-idx="17" data-url="/mustavalkoinen-sarja#img-17"><img src="/assets/thumbnails/DSC5474-1_mobile.webp" loading="lazy" alt="A bearded man plays a flugelhorn while a woman dances behind him on a dark stage."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC0283-1.jpg" data-idx="18" data-url="/mustavalkoinen-sarja#img-18"><img src="/assets/thumbnails/DSC0283-1_mobile.webp" loading="lazy" alt="A person in a long dark coat looks across a wet street toward a large building at dusk."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC7503.jpg" data-idx="19" data-url="/mustavalkoinen-sarja#img-19"><img src="/assets/thumbnails/DSC7503_mobile.webp" loading="lazy" alt="Snow-covered buoys sit on frozen water below a lighthouse on the winter shore."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC7425.jpg" data-idx="20" data-url="/mustavalkoinen-sarja#img-20"><img src="/assets/thumbnails/DSC7425_mobile.webp" loading="lazy" alt="A snow-covered wooden bench stands beneath two heavily snow-laden trees, with buildings in the background."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC6350.jpg" data-idx="21" data-url="/mustavalkoinen-sarja#img-21"><img src="/assets/thumbnails/DSC6350_mobile.webp" loading="lazy" alt="Mallards swim through a narrow channel bordered by snow and ice."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC6482.jpg" data-idx="22" data-url="/mustavalkoinen-sarja#img-22"><img src="/assets/thumbnails/DSC6482_mobile.webp" loading="lazy" alt="A close-up shows the back pockets and label of Levi’s jeans resting on patterned fabric."></div><div class="jd-thumb-global" data-cat="mustavalkoinen-sarja" data-cat-label="Mustavalkoinen" data-key="DSC7145-2.jpg" data-idx="23" data-url="/mustavalkoinen-sarja#img-23"><img src="/assets/thumbnails/DSC7145-2_mobile.webp" loading="lazy" alt="Several bicycles sit partly buried in a deep snowbank, their frames and handlebars covered in snow."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-sisatilan-valo"><div class="jd-thumbs-section-title">Valo sisällä</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="sisatilan-valo" data-cat-label="Valo sisällä" data-key="https://media.aatualatalo.com/Photographs/lamppu.webp" data-idx="0" data-url="/sisatilan-valo#img-0"><img src="https://media.aatualatalo.com/Photographs/lamppu.webp" loading="lazy" alt="A ceiling lamp casts light across textured wallpaper and a zigzag border in a living room in Oulu."></div><div class="jd-thumb-global" data-cat="sisatilan-valo" data-cat-label="Valo sisällä" data-key="DSC5577.jpg" data-idx="1" data-url="/sisatilan-valo#img-1"><img src="/assets/thumbnails/DSC5577_mobile.webp" loading="lazy" alt="A lit floor lamp with a beige shade and wooden stand against a light blue-grey wall. The edge of a purple sofa with a green pillow is visible in the foreground."></div><div class="jd-thumb-global" data-cat="sisatilan-valo" data-cat-label="Valo sisällä" data-key="olohuone.webp" data-idx="2" data-url="/sisatilan-valo#img-2"><img src="/assets/thumbnails/olohuone_mobile.webp" loading="lazy" alt="A living room corner with a dark burgundy sofa and a patterned throw pillow. Sunlight streams in and casts diagonal shadows across the wall."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-kiehtovat-rakennukset"><div class="jd-thumbs-section-title">Arkkitehtuuri</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="kiehtovat-rakennukset" data-cat-label="Arkkitehtuuri" data-key="navetta.webp" data-idx="0" data-url="/kiehtovat-rakennukset#img-0"><img src="/assets/thumbnails/navetta_mobile.webp" loading="lazy" alt="A red wooden barn and a cylindrical silo in a snowy winter landscape in Suomussalmi. A snow-covered ramp leads up to a weathered green door."></div><div class="jd-thumb-global" data-cat="kiehtovat-rakennukset" data-cat-label="Arkkitehtuuri" data-key="rakennukset.jpg" data-idx="1" data-url="/kiehtovat-rakennukset#img-1"><img src="/assets/thumbnails/rakennukset_mobile.webp" loading="lazy" alt="A small, bright red wooden shed with a snow-covered roof and light wooden double doors. Flat, snow-covered ground around it and a clear pale blue winter sky behind."></div><div class="jd-thumb-global" data-cat="kiehtovat-rakennukset" data-cat-label="Arkkitehtuuri" data-key="DSC2636.jpg" data-idx="2" data-url="/kiehtovat-rakennukset#img-2"><img src="/assets/thumbnails/DSC2636_mobile.webp" loading="lazy" alt="The white brick Marjaniemi lighthouse and a wind turbine rise above Hailuoto beneath an overcast sky; a dark wooden building enters the lower edge."></div><div class="jd-thumb-global" data-cat="kiehtovat-rakennukset" data-cat-label="Arkkitehtuuri" data-key="https://media.aatualatalo.com/Photographs/vaaleat_tilat.webp" data-idx="3" data-url="/kiehtovat-rakennukset#img-3"><img src="https://media.aatualatalo.com/Photographs/vaaleat_tilat.webp" loading="lazy" alt="A cafeteria with round white tables and matching white chairs on a terrazzo floor. Pendant lamps with a turquoise stripe hang above the tables. Floor-to-ceiling windows look onto an outdoor courtyard with white pillars."></div><div class="jd-thumb-global" data-cat="kiehtovat-rakennukset" data-cat-label="Arkkitehtuuri" data-key="https://media.aatualatalo.com/Photographs/vaaleat_tilat_1.webp|https://media.aatualatalo.com/Photographs/vaaleat_tilat_2.webp" data-idx="4" data-url="/kiehtovat-rakennukset#img-4"><img src="https://media.aatualatalo.com/Photographs/vaaleat_tilat_1.webp" loading="lazy" alt="A tiled university hallway in pale mint and white. A labeled glass door stands on the left, and an open doorway reveals a stairwell on the right."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-luonto-ja-ymparisto"><div class="jd-thumbs-section-title">Maisema</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="https://media.aatualatalo.com/Photographs/kuu_kolilla.webp" data-idx="0" data-url="/luonto-ja-ymparisto#img-0"><img src="https://media.aatualatalo.com/Photographs/kuu_kolilla.webp" loading="lazy" alt="A tranquil twilight landscape looking out over Lake Pielinen from Koli, with silhouetted forested islands on dark blue water under an evening sky with the moon."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="https://media.aatualatalo.com/Photographs/tutkimuslaitos_punkaharju.webp" data-idx="1" data-url="/luonto-ja-ymparisto#img-1"><img src="https://media.aatualatalo.com/Photographs/tutkimuslaitos_punkaharju.webp" loading="lazy" alt="Ferns grow beneath conifer trees in Punkaharju, Finland."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="https://media.aatualatalo.com/Photographs/soratie.webp" data-idx="2" data-url="/luonto-ja-ymparisto#img-2"><img src="https://media.aatualatalo.com/Photographs/soratie.webp" loading="lazy" alt="A gravel road crosses flat fields in Tyrnävä, with jackdaws flying low beneath an overcast sky."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="https://media.aatualatalo.com/Photographs/myrsky.webp" data-idx="3" data-url="/luonto-ja-ymparisto#img-3"><img src="https://media.aatualatalo.com/Photographs/myrsky.webp" loading="lazy" alt="A small wooden building stands among fields and trees in Muhos beneath storm clouds; a cat's ears appear in the foreground."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="DSC3900_Panorama.jpg" data-idx="4" data-url="/luonto-ja-ymparisto#img-4"><img src="/assets/thumbnails/DSC3900_Panorama_mobile.webp" loading="lazy" alt="A leaning dead pine stands on a rocky, moss-covered hillside in Hossa National Park, surrounded by conifer forest."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="Louhos_1.jpg|Louhos_2.jpg" data-idx="5" data-url="/luonto-ja-ymparisto#img-5"><img src="/assets/thumbnails/Louhos_1_mobile.webp" loading="lazy" alt="A green gate blocks a gravel road into a quarry in Murto, with piles of sand and gravel beyond."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="pr1.jpg" data-idx="6" data-url="/luonto-ja-ymparisto#img-6"><img src="/assets/thumbnails/pr1_mobile.webp" loading="lazy" alt="A red wooden barn in Muhos is partly hidden by snow-covered pine trees; footprints cross the snow beneath a clear winter sky."></div><div class="jd-thumb-global" data-cat="luonto-ja-ymparisto" data-cat-label="Maisema" data-key="DSC7318.jpg" data-idx="7" data-url="/luonto-ja-ymparisto#img-7"><img src="/assets/thumbnails/DSC7318_mobile.webp" loading="lazy" alt="A snowy road runs beneath a concrete overpass in Ylivieska, with frost-covered trees and a yellow house beyond."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-still-life"><div class="jd-thumbs-section-title">Asetelmat</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="still-life" data-cat-label="Asetelmat" data-key="Hedelmat1.jpg" data-idx="0" data-url="/still-life#img-0"><img src="/assets/thumbnails/Hedelmat1_mobile.webp" loading="lazy" alt="A plate of banana, limes, kiwi, and lemon sits on blue placemats, with a bowl of oranges on the wooden table behind it."></div><div class="jd-thumb-global" data-cat="still-life" data-cat-label="Asetelmat" data-key="DSC4115-1.jpg" data-idx="1" data-url="/still-life#img-1"><img src="/assets/thumbnails/DSC4115-1_mobile.webp" loading="lazy" alt="A hand scoops white, black-seeded dragon fruit from its pink peel on a cutting board, beside a knife."></div><div class="jd-thumb-global" data-cat="still-life" data-cat-label="Asetelmat" data-key="paprika.jpg" data-idx="2" data-url="/still-life#img-2"><img src="/assets/thumbnails/paprika_mobile.webp" loading="lazy" alt="An opened red pepper and a square-cut apple core rest on a cutting board beside a partly visible laptop."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-elaimet"><div class="jd-thumbs-section-title">Eläimet</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="https://media.aatualatalo.com/Photographs/hevoset.webp" data-idx="0" data-url="/elaimet#img-0"><img src="https://media.aatualatalo.com/Photographs/hevoset.webp" loading="lazy" alt="Six horses walk across a field in front of a forest, including brown, tan, and white horses."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="Dalmatialainen.webp" data-idx="1" data-url="/elaimet#img-1"><img src="/assets/thumbnails/Dalmatialainen_mobile.webp" loading="lazy" alt="A Dalmatian sits beside its owner on a sidewalk, looking up at the person holding its leash; a crosswalk is visible behind them."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="lumipaakku.jpg" data-idx="2" data-url="/elaimet#img-2"><img src="/assets/thumbnails/lumipaakku_mobile.webp" loading="lazy" alt="A small terrier on a leash investigates melting snow on a wet street in Oulu's Karjasilta, beside a white fence and snowy yard."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="Kissakahvila.jpeg" data-idx="3" data-url="/elaimet#img-3"><img src="/assets/thumbnails/Kissakahvila_mobile.webp" loading="lazy" alt="A white cat looks out from a café window in Kamppi, Helsinki, while the glass reflects a passerby and nearby buildings."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="lofootit.webp" data-idx="4" data-url="/elaimet#img-4"><img src="/assets/thumbnails/lofootit_mobile.webp" loading="lazy" alt="Three sheep resting on a grassy shoreline in Lofoten, Norway. Calm dark water and rugged mountains under an overcast sky behind them."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="DSC5653.jpg" data-idx="5" data-url="/elaimet#img-5"><img src="/assets/thumbnails/DSC5653_mobile.webp" loading="lazy" alt="A black dog lies on a striped rug beside a red spiked toy, looking up toward the viewer."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="DSC4276.jpg" data-idx="6" data-url="/elaimet#img-6"><img src="/assets/thumbnails/DSC4276_mobile.webp" loading="lazy" alt="Two horses grazing in a green pasture at golden hour. A wooden fence and yellow wildflowers in the foreground, a dark pine forest against a soft sunset sky behind."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="DSC0325.jpg" data-idx="7" data-url="/elaimet#img-7"><img src="/assets/thumbnails/DSC0325_mobile.webp" loading="lazy" alt="Two dogs sit close together against a dark background; the dog on the right looks upward while the other is partly visible."></div><div class="jd-thumb-global" data-cat="elaimet" data-cat-label="Eläimet" data-key="DSC0336.jpg" data-idx="8" data-url="/elaimet#img-8"><img src="/assets/thumbnails/DSC0336_mobile.webp" loading="lazy" alt="Two tabby cats rest behind a sofa, both looking to the right."></div></div></div><div class="jd-thumbs-section" id="jd-thumbs-section-kuvaprojekti-ajasta-v365"><div class="jd-thumbs-section-title">V365</div><div class="jd-thumbs-grid"><div class="jd-thumb-global" data-cat="kuvaprojekti-ajasta-v365" data-cat-label="V365" data-key="Vuosikuvaus1 1.jpg" data-idx="0" data-url="/kuvaprojekti-ajasta-v365#img-0"><img src="/assets/thumbnails/Vuosikuvaus1 1_mobile.webp" loading="lazy" alt="Snow covers a wooden outbuilding, its roof, and the surrounding birch and pine trees beneath a pale blue sky."></div><div class="jd-thumb-global" data-cat="kuvaprojekti-ajasta-v365" data-cat-label="V365" data-key="Vuosikuvaus1.jpg" data-idx="1" data-url="/kuvaprojekti-ajasta-v365#img-1"><img src="/assets/thumbnails/Vuosikuvaus1_mobile.webp" loading="lazy" alt="A grey wooden outbuilding with black double doors stands beside melting snow, muddy grass, bare birches, and a pine forest."></div><div class="jd-thumb-global" data-cat="kuvaprojekti-ajasta-v365" data-cat-label="V365" data-key="Vuosikuvaus2.jpg" data-idx="2" data-url="/kuvaprojekti-ajasta-v365#img-2"><img src="/assets/thumbnails/Vuosikuvaus2_mobile.webp" loading="lazy" alt="A grey wooden outbuilding with black doors stands in dry grass, with a trampoline in front and bare trees behind."></div><div class="jd-thumb-global" data-cat="kuvaprojekti-ajasta-v365" data-cat-label="V365" data-key="Vuosikuvaus3.jpg" data-idx="3" data-url="/kuvaprojekti-ajasta-v365#img-3"><img src="/assets/thumbnails/Vuosikuvaus3_mobile.webp" loading="lazy" alt="A wooden outbuilding and nearby field are lit against a dark sky, with a bare tree and forest in silhouette."></div><div class="jd-thumb-global" data-cat="kuvaprojekti-ajasta-v365" data-cat-label="V365" data-key="Vuosikuvaus4.jpg" data-idx="4" data-url="/kuvaprojekti-ajasta-v365#img-4"><img src="/assets/thumbnails/Vuosikuvaus4_mobile.webp" loading="lazy" alt="Low evening light falls across a grassy field and a grey wooden outbuilding, with a leafy tree and forest behind."></div><div class="jd-thumb-global" data-cat="kuvaprojekti-ajasta-v365" data-cat-label="V365" data-key="Vuosikuvaus5.jpg" data-idx="5" data-url="/kuvaprojekti-ajasta-v365#img-5"><img src="/assets/thumbnails/Vuosikuvaus5_mobile.webp" loading="lazy" alt="A grey wooden outbuilding stands in green grass beneath a leafy tree and an overcast sky."></div></div></div></div></div><!-- Floating close button for Kuvasto (Thumbs) --><button id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label="Sulje kuvasto"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Invalidate Safari's cached edge colour after navigation, viewport changes,
+    // and overlays. A two-frame geometry pulse paints no pixels and never scrolls.
+    if (CSS.supports('-webkit-touch-callout', 'none')) {
+      let tintFrame = 0;
+      const refreshTint = () => {
+        cancelAnimationFrame(tintFrame);
+        if (!matchMedia('(max-width: 800px)').matches) {
+          document.documentElement.removeAttribute('data-jd-tint-refresh');
+          return;
+        }
+        document.documentElement.setAttribute('data-jd-tint-refresh', '');
+        tintFrame = requestAnimationFrame(() => {
+          tintFrame = requestAnimationFrame(() => {
+            document.documentElement.removeAttribute('data-jd-tint-refresh');
+            tintFrame = 0;
+          });
+        });
+      };
+      window.addEventListener('pageshow', refreshTint);
+      window.addEventListener('resize', refreshTint);
+      window.addEventListener('jd:splash-dismissed', refreshTint);
+      new MutationObserver(refreshTint).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      refreshTint();
+    }
+    // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
+    const splashEl = document.getElementById('jd-splash');
+    const splashRoot = document.documentElement;
+    function restoreGalleryTheme() {
+      window.jdSyncBrowserTheme();
+    }
+    function finishSplash() {
+      splashEl?.remove();
+      splashRoot.classList.remove('jd-splash-active', 'jd-splash-revealing');
+      splashRoot.classList.add('jd-no-splash');
+      restoreGalleryTheme();
+      window.dispatchEvent(new Event('jd:splash-dismissed'));
+    }
+    if (splashEl) {
+      if (splashRoot.classList.contains('jd-no-splash')) {
+        finishSplash();
+      } else {
+        try { sessionStorage.setItem('jd_splash_seen', 'true'); } catch (e) {}
+        let splashDismissed = false;
+        let removalTimer;
+        function dismissSplash() {
+          if (splashDismissed) return;
+          splashDismissed = true;
+          clearTimeout(autoTimer);
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
+          splashEl.classList.add('jd-splash-text-exit');
+          setTimeout(() => {
+            // Reveal a fully light gallery, including its edge masks. The black
+            // curtain alone travels upward; no black bars remain beneath it.
+            splashRoot.classList.add('jd-splash-revealing');
+            restoreGalleryTheme();
+            splashEl.classList.add('jd-splash-dismissed');
+          }, 100);
+          // Prefer completion of the actual curtain; timer covers interrupted transitions.
+          splashEl.addEventListener('transitionend', event => {
+            if (event.target !== splashEl || event.propertyName !== 'transform') return;
+            clearTimeout(removalTimer);
+            finishSplash();
+          });
+          removalTimer = setTimeout(finishSplash, 1150);
+        }
+        const autoTimer = setTimeout(dismissSplash, 2400);
+        splashEl.addEventListener('click', dismissSplash);
+        window.addEventListener('keydown', dismissSplash, { once: true });
+      }
+    }
+
+    const metaEl = document.getElementById('jd-meta');
+    const meta = metaEl ? JSON.parse(metaEl.textContent) : {};
+    const { catLabel, categorySlug, isEventsCategory } = meta;
+
+    const data = JSON.parse(document.getElementById('jd-data').textContent);
+    const total = data.length;
+
+    const mastersInfo = document.getElementById('jd-masters-info');
+    const mastersInfoButton = document.getElementById('jd-masters-info-button');
+    document.querySelectorAll('.jd-masters-info-trigger').forEach(button => {
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        mastersInfo?.showModal();
+      });
+    });
+    document.getElementById('jd-masters-info-close')?.addEventListener('click', () => mastersInfo.close());
+    mastersInfo?.addEventListener('click', event => {
+      event.stopPropagation();
+      const bounds = mastersInfo.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) mastersInfo.close();
+    });
+    mastersInfo?.addEventListener('keydown', event => event.stopPropagation());
+    mastersInfo?.addEventListener('wheel', event => event.stopPropagation());
+
+    const slideshow = document.getElementById('jd-slideshow');
+    const thumbsPanel = document.getElementById('jd-thumbs-panel');
+    const counterNum = document.getElementById('jd-counter-num');
+    const cursor = document.getElementById('jd-cursor-custom');
+    const shutter = document.querySelector('.jd-curtain-primary');
+    const shutterTitle = document.querySelector('.jd-shutter-title');
+
+    if (cursor && cursor.parentElement !== document.body) document.body.appendChild(cursor);
+
+    const slides = [];
+    let current = 0;
+    let thumbsOpen = false;
+
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#img-')) {
+      const idx = parseInt(hash.replace('#img-', ''), 10);
+      if (!isNaN(idx) && idx >= 0 && idx < total) current = idx;
+    }
+
+    function createSlide(item, i) {
+      const slide = document.createElement('div');
+      slide.className = 'jd-slide' + (i === current ? ' active' : '');
+      if (item.type === 'text') {
+        slide.className += ' jd-text-slide';
+        const content = document.createElement('div');
+        if (item.kartta) {
+          content.className = 'jd-text-content jd-postcard-content';
+          if (item.title) {
+            const h2 = document.createElement('h2');
+            h2.textContent = item.title;
+            content.appendChild(h2);
+          }
+          if (item.text) {
+            const p = document.createElement('p');
+            p.textContent = item.text;
+            content.appendChild(p);
+          }
+          if (window.L) {
+            const mapContainer = document.createElement('div');
+            mapContainer.className = 'jd-postcard-map';
+            content.appendChild(mapContainer);
+            
+            setTimeout(() => {
+              const map = L.map(mapContainer, {
+                center: item.kartta.center || [60, 25],
+                zoom: item.kartta.zoom || 8,
+                zoomControl: false,
+                dragging: false,
+                touchZoom: false,
+                doubleClickZoom: false,
+                scrollWheelZoom: false,
+                boxZoom: false,
+                keyboard: false
+              });
+              L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO'
+              }).addTo(map);
+              
+              if (item.kartta.points && item.kartta.points.length > 0) {
+                const dotIcon = L.divIcon({ className: 'jd-map-dot-wrapper', html: '<div class="jd-map-dot"></div>', iconSize: [14, 14] });
+                const bounds = L.latLngBounds();
+                item.kartta.points.forEach(pt => {
+                  const coords = pt.latlng || pt;
+                  bounds.extend(coords);
+                  const marker = L.marker(coords, { icon: dotIcon }).addTo(map);
+                  if (pt.nimi) {
+                    marker.bindTooltip(pt.nimi, {
+                      permanent: true,
+                      direction: 'top',
+                      className: 'jd-map-tooltip',
+                      offset: [0, -5],
+                      opacity: 1
+                    });
+                  }
+                });
+                map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+              }
+            }, 300);
+          }
+        } else {
+          content.className = 'jd-editorial-content';
+          if (item.title) {
+            const h2 = document.createElement('h2');
+            h2.textContent = item.title;
+            content.appendChild(h2);
+          }
+          if (item.text) {
+            const p = document.createElement('p');
+            p.textContent = item.text;
+            content.appendChild(p);
+          }
+        }
+        slide.appendChild(content);
+      } else if (item.layout === 'diptych' && item.images) {
+        slide.className += ' jd-diptych-slide';
+        item.images.forEach(imgData => {
+          const picture = document.createElement('picture');
+          
+          // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
+          // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
+          const retinaSrc = document.createElement('source');
+          retinaSrc.type = (imgData.full && imgData.full.endsWith('.webp')) ? 'image/webp' : 'image/jpeg';
+          retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
+          retinaSrc.srcset = imgData.full;
+          picture.appendChild(retinaSrc);
+
+          // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) ladataan uusi nopea 1600px AVIF
+          if (imgData.srcAvif) {
+            const avifSrc = document.createElement('source');
+            avifSrc.type = 'image/avif';
+            avifSrc.media = '(min-width: 801px)';
+            avifSrc.srcset = imgData.srcAvif;
+            picture.appendChild(avifSrc);
+          }
+          
+          // 3. Fallback & mobiililaitteet: selaimen automaattisesti valitsema koko 
+          const webpSrc = document.createElement('source');
+          webpSrc.type = 'image/webp';
+          webpSrc.srcset = imgData.srcset;
+          webpSrc.sizes = '(max-width: 768px) 100vw, 50vw';
+          picture.appendChild(webpSrc);
+          
+          const img = document.createElement('img');
+          img.src = imgData.src;
+          img.alt = imgData.alt || '';
+          img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
+          img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = imgData.full; };
+          picture.appendChild(img);
+          slide.appendChild(picture);
+        });
+
+      } else {
+        const picture = document.createElement('picture');
+        
+        // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
+        // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
+        const retinaSrc = document.createElement('source');
+        retinaSrc.type = 'image/webp';
+        retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
+        retinaSrc.srcset = item.full;
+        picture.appendChild(retinaSrc);
+
+        // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) ladataan uusi nopea 1600px AVIF
+        if (item.srcAvif) {
+          const avifSrc = document.createElement('source');
+          avifSrc.type = 'image/avif';
+          avifSrc.media = '(min-width: 801px)';
+          avifSrc.srcset = item.srcAvif;
+          picture.appendChild(avifSrc);
+        }
+        
+        // 3. Fallback & mobiililaitteet: selaimen automaattisesti valitsema koko 
+        const webpSrc = document.createElement('source');
+        webpSrc.type = 'image/webp';
+        webpSrc.srcset = item.srcset;
+        webpSrc.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
+        picture.appendChild(webpSrc);
+        
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = item.alt || '';
+        img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
+        img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = item.full; };
+        picture.appendChild(img);
+        if (categorySlug === 'masters-2026' && i === 0) {
+          const frame = document.createElement('div');
+          frame.className = 'jd-masters-image-frame';
+          frame.appendChild(picture);
+          if (mastersInfoButton) frame.appendChild(mastersInfoButton);
+          slide.appendChild(frame);
+        } else {
+          slide.appendChild(picture);
+        }
+
+
+      }
+      return slide;
+    }
+
+    const desktopLocation = document.createElement('div');
+    desktopLocation.className = 'jd-slide-location jd-current-location';
+    document.body.appendChild(desktopLocation);
+
+    data.forEach((item, i) => {
+      const slide = createSlide(item, i);
+      slideshow.appendChild(slide);
+      slides.push(slide);
+    });
+
+    // Cache gallery references; scrolling only updates changed text and nearby slides.
+    const localThumbs = Array.from(document.querySelectorAll(`.jd-thumb-global[data-cat="${categorySlug}"]`));
+    const slideImages = slides.map(slide => Array.from(slide.querySelectorAll('img')));
+    const counterUI = Object.fromEntries(['jd-wheel-counter', 'jd-counter-cat', 'jd-counter-num',
+      'jd-counter-tot', 'jd-counter-rest', 'jd-counter-place', 'jd-cursor-text']
+      .map(id => [id, document.getElementById(id)]));
+    let displayedIndex = current;
+    let counterSignature = '';
+    const preparedImages = new WeakMap();
+
+    function prepareNearbyImages(index) {
+      const vi = visibleIndices.indexOf(index);
+      if (vi < 0) return;
+      // No wraparound: prepare only actual neighbours, including both diptych images.
+      [vi, vi + 1, vi + 2, vi - 1].forEach(position => {
+        const target = visibleIndices[position];
+        if (target === undefined) return;
+        slideImages[target].forEach(img => {
+          img.loading = 'eager';
+          const source = img.currentSrc || img.src;
+          if (!source || preparedImages.get(img) === source) return;
+          preparedImages.set(img, source);
+          if (typeof img.decode === 'function') img.decode().catch(() => {
+            // A source change or failed download must never block navigation.
+            preparedImages.delete(img);
+          });
+        });
+      });
+    }
+
+    /* Filter */
+    const filterContainer = document.getElementById('jd-filter-dropdown-container');
+    const filterToggle = document.getElementById('jd-filter-toggle');
+    const filterMenu = document.getElementById('jd-filter-menu');
+    let uniqueSeries = [...new Set(data.map(item => item.series))].filter(s => s && s !== 'all');
+    let currentFilter = 'all';
+    let visibleIndices = data.map((_, i) => i);
+    let visibleTotal = visibleIndices.length;
+
+    if (uniqueSeries.length > 1 && filterContainer && (isEventsCategory || categorySlug === 'recent')) {
+      filterContainer.classList.add('is-visible');
+      const btnAll = document.createElement('button');
+      btnAll.className = 'jd-filter-btn active'; btnAll.textContent = meta.lang === 'fi' ? 'KAIKKI' : 'ALL';
+      btnAll.dataset.filter = 'all'; filterMenu.appendChild(btnAll);
+      uniqueSeries.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'jd-filter-btn'; btn.textContent = s.toUpperCase().replace(/-/g, ' ');
+        btn.dataset.filter = s; filterMenu.appendChild(btn);
+      });
+      filterToggle.addEventListener('click', e => { e.stopPropagation(); filterMenu.classList.toggle('is-open'); filterToggle.classList.toggle('is-open'); });
+      document.addEventListener('click', e => { if (!filterContainer.contains(e.target)) { filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); } });
+      filterMenu.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { const f = e.target.dataset.filter; filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); if (f !== currentFilter) applyFilter(f); } });
+    }
+
+    function applyFilter(filter) {
+      currentFilter = filter;
+      visibleIndices = [];
+      data.forEach((item, i) => { if (filter === 'all' || item.series === filter) visibleIndices.push(i); });
+      visibleTotal = visibleIndices.length;
+      slides.forEach((slide, index) => slide.classList.toggle('is-filtered-out', !visibleIndices.includes(index)));
+      document.querySelectorAll('.jd-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+      const filterBase = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+      let newCurrent = visibleIndices.includes(filterBase) ? filterBase : visibleIndices[0];
+      if (newCurrent === undefined) newCurrent = 0;
+      rebuildMobileCentres();
+      goToAbsolute(newCurrent, true);
+    }
+
+    /* Thumbs listeners */
+    document.querySelectorAll('.jd-thumb-global').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const cat = thumb.getAttribute('data-cat');
+        const idx = parseInt(thumb.getAttribute('data-idx'), 10);
+        const url = thumb.getAttribute('data-url');
+        const catLabel = thumb.getAttribute('data-cat-label') || '';
+        if (cat === categorySlug) { goToAbsolute(idx); closeThumbsView(); }
+        else goToCategory(url, catLabel);
+      });
+    });
+
+    function updateCounter(index = current) {
+      const vi = Math.max(0, visibleIndices.indexOf(index));
+      const n = vi + 1;
+      const place = data[index]?.place || '';
+      const caption = place;
+      const mastersInfoButton = document.getElementById('jd-masters-info-button');
+      if (mastersInfoButton) mastersInfoButton.hidden = index !== 0;
+      const signature = `${index}|${visibleTotal}|${currentFilter}`;
+      if (signature === counterSignature) return;
+      counterSignature = signature;
+      desktopLocation.textContent = caption;
+      desktopLocation.hidden = !caption;
+      const setText = (id, text) => {
+        const element = counterUI[id];
+        if (element && element.textContent !== String(text)) element.textContent = text;
+      };
+      setText('jd-wheel-counter', `${n} / ${visibleTotal}`);
+      setText('jd-counter-cat', catLabel);
+      setText('jd-counter-num', n);
+      setText('jd-counter-tot', visibleTotal);
+      setText('jd-counter-place', caption);
+      setText('jd-cursor-text', `${catLabel} — ${n} / ${visibleTotal}`);
+      if (counterUI['jd-counter-place']) counterUI['jd-counter-place'].style.display = caption ? 'block' : 'none';
+    }
+    updateCounter();
+    prepareNearbyImages(current);
+
+    /* Navigation */
+    function goToCategory(url, titleText = '') {
+      if (document.body.classList.contains('is-leaving')) return;
+      if (reducedMotion.matches) { window.location.href = url; return; }
+
+      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
+      if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel();
+      if (typeof closeThumbsView === 'function') closeThumbsView();
+
+      if (titleText && shutterTitle) {
+        shutterTitle.textContent = titleText;
+        document.body.classList.remove('hide-shutter-title');
+        document.body.classList.add('show-shutter-title');
+      } else {
+        document.body.classList.add('hide-shutter-title');
+      }
+
+      document.body.classList.add('prepare-leave');
+      if (shutter) void shutter.offsetHeight;
+
+      requestAnimationFrame(() => {
+        document.body.classList.remove('is-entering-ready');
+        document.body.classList.remove('prepare-leave');
+        document.body.classList.add('is-leaving');
+        let triggered = false;
+        const onDone = () => {
+          if (!triggered) {
+            triggered = true;
+            window.location.href = url;
+          }
+        };
+        if (shutter) shutter.addEventListener('transitionend', onDone, { once: true });
+        setTimeout(onDone, 700);
+      });
+    }
+
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a');
+      if (link && link.href) {
+        const urlObj = new URL(link.href, window.location.origin);
+        if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
+          if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
+            e.preventDefault();
+            
+            let titleText = '';
+            const spanText = link.querySelector('span:not(.jd-count)');
+            if (spanText) titleText = spanText.textContent.trim();
+            else if (link.classList.contains('jd-filter-btn')) titleText = link.textContent.trim();
+            else {
+              const textNode = Array.from(link.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length > 0);
+              if (textNode) titleText = textNode.textContent.trim();
+            }
+            
+            goToCategory(link.href, titleText);
+          }
+        }
+      }
+    });
+
+    function goToRelative(step, allowCategorySwitch = true) {
+      if (visibleTotal === 0) return;
+      const base = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+      let cvi = visibleIndices.indexOf(base);
+      if (cvi === -1) cvi = 0;
+      const nvi = cvi + step;
+      if (nvi >= 0 && nvi < visibleTotal) {
+        goToAbsolute(visibleIndices[nvi]);
+      } else if (nvi >= visibleTotal) {
+        if (allowCategorySwitch) {
+          const nextUrl = document.getElementById('jd-next-url');
+          if (nextUrl) goToCategory(nextUrl.textContent, nextUrl.getAttribute('data-cat-label') || '');
+        }
+      } else {
+        if (allowCategorySwitch) {
+          const prevUrl = document.getElementById('jd-prev-url');
+          if (prevUrl) goToCategory(prevUrl.textContent, prevUrl.getAttribute('data-cat-label') || '');
+        }
+      }
+    }
+
+    function setWheelCounterVisible(visible) {
+      document.body.classList.toggle('is-wheel-browsing', visible);
+      document.getElementById('jd-wheel-counter')?.setAttribute('aria-hidden', String(!visible));
+    }
+    document.addEventListener('pointerdown', () => setWheelCounterVisible(false), { capture: true });
+
+    /* Desktop wheel browsing: one photo per continuous gesture. */
+    let wheelMotion = null;
+    let wheelRestoreFrame = 0;
+    let wheelIdleTimer;
+    let wheelDelta = 0;
+    let wheelCommitting = false;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const wheelStep = 24;
+    const wheelBoundaryStep = 360;
+    const wheelSnapDuration = 640;
+    let lastWheelEventAt = -Infinity;
+    let wheelInputDirection = 0;
+    let wheelReverseDelta = 0;
+    let wheelBoundaryDirection = 0;
+    let wheelGestureHasCommitted = false;
+
+    function cancelWheelMotion() {
+      clearTimeout(wheelIdleTimer);
+      wheelDelta = 0;
+      if (!wheelMotion) return;
+      cancelAnimationFrame(wheelMotion.frame);
+      slideshow.classList.add('wheel-restoring');
+      wheelMotion.painted.forEach(slide => {
+        slide.classList.remove('wheel-motion');
+        slide.style.removeProperty('transform');
+        slide.style.removeProperty('visibility');
+        slide.style.removeProperty('will-change');
+      });
+      slideshow.classList.remove('wheel-browsing');
+      cancelAnimationFrame(wheelRestoreFrame);
+      wheelRestoreFrame = requestAnimationFrame(() => {
+        wheelRestoreFrame = requestAnimationFrame(() => {
+          slideshow.classList.remove('wheel-restoring');
+          wheelRestoreFrame = 0;
+        });
+      });
+      wheelMotion = null;
+    }
+
+    // A timed quintic motion distributes travel across the whole transition.
+    // Preserve sampled position and velocity when interrupted, with zero final
+    // velocity and acceleration instead of a fast spring followed by a long tail.
+    let wheelWidth = slideshow.clientWidth;
+    function sampleWheelMotion(now) {
+      const motion = wheelMotion;
+      if (reducedMotion.matches || motion.duration === 0) return { position: motion.target, velocity: 0 };
+      const u = Math.max(0, Math.min(1, (now - motion.started) / motion.duration));
+      if (u === 1) return { position: motion.target, velocity: 0 };
+      const seconds = motion.duration / 1000;
+      const distance = motion.target - motion.from;
+      const blend = u * u * u * (10 + u * (-15 + 6 * u));
+      const blendVelocity = 30 * u * u * (1 - u) * (1 - u);
+      const carry = u - 6 * u ** 3 + 8 * u ** 4 - 3 * u ** 5;
+      const carryVelocity = 1 - 18 * u * u + 32 * u ** 3 - 15 * u ** 4;
+      return {
+        position: motion.from + distance * blend + motion.velocity * seconds * carry,
+        velocity: distance * blendVelocity / seconds + motion.velocity * carryVelocity
+      };
+    }
+    function wheelPositionAt(now) { return sampleWheelMotion(now).position; }
+
+    function paintWheelMotion(now) {
+      const motion = wheelMotion;
+      if (!motion) return;
+      // Initial setup/decode work must not consume the beginning of the motion.
+      if (motion.firstPaint) { motion.started = now; motion.firstPaint = false; }
+      const position = wheelPositionAt(now);
+      const near = new Set();
+      const first = Math.max(0, Math.floor(position) - 1);
+      const last = Math.min(visibleTotal - 1, Math.ceil(position) + 1);
+      for (let vi = first; vi <= last; vi++) {
+        if (Math.abs(vi - position) >= 1.25) continue;
+        const slide = slides[visibleIndices[vi]];
+        near.add(slide);
+        if (!motion.painted.has(slide)) {
+          slide.classList.add('wheel-motion');
+          slide.style.visibility = 'visible';
+          slide.style.willChange = 'transform';
+        }
+        slide.style.transform = `translate3d(${(vi - position) * wheelWidth}px, 0, 0)`;
+      }
+      motion.painted.forEach(slide => {
+        if (!near.has(slide)) {
+          slide.classList.remove('wheel-motion');
+          slide.style.removeProperty('visibility');
+          slide.style.removeProperty('will-change');
+          slide.style.removeProperty('transform');
+        }
+      });
+      motion.painted = near;
+      if (position !== motion.target) {
+        motion.frame = requestAnimationFrame(paintWheelMotion);
+      } else {
+        motion.frame = 0;
+      }
+    }
+
+    function retargetWheelMotion(target, duration = wheelSnapDuration) {
+      const now = performance.now();
+      if (!wheelMotion) {
+        const position = visibleIndices.indexOf(current);
+        wheelMotion = { from: position, target: position, velocity: 0, started: now, duration: 0, frame: 0, firstPaint: true, painted: new Set() };
+        cancelAnimationFrame(wheelRestoreFrame);
+        slideshow.classList.remove('wheel-restoring');
+        slideshow.classList.add('wheel-browsing');
+      }
+      const sample = sampleWheelMotion(now);
+      // Carry the current speed into a new destination without restarting from rest.
+      const elapsed = Math.max(1, now - wheelMotion.started) / 1000;
+      const velocity = duration === 0
+        ? Math.max(-8, Math.min(8, (target - sample.position) / elapsed))
+        : wheelMotion.duration === 0 ? wheelMotion.velocity : sample.velocity;
+      wheelMotion.from = sample.position;
+      wheelMotion.target = target;
+      wheelMotion.velocity = Math.abs(target - sample.position) < 0.000001 ? 0 : velocity;
+      wheelMotion.started = now;
+      wheelMotion.duration = duration;
+      // Event handlers update physics only. Paint at most once per display frame.
+      if (!wheelMotion.frame) {
+        wheelMotion.frame = requestAnimationFrame(paintWheelMotion);
+      }
+    }
+
+    // Wheel events have no finger-up signal. Rearm after a quiet interval or
+    // a sustained reversal, never from acceleration inside a momentum tail.
+    function startsNewWheelGesture(delta, now) {
+      const direction = Math.sign(delta);
+      const quiet = now - lastWheelEventAt >= 180;
+      if (direction !== wheelInputDirection) wheelReverseDelta += Math.abs(delta);
+      else wheelReverseDelta = 0;
+      const fresh = quiet || wheelReverseDelta >= 32;
+      if (fresh) {
+        wheelInputDirection = direction;
+        wheelReverseDelta = 0;
+      }
+      lastWheelEventAt = now;
+      return fresh;
+    }
+
+    // Listen independently of the moving slides and the custom cursor.
+    document.addEventListener('wheel', e => {
+      if (window.innerWidth <= 800 || e.ctrlKey || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
+      if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const scale = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? window.innerHeight : 1;
+      const delta = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * scale;
+      if (!delta || !visibleTotal) return;
+      e.preventDefault();
+      document.body.classList.add('user-has-interacted');
+      if (cursor) cursor.style.opacity = '0';
+      setWheelCounterVisible(true);
+      clearTimeout(wheelIdleTimer);
+      const now = performance.now();
+      const inputDirection = Math.sign(delta);
+      // Category boundaries require actual silence, not merely the acceleration
+      // or reversal that can start a new gesture within the current category.
+      const boundaryPause = now - lastWheelEventAt >= 280;
+      if (startsNewWheelGesture(delta, now)) {
+        wheelGestureHasCommitted = false;
+        const index = visibleIndices.indexOf(current);
+        const boundarySettled = !wheelMotion || Math.abs(wheelPositionAt(now) - index) < 0.001;
+        const atBoundary = (inputDirection > 0 && index === visibleTotal - 1)
+          || (inputDirection < 0 && index === 0);
+        // Once a swipe starts after stopping at the boundary, keep its
+        // permission and accumulated distance through acceleration changes.
+        const continuingBoundarySwipe = !boundaryPause && atBoundary
+          && wheelBoundaryDirection === inputDirection;
+        if (!continuingBoundarySwipe) wheelDelta = 0;
+        if (boundaryPause) {
+          wheelBoundaryDirection = boundarySettled && atBoundary ? inputDirection : 0;
+        } else if (!continuingBoundarySwipe) {
+          wheelBoundaryDirection = 0;
+        }
+      }
+      wheelIdleTimer = setTimeout(() => { wheelDelta = 0; }, 180);
+      if (wheelGestureHasCommitted) return;
+      if (Math.sign(wheelDelta) !== Math.sign(delta)) wheelDelta = 0;
+      wheelDelta += delta;
+      const indexBeforeCommit = visibleIndices.indexOf(current);
+      const outward = inputDirection > 0 ? indexBeforeCommit === visibleTotal - 1 : indexBeforeCommit === 0;
+      const threshold = outward ? wheelBoundaryStep : wheelStep;
+      // No provisional displacement: once movement starts, it completes a step.
+      if (Math.abs(wheelDelta) >= threshold) {
+        if (!wheelMotion) retargetWheelMotion(indexBeforeCommit);
+        const direction = Math.sign(wheelDelta);
+        wheelDelta = 0;
+        wheelGestureHasCommitted = true;
+        const targetIndex = visibleIndices.indexOf(current) + direction;
+        if (targetIndex < 0 || targetIndex >= visibleTotal) {
+          wheelDelta = 0;
+          if (wheelBoundaryDirection === direction) {
+            wheelBoundaryDirection = 0;
+            cancelWheelMotion();
+            goToRelative(direction);
+            return;
+          }
+          retargetWheelMotion(visibleIndices.indexOf(current));
+          return;
+        }
+        wheelCommitting = true;
+        goToAbsolute(visibleIndices[targetIndex]);
+        wheelCommitting = false;
+      }
+      if (wheelGestureHasCommitted) {
+        retargetWheelMotion(visibleIndices.indexOf(current));
+      }
+    }, { passive: false, capture: true });
+    window.addEventListener('resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
+
+    function goToAbsolute(idx, skipFilterCheck = false, fromNativeScroll = false) {
+      if (visibleTotal === 0) return;
+      if (!skipFilterCheck && !visibleIndices.includes(idx)) applyFilter('all');
+      if (window.innerWidth <= 800 && !fromNativeScroll) {
+        mobileRequestedIndex = idx;
+        prepareNearbyImages(idx);
+        alignMobileSlide(idx);
+        return;
+      }
+      if (!wheelCommitting) cancelWheelMotion();
+      const outgoingSlide = slides[current];
+      if (outgoingSlide) outgoingSlide.classList.remove('active');
+      if (localThumbs[current]) localThumbs[current].classList.remove('is-active');
+      current = idx;
+      if (slides[current]) slides[current].classList.add('active');
+      if (localThumbs[current]) localThumbs[current].classList.add('is-active');
+      displayedIndex = idx;
+      updateCounter(idx);
+      if (window.history && window.history.replaceState) {
+        const newUrl = idx === 0 
+          ? window.location.pathname + window.location.search 
+          : `${window.location.pathname}${window.location.search}#img-${idx}`;
+        window.history.replaceState(null, '', newUrl);
+      }
+      prepareNearbyImages(idx);
+    }
+
+    /* Mobile uses native root scrolling and CSS snap, with no JS transforms. */
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0, hasSwiped = false;
+    let swipeIntentDetermined = false;
+    let mobileTouch = null;
+    let touchGestureIgnored = false;
+    let mobileScrollFrame = 0;
+    let mobileScrollReady = false;
+    let mobilePanelOpen = false;
+    let mobileRequestedIndex = null;
+    let mobileFingerDown = false;
+    let mobileCentres = [];
+    let mobileGeometryFrame = 0;
+    let mobileSettleTimer = 0;
+    let mobileSettleFrame = 0;
+    let lastMobileScrollAt = -Infinity;
+    let mobileViewportActive = window.innerWidth <= 800;
+
+    function rebuildMobileCentres() {
+      mobileGeometryFrame = 0;
+      if (window.innerWidth > 800) { mobileCentres = []; return; }
+      const y = window.scrollY;
+      mobileCentres = visibleIndices.map(index => {
+        const rect = slides[index].getBoundingClientRect();
+        return { index, centre: rect.top + y + rect.height / 2 };
+      });
+    }
+    function scheduleMobileGeometry() {
+      if (!mobileGeometryFrame) mobileGeometryFrame = requestAnimationFrame(() => {
+        rebuildMobileCentres();
+        if (mobileScrollReady) { syncMobileSlide(); scheduleMobileSettle(); }
+      });
+    }
+    function nearestMobilePosition() {
+      const centre = window.scrollY + window.innerHeight / 2;
+      let low = 0, high = mobileCentres.length - 1;
+      while (low < high) {
+        const mid = (low + high) >> 1;
+        if (centre > (mobileCentres[mid].centre + mobileCentres[mid + 1].centre) / 2) low = mid + 1;
+        else high = mid;
+      }
+      return low;
+    }
+    function mobileNavigationIndex() {
+      if (mobileRequestedIndex !== null) return mobileRequestedIndex;
+      return mobileCentres[nearestMobilePosition()]?.index ?? current;
+    }
+    function alignMobileSlide(index, behavior = reducedMotion.matches ? 'instant' : 'smooth') {
+      if (window.innerWidth > 800 || !slides[index]) return;
+      slides[index].scrollIntoView({ block: 'center', inline: 'nearest', behavior });
+      scheduleMobileSettle(); // Also handles an already-centred target with no scroll event.
+    }
+    function mobileScrollBlocked() {
+      return !mobileScrollReady || window.innerWidth > 800 || !mobileCentres.length
+        || document.documentElement.classList.contains('jd-splash-active')
+        || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving');
+    }
+    function syncMobileSlide() {
+      mobileScrollFrame = 0;
+      if (mobileScrollBlocked()) return;
+      const centre = window.scrollY + window.innerHeight / 2;
+      let position = mobileCentres.findIndex(item => item.index === displayedIndex);
+      if (position < 0) position = nearestMobilePosition();
+      // Hysteresis: 60% forward, 60% back. Read cached centres, not every slide's layout.
+      while (position < mobileCentres.length - 1
+        && centre > mobileCentres[position].centre + 0.6 * (mobileCentres[position + 1].centre - mobileCentres[position].centre)) position++;
+      while (position > 0
+        && centre < mobileCentres[position].centre - 0.6 * (mobileCentres[position].centre - mobileCentres[position - 1].centre)) position--;
+      const index = mobileCentres[position].index;
+      if (index !== displayedIndex) { displayedIndex = index; updateCounter(index); }
+    }
+    function commitMobileSlide() {
+      if (mobileScrollBlocked() || mobileFingerDown) return;
+      const index = mobileCentres[nearestMobilePosition()].index;
+      mobileRequestedIndex = null;
+      if (index !== current) goToAbsolute(index, false, true);
+      else { displayedIndex = index; updateCounter(index); }
+    }
+    function scheduleMobileSettle() {
+      clearTimeout(mobileSettleTimer);
+      cancelAnimationFrame(mobileSettleFrame);
+      mobileSettleTimer = setTimeout(() => {
+        if (mobileScrollBlocked() || mobileFingerDown) return;
+        let previous = window.scrollY, stable = 0;
+        const check = () => {
+          if (mobileScrollBlocked() || mobileFingerDown) return;
+          const y = window.scrollY;
+          stable = Math.abs(y - previous) < 0.5 ? stable + 1 : 0;
+          previous = y;
+          if (performance.now() - lastMobileScrollAt < 120) return;
+          if (stable >= 3) commitMobileSlide();
+          else mobileSettleFrame = requestAnimationFrame(check);
+        };
+        mobileSettleFrame = requestAnimationFrame(check);
+      }, 120);
+    }
+    window.addEventListener('scroll', () => {
+      if (!mobileScrollReady || window.innerWidth > 800) return;
+      lastMobileScrollAt = performance.now();
+      if (!mobileScrollFrame) mobileScrollFrame = requestAnimationFrame(syncMobileSlide);
+      scheduleMobileSettle();
+    }, { passive: true });
+    window.addEventListener('scrollend', () => {
+      // Some Safari versions emit an old scrollend when smooth scrolling is retargeted.
+      const requested = mobileCentres.find(item => item.index === mobileRequestedIndex);
+      if (requested && Math.abs(requested.centre - window.scrollY - window.innerHeight / 2) >= 3) return;
+      commitMobileSlide();
+    }, { passive: true });
+    const mobilePanelObserver = new MutationObserver(() => {
+      const open = document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open');
+      document.documentElement.classList.toggle('jd-mobile-panel-open', open);
+      if (!mobilePanelOpen && open) {
+        mobileRequestedIndex = mobileCentres[nearestMobilePosition()]?.index ?? current;
+      }
+      if (mobilePanelOpen && !open) requestAnimationFrame(() => {
+        rebuildMobileCentres();
+        alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
+      });
+      mobilePanelOpen = open;
+    });
+    mobilePanelObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('jd:splash-dismissed', () => {
+      if (window.innerWidth > 800) return;
+      requestAnimationFrame(() => {
+        rebuildMobileCentres();
+        alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
+      });
+    });
+    new ResizeObserver(scheduleMobileGeometry).observe(slideshow);
+    window.addEventListener('resize', () => {
+      const active = window.innerWidth <= 800;
+      if (active !== mobileViewportActive) {
+        mobileViewportActive = active;
+        mobileRequestedIndex = null;
+        mobileFingerDown = false;
+        rebuildMobileCentres();
+        if (active) alignMobileSlide(current, 'instant');
+      }
+      scheduleMobileGeometry();
+    }, { passive: true });
+    requestAnimationFrame(() => {
+      rebuildMobileCentres();
+      alignMobileSlide(current, 'instant');
+      requestAnimationFrame(() => {
+        mobileScrollReady = true;
+        syncMobileSlide();
+        scheduleMobileSettle();
+      });
+    });
+
+    slideshow.addEventListener('touchstart', e => {
+      mobileTouch = null;
+      mobileFingerDown = true;
+      mobileRequestedIndex = null;
+      clearTimeout(mobileSettleTimer);
+      cancelAnimationFrame(mobileSettleFrame);
+      touchGestureIgnored = e.touches.length !== 1;
+      if (touchGestureIgnored) return;
+      const finger = e.touches[0];
+      touchStartX = finger.clientX; touchStartY = finger.clientY;
+      touchStartTime = Date.now(); hasSwiped = false; swipeIntentDetermined = false;
+      if (touchStartX < 30) return;
+      document.body.classList.add('user-has-interacted');
+      if (window.innerWidth <= 800 && touchStartX < window.innerWidth - 30
+        && !document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')
+        && !e.target.closest('.jd-postcard-map')) {
+        const item = mobileCentres[nearestMobilePosition()];
+        mobileTouch = {
+          id: finger.identifier, axis: null, startIndex: item?.index ?? current,
+          settled: item && Math.abs(item.centre - window.scrollY - window.innerHeight / 2) < 3
+        };
+      }
+    }, { passive: true });
+
+    slideshow.addEventListener('touchmove', e => {
+      if (touchStartX < 30) return;
+      if (e.touches.length !== 1) {
+        mobileTouch = null;
+        touchGestureIgnored = true;
+        hasSwiped = true;
+        return;
+      }
+      const finger = e.touches[0];
+      const dx = finger.clientX - touchStartX;
+      const dy = finger.clientY - touchStartY;
+      if (mobileTouch) {
+        if (!mobileTouch.axis && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+          mobileTouch.axis = Math.abs(dy) > Math.abs(dx) ? 'vertical' : 'horizontal';
+        }
+        if (mobileTouch.axis === 'vertical') {
+          document.body.classList.add('mobile-has-scrolled');
+          hasSwiped = true;
+          return; // Safari owns the drag, momentum, toolbar motion and snap.
+        }
+      }
+      if (!swipeIntentDetermined && (Math.abs(dx) > 25 || Math.abs(dy) > 25)) {
+        swipeIntentDetermined = true;
+        hasSwiped = true;
+      }
+      if (swipeIntentDetermined && Math.abs(dx) > Math.abs(dy) && e.cancelable) e.preventDefault();
+    }, { passive: false });
+
+    slideshow.addEventListener('touchend', e => {
+      mobileFingerDown = e.touches.length > 0;
+      scheduleMobileSettle();
+      if (touchStartX < 30 || touchGestureIgnored) return;
+      const gesture = mobileTouch;
+      mobileTouch = null;
+      if (gesture?.axis === 'vertical') {
+        hasSwiped = true;
+        const finger = Array.from(e.changedTouches).find(touch => touch.identifier === gesture.id);
+        if (!finger) return;
+        const dy = finger.clientY - touchStartY;
+        const direction = dy < 0 ? 1 : -1;
+        const index = visibleIndices.indexOf(gesture.startIndex);
+        const outward = direction > 0 ? index === visibleTotal - 1 : index === 0;
+        // A gesture arriving at the first/last work cannot leave its category.
+        if (gesture.settled && outward && mobileNavigationIndex() === gesture.startIndex && Math.abs(dy) >= 60) {
+          goToRelative(direction);
+        }
+        return;
+      }
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+      if (Math.abs(dx) > 45 && Math.abs(dx) > dy && !document.body.classList.contains('index-is-open')) {
+        dx < 0 ? goToRelative(1) : goToRelative(-1);
+      }
+    }, { passive: true });
+
+    slideshow.addEventListener('touchcancel', () => {
+      mobileFingerDown = false;
+      scheduleMobileSettle();
+      mobileTouch = null;
+      touchGestureIgnored = true;
+      hasSwiped = true;
+    }, { passive: true });
+    window.addEventListener('orientationchange', () => {
+      mobileTouch = null;
+      requestAnimationFrame(() => { rebuildMobileCentres(); alignMobileSlide(displayedIndex, 'instant'); });
+    });
+
+    slideshow.addEventListener('click', e => {
+      if (hasSwiped) { hasSwiped = false; return; }
+      if (e.target.closest('.jd-postcard-map')) return;
+      
+      // Napautuksen aikaraja 450ms: sormen lepuutus ruudulla (> 450ms) ei vaihda kuvaa
+      if (touchStartTime && (Date.now() - touchStartTime > 450)) {
+        touchStartTime = 0;
+        return;
+      }
+      
+      document.body.classList.add('user-has-interacted');
+      if (thumbsOpen) return;
+
+      const isTouchOrMobile = window.innerWidth <= 800 || ('ontouchstart' in window);
+      if (isTouchOrMobile) {
+        if (e.clientX < window.innerWidth * 0.38) {
+          goToRelative(-1);
+        } else {
+          goToRelative(1);
+        }
+      } else {
+        e.clientX > window.innerWidth / 2 ? goToRelative(1) : goToRelative(-1);
+      }
+    });
+
+    document.querySelectorAll('.jd-hint-arrow.left').forEach(el => {
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        goToRelative(-1);
+      });
+    });
+    document.querySelectorAll('.jd-hint-arrow.right').forEach(el => {
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+        if ('vibrate' in navigator) navigator.vibrate(10);
+        goToRelative(1);
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === ' ') document.body.classList.add('user-has-interacted');
+      if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToRelative(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const h = window.location.hash;
+      if (h && h.startsWith('#img-')) {
+        const targetIdx = parseInt(h.replace('#img-', ''), 10);
+        if (!isNaN(targetIdx) && targetIdx >= 0 && targetIdx < total && targetIdx !== current) {
+          goToAbsolute(targetIdx);
+        }
+      } else if (!h && current !== 0) {
+        goToAbsolute(0);
+      }
+    });
+
+    /* Wheel to open/close index feature removed */
+
+    /* Cursor Physics (Instant) */
+    if ('ontouchstart' in window) { if (cursor) cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      document.body.style.cursor = 'none';
+      
+      document.addEventListener('mousemove', e => {
+        setWheelCounterVisible(false);
+        sessionStorage.setItem('jdLastMouseX', e.clientX);
+        sessionStorage.setItem('jdLastMouseY', e.clientY);
+        if (window.jdCursorFrozen) return;
+
+        if (document.body.classList.contains('index-is-open') || document.body.classList.contains('about-is-open') || thumbsOpen) { 
+          if (cursor) cursor.style.opacity = '0'; 
+          document.body.style.cursor = 'auto'; 
+          return; 
+        }
+        
+        const target = e.target;
+        const isNav = target.closest('#jd-bottom-nav') || target.closest('#jd-index-panel') || target.closest('#jd-thumbs-close') || target.closest('#jd-thumbs-header');
+        const nearBottom = e.clientY > window.innerHeight - 100;
+        
+        if (isNav || nearBottom) { 
+          cursor.style.opacity = '0'; 
+          document.body.style.cursor = 'auto'; 
+        } else {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top = e.clientY + 'px';
+          cursor.style.opacity = '1'; 
+          document.body.style.cursor = 'none';
+          const arrowEl = document.getElementById('jd-cursor-arrow');
+          if (arrowEl) arrowEl.textContent = e.clientX > window.innerWidth / 2 ? '→' : '←';
+        }
+      });
+      
+      document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+    }
+
+    /* Thumbs view */
+    function openThumbsView() {
+      cancelWheelMotion();
+      mobileTouch = null;
+      if (thumbsOpen) return;
+      
+      thumbsOpen = true; 
+      document.body.classList.add('thumbs-is-open');
+      if (cursor) cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
+      thumbsPanel.classList.add('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'none';
+      
+      const thumbsNav = document.getElementById('jd-thumbs-nav');
+      thumbsNav.style.animation = 'none';
+      void thumbsNav.offsetWidth;
+      thumbsNav.classList.add('is-open');
+      thumbsNav.style.animation = '';
+      
+      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
+      const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
+      if (currentCatSection) {
+        const selected = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+        const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[selected];
+        if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
+        currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
+      const hintArrows = document.getElementById('jd-hint-arrows');
+      if (hintArrows) hintArrows.style.opacity = '0';
+      const thumbsHeader = document.getElementById('jd-thumbs-header');
+      if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'false');
+    }
+    
+    function closeThumbsView() {
+      if (!thumbsOpen) return;
+      
+      thumbsOpen = false; 
+      document.body.classList.remove('thumbs-is-open');
+      if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
+        if (cursor) cursor.style.display = '';
+        document.body.style.cursor = 'none';
+      }
+      thumbsPanel.classList.remove('is-open');
+      document.getElementById('jd-normal-nav').style.display = 'flex';
+      document.getElementById('jd-thumbs-nav').classList.remove('is-open');
+      
+      const hintArrows = document.getElementById('jd-hint-arrows');
+      if (hintArrows) hintArrows.style.opacity = '1';
+      const thumbsHeader = document.getElementById('jd-thumbs-header');
+      if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'true');
+    }
+    document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
+    document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
+    document.getElementById('jd-thumbs-close-btn')?.addEventListener('click', closeThumbsView);
+    document.getElementById('jd-thumbs-close-top')?.addEventListener('click', closeThumbsView);
+
+    /* Index button */
+    document.getElementById('jd-index-btn-bottom')?.addEventListener('click', e => {
+      e.stopPropagation();
+      if (typeof window.openIndexPanel === 'function') {
+        const panel = document.getElementById('jd-index-panel');
+        panel?.classList.contains('is-open') ? window.closeIndexPanel() : window.openIndexPanel();
+      }
+    });
+
+    /* Mobile counter click/tap to open menu */
+    const counterEl = document.getElementById('jd-counter');
+    counterEl?.addEventListener('click', e => {
+      e.stopPropagation();
+      if (typeof window.openIndexPanel === 'function') {
+        const panel = document.getElementById('jd-index-panel');
+        panel?.classList.contains('is-open') ? window.closeIndexPanel() : window.openIndexPanel();
+      }
+    });
+    counterEl?.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+      }
+    });
+
+    /* Page entrance animation */
+    function startPageOpen() {
+      if (shutterTitle) {
+        const isMobile = window.innerWidth <= 800;
+        if (!isMobile) {
+          const lastX = sessionStorage.getItem('jdLastMouseX');
+          const lastY = sessionStorage.getItem('jdLastMouseY');
+          if (lastX && lastY && cursor) { 
+            cursor.style.left = lastX + 'px'; cursor.style.top = lastY + 'px'; 
+            cursor.style.opacity = '0'; document.body.style.cursor = 'none'; 
+            shutterTitle.style.setProperty('--target-x', lastX + 'px');
+            shutterTitle.style.setProperty('--target-y', lastY + 'px');
+            window.jdCursorFrozen = true;
+            setTimeout(() => {
+              window.jdCursorFrozen = false;
+              cursor.style.opacity = '1';
+            }, reducedMotion.matches ? 0 : 600);
+          }
+        } else {
+          const catSpan = document.getElementById('jd-counter-cat');
+          const counterRest = document.getElementById('jd-counter-rest');
+          if (catSpan && counterRest) {
+            const rect = catSpan.getBoundingClientRect();
+            if (rect.width > 0) {
+              const targetX = rect.left + rect.width / 2;
+              const targetY = rect.top + rect.height / 2;
+              shutterTitle.style.setProperty('--target-x', targetX + 'px');
+              shutterTitle.style.setProperty('--target-y', targetY + 'px');
+            } else {
+              shutterTitle.style.setProperty('--target-x', '50%');
+              shutterTitle.style.setProperty('--target-y', 'calc(100dvh - 59px)');
+            }
+            setTimeout(() => {
+              catSpan.style.transition = 'opacity 0.6s ease';
+              catSpan.style.opacity = '1';
+              counterRest.style.transition = 'opacity 0.6s ease';
+              counterRest.style.opacity = '1';
+            }, reducedMotion.matches ? 0 : 600);
+          }
+        }
+      }
+      setTimeout(() => {
+        document.body.classList.add('is-entering-ready');
+        if (!sessionStorage.getItem('jd-hints-seen')) {
+          const hintArrows = document.getElementById('jd-hint-arrows');
+          if (hintArrows) hintArrows.classList.add('show-hints');
+          sessionStorage.setItem('jd-hints-seen', 'true');
+        }
+      }, 50);
+    }
+
+    document.body.classList.add('show-shutter-title');
+    let hasOpened = false;
+    function tryOpen() {
+      if (!hasOpened) {
+        hasOpened = true;
+        startPageOpen();
+      }
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(tryOpen, 100);
+    } else {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(tryOpen, 100));
+    }
+    window.addEventListener('load', tryOpen);
+    setTimeout(tryOpen, 1000);
+
+    /* Index panel open/close (global) */
+    const indexPanel = document.getElementById('jd-index-panel');
+    const indexOverlay = document.getElementById('jd-index-overlay');
+    const jdMain = document.getElementById('jd-main');
+
+    // Index desktop hover preview logic (Dual Layer Smooth Crossfade)
+    const imgA = document.getElementById('jd-index-preview-img-a');
+    const imgB = document.getElementById('jd-index-preview-img-b');
+    const indexLinks = document.querySelectorAll('.jd-index-link');
+
+    if (imgA && imgB && indexLinks.length > 0) {
+      let currentLayer = 'a'; // 'a' or 'b'
+      let activeSrc = '';
+      let switchTimeout = null;
+      let hideTimeout = null;
+
+      function setPreviewImage(src) {
+        if (!src || src === activeSrc) return;
+        activeSrc = src;
+
+        const nextImg = currentLayer === 'a' ? imgB : imgA;
+        const currentImg = currentLayer === 'a' ? imgA : imgB;
+
+        nextImg.src = src;
+        requestAnimationFrame(() => {
+          nextImg.classList.add('is-active');
+          currentImg.classList.remove('is-active');
+          currentLayer = currentLayer === 'a' ? 'b' : 'a';
+        });
+      }
+
+      // Ennakkolataus: fetch() toimii kaikissa selaimissa, myös Safarissa
+      // (link rel="prefetch" ei tue Safari – käytetään fetch()-pohjaista ratkaisua)
+      function prefetchPage(url) {
+        if (!url || url.startsWith('#')) return;
+        if (document.querySelector(`link[data-prefetched="${CSS.escape(url)}"]`)) return;
+        const marker = document.createElement('link');
+        marker.dataset.prefetched = url;
+        document.head.appendChild(marker);
+        fetch(url, { priority: 'low' }).catch(() => {});
+      }
+
+      indexLinks.forEach(link => {
+        const src = link.getAttribute('data-preview-src');
+        if (src) {
+          const preloader = new Image();
+          preloader.src = src;
+        }
+
+        link.addEventListener('mouseenter', () => {
+          if (window.innerWidth <= 768) return;
+          if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+          const targetSrc = link.getAttribute('data-preview-src');
+          if (targetSrc && targetSrc !== activeSrc) {
+            if (switchTimeout) clearTimeout(switchTimeout);
+            switchTimeout = setTimeout(() => {
+              setPreviewImage(targetSrc);
+            }, 80);
+          }
+          // HTML-sivun ennakkolataus hover-hetkellä
+          const href = link.getAttribute('href');
+          if (href) prefetchPage(href);
+        });
+
+        // Mobiili: touchstart – sormi osuu linkkiin
+        link.addEventListener('touchstart', () => {
+          const href = link.getAttribute('href');
+          if (href) prefetchPage(href);
+        }, { passive: true });
+      });
+
+      indexPanel?.addEventListener('mouseleave', () => {
+        hideTimeout = setTimeout(() => {
+          imgA.classList.remove('is-active');
+          imgB.classList.remove('is-active');
+          activeSrc = '';
+        }, 300);
+      });
+    }
+
+    window.openIndexPanel = function() {
+      cancelWheelMotion();
+      mobileTouch = null;
+      if (typeof closeThumbsView === 'function') closeThumbsView();
+      if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
+      indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
+      if (cursor) cursor.style.display = 'none';
+      document.body.style.cursor = 'auto';
+      if (indexPanel) indexPanel.scrollTop = 0;
+
+      // Autoselect active category preview if available on desktop
+      if (window.innerWidth > 768 && imgA) {
+        const activeLink = document.querySelector('.jd-index-link.active');
+        const activeSrc = activeLink?.getAttribute('data-preview-src');
+        if (activeSrc) {
+          imgA.src = activeSrc;
+          requestAnimationFrame(() => {
+            imgA.classList.add('is-active');
+          });
+        }
+      }
+    };
+    window.closeIndexPanel = function() {
+      if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
+      indexOverlay?.classList.remove('is-open'); document.body.classList.remove('index-is-open');
+      if (imgA) imgA.classList.remove('is-active');
+      if (imgB) imgB.classList.remove('is-active');
+      if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
+        if (cursor) cursor.style.display = '';
+        document.body.style.cursor = 'none';
+      }
+    };
+
+    window.openAboutPanel = function() {
+      cancelWheelMotion();
+      mobileTouch = null;
+      const p = document.getElementById('jd-about-panel'); 
+      if (p) { 
+        p.classList.add('is-open'); 
+        document.body.classList.add('about-is-open'); 
+        if (cursor) cursor.style.opacity = '0';
+        document.body.style.cursor = 'auto';
+        const n = document.getElementById('jd-normal-nav'); 
+        if (n) n.style.display = 'none'; 
+      } 
+    };
+    window.closeAboutPanel = function() { 
+      const p = document.getElementById('jd-about-panel'); 
+      if (p) { 
+        p.classList.remove('is-open'); 
+        document.body.classList.remove('about-is-open'); 
+        const n = document.getElementById('jd-normal-nav'); 
+        const tp = document.getElementById('jd-thumbs-panel'); 
+        if (n && (!tp || !tp.classList.contains('is-open'))) n.style.display = 'flex'; 
+        if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
+          if (cursor && !document.body.classList.contains('index-is-open') && !thumbsOpen) {
+            document.body.style.cursor = 'none';
+          }
+        }
+      } 
+    };
+
+    indexOverlay?.addEventListener('click', () => window.closeIndexPanel());
+    jdMain?.addEventListener('click', e => { if (e.target.closest('#jd-bottom-nav')) return; if (document.body.classList.contains('index-is-open')) window.closeIndexPanel(); });
+    document.querySelectorAll('#jd-index-panel .jd-index-link.active').forEach(link => { link.addEventListener('click', e => { e.preventDefault(); window.closeIndexPanel(); }); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); closeThumbsView(); } });
+  });
+  </script></body></html>
