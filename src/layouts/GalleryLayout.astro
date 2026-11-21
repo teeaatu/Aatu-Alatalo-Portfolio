@@ -3451,10 +3451,19 @@ function canonicalPath(path: string) {
     });
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === ' ') document.body.classList.add('user-has-interacted');
       if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToRelative(1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); goToRelative(-1); }
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey
+        || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
+      if (e.target instanceof Element && e.target.closest('dialog[open], input, textarea, select, [contenteditable], a, button')) return;
+
+      const desktop = window.innerWidth > 800;
+      const forward = e.key === 'ArrowRight' || (desktop && e.key === 'ArrowDown');
+      const backward = e.key === 'ArrowLeft' || (desktop && e.key === 'ArrowUp');
+      const space = e.key === ' ';
+      if (!forward && !backward && !space) return;
+      e.preventDefault();
+      document.body.classList.add('user-has-interacted');
+      goToRelative(backward ? -1 : 1, space);
     });
 
     window.addEventListener('hashchange', () => {
