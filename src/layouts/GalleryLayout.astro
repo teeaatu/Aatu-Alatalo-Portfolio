@@ -489,6 +489,11 @@ function canonicalPath(path: string) {
     .jd-slide.active { opacity: 1; pointer-events: auto; }
     @media (min-width: 801px) {
       .jd-slide { transition-duration: 0.22s; }
+      /* Send gallery input to the stationary slideshow, even between frames. */
+      #jd-slideshow .jd-slide { pointer-events: none; }
+      #jd-slideshow:not(.wheel-browsing) .jd-slide.active :is(.jd-postcard-map, .jd-masters-info-trigger) {
+        pointer-events: auto;
+      }
       #jd-slideshow.wheel-browsing .jd-slide {
         opacity: 0;
         visibility: hidden;
@@ -2864,7 +2869,7 @@ function canonicalPath(path: string) {
     }
     document.addEventListener('pointerdown', () => setWheelCounterVisible(false), { capture: true });
 
-    /* Desktop wheel browsing: one photo per continuous gesture. */
+    /* Desktop wheel browsing: one image per detected swipe. */
     let wheelMotion = null;
     let wheelRestoreFrame = 0;
     let wheelIdleTimer;
@@ -2873,16 +2878,41 @@ function canonicalPath(path: string) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const wheelStep = 24;
     const wheelBoundaryStep = 360;
+    const wheelBoundaryRepeatInterval = 110;
+    const wheelMomentumNoise = 3;
     const wheelSnapDuration = 640;
     let lastWheelEventAt = -Infinity;
     let wheelInputDirection = 0;
     let wheelReverseDelta = 0;
     let wheelBoundaryDirection = 0;
-    let wheelGestureHasCommitted = false;
+    let wheelBoundaryLow = Infinity;
+    let wheelBoundaryContinued = false;
+    let wheelBoundaryRequest = 0;
+    let lastWheelAdvanceAt = -Infinity;
+    let wheelPeak = 0;
+    let wheelTailAt = Infinity;
+    let wheelTailLow = Infinity;
+    let wheelRenewalSamples = 0;
+
+    function resetWheelImageGesture() {
+      lastWheelAdvanceAt = -Infinity;
+      wheelPeak = 0;
+      wheelTailAt = Infinity;
+      wheelTailLow = Infinity;
+      wheelRenewalSamples = 0;
+    }
 
     function cancelWheelMotion() {
       clearTimeout(wheelIdleTimer);
       wheelDelta = 0;
+      wheelBoundaryDirection = 0;
+      wheelBoundaryLow = Infinity;
+      wheelBoundaryContinued = false;
+      wheelBoundaryRequest = 0;
+      restoreWheelSlides();
+    }
+
+    function restoreWheelSlides() {
       if (!wheelMotion) return;
       cancelAnimationFrame(wheelMotion.frame);
       slideshow.classList.add('wheel-restoring');
@@ -2957,7 +2987,10 @@ function canonicalPath(path: string) {
       if (position !== motion.target) {
         motion.frame = requestAnimationFrame(paintWheelMotion);
       } else {
-        motion.frame = 0;
+        const boundaryRequest = wheelBoundaryRequest;
+        wheelBoundaryRequest = 0;
+        restoreWheelSlides();
+        if (boundaryRequest) goToRelative(boundaryRequest);
       }
     }
 
@@ -2987,12 +3020,9 @@ function canonicalPath(path: string) {
       }
     }
 
-    // Wheel events have no finger-up signal. Rearm after a quiet interval or
-    // a sustained reversal, never from acceleration inside a momentum tail.
-    function startsNewWheelGesture(delta, now) {
-      const direction = Math.sign(delta);
+    function startsNewWheelGesture(direction, magnitude, now) {
       const quiet = now - lastWheelEventAt >= 180;
-      if (direction !== wheelInputDirection) wheelReverseDelta += Math.abs(delta);
+      if (direction !== wheelInputDirection) wheelReverseDelta += magnitude;
       else wheelReverseDelta = 0;
       const fresh = quiet || wheelReverseDelta >= 32;
       if (fresh) {
@@ -3003,10 +3033,36 @@ function canonicalPath(path: string) {
       return fresh;
     }
 
-    // Listen independently of the moving slides and the custom cursor.
-    document.addEventListener('wheel', e => {
+    function acceptWheelImageInput(direction, magnitude, now) {
+      if (!Number.isFinite(lastWheelAdvanceAt)) {
+        wheelPeak = Math.max(wheelPeak, magnitude);
+        return true;
+      }
+      if (direction !== wheelInputDirection) return false;
+
+      // Wheel events don't expose finger-up. A long decaying or steady tail
+      // stays on its current image. Require fresh acceleration after decay.
+      if (magnitude <= Math.max(2, wheelPeak * 0.25)) {
+        wheelTailAt = Math.min(wheelTailAt, now);
+        wheelTailLow = Math.min(wheelTailLow, magnitude);
+        wheelRenewalSamples = 0;
+      } else if (now - lastWheelAdvanceAt >= 100 && now - wheelTailAt >= 24
+        && magnitude >= Math.max(4, wheelTailLow * 3, wheelPeak * 0.45)) {
+        if (++wheelRenewalSamples >= 2) {
+          resetWheelImageGesture();
+          wheelPeak = magnitude;
+          return true;
+        }
+      } else {
+        wheelPeak = Math.max(wheelPeak, magnitude);
+        wheelRenewalSamples = 0;
+      }
+      return false;
+    }
+
+    function browseDesktopWithWheel(e) {
       if (window.innerWidth <= 800 || e.ctrlKey || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
-      if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      if (e.target instanceof Element && e.target.closest('dialog[open], input, textarea, select, [contenteditable="true"]')) return;
       const scale = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? window.innerHeight : 1;
       const delta = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * scale;
       if (!delta || !visibleTotal) return;
@@ -3015,60 +3071,75 @@ function canonicalPath(path: string) {
       if (cursor) cursor.style.opacity = '0';
       setWheelCounterVisible(true);
       clearTimeout(wheelIdleTimer);
+
       const now = performance.now();
-      const inputDirection = Math.sign(delta);
-      // Category boundaries require actual silence, not merely the acceleration
-      // or reversal that can start a new gesture within the current category.
+      const direction = Math.sign(delta);
+      const magnitude = Math.abs(delta);
+      const index = visibleIndices.indexOf(current);
+      const next = index + direction;
+      const outward = next < 0 || next >= visibleTotal;
       const boundaryPause = now - lastWheelEventAt >= 280;
-      if (startsNewWheelGesture(delta, now)) {
-        wheelGestureHasCommitted = false;
-        const index = visibleIndices.indexOf(current);
-        const boundarySettled = !wheelMotion || Math.abs(wheelPositionAt(now) - index) < 0.001;
-        const atBoundary = (inputDirection > 0 && index === visibleTotal - 1)
-          || (inputDirection < 0 && index === 0);
-        // Once a swipe starts after stopping at the boundary, keep its
-        // permission and accumulated distance through acceleration changes.
-        const continuingBoundarySwipe = !boundaryPause && atBoundary
-          && wheelBoundaryDirection === inputDirection;
-        if (!continuingBoundarySwipe) wheelDelta = 0;
-        if (boundaryPause) {
-          wheelBoundaryDirection = boundarySettled && atBoundary ? inputDirection : 0;
-        } else if (!continuingBoundarySwipe) {
-          wheelBoundaryDirection = 0;
-        }
+      if (startsNewWheelGesture(direction, magnitude, now)) {
+        resetWheelImageGesture();
+        wheelDelta = 0;
+        wheelBoundaryDirection = boundaryPause && outward ? direction : 0;
+        wheelBoundaryLow = Infinity;
+        wheelBoundaryContinued = false;
+      }
+      if (!outward) {
+        wheelBoundaryDirection = 0;
+        wheelBoundaryLow = Infinity;
+        wheelBoundaryRequest = 0;
       }
       wheelIdleTimer = setTimeout(() => { wheelDelta = 0; }, 180);
-      if (wheelGestureHasCommitted) return;
-      if (Math.sign(wheelDelta) !== Math.sign(delta)) wheelDelta = 0;
-      wheelDelta += delta;
-      const indexBeforeCommit = visibleIndices.indexOf(current);
-      const outward = inputDirection > 0 ? indexBeforeCommit === visibleTotal - 1 : indexBeforeCommit === 0;
-      const threshold = outward ? wheelBoundaryStep : wheelStep;
-      // No provisional displacement: once movement starts, it completes a step.
-      if (Math.abs(wheelDelta) >= threshold) {
-        if (!wheelMotion) retargetWheelMotion(indexBeforeCommit);
-        const direction = Math.sign(wheelDelta);
-        wheelDelta = 0;
-        wheelGestureHasCommitted = true;
-        const targetIndex = visibleIndices.indexOf(current) + direction;
-        if (targetIndex < 0 || targetIndex >= visibleTotal) {
+      if (outward && wheelBoundaryRequest) return;
+      if (outward && wheelBoundaryDirection !== direction) {
+        // A deliberate new pull may overlap the last swipe's momentum. Require
+        // both a clear rise after a low delta and the full boundary distance.
+        const renewedPull = now - lastWheelAdvanceAt >= 80
+          && wheelBoundaryLow <= 6
+          && magnitude >= Math.max(12, wheelBoundaryLow * 3);
+        if (!renewedPull) {
+          wheelBoundaryLow = Math.min(wheelBoundaryLow, magnitude);
           wheelDelta = 0;
-          if (wheelBoundaryDirection === direction) {
-            wheelBoundaryDirection = 0;
-            cancelWheelMotion();
-            goToRelative(direction);
-            return;
-          }
-          retargetWheelMotion(visibleIndices.indexOf(current));
           return;
         }
-        wheelCommitting = true;
-        goToAbsolute(visibleIndices[targetIndex]);
-        wheelCommitting = false;
+        wheelBoundaryDirection = direction;
+        wheelBoundaryContinued = true;
       }
-      if (wheelGestureHasCommitted) {
-        retargetWheelMotion(visibleIndices.indexOf(current));
+
+      if (!outward && !acceptWheelImageInput(direction, magnitude, now)) return;
+      if (outward && Number.isFinite(lastWheelAdvanceAt)
+        && (now - lastWheelAdvanceAt < wheelBoundaryRepeatInterval || magnitude < wheelMomentumNoise)) return;
+      if (Math.sign(wheelDelta) !== direction) wheelDelta = 0;
+      // A resumed pull must build up over several events. A single spike
+      // can otherwise look like a full boundary swipe.
+      wheelDelta += outward && wheelBoundaryContinued ? direction * Math.min(magnitude, 48) : delta;
+      const threshold = outward ? wheelBoundaryStep : wheelStep;
+      if (Math.abs(wheelDelta) < threshold) return;
+
+      wheelDelta = 0;
+      lastWheelAdvanceAt = now;
+      if (outward) {
+        wheelBoundaryDirection = 0;
+        wheelBoundaryLow = Infinity;
+        if (wheelMotion) wheelBoundaryRequest = direction;
+        else goToRelative(direction);
+        return;
       }
+
+      if (!wheelMotion) retargetWheelMotion(index);
+      wheelCommitting = true;
+      goToAbsolute(visibleIndices[next]);
+      wheelCommitting = false;
+      retargetWheelMotion(visibleIndices.indexOf(current));
+    }
+
+    // Bind directly to the stable stage for browsers that latch wheel input
+    // to its target. Keep navigation available over the surrounding controls.
+    slideshow.addEventListener('wheel', browseDesktopWithWheel, { passive: false });
+    document.addEventListener('wheel', e => {
+      if (!slideshow.contains(e.target)) browseDesktopWithWheel(e);
     }, { passive: false, capture: true });
     window.addEventListener('resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
 
