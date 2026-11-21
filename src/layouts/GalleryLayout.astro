@@ -225,6 +225,13 @@ const currentUrl = Astro.url.pathname;
 const fiTransUrl = lang === 'fi' ? currentUrl : translationUrl;
 const enTransUrl = lang === 'en' ? currentUrl : translationUrl;
 const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
+
+function canonicalPath(path: string) {
+  const withSlash = path.endsWith('/') ? path : path + '/';
+  if (withSlash === '/recent/') return '/';
+  if (withSlash === '/en/recent/') return '/en/';
+  return withSlash;
+}
 ---
 <!DOCTYPE html>
 <html lang={lang} translate="no" class="notranslate">
@@ -282,6 +289,7 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <meta name="robots" content="index, follow">
+  <link rel="canonical" href={siteUrl + canonicalPath(currentUrl)}>
   
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicon-192x192.png">
@@ -300,8 +308,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
   <meta name="twitter:description" content={mainDesc}>
   <meta name="twitter:image" content={`${siteUrl}/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg`}>
 
-  {translationUrl && <link rel="alternate" hreflang="fi" href={`${siteUrl}${fiTransUrl}`} />}
-  {translationUrl && <link rel="alternate" hreflang="en" href={`${siteUrl}${enTransUrl}`} />}
+  {translationUrl && <link rel="alternate" hreflang="fi" href={siteUrl + canonicalPath(fiTransUrl)} />}
+  {translationUrl && <link rel="alternate" hreflang="en" href={siteUrl + canonicalPath(enTransUrl)} />}
 
   <!-- Schema.org Structured Data for Google Knowledge Graph & SEO -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify({
@@ -3719,6 +3727,8 @@ const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
         }
       } 
     };
+
+    if (window.location.hash === '#jd-about-panel') window.openAboutPanel();
 
     indexOverlay?.addEventListener('click', () => window.closeIndexPanel());
     jdMain?.addEventListener('click', e => { if (e.target.closest('#jd-bottom-nav')) return; if (document.body.classList.contains('index-is-open')) window.closeIndexPanel(); });
