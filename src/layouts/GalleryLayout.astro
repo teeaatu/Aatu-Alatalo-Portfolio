@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import t from '../data/t.yml';
 import recent from '../data/recent.yml';
 import work1 from '../data/work1.yml';
@@ -244,6 +245,9 @@ function canonicalPath(path: string) {
   <meta name="google" content="notranslate">
   <meta name="format-detection" content="telephone=no">
 
+  <style is:inline>
+    html.jd-category-arrival:not(.jd-category-revealing) body { background: #000 !important; }
+  </style>
   <!-- Only the unprefixed home page negotiates language; explicit URLs keep theirs. -->
   <script is:inline>
     (function() {
@@ -267,12 +271,22 @@ function canonicalPath(path: string) {
       var skip = false;
       try {
         skip = !!sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(location.search).has('splash');
+        var navigation = JSON.parse(sessionStorage.getItem('jd-category-arrival') || 'null');
+        sessionStorage.removeItem('jd-category-arrival');
+        if (skip && navigation
+          && navigation.path === location.pathname.replace(/\/$/, '')
+          && Date.now() - navigation.started < 30000
+          && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.add('jd-category-arrival');
+          window.jdCategoryArrivalTitle = navigation.title;
+        }
       } catch (e) {}
       document.documentElement.classList.add(skip ? 'jd-no-splash' : 'jd-splash-active');
       // Browser canvas is independent of the light gallery and splash history.
       // Every static category load must establish the same mobile chrome theme.
       window.jdSyncBrowserTheme = function () {
         var darkCanvas = window.matchMedia('(max-width: 800px)').matches
+          || document.documentElement.classList.contains('jd-category-arrival')
           || (document.documentElement.classList.contains('jd-splash-active')
             && !document.documentElement.classList.contains('jd-splash-revealing'));
         var scheme = darkCanvas ? 'dark' : 'light';
@@ -285,6 +299,32 @@ function canonicalPath(path: string) {
       window.jdSyncBrowserTheme();
       window.matchMedia('(max-width: 800px)').addEventListener('change', window.jdSyncBrowserTheme);
     })();
+  </script>
+  <ClientRouter fallback="swap" />
+  <script>
+    import { navigate } from "astro:transitions/client";
+    Object.assign(window, { jdNavigateCategory: navigate });
+
+    document.addEventListener('astro:before-swap', event => {
+      // Keep the real black curtain across the DOM swap. No snapshot or fade
+      // from the router is needed on top of the gallery's own transition.
+      event.viewTransition.skipTransition();
+      const root = event.newDocument.documentElement;
+      root.classList.add('jd-no-splash');
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const nextTitle = event.info?.title
+        || event.newDocument.querySelector('.jd-shutter-title')?.textContent
+        || '';
+      const title = document.querySelector('.jd-shutter-title');
+      if (title) title.textContent = nextTitle;
+      Object.assign(window, { jdCategoryArrivalTitle: reduced ? undefined : nextTitle });
+      try { sessionStorage.removeItem('jd-category-arrival'); } catch {}
+      if (!reduced) root.classList.add('jd-category-arrival');
+    });
+    document.addEventListener('astro:after-swap', () => {
+      const syncTheme = Reflect.get(window, 'jdSyncBrowserTheme');
+      if (typeof syncTheme === 'function') syncTheme();
+    });
   </script>
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
@@ -811,55 +851,74 @@ function canonicalPath(path: string) {
 
     /* ─── SHUTTER / CURTAIN ─────────────────────────── */
     #jd-shutter-container {
-      position: fixed; inset: 0; z-index: 99998; pointer-events: none;
+      position: fixed; inset: 0; z-index: 200000; pointer-events: none;
+      --jd-curtain-edge: 56px;
     }
     .jd-curtain-primary {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 9999998; background: var(--jd-bg); transform: translateY(0);
-      will-change: transform; pointer-events: none;
+      position: absolute; inset: 0;
+      background: #000; transform: translateY(0);
+      pointer-events: none;
+    }
+    .jd-curtain-primary::before,
+    .jd-curtain-primary::after {
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      height: var(--jd-curtain-edge);
+      background:
+        radial-gradient(ellipse 35% 56px at 24% 100%, #000 57%, transparent),
+        radial-gradient(ellipse 32% 40px at 80% 100%, #000 40%, transparent),
+        linear-gradient(to top, #000, transparent 24px);
+    }
+    .jd-curtain-primary::before {
+      bottom: 100%;
+    }
+    .jd-curtain-primary::after {
+      top: 100%;
+      transform: rotate(180deg);
     }
     .jd-shutter-title {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      color: white; mix-blend-mode: difference; z-index: 99999999;
-      font-family: var(--jd-font); font-size: 2rem; letter-spacing: 0.02em; text-transform: none;
-      opacity: 1; pointer-events: none;
-      white-space: nowrap;
+      color: #fff; z-index: 99999999;
+      font-family: var(--jd-font); font-size: 2rem; letter-spacing: 0.02em;
+      opacity: 1; pointer-events: none; white-space: nowrap;
     }
-    @keyframes titleEnter {
-      0% { top: 53%; opacity: 0; }
-      100% { top: 50%; opacity: 1; }
+    body.is-entering-ready .jd-curtain-primary {
+      transition: transform 760ms cubic-bezier(0.42, 0, 0.42, 1);
+      transform: translateY(calc(100% + var(--jd-curtain-edge)));
     }
-    .trigger-title-enter {
-      animation: titleEnter 0.18s 0s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-    body.is-entering-ready .jd-shutter-title { 
-      top: var(--target-y, -10%);
-      left: var(--target-x, 50%);
-      font-size: 1rem;
-      letter-spacing: 0.02em;
+    body.is-entering-ready .jd-shutter-title {
+      transform: translate(-50%, calc(-50% + 6px));
       opacity: 0;
-      transition: top 0.6s 0s cubic-bezier(0.16,1,0.3,1),
-                  left 0.6s 0s cubic-bezier(0.16,1,0.3,1),
-                  font-size 0.6s 0s cubic-bezier(0.16,1,0.3,1),
-                  letter-spacing 0.6s 0s cubic-bezier(0.16,1,0.3,1),
-                  opacity 0.2s 0.4s ease;
+      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease-out;
     }
-    @media (min-width: 769px) {
-      body.is-entering-ready .jd-shutter-title {
-        letter-spacing: 0.02em;
-      }
+    body.prepare-leave .jd-curtain-primary {
+      transition: none;
+      transform: translateY(calc(-100% - var(--jd-curtain-edge)));
     }
-    body.hide-shutter-title .jd-shutter-title { opacity: 0 !important; transition: none !important; }
-    body.is-leaving .jd-shutter-title, body.prepare-leave .jd-shutter-title { transition: none !important; }
-    body.is-entering-ready .jd-curtain-primary { transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(-150vh); }
-    body.prepare-leave .jd-curtain-primary { transition: none !important; transform: translateY(150vh) !important; }
-    body.is-leaving .jd-curtain-primary { transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1); transform: translateY(0); }
+    body.prepare-leave .jd-shutter-title {
+      transform: translate(-50%, calc(-50% - 6px));
+      opacity: 0;
+      transition: none;
+    }
+    body.is-leaving .jd-curtain-primary {
+      transition: transform 620ms cubic-bezier(0.42, 0, 0.48, 1);
+      transform: translateY(0);
+    }
+    body.is-leaving .jd-shutter-title {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1) 330ms,
+                  opacity 180ms ease-out 330ms;
+    }
+    body.hide-shutter-title .jd-shutter-title { opacity: 0 !important; }
+    body.restore-category :is(.jd-curtain-primary, .jd-shutter-title) {
+      transition: none !important;
+    }
 
     @media (prefers-reduced-motion: reduce) {
-      .jd-slide, .jd-curtain-primary, .jd-shutter-title,
-      body.is-entering-ready .jd-curtain-primary,
-      body.is-entering-ready .jd-shutter-title,
-      body.is-leaving #jd-cursor-custom {
+      #jd-shutter-container, .jd-shutter-title { display: none; }
+      .jd-slide, body.is-leaving #jd-cursor-custom {
         transition: none !important;
         animation: none !important;
       }
@@ -2307,10 +2366,10 @@ function canonicalPath(path: string) {
   </button>
 
   <!-- Shutter curtain -->
-  <div id="jd-shutter-container">
-    <div class="jd-curtain-primary"></div>
+  <div id="jd-shutter-container" transition:persist="gallery-curtain">
+    <div class="jd-curtain-primary" aria-hidden="true"></div>
+    <div class="jd-shutter-title">{catLabel}</div>
   </div>
-  <div class="jd-shutter-title">{catLabel}</div>
 
   <!-- Mobile thumbs top bar -->
   <div id="jd-thumbs-header" class="jd-thumbs-header" aria-hidden="true">
@@ -2390,8 +2449,20 @@ function canonicalPath(path: string) {
     </svg>
   </button>
 
-  <script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
+  <script is:inline data-astro-rerun>
+  (() => {
+  function initializeGallery() {
+    const galleryEvents = new AbortController();
+    const { signal } = galleryEvents;
+    const listen = (target, type, handler, options) => target.addEventListener(type, handler, { ...options, signal });
+    const observers = [];
+    listen(document, 'astro:before-swap', () => {
+      galleryEvents.abort();
+      observers.forEach(observer => observer.disconnect());
+      cancelWheelMotion();
+      clearTimeout(mobileSettleTimer);
+      cancelAnimationFrame(mobileSettleFrame);
+    }, { once: true });
     // Invalidate Safari's cached edge colour after navigation, viewport changes,
     // and overlays. A two-frame geometry pulse paints no pixels and never scrolls.
     if (CSS.supports('-webkit-touch-callout', 'none')) {
@@ -2410,10 +2481,12 @@ function canonicalPath(path: string) {
           });
         });
       };
-      window.addEventListener('pageshow', refreshTint);
-      window.addEventListener('resize', refreshTint);
-      window.addEventListener('jd:splash-dismissed', refreshTint);
-      new MutationObserver(refreshTint).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      listen(window, 'pageshow', refreshTint);
+      listen(window, 'resize', refreshTint);
+      listen(window, 'jd:splash-dismissed', refreshTint);
+      const tintObserver = new MutationObserver(refreshTint);
+      tintObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      observers.push(tintObserver);
       refreshTint();
     }
     // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
@@ -2459,7 +2532,7 @@ function canonicalPath(path: string) {
         }
         const autoTimer = setTimeout(dismissSplash, 2400);
         splashEl.addEventListener('click', dismissSplash);
-        window.addEventListener('keydown', dismissSplash, { once: true });
+        listen(window, 'keydown', dismissSplash, { once: true });
       }
     }
 
@@ -2493,6 +2566,12 @@ function canonicalPath(path: string) {
     const cursor = document.getElementById('jd-cursor-custom');
     const shutter = document.querySelector('.jd-curtain-primary');
     const shutterTitle = document.querySelector('.jd-shutter-title');
+    const initialShutterTitle = shutterTitle?.textContent;
+    if (shutterTitle && typeof window.jdCategoryArrivalTitle === 'string') {
+      shutterTitle.textContent = window.jdCategoryArrivalTitle;
+      document.body.classList.toggle('hide-shutter-title', !window.jdCategoryArrivalTitle);
+    }
+    const curtainRevealMs = 760;
 
     if (cursor && cursor.parentElement !== document.body) document.body.appendChild(cursor);
 
@@ -2726,7 +2805,7 @@ function canonicalPath(path: string) {
         btn.dataset.filter = s; filterMenu.appendChild(btn);
       });
       filterToggle.addEventListener('click', e => { e.stopPropagation(); filterMenu.classList.toggle('is-open'); filterToggle.classList.toggle('is-open'); });
-      document.addEventListener('click', e => { if (!filterContainer.contains(e.target)) { filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); } });
+      listen(document, 'click', e => { if (!filterContainer.contains(e.target)) { filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); } });
       filterMenu.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { const f = e.target.dataset.filter; filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); if (f !== currentFilter) applyFilter(f); } });
     }
 
@@ -2785,8 +2864,23 @@ function canonicalPath(path: string) {
 
     /* Navigation */
     function goToCategory(url, titleText = '') {
-      if (document.body.classList.contains('is-leaving')) return;
-      if (reducedMotion.matches) { window.location.href = url; return; }
+      if (document.body.matches('.prepare-leave, .is-leaving')) return;
+      const destination = new URL(url, location.href);
+      // The static preview serves a redirect document at slashless URLs.
+      // Fetch the actual gallery directory so the router can swap it in.
+      if (destination.origin === location.origin && !destination.pathname.endsWith('/')
+        && !destination.pathname.split('/').pop().includes('.')) {
+        destination.pathname += '/';
+      }
+      const visit = () => {
+      if (window.jdNavigateCategory) {
+          window.jdNavigateCategory(destination.href, { info: { title: titleText } })
+            .catch(() => { window.location.href = destination.href; });
+      } else {
+          window.location.href = destination.href;
+      }
+    };
+    if (reducedMotion.matches) { visit(); return; }
 
       if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
       if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel();
@@ -2795,7 +2889,6 @@ function canonicalPath(path: string) {
       if (titleText && shutterTitle) {
         shutterTitle.textContent = titleText;
         document.body.classList.remove('hide-shutter-title');
-        document.body.classList.add('show-shutter-title');
       } else {
         document.body.classList.add('hide-shutter-title');
       }
@@ -2804,27 +2897,54 @@ function canonicalPath(path: string) {
       if (shutter) void shutter.offsetHeight;
 
       requestAnimationFrame(() => {
+        if (signal.aborted) return;
         document.body.classList.remove('is-entering-ready');
         document.body.classList.remove('prepare-leave');
         document.body.classList.add('is-leaving');
-        let triggered = false;
-        const onDone = () => {
-          if (!triggered) {
-            triggered = true;
-            window.location.href = url;
+        let completed = false;
+        const holdClosed = () => {
+          if (completed) return;
+          completed = true;
+          clearTimeout(fallback);
+          shutter?.removeEventListener('transitionend', onCurtainClosed);
+          if (destination.origin === location.origin) {
+            try {
+              sessionStorage.setItem('jd-category-arrival', JSON.stringify({
+                path: destination.pathname.replace(/\/$/, ''), started: Date.now(), title: titleText
+              }));
+            } catch {}
+            document.documentElement.classList.add('jd-category-arrival', 'jd-category-revealing', 'jd-category-departure');
+            window.jdSyncBrowserTheme();
           }
+          setTimeout(() => { if (!signal.aborted) visit(); }, 90);
         };
-        if (shutter) shutter.addEventListener('transitionend', onDone, { once: true });
-        setTimeout(onDone, 700);
+        const onCurtainClosed = event => {
+          if (event.target === shutter && event.propertyName === 'transform') holdClosed();
+        };
+        const fallback = setTimeout(holdClosed, 720);
+        shutter?.addEventListener('transitionend', onCurtainClosed);
       });
     }
 
-    document.addEventListener('click', e => {
+    listen(window, 'pageshow', event => {
+      if (!event.persisted) return;
+      document.documentElement.classList.remove('jd-category-arrival', 'jd-category-revealing', 'jd-category-departure');
+      window.jdSyncBrowserTheme();
+      document.body.classList.add('restore-category', 'is-entering-ready');
+      document.body.classList.remove('prepare-leave', 'is-leaving', 'hide-shutter-title');
+      if (shutterTitle) shutterTitle.textContent = initialShutterTitle;
+      if (shutter) void shutter.offsetHeight;
+      document.body.classList.remove('restore-category');
+    });
+
+    listen(document, 'click', e => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const link = e.target.closest('a');
       if (link && link.href) {
         const urlObj = new URL(link.href, window.location.origin);
         if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
-          if (urlObj.pathname !== window.location.pathname || urlObj.search !== window.location.search) {
+          const normalizedPath = path => path.replace(/\/$/, '');
+          if (normalizedPath(urlObj.pathname) !== normalizedPath(window.location.pathname) || urlObj.search !== window.location.search) {
             e.preventDefault();
             
             let titleText = '';
@@ -2840,7 +2960,7 @@ function canonicalPath(path: string) {
           }
         }
       }
-    });
+    }, { capture: true });
 
     function goToRelative(step, allowCategorySwitch = true) {
       if (visibleTotal === 0) return;
@@ -2867,7 +2987,7 @@ function canonicalPath(path: string) {
       document.body.classList.toggle('is-wheel-browsing', visible);
       document.getElementById('jd-wheel-counter')?.setAttribute('aria-hidden', String(!visible));
     }
-    document.addEventListener('pointerdown', () => setWheelCounterVisible(false), { capture: true });
+    listen(document, 'pointerdown', () => setWheelCounterVisible(false), { capture: true });
 
     /* Desktop wheel browsing: one image per detected swipe. */
     let wheelMotion = null;
@@ -3138,10 +3258,10 @@ function canonicalPath(path: string) {
     // Bind directly to the stable stage for browsers that latch wheel input
     // to its target. Keep navigation available over the surrounding controls.
     slideshow.addEventListener('wheel', browseDesktopWithWheel, { passive: false });
-    document.addEventListener('wheel', e => {
+    listen(document, 'wheel', e => {
       if (!slideshow.contains(e.target)) browseDesktopWithWheel(e);
     }, { passive: false, capture: true });
-    window.addEventListener('resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
+    listen(window, 'resize', () => { cancelWheelMotion(); wheelWidth = slideshow.clientWidth; });
 
     function goToAbsolute(idx, skipFilterCheck = false, fromNativeScroll = false) {
       if (visibleTotal === 0) return;
@@ -3165,7 +3285,7 @@ function canonicalPath(path: string) {
         const newUrl = idx === 0 
           ? window.location.pathname + window.location.search 
           : `${window.location.pathname}${window.location.search}#img-${idx}`;
-        window.history.replaceState(null, '', newUrl);
+        window.history.replaceState(window.history.state, '', newUrl);
       }
       prepareNearbyImages(idx);
     }
@@ -3265,13 +3385,13 @@ function canonicalPath(path: string) {
         mobileSettleFrame = requestAnimationFrame(check);
       }, 120);
     }
-    window.addEventListener('scroll', () => {
+    listen(window, 'scroll', () => {
       if (!mobileScrollReady || window.innerWidth > 800) return;
       lastMobileScrollAt = performance.now();
       if (!mobileScrollFrame) mobileScrollFrame = requestAnimationFrame(syncMobileSlide);
       scheduleMobileSettle();
     }, { passive: true });
-    window.addEventListener('scrollend', () => {
+    listen(window, 'scrollend', () => {
       // Some Safari versions emit an old scrollend when smooth scrolling is retargeted.
       const requested = mobileCentres.find(item => item.index === mobileRequestedIndex);
       if (requested && Math.abs(requested.centre - window.scrollY - window.innerHeight / 2) >= 3) return;
@@ -3290,15 +3410,18 @@ function canonicalPath(path: string) {
       mobilePanelOpen = open;
     });
     mobilePanelObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    window.addEventListener('jd:splash-dismissed', () => {
+    observers.push(mobilePanelObserver);
+    listen(window, 'jd:splash-dismissed', () => {
       if (window.innerWidth > 800) return;
       requestAnimationFrame(() => {
         rebuildMobileCentres();
         alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
       });
     });
-    new ResizeObserver(scheduleMobileGeometry).observe(slideshow);
-    window.addEventListener('resize', () => {
+    const galleryResizeObserver = new ResizeObserver(scheduleMobileGeometry);
+    galleryResizeObserver.observe(slideshow);
+    observers.push(galleryResizeObserver);
+    listen(window, 'resize', () => {
       const active = window.innerWidth <= 800;
       if (active !== mobileViewportActive) {
         mobileViewportActive = active;
@@ -3405,7 +3528,7 @@ function canonicalPath(path: string) {
       touchGestureIgnored = true;
       hasSwiped = true;
     }, { passive: true });
-    window.addEventListener('orientationchange', () => {
+    listen(window, 'orientationchange', () => {
       mobileTouch = null;
       requestAnimationFrame(() => { rebuildMobileCentres(); alignMobileSlide(displayedIndex, 'instant'); });
     });
@@ -3450,7 +3573,7 @@ function canonicalPath(path: string) {
       });
     });
 
-    document.addEventListener('keydown', e => {
+    listen(document, 'keydown', e => {
       if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey
         || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
@@ -3466,7 +3589,7 @@ function canonicalPath(path: string) {
       goToRelative(backward ? -1 : 1, space);
     });
 
-    window.addEventListener('hashchange', () => {
+    listen(window, 'hashchange', () => {
       const h = window.location.hash;
       if (h && h.startsWith('#img-')) {
         const targetIdx = parseInt(h.replace('#img-', ''), 10);
@@ -3485,7 +3608,7 @@ function canonicalPath(path: string) {
     if (!window.matchMedia('(pointer: coarse)').matches) {
       document.body.style.cursor = 'none';
       
-      document.addEventListener('mousemove', e => {
+      listen(document, 'mousemove', e => {
         setWheelCounterVisible(false);
         sessionStorage.setItem('jdLastMouseX', e.clientX);
         sessionStorage.setItem('jdLastMouseY', e.clientY);
@@ -3514,7 +3637,7 @@ function canonicalPath(path: string) {
         }
       });
       
-      document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+      listen(document, 'mouseleave', () => { cursor.style.opacity = '0'; });
     }
 
     /* Thumbs view */
@@ -3599,47 +3722,62 @@ function canonicalPath(path: string) {
     });
 
     /* Page entrance animation */
-    function startPageOpen() {
-      if (shutterTitle) {
-        const isMobile = window.innerWidth <= 800;
-        if (!isMobile) {
-          const lastX = sessionStorage.getItem('jdLastMouseX');
-          const lastY = sessionStorage.getItem('jdLastMouseY');
-          if (lastX && lastY && cursor) { 
-            cursor.style.left = lastX + 'px'; cursor.style.top = lastY + 'px'; 
-            cursor.style.opacity = '0'; document.body.style.cursor = 'none'; 
-            shutterTitle.style.setProperty('--target-x', lastX + 'px');
-            shutterTitle.style.setProperty('--target-y', lastY + 'px');
-            window.jdCursorFrozen = true;
-            setTimeout(() => {
-              window.jdCursorFrozen = false;
-              cursor.style.opacity = '1';
-            }, reducedMotion.matches ? 0 : 600);
-          }
-        } else {
-          const catSpan = document.getElementById('jd-counter-cat');
-          const counterRest = document.getElementById('jd-counter-rest');
-          if (catSpan && counterRest) {
-            const rect = catSpan.getBoundingClientRect();
-            if (rect.width > 0) {
-              const targetX = rect.left + rect.width / 2;
-              const targetY = rect.top + rect.height / 2;
-              shutterTitle.style.setProperty('--target-x', targetX + 'px');
-              shutterTitle.style.setProperty('--target-y', targetY + 'px');
-            } else {
-              shutterTitle.style.setProperty('--target-x', '50%');
-              shutterTitle.style.setProperty('--target-y', 'calc(100dvh - 59px)');
-            }
-            setTimeout(() => {
-              catSpan.style.transition = 'opacity 0.6s ease';
-              catSpan.style.opacity = '1';
-              counterRest.style.transition = 'opacity 0.6s ease';
-              counterRest.style.opacity = '1';
-            }, reducedMotion.matches ? 0 : 600);
-          }
+    async function startPageOpen() {
+      const categoryArrival = document.documentElement.classList.contains('jd-category-arrival');
+      const firstImage = slides[current]?.querySelector('img');
+      if (categoryArrival) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        let imageWait;
+        const imageReady = firstImage && !firstImage.complete
+          ? Promise.race([
+              firstImage.decode().catch(() => {}),
+              new Promise(resolve => { imageWait = setTimeout(resolve, 450); })
+            ])
+          : Promise.resolve();
+        await Promise.allSettled([
+          imageReady,
+          new Promise(resolve => { setTimeout(resolve, 280); })
+        ]);
+        clearTimeout(imageWait);
+        if (signal.aborted) return;
+      }
+      const revealDelay = reducedMotion.matches ? 0 : curtainRevealMs;
+      if (window.innerWidth > 800) {
+        const lastX = sessionStorage.getItem('jdLastMouseX');
+        const lastY = sessionStorage.getItem('jdLastMouseY');
+        if (lastX && lastY && cursor) {
+          cursor.style.left = lastX + 'px';
+          cursor.style.top = lastY + 'px';
+          cursor.style.opacity = '0';
+          document.body.style.cursor = 'none';
+          window.jdCursorFrozen = true;
+          setTimeout(() => {
+            window.jdCursorFrozen = false;
+            cursor.style.opacity = '1';
+          }, revealDelay);
+        }
+      } else {
+        const catSpan = document.getElementById('jd-counter-cat');
+        const counterRest = document.getElementById('jd-counter-rest');
+        if (catSpan && counterRest) {
+          setTimeout(() => {
+            catSpan.style.transition = 'opacity 0.6s ease';
+            counterRest.style.transition = 'opacity 0.6s ease';
+            catSpan.style.opacity = '1';
+            counterRest.style.opacity = '1';
+          }, revealDelay);
         }
       }
       setTimeout(() => {
+        if (signal.aborted) return;
+        if (categoryArrival) {
+          document.documentElement.classList.add('jd-category-revealing');
+          setTimeout(() => {
+            if (signal.aborted) return;
+            document.documentElement.classList.remove('jd-category-arrival', 'jd-category-revealing');
+            window.jdSyncBrowserTheme();
+          }, revealDelay);
+        }
         document.body.classList.add('is-entering-ready');
         if (!sessionStorage.getItem('jd-hints-seen')) {
           const hintArrows = document.getElementById('jd-hint-arrows');
@@ -3649,7 +3787,6 @@ function canonicalPath(path: string) {
       }, 50);
     }
 
-    document.body.classList.add('show-shutter-title');
     let hasOpened = false;
     function tryOpen() {
       if (!hasOpened) {
@@ -3661,9 +3798,9 @@ function canonicalPath(path: string) {
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
       setTimeout(tryOpen, 100);
     } else {
-      document.addEventListener('DOMContentLoaded', () => setTimeout(tryOpen, 100));
+      listen(document, 'DOMContentLoaded', () => setTimeout(tryOpen, 100));
     }
-    window.addEventListener('load', tryOpen);
+    listen(window, 'load', tryOpen);
     setTimeout(tryOpen, 1000);
 
     /* Index panel open/close (global) */
@@ -3813,8 +3950,14 @@ function canonicalPath(path: string) {
     indexOverlay?.addEventListener('click', () => window.closeIndexPanel());
     jdMain?.addEventListener('click', e => { if (e.target.closest('#jd-bottom-nav')) return; if (document.body.classList.contains('index-is-open')) window.closeIndexPanel(); });
     document.querySelectorAll('#jd-index-panel .jd-index-link.active').forEach(link => { link.addEventListener('click', e => { e.preventDefault(); window.closeIndexPanel(); }); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); closeThumbsView(); } });
-  });
+    listen(document, 'keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); closeThumbsView(); } });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeGallery, { once: true });
+  } else {
+    initializeGallery();
+  }
+  })();
   </script>
 
   {import.meta.env.DEV && <CreativeToolbar categorySlug={categorySlug} lang={lang} />}
