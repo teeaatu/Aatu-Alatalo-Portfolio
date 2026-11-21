@@ -1070,6 +1070,14 @@ function canonicalPath(path: string) {
       pointer-events: auto !important;
       transform: scale(1) !important;
     }
+    @media (max-width: 800px) {
+      #jd-index-close-btn,
+      #jd-about-close-btn {
+        top: calc(16px + env(safe-area-inset-top, 0px)) !important;
+        right: 20px !important;
+        bottom: auto !important;
+      }
+    }
     @media (min-width: 801px) {
       #jd-index-close-btn,
       #jd-thumbs-close-btn,
@@ -1130,6 +1138,15 @@ function canonicalPath(path: string) {
       gap: 1.6rem !important;
       flex-wrap: nowrap !important;
       white-space: nowrap !important;
+    }
+    .jd-index-contact {
+      display: inline-block;
+      margin: -1.3rem 0 2.4rem;
+      color: var(--jd-text);
+      font-family: var(--jd-font);
+      font-size: 1rem;
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
     .jd-top-nav a {
       color: #1a1a18 !important;
@@ -2233,6 +2250,8 @@ function canonicalPath(path: string) {
         </a>
       </div>
     </div>
+
+    <a class="jd-index-contact" href="mailto:info@aatualatalo.com">info@aatualatalo.com</a>
 
     <ul class="jd-index-list">
       {navItems.map(item => (
