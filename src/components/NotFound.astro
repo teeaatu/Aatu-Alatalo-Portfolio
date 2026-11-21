@@ -1,0 +1,174 @@
+---
+interface Props {
+  language: 'fi' | 'en';
+}
+
+const { language } = Astro.props;
+const titles = {
+  fi: '404 — Sivua ei löytynyt | Aatu Alatalo',
+  en: '404 — Page not found | Aatu Alatalo',
+};
+---
+<!doctype html>
+<html lang={language}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f8f7f4">
+  <title>{titles[language]}</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+  <!-- The host serves the root error document for missing URLs in both languages. -->
+  <script define:vars={{ titles }}>
+    if (/^\/en(?:\/|$)/.test(window.location.pathname)) {
+      document.documentElement.lang = 'en';
+      document.title = titles.en;
+    }
+  </script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="/recent/" data-language="fi">Aatu Alatalo</a>
+    <a class="wordmark" href="/en/" data-language="en">Aatu Alatalo</a>
+    <a class="language" href="/en/404/" hreflang="en" lang="en" data-language="fi">In English</a>
+    <a class="language" href="/404.html" hreflang="fi" lang="fi" data-language="en">Suomeksi</a>
+  </header>
+
+  <main>
+    <section class="message" data-language="fi">
+      <p class="code">404</p>
+      <h1>Sivua ei löytynyt.</h1>
+      <p>Osoite on voinut muuttua tai sivu on poistettu.</p>
+      <a class="return" href="/recent/">Palaa uusimpiin kuviin</a>
+    </section>
+    <section class="message" data-language="en">
+      <p class="code">404</p>
+      <h1>Page not found.</h1>
+      <p>The address may have changed or the page may have been removed.</p>
+      <a class="return" href="/en/">Back to recent work</a>
+    </section>
+
+    <figure>
+      <img
+        src="/assets/thumbnails/Aallot_mobile.webp"
+        srcset="/assets/thumbnails/Aallot_mobile.webp 800w, /assets/thumbnails/Aallot_desktop.webp 1600w"
+        sizes="(min-width: 760px) 56vw, 92vw"
+        width="800"
+        height="533"
+        alt=""
+      >
+      <figcaption>
+        <em data-language="fi">Yksin</em>
+        <em data-language="en">Alone</em>
+        <span>Bilbao, 2024</span>
+      </figcaption>
+    </figure>
+  </main>
+
+  <footer>© Aatu Alatalo</footer>
+</body>
+</html>
+
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; }
+  html[lang="fi"] [data-language="en"],
+  html[lang="en"] [data-language="fi"] { display: none; }
+  :root {
+    --paper: #f8f7f4;
+    --ink: #1a1a18;
+    --muted: #605b54;
+    --rule: #cfc9bf;
+  }
+  body {
+    margin: 0 auto;
+    min-height: 100svh;
+    max-width: 1500px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 clamp(1.25rem, 4vw, 4.75rem);
+    background: var(--paper);
+    color: var(--ink);
+    font: 1.125rem/1.45 "EB Garamond", Georgia, serif;
+  }
+  a { color: inherit; text-underline-offset: 0.2em; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.3rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .wordmark {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .language { font-size: 1rem; }
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 7rem);
+    padding: clamp(2.75rem, 8vh, 7rem) 0;
+  }
+  .message { max-width: 27rem; }
+  .message p { margin: 0; color: var(--muted); }
+  .code {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    letter-spacing: 0.16em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  h1 {
+    margin: 0.4rem 0 1.25rem;
+    font-size: clamp(2.8rem, 5.25vw, 5.4rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+  .return {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 1.55rem;
+    padding: 0.45rem 1.1rem;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .return:hover { background: var(--paper); color: var(--ink); }
+  figure { margin: 0; min-width: 0; }
+  img { display: block; width: 100%; height: auto; }
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.55rem;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 1rem 0 1.4rem;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  @media (max-width: 759px) {
+    main {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      padding: 2.25rem 0 1.75rem;
+    }
+    h1 { margin-bottom: 0.85rem; }
+    .return { margin-top: 1.1rem; }
+  }
+</style>
