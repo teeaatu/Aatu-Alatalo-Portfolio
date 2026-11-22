@@ -2817,7 +2817,7 @@ function canonicalPath(path: string) {
     let counterSignature = '';
     const preparedImages = new WeakMap();
     const photoFocusAnimations = new WeakMap();
-    const desktopPhotoMotion = { blur: 1.125, brightness: 0.9775, offset: 6.5, rotation: 1.125, scale: 0.99375, duration: 360 };
+    const desktopPhotoMotion = { blur: 1.04625, brightness: 0.979075, offset: 6.045, rotation: 1.04625, scale: 0.9941875, duration: 360 };
 
     function animatePhotoFocus(slide, direction, entering, motion) {
       if (!slide || slide.classList.contains('jd-text-slide') || reducedMotion.matches) return;
@@ -3508,12 +3508,13 @@ function canonicalPath(path: string) {
         const distance = Math.abs(centre - item.centre);
         // Keep the central part of the viewport sharp, then ease the effect
         // in as the slide moves toward either edge.
-        const edgeDistance = Math.max(0, Math.min(1, (distance / window.innerHeight - 0.35) / 0.45));
-        const progress = edgeDistance * edgeDistance * (3 - 2 * edgeDistance);
-        if (progress < 0.01) continue;
-
-        const transform = `scale(${(1 - progress * 0.015).toFixed(4)})`;
-        const filter = `blur(${(progress * 3.4).toFixed(2)}px)`;
+        const edgeDistance = Math.max(0, Math.min(1, (distance / window.innerHeight - 0.33) / 0.5));
+        const progress = edgeDistance * edgeDistance * edgeDistance * (edgeDistance * (edgeDistance * 6 - 15) + 10);
+        // Keep the same filter and transform throughout the visible slides,
+        // including at zero, so the browser can interpolate without switching
+        // between a filtered layer and `none` at the sharp boundary.
+        const transform = `scale(${1 - progress * 0.015})`;
+        const filter = `blur(${progress * 3.4}px)`;
         slideImages[item.index].forEach(img => {
           if (img.style.getPropertyValue('--jd-mobile-photo-transform') !== transform) {
             img.style.setProperty('--jd-mobile-photo-transform', transform);
