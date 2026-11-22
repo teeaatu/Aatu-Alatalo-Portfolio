@@ -917,6 +917,37 @@ function canonicalPath(path: string) {
       transition: none !important;
     }
 
+    @keyframes jd-category-text-reveal {
+      from {
+        opacity: 0;
+        filter: blur(5px);
+        -webkit-mask-position: 0 0%;
+        mask-position: 0 0%;
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        -webkit-mask-position: 0 100%;
+        mask-position: 0 100%;
+      }
+    }
+    @keyframes jd-category-image-focus {
+      from { filter: blur(8px); }
+      to { filter: blur(0); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      html.jd-category-revealing:not(.jd-category-departure) :is(#jd-normal-nav, #jd-counter, .jd-current-location) {
+        -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
+        mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
+        -webkit-mask-size: 100% 240%;
+        mask-size: 100% 240%;
+        animation: jd-category-text-reveal 700ms ease-out both;
+      }
+      html.jd-category-revealing:not(.jd-category-departure) .jd-slide.active img {
+        animation: jd-category-image-focus 1100ms ease-out both;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       #jd-shutter-container, .jd-shutter-title { display: none; }
       .jd-slide, body.is-leaving #jd-cursor-custom {
@@ -3774,9 +3805,12 @@ function canonicalPath(path: string) {
           document.documentElement.classList.add('jd-category-revealing');
           setTimeout(() => {
             if (signal.aborted) return;
-            document.documentElement.classList.remove('jd-category-arrival', 'jd-category-revealing');
+            document.documentElement.classList.remove('jd-category-arrival');
             window.jdSyncBrowserTheme();
           }, revealDelay);
+          setTimeout(() => {
+            if (!signal.aborted) document.documentElement.classList.remove('jd-category-revealing');
+          }, 1100);
         }
         document.body.classList.add('is-entering-ready');
         if (!sessionStorage.getItem('jd-hints-seen')) {
