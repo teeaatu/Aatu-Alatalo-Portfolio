@@ -547,6 +547,16 @@ function canonicalPath(path: string) {
       }
     }
     .jd-slide picture { display: contents; }
+    @keyframes jd-photo-focus-motion {
+      from {
+        filter: var(--jd-photo-focus-from-filter);
+        transform: var(--jd-photo-focus-from-transform);
+      }
+      to {
+        filter: var(--jd-photo-focus-to-filter);
+        transform: var(--jd-photo-focus-to-transform);
+      }
+    }
     .jd-slide img {
       max-width: calc(100% - 120px);
       max-height: calc(100vh - 148px); max-height: calc(100dvh - 148px);
@@ -1659,6 +1669,10 @@ function canonicalPath(path: string) {
         will-change: auto;
         scroll-snap-align: center;
         scroll-snap-stop: always;
+      }
+      #jd-slideshow > .jd-slide img {
+        transform: var(--jd-mobile-photo-transform, none);
+        filter: var(--jd-mobile-photo-filter, none);
       }
       #jd-slideshow > .jd-slide.is-filtered-out { display: none !important; }
       /* Opaque safe-area coverage keeps Safari's browser bars consistent. */
@@ -2802,6 +2816,83 @@ function canonicalPath(path: string) {
     let displayedIndex = current;
     let counterSignature = '';
     const preparedImages = new WeakMap();
+    const photoFocusAnimations = new WeakMap();
+    const desktopPhotoMotion = { blur: 1.125, brightness: 0.9775, offset: 6.5, rotation: 1.125, scale: 0.99375, duration: 360 };
+
+    function animatePhotoFocus(slide, direction, entering, motion) {
+      if (!slide || slide.classList.contains('jd-text-slide') || reducedMotion.matches) return;
+      const sign = Math.sign(direction) || 1;
+      const edgeOffset = entering ? sign * motion.offset : -sign * motion.offset;
+      const edgeRotation = entering ? -sign * motion.rotation : sign * motion.rotation;
+      const edgeFrame = {
+        filter: `blur(${motion.blur}px) brightness(${motion.brightness})`,
+        transform: motion.offset || motion.rotation || motion.scale !== 1
+          ? `perspective(1100px) translate3d(${edgeOffset}px, 0, 0) rotateY(${edgeRotation}deg) scale(${motion.scale})`
+          : 'none',
+      };
+      const settledFrame = {
+        filter: 'blur(0px) brightness(1)',
+        transform: 'none',
+      };
+      slide.querySelectorAll('img').forEach(img => {
+        if (!img.complete || !img.naturalWidth) return;
+        photoFocusAnimations.get(img)?.cancel();
+        const frames = entering ? [edgeFrame, settledFrame] : [settledFrame, edgeFrame];
+        if (typeof img.animate === 'function') {
+          const animation = img.animate(frames, {
+            duration: motion.duration,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'none',
+          });
+          const handle = { cancel: () => animation.cancel() };
+          photoFocusAnimations.set(img, handle);
+          animation.onfinish = () => {
+            if (photoFocusAnimations.get(img) === handle) photoFocusAnimations.delete(img);
+          };
+          return;
+        }
+
+        // Some Safari and embedded browser builds expose CSS animations but
+        // not Element.animate(). Use the same keyframes through CSS there.
+        const styleProperties = [
+          '--jd-photo-focus-from-filter', '--jd-photo-focus-from-transform',
+          '--jd-photo-focus-to-filter', '--jd-photo-focus-to-transform',
+          'animation-name', 'animation-duration', 'animation-timing-function', 'animation-fill-mode',
+        ];
+        const previousStyles = styleProperties.map(property => ({
+          property,
+          value: img.style.getPropertyValue(property),
+          priority: img.style.getPropertyPriority(property),
+        }));
+        let active = true;
+        const cleanup = () => {
+          if (!active) return;
+          active = false;
+          img.removeEventListener('animationend', onAnimationEnd);
+          previousStyles.forEach(({ property, value, priority }) => {
+            if (value) img.style.setProperty(property, value, priority);
+            else img.style.removeProperty(property);
+          });
+          if (photoFocusAnimations.get(img) === handle) photoFocusAnimations.delete(img);
+        };
+        const handle = { cancel: cleanup };
+        const onAnimationEnd = event => {
+          if (event.target === img && event.animationName === 'jd-photo-focus-motion') cleanup();
+        };
+        photoFocusAnimations.set(img, handle);
+        img.style.animationName = 'none';
+        void img.offsetWidth;
+        img.style.setProperty('--jd-photo-focus-from-filter', frames[0].filter);
+        img.style.setProperty('--jd-photo-focus-from-transform', frames[0].transform);
+        img.style.setProperty('--jd-photo-focus-to-filter', frames[1].filter);
+        img.style.setProperty('--jd-photo-focus-to-transform', frames[1].transform);
+        img.style.animationName = 'jd-photo-focus-motion';
+        img.style.animationDuration = `${motion.duration}ms`;
+        img.style.animationTimingFunction = 'cubic-bezier(0.22, 1, 0.36, 1)';
+        img.style.animationFillMode = 'none';
+        img.addEventListener('animationend', onAnimationEnd);
+      });
+    }
 
     function prepareNearbyImages(index) {
       const vi = visibleIndices.indexOf(index);
@@ -3312,6 +3403,15 @@ function canonicalPath(path: string) {
       }
       if (!wheelCommitting) cancelWheelMotion();
       const outgoingSlide = slides[current];
+      const didChangeSlide = idx !== current;
+      const isMobile = window.innerWidth <= 800;
+      const direction = Math.sign(idx - current) || 1;
+      if (didChangeSlide && !isMobile) {
+        // Keep the existing full-width wheel slide and add the directional
+        // blur/tilt to the photos as the incoming image enters from the edge.
+        animatePhotoFocus(outgoingSlide, direction, false, desktopPhotoMotion);
+        animatePhotoFocus(slides[idx], direction, true, desktopPhotoMotion);
+      }
       if (outgoingSlide) outgoingSlide.classList.remove('active');
       if (localThumbs[current]) localThumbs[current].classList.remove('is-active');
       current = idx;
@@ -3339,6 +3439,7 @@ function canonicalPath(path: string) {
     let mobileRequestedIndex = null;
     let mobileFingerDown = false;
     let mobileCentres = [];
+    const mobilePhotoFocusImages = new Set();
     let mobileGeometryFrame = 0;
     let mobileSettleTimer = 0;
     let mobileSettleFrame = 0;
@@ -3384,9 +3485,58 @@ function canonicalPath(path: string) {
         || document.documentElement.classList.contains('jd-splash-active')
         || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving');
     }
+    function clearMobilePhotoFocus() {
+      mobilePhotoFocusImages.forEach(img => {
+        img.style.removeProperty('--jd-mobile-photo-transform');
+        img.style.removeProperty('--jd-mobile-photo-filter');
+      });
+      mobilePhotoFocusImages.clear();
+    }
+    function syncMobilePhotoFocus() {
+      if (window.innerWidth > 800 || !mobileCentres.length || reducedMotion.matches) {
+        clearMobilePhotoFocus();
+        return;
+      }
+
+      const centre = window.scrollY + window.innerHeight / 2;
+      const nearest = nearestMobilePosition();
+      const nextImages = new Set();
+      const first = Math.max(0, nearest - 1);
+      const last = Math.min(mobileCentres.length - 1, nearest + 1);
+      for (let position = first; position <= last; position++) {
+        const item = mobileCentres[position];
+        const distance = Math.abs(centre - item.centre);
+        // Keep the central part of the viewport sharp, then ease the effect
+        // in as the slide moves toward either edge.
+        const edgeDistance = Math.max(0, Math.min(1, (distance / window.innerHeight - 0.35) / 0.45));
+        const progress = edgeDistance * edgeDistance * (3 - 2 * edgeDistance);
+        if (progress < 0.01) continue;
+
+        const transform = `scale(${(1 - progress * 0.015).toFixed(4)})`;
+        const filter = `blur(${(progress * 3.4).toFixed(2)}px)`;
+        slideImages[item.index].forEach(img => {
+          if (img.style.getPropertyValue('--jd-mobile-photo-transform') !== transform) {
+            img.style.setProperty('--jd-mobile-photo-transform', transform);
+          }
+          if (img.style.getPropertyValue('--jd-mobile-photo-filter') !== filter) {
+            img.style.setProperty('--jd-mobile-photo-filter', filter);
+          }
+          nextImages.add(img);
+        });
+      }
+
+      mobilePhotoFocusImages.forEach(img => {
+        if (nextImages.has(img)) return;
+        img.style.removeProperty('--jd-mobile-photo-transform');
+        img.style.removeProperty('--jd-mobile-photo-filter');
+      });
+      mobilePhotoFocusImages.clear();
+      nextImages.forEach(img => mobilePhotoFocusImages.add(img));
+    }
     function syncMobileSlide() {
       mobileScrollFrame = 0;
       if (mobileScrollBlocked()) return;
+      syncMobilePhotoFocus();
       const centre = window.scrollY + window.innerHeight / 2;
       let position = mobileCentres.findIndex(item => item.index === displayedIndex);
       if (position < 0) position = nearestMobilePosition();
@@ -3400,6 +3550,7 @@ function canonicalPath(path: string) {
     }
     function commitMobileSlide() {
       if (mobileScrollBlocked() || mobileFingerDown) return;
+      syncMobilePhotoFocus();
       const index = mobileCentres[nearestMobilePosition()].index;
       mobileRequestedIndex = null;
       if (index !== current) goToAbsolute(index, false, true);
@@ -3440,6 +3591,7 @@ function canonicalPath(path: string) {
       document.documentElement.classList.toggle('jd-mobile-panel-open', open);
       if (!mobilePanelOpen && open) {
         mobileRequestedIndex = mobileCentres[nearestMobilePosition()]?.index ?? current;
+        clearMobilePhotoFocus();
       }
       if (mobilePanelOpen && !open) requestAnimationFrame(() => {
         rebuildMobileCentres();
@@ -3465,6 +3617,7 @@ function canonicalPath(path: string) {
         mobileViewportActive = active;
         mobileRequestedIndex = null;
         mobileFingerDown = false;
+        if (!active) clearMobilePhotoFocus();
         rebuildMobileCentres();
         if (active) alignMobileSlide(current, 'instant');
       }
