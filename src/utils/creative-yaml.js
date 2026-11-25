@@ -25,8 +25,14 @@ const SLUG_TO_FILE = {
 };
 
 export function getYamlFilePath(categorySlug) {
-  const fileName = SLUG_TO_FILE[categorySlug] || `${categorySlug}.yml`;
-  return path.join(DATA_DIR, fileName);
+  if (typeof categorySlug !== 'string' || !Object.hasOwn(SLUG_TO_FILE, categorySlug)) {
+    throw new Error(`Tuntematon tai virheellinen kategoria: ${categorySlug}`);
+  }
+  const resolved = path.resolve(DATA_DIR, SLUG_TO_FILE[categorySlug]);
+  if (!resolved.startsWith(DATA_DIR + path.sep)) {
+    throw new Error(`Virheellinen tiedostopolku: ${categorySlug}`);
+  }
+  return resolved;
 }
 
 export function ensureBackupDir() {
@@ -74,12 +80,12 @@ export function getAvailableBackups() {
 
 export function restoreLatestBackup(categorySlug) {
   ensureBackupDir();
-  const fileName = SLUG_TO_FILE[categorySlug] || `${categorySlug}.yml`;
+  const targetPath = getYamlFilePath(categorySlug);
+  const fileName = path.basename(targetPath);
   const backups = getAvailableBackups().filter(b => b.endsWith(`_${fileName}`));
   if (backups.length === 0) return false;
 
   const latestBackup = path.join(BACKUP_DIR, backups[0]);
-  const targetPath = getYamlFilePath(categorySlug);
   fs.copyFileSync(latestBackup, targetPath);
   return true;
 }

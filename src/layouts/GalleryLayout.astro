@@ -1,22 +1,15 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import t from '../data/t.yml';
-import recent from '../data/recent.yml';
-import work1 from '../data/work1.yml';
-import work2 from '../data/work2.yml';
-import tapahtumat from '../data/tapahtumat.yml';
-import variJaMuoto from '../data/vari-ja-muoto.yml';
-import raw from '../data/raw.yml';
-import mustavalkoinenSarja from '../data/mustavalkoinen-sarja.yml';
-import sisatilanValo from '../data/sisatilan-valo.yml';
-import kiehtovatRakennukset from '../data/kiehtovat-rakennukset.yml';
-import luontoJaYmparisto from '../data/luonto-ja-ymparisto.yml';
-import stillLife from '../data/still-life.yml';
-import elaimet from '../data/elaimet.yml';
-import masters from '../data/masters-2026.yml';
-import v365 from '../data/kuvaprojekti_ajasta_v365.yml';
 import CreativeToolbar from '../components/creative/CreativeToolbar.astro';
-
+import {
+  CATEGORIES,
+  canonicalPath,
+  getCategoryLabel,
+  getCategoryUrl,
+  parseLocalizedField,
+  resolveImagePaths,
+  type Lang,
+} from '../utils/gallery-config';
 
 const {
   lang = 'fi',
@@ -31,53 +24,12 @@ const {
   description,
 } = Astro.props;
 
+const activeLang: Lang = lang === 'en' ? 'en' : 'fi';
 const siteUrl = 'https://aatualatalo.com';
 const pageTitle = title || (categoryTitle ? `${categoryTitle} — Aatu Alatalo` : 'Aatu Alatalo | Valokuvaaja');
-const mainDesc = description || (lang === 'fi'
+const mainDesc = description || (activeLang === 'fi'
   ? 'Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti.'
   : 'Aatu Alatalo is a photographer from Tyrnävä, based in Oulu, Finland, and a Hasselblad Masters 2026 finalist.');
-
-// Build gallery data JSON from dataset
-const allCats = [
-  { key: 'recent', data: recent },
-  { key: 'masters-2026', data: masters },
-  { key: 'work1', data: work1 },
-  { key: 'work2', data: work2 },
-  { key: 'tapahtumat', data: tapahtumat },
-  { key: 'vari-ja-muoto', data: variJaMuoto },
-  { key: 'raw', data: raw },
-  { key: 'mustavalkoinen-sarja', data: mustavalkoinenSarja },
-  { key: 'sisatilan-valo', data: sisatilanValo },
-  { key: 'kiehtovat-rakennukset', data: kiehtovatRakennukset },
-  { key: 'luonto-ja-ymparisto', data: luontoJaYmparisto },
-  { key: 'still-life', data: stillLife },
-  { key: 'elaimet', data: elaimet },
-  { key: 'kuvaprojekti-ajasta-v365', data: v365 },
-];
-
-function resolveImagePaths(kuva: string) {
-  const fn = kuva.split('/').pop()!.split('.')[0];
-  const mob    = `${fn}_mobile.webp`;
-  const dsk    = `${fn}_desktop.webp`;
-  
-  if (kuva.includes('http')) {
-    const avifDsk = `${fn}_desktop.avif`;
-    const fnext = kuva.split('/').pop()!;
-    const bpath = kuva.replace(fnext, '');
-    return {
-      src: `${bpath}thumbs/${dsk}`,
-      srcAvif: `${bpath}thumbs/${avifDsk}`,
-      srcMob: `${bpath}thumbs/${mob}`,
-      full: kuva
-    };
-  }
-  return {
-    src: `/assets/thumbnails/${dsk}`,
-    srcAvif: null, // Lokaaleilla kuville (kuten Louhos.jpg) ei ole generoitu AVIF-thumbeja
-    srcMob: `/assets/thumbnails/${mob}`,
-    full: `/assets/images/${kuva}`
-  };
-}
 
 let jdIdx = 0;
 const galleryData: any[] = [];
@@ -86,85 +38,75 @@ for (const item of dataset) {
   const placeVal = item.paikka || '';
   const textVal = item.teksti || '';
 
-  const parseField = (val: any) => {
-    if (val === undefined || val === null || val === '') return '';
-    const str = String(val);
-    if (str.includes(' / ')) {
-      const parts = str.split(' / ');
-      return lang === 'fi' ? (parts[1]?.trim() || parts[0]?.trim()) : (parts[0]?.trim() || parts[1]?.trim());
-    }
-    return str;
-  };
-
   if (item.tyyppi === 'teksti') {
     if (categorySlug !== 'work1') continue;
     galleryData.push({
-      i: jdIdx++, type: 'text',
-      title: parseField(titleVal),
-      text: parseField(textVal),
+      i: jdIdx++,
+      type: 'text',
+      title: parseLocalizedField(titleVal, activeLang),
+      text: parseLocalizedField(textVal, activeLang),
       series: item.series || 'all',
-      kartta: item.kartta || null
+      kartta: item.kartta || null,
     });
     continue;
   }
   if (item.layout === 'diptych' && item.images) {
     const images = item.images.map((sub: any) => {
       const { src, srcAvif, srcMob, full } = resolveImagePaths(sub.kuva);
-      return { src, srcAvif, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob, alt: sub.alt_text || '' };
+      return {
+        src,
+        srcAvif,
+        srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`,
+        full,
+        thumb: srcMob,
+        width: sub.width || null,
+        height: sub.height || null,
+        alt: sub.alt_text || '',
+      };
     });
     galleryData.push({
-      i: jdIdx++, layout: 'diptych', images,
-      title: parseField(titleVal),
-      place: parseField(placeVal),
+      i: jdIdx++,
+      layout: 'diptych',
+      images,
+      title: parseLocalizedField(titleVal, activeLang),
+      place: parseLocalizedField(placeVal, activeLang),
       series: item.series || 'all',
     });
   } else {
     const { src, srcAvif, srcMob, full } = resolveImagePaths(item.kuva);
     galleryData.push({
-      i: jdIdx++, src, srcAvif, srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`, full, thumb: srcMob,
+      i: jdIdx++,
+      src,
+      srcAvif,
+      srcset: `${srcMob} 800w, ${src} 1600w, ${full} 3000w`,
+      full,
+      thumb: srcMob,
+      width: item.width || null,
+      height: item.height || null,
       alt: item.alt_text || '',
-      title: parseField(titleVal),
-      place: parseField(placeVal),
+      title: parseLocalizedField(titleVal, activeLang),
+      place: parseLocalizedField(placeVal, activeLang),
       series: item.series || 'all',
     });
   }
 }
 
-// Build category label map
-const catLabels: Record<string, string> = {
-  recent: lang === 'fi' ? 'Uusimmat' : 'Recent',
-  work1: lang === 'fi' ? 'Työ I' : 'Work I',
-  work2: lang === 'fi' ? 'Työ II' : 'Work II',
-  'masters-2026': 'Hasselblad Masters 2026',
-  'kuvaprojekti-ajasta-v365': t.v365[lang],
-  'tapahtumat': t.events[lang],
-  'vari-ja-muoto': t.color_and_form[lang],
-  raw: t.portraits[lang],
-  'mustavalkoinen-sarja': t.monochrome[lang],
-  'sisatilan-valo': t.interior[lang],
-  'kiehtovat-rakennukset': t.buildings[lang],
-  'luonto-ja-ymparisto': t.nature[lang],
-  'still-life': t.still_life[lang],
-  elaimet: t.animals[lang],
-};
-
-const catLabel = catLabels[categorySlug] || categoryTitle || categorySlug;
+const hasMap = galleryData.some(item => item.type === 'text' && item.kartta);
+const catLabel = getCategoryLabel(categorySlug, activeLang, categoryTitle);
 const isEventsCategory = categorySlug === 'tapahtumat';
 
-// Index panel data
 const indexCounts: Record<string, number> = {};
-allCats.forEach(c => { indexCounts[c.key] = c.data?.length || 0; });
+const catCoverImages: Record<string, string> = {};
+for (const cat of CATEGORIES) {
+  indexCounts[cat.key] = cat.data?.length || 0;
+  const firstItem = cat.data?.find((it: any) => it.kuva || (it.layout === 'diptych' && it.images?.[0]?.kuva));
+  if (firstItem) {
+    const k = firstItem.kuva || firstItem.images[0].kuva;
+    catCoverImages[cat.key] = resolveImagePaths(k).src;
+  }
+}
 
-const fiBase = (slug: string) => `/${slug}`;
-const enBase = (slug: string, enSlug?: string) => `/en/${enSlug || slug}`;
-
-const getCatUrl = (key: string, l: string) => {
-  return l === 'en'
-    ? `/en/${key === 'kuvaprojekti-ajasta-v365' ? 'photo-project-time-v365' : key === 'tapahtumat' ? 'events' : key === 'vari-ja-muoto' ? 'color-and-form' : key === 'mustavalkoinen-sarja' ? 'black-and-white-series' : key === 'sisatilan-valo' ? 'interior-light' : key === 'kiehtovat-rakennukset' ? 'buildings' : key === 'luonto-ja-ymparisto' ? 'nature' : key === 'elaimet' ? 'animals' : key}`
-    : `/${key}`;
-};
-
-const currentIndex = allCats.findIndex(c => c.key === categorySlug);
+const currentIndex = CATEGORIES.findIndex(c => c.key === categorySlug);
 let computedNextUrl = nextUrl;
 let computedPrevUrl = prevUrl;
 let computedNextLabel = '';
@@ -173,66 +115,33 @@ let computedPrevLabel = '';
 if (currentIndex !== -1) {
   if (!computedNextUrl) {
     // The final project continues to Recent; the first category's back edge stays unchanged.
-    const nextCat = allCats[(currentIndex + 1) % allCats.length];
-    computedNextUrl = getCatUrl(nextCat.key, lang);
-    computedNextLabel = catLabels[nextCat.key] || nextCat.key;
+    const nextCat = CATEGORIES[(currentIndex + 1) % CATEGORIES.length];
+    computedNextUrl = getCategoryUrl(nextCat.key, activeLang);
+    computedNextLabel = nextCat.label(activeLang);
   }
   if (!computedPrevUrl && currentIndex > 0) {
-    const prevCat = allCats[currentIndex - 1];
-    computedPrevUrl = getCatUrl(prevCat.key, lang);
-    computedPrevLabel = catLabels[prevCat.key] || prevCat.key;
+    const prevCat = CATEGORIES[currentIndex - 1];
+    computedPrevUrl = getCategoryUrl(prevCat.key, activeLang);
+    computedPrevLabel = prevCat.label(activeLang);
   }
 }
 
-const navItems = [
-  { fi: 'recent', en: 'recent', label: lang === 'fi' ? 'Uusimmat' : 'Recent' },
-  { fi: 'masters-2026', en: 'masters-2026', label: 'Hasselblad Masters 2026' },
-  { fi: 'work1', en: 'work1', label: lang === 'fi' ? 'Työ I' : 'Work I' },
-  { fi: 'work2', en: 'work2', label: lang === 'fi' ? 'Työ II' : 'Work II' },
-];
-const catNavItems = [
-  { fi: 'tapahtumat', en: 'events', label: t.events[lang] },
-  { fi: 'vari-ja-muoto', en: 'color-and-form', label: t.color_and_form[lang] },
-  { fi: 'raw', en: 'raw', label: t.portraits[lang] },
-  { fi: 'mustavalkoinen-sarja', en: 'black-and-white-series', label: t.monochrome[lang] },
-  { fi: 'sisatilan-valo', en: 'interior-light', label: t.interior[lang] },
-  { fi: 'kiehtovat-rakennukset', en: 'buildings', label: t.buildings[lang] },
-  { fi: 'luonto-ja-ymparisto', en: 'nature', label: t.nature[lang] },
-  { fi: 'still-life', en: 'still-life', label: t.still_life[lang] },
-  { fi: 'elaimet', en: 'animals', label: t.animals[lang] },
-];
-const projectNavItems = [
-  { fi: 'kuvaprojekti-ajasta-v365', en: 'photo-project-time-v365', label: t.v365[lang] },
-];
+const navItems = CATEGORIES.filter(c => c.group === 'primary');
+const catNavItems = CATEGORIES.filter(c => c.group === 'category');
+const projectNavItems = CATEGORIES.filter(c => c.group === 'project');
 
-const catCoverImages: Record<string, string> = {};
-allCats.forEach(c => {
-  const firstItem = c.data?.find((it: any) => it.kuva || (it.layout === 'diptych' && it.images?.[0]?.kuva));
-  if (firstItem) {
-    const k = firstItem.kuva || firstItem.images[0].kuva;
-    const paths = resolveImagePaths(k);
-    catCoverImages[c.key] = k.startsWith('http') ? k : paths.src;
-  }
-});
-
-function navUrl(item: { fi: string; en: string }) {
-  return lang === 'en' ? `/en/${item.en}` : `/${item.fi}`;
+function navUrl(item: { key: string }) {
+  return getCategoryUrl(item.key, activeLang);
 }
-function isActive(item: { fi: string }) {
-  return activeNav === item.fi;
+function isActive(item: { key: string }) {
+  return activeNav === item.key;
 }
 
 const currentUrl = Astro.url.pathname;
-const fiTransUrl = lang === 'fi' ? currentUrl : translationUrl;
-const enTransUrl = lang === 'en' ? currentUrl : translationUrl;
-const switchLangUrl = lang === 'fi' ? enTransUrl : fiTransUrl;
-
-function canonicalPath(path: string) {
-  const withSlash = path.endsWith('/') ? path : path + '/';
-  if (withSlash === '/recent/') return '/';
-  if (withSlash === '/en/recent/') return '/en/';
-  return withSlash;
-}
+const canonicalUrl = siteUrl + canonicalPath(currentUrl);
+const fiTransUrl = activeLang === 'fi' ? currentUrl : translationUrl;
+const enTransUrl = activeLang === 'en' ? currentUrl : translationUrl;
+const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 ---
 <!DOCTYPE html>
 <html lang={lang} translate="no" class="notranslate">
@@ -293,8 +202,8 @@ function canonicalPath(path: string) {
         var colour = darkCanvas ? '#000000' : '#ffffff';
         document.documentElement.style.colorScheme = scheme;
         document.documentElement.style.backgroundColor = colour;
-        document.querySelector('meta[name="color-scheme"]').setAttribute('content', scheme);
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', colour);
+        document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', scheme);
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colour);
       };
       window.jdSyncBrowserTheme();
       window.matchMedia('(max-width: 800px)').addEventListener('change', window.jdSyncBrowserTheme);
@@ -329,7 +238,7 @@ function canonicalPath(path: string) {
   <title>{pageTitle}</title>
   <meta name="description" content={mainDesc}>
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href={siteUrl + canonicalPath(currentUrl)}>
+  <link rel="canonical" href={canonicalUrl}>
   
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicon-192x192.png">
@@ -340,7 +249,7 @@ function canonicalPath(path: string) {
   <meta property="og:description" content={mainDesc}>
   <meta property="og:type" content="website">
   <meta property="og:image" content={`${siteUrl}/assets/images/aatu-alatalo-valokuvaaja-oulu.jpg`}>
-  <meta property="og:url" content={`${siteUrl}${currentUrl}`}>
+  <meta property="og:url" content={canonicalUrl}>
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
@@ -350,6 +259,7 @@ function canonicalPath(path: string) {
 
   {translationUrl && <link rel="alternate" hreflang="fi" href={siteUrl + canonicalPath(fiTransUrl)} />}
   {translationUrl && <link rel="alternate" hreflang="en" href={siteUrl + canonicalPath(enTransUrl)} />}
+  {translationUrl && <link rel="alternate" hreflang="x-default" href={siteUrl + canonicalPath(enTransUrl)} />}
 
   <!-- Schema.org Structured Data for Google Knowledge Graph & SEO -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify({
@@ -422,9 +332,11 @@ function canonicalPath(path: string) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://media.aatualatalo.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400..600&family=Lora:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+  {hasMap && <>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  </>}
   <style is:global>
     /* ─── RESET ────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -435,8 +347,8 @@ function canonicalPath(path: string) {
       --jd-text:     #1a1a18;
       --jd-dimmed:   #888880;
       --jd-font:     'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
-      --jd-font-serif: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
-      --jd-font-garamond: 'EB Garamond', Garamond, 'Adobe Garamond Pro', Georgia, serif;
+      --jd-font-serif: var(--jd-font);
+      --jd-font-garamond: var(--jd-font);
       --jd-panel-w:  min(500px, 42vw);
     }
 
@@ -454,50 +366,14 @@ function canonicalPath(path: string) {
     a { color: inherit; text-decoration: none; }
     img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; pointer-events: none; }
 
-    /* ─── HEADER ──────────────────────────────────────── */
-    #jd-header {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 200;
-      display: flex; justify-content: space-between; align-items: flex-start;
-      padding: 1.4rem 1.8rem;
-      pointer-events: none;
-    }
-    .jd-header-left, .jd-header-right {
-      pointer-events: auto;
-      display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .jd-ui-btn {
-      background: none; border: none;
-      color: rgba(26, 26, 24, 0.45);
-      font-family: var(--jd-font);
-      font-size: 0.95rem; letter-spacing: 0.04em; text-transform: none;
-      cursor: pointer; padding: 12px; margin: -12px;
-      min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
-      transition: color 0.3s ease;
-    }
-    .jd-ui-btn:hover {
-      color: rgba(26, 26, 24, 1);
-    }
-    .jd-ui-link {
-      color: rgba(26, 26, 24, 0.45); text-decoration: none;
-      font-family: var(--jd-font);
-      font-size: 0.95rem; letter-spacing: 0.04em; text-transform: none;
-      padding: 12px; margin: -12px;
-      min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
-      transition: color 0.3s ease;
-    }
-    .jd-ui-link:hover {
-      color: rgba(26, 26, 24, 1);
-    }
-
     /* Tactile press feedback */
-    .jd-ui-btn, .jd-ui-link, .jd-bottom-btn, .jd-index-link {
+    .jd-bottom-btn, .jd-index-link {
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
       will-change: transform, opacity;
     }
-    .jd-bottom-btn, .jd-ui-btn, .jd-ui-link { display: inline-block; transform-origin: center; }
+    .jd-bottom-btn { display: inline-block; transform-origin: center; }
     .jd-index-link { transform-origin: left center; }
-    .jd-ui-btn:active, .jd-ui-link:active, .jd-bottom-btn:active, .jd-index-link:active {
+    .jd-bottom-btn:active, .jd-index-link:active {
       transform: scale(0.985) !important; opacity: 0.6 !important;
       transition: transform 0.05s ease, opacity 0.05s ease !important;
     }
@@ -631,7 +507,8 @@ function canonicalPath(path: string) {
       background: #fafaf8; color: #242421; overflow: auto; overscroll-behavior: contain;
       font-family: var(--jd-font); line-height: 1.6; text-align: left; cursor: auto;
     }
-    #jd-masters-info::backdrop { background: rgb(0 0 0 / .35); }
+    #jd-masters-info:modal { overscroll-behavior: contain; }
+    #jd-masters-info::backdrop { background: rgb(0 0 0 / .35); overflow: hidden; overscroll-behavior: contain; }
     #jd-masters-info h2 { font-family: var(--jd-font-serif); font-size: 1.8rem; font-weight: normal; line-height: 1.2; margin: 12px 0 20px; }
     #jd-masters-info h3 { font-size: 1rem; margin: 24px 0 8px; }
     #jd-masters-info p { font-size: .95rem; }
@@ -824,7 +701,6 @@ function canonicalPath(path: string) {
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       opacity: 1 !important;
     }
-    .jd-nav-divider { display: none !important; }
     #jd-counter { display: none; }
 
     #jd-wheel-counter { display: none; }
@@ -1048,6 +924,9 @@ function canonicalPath(path: string) {
       transform: scale(0.975);
       transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: opacity, transform;
+    }
+    .jd-preview-layer:not([src]) {
+      display: none;
     }
     .jd-preview-layer.is-active {
       opacity: 1;
@@ -1304,7 +1183,6 @@ function canonicalPath(path: string) {
       color: #1a1a18 !important;
       opacity: 0.55;
     }
-    .jd-mobile-close { display: none; }
 
     /* ─── THUMBS PANEL ───────────────────────────────── */
     #jd-thumbs-panel {
@@ -1426,18 +1304,9 @@ function canonicalPath(path: string) {
     .jd-hint-arrow.left { transform: translateX(0); }
     .jd-hint-arrow.right { transform: translateX(0); }
 
-    @keyframes pulseArrowMobile {
-      0%, 100% { transform: translateX(0); opacity: 0.6; }
-      50% { transform: translateX(6px); opacity: 1; }
-    }
-
     #jd-hint-arrows.show-hints .jd-hint-arrow {
       opacity: 0.25;
     }
-
-    /* ─── THUMBNAIL LAZY LOAD ANIMATION ─────────────── */
-    @keyframes thumbFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .jd-thumb.thumb-animate { opacity: 0; animation: thumbFadeIn 0.4s ease forwards; }
 
     /* ─── ABOUT PANEL ────────────────────────────────── */
     #jd-about-panel {
@@ -1537,8 +1406,7 @@ function canonicalPath(path: string) {
     body.about-is-open #jd-bottom-nav,
     body.about-is-open #jd-counter,
     body.about-is-open #jd-hint-arrows,
-    body.about-is-open .jd-filter-dropdown-container,
-    body.about-is-open #jd-about-bottom-nav {
+    body.about-is-open .jd-filter-dropdown-container {
       display: none !important;
       opacity: 0 !important;
       visibility: hidden !important;
@@ -1616,7 +1484,6 @@ function canonicalPath(path: string) {
         opacity: 0.7 !important;
         margin-left: auto !important;
       }
-      #jd-header { padding: 1rem 1.2rem; }
       #jd-index-overlay.is-open { width: 100%; }
       html { background: #000000 !important; color-scheme: dark; }
       body { background: var(--jd-bg) !important; color-scheme: light; }
@@ -1700,8 +1567,7 @@ function canonicalPath(path: string) {
       body.about-is-open #jd-counter, 
       body.about-is-open #jd-bottom-nav,
       body.about-is-open #jd-hint-arrows, 
-      body.about-is-open .jd-filter-dropdown-container,
-      body.about-is-open #jd-about-bottom-nav {
+      body.about-is-open .jd-filter-dropdown-container {
         opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity 0.3s ease;
       }
       .jd-image-wrap {
@@ -1918,7 +1784,6 @@ function canonicalPath(path: string) {
         display: none !important;
       }
       .jd-postcard-map { height: 300px; }
-      #jd-about-bottom-nav { display: none !important; }
       .jd-about-content { flex-direction: column; padding-top: 4.5rem; gap: 2.5rem; }
       .jd-about-text h1 { font-size: 2.2rem; }
 
@@ -2156,7 +2021,7 @@ function canonicalPath(path: string) {
   <div id="jd-splash" class="jd-splash-screen" aria-hidden="true">
     <div class="jd-splash-inner">
       <div class="jd-splash-title-wrap">
-        <h1 class="jd-splash-title">AATU ALATALO</h1>
+        <div class="jd-splash-title">AATU ALATALO</div>
       </div>
       <div class="jd-splash-subtitle-wrap">
         <span class="jd-splash-subtitle" id="jd-splash-subtitle">{lang === 'fi' ? 'VALOKUVAAJA' : 'PHOTOGRAPHER'}</span>
@@ -2165,11 +2030,11 @@ function canonicalPath(path: string) {
   </div>
 
   {categorySlug === 'masters-2026' && <>
-    <button id="jd-masters-info-button" class="jd-masters-info-trigger" aria-haspopup="dialog" aria-controls="jd-masters-info" aria-label={lang === 'fi' ? 'Tietoa Hasselblad Masters -kilpailusta' : 'About the Hasselblad Masters competition'} hidden>
+    <button id="jd-masters-info-button" type="button" class="jd-masters-info-trigger" commandfor="jd-masters-info" command="show-modal" aria-haspopup="dialog" aria-controls="jd-masters-info" aria-label={lang === 'fi' ? 'Tietoa Hasselblad Masters -kilpailusta' : 'About the Hasselblad Masters competition'} hidden>
       <span aria-hidden="true">?</span>
     </button>
-    <dialog id="jd-masters-info" aria-labelledby="jd-masters-info-title">
-      <button id="jd-masters-info-close" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>×</button>
+    <dialog id="jd-masters-info" closedby="any" aria-labelledby="jd-masters-info-title">
+      <button id="jd-masters-info-close" type="button" commandfor="jd-masters-info" command="close" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>×</button>
       <p class="jd-masters-eyebrow">Hasselblad Masters 2026</p>
       <h2 id="jd-masters-info-title">{lang === 'fi' ? 'Mikä tämä kilpailu on?' : 'What is the competition?'}</h2>
       <p>{lang === 'fi'
@@ -2193,29 +2058,29 @@ function canonicalPath(path: string) {
 
   <!-- Hint arrows -->
   <div id="jd-hint-arrows">
-    <div class="jd-hint-arrow left" aria-label="Edellinen kuva / Previous image" role="button" tabindex="0">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+    <div class="jd-hint-arrow left" aria-label={lang === 'fi' ? 'Edellinen' : 'Previous'} role="button" tabindex="0">
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
     </div>
-    <div class="jd-hint-arrow right" aria-label="Seuraava kuva / Next image" role="button" tabindex="0">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+    <div class="jd-hint-arrow right" aria-label={lang === 'fi' ? 'Seuraava' : 'Next'} role="button" tabindex="0">
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
     </div>
   </div>
 
   <!-- Bottom nav -->
   <div id="jd-bottom-nav">
     <div id="jd-normal-nav">
-      <button class="jd-bottom-btn" id="jd-index-btn-bottom">{lang === 'en' ? 'Index' : 'Valikko'}</button>
-      <button class="jd-bottom-btn" id="jd-thumbs-btn">{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</button>
+      <button type="button" class="jd-bottom-btn" id="jd-index-btn-bottom" aria-controls="jd-index-panel" aria-expanded="false">{lang === 'en' ? 'Index' : 'Valikko'}</button>
+      <button type="button" class="jd-bottom-btn" id="jd-thumbs-btn" aria-controls="jd-thumbs-panel" aria-expanded="false">{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</button>
     </div>
     <div id="jd-thumbs-nav">
-      <button class="jd-bottom-btn" id="jd-thumbs-close">{lang === 'en' ? 'Close' : 'Sulje'}</button>
+      <button type="button" class="jd-bottom-btn" id="jd-thumbs-close">{lang === 'en' ? 'Close' : 'Sulje'}</button>
     </div>
   </div>
 
   { (categorySlug === 'tapahtumat' || categorySlug === 'events') && (
     <div id="jd-filter-dropdown-container" class="jd-filter-dropdown-container">
-      <button id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display:flex;align-items:center;justify-content:center;height:100%;cursor:pointer;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(26,26,24,0.35)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      <button type="button" id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display:flex;align-items:center;justify-content:center;height:100%;cursor:pointer;">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(26,26,24,0.35)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
       </button>
       <div id="jd-filter-menu" class="jd-filter-menu"></div>
     </div>
@@ -2224,9 +2089,9 @@ function canonicalPath(path: string) {
   <span id="jd-wheel-counter" aria-hidden="true">1 / {galleryData.length}</span>
 
   <!-- Mobile counter -->
-  <div id="jd-counter" role="button" tabindex="0" aria-label={lang === 'fi' ? 'Avaa valikko' : 'Open menu'}>
+  <div id="jd-counter" role="button" tabindex="0" aria-controls="jd-index-panel" aria-expanded="false" aria-label={lang === 'fi' ? 'Avaa valikko' : 'Open menu'}>
     <div class="jd-counter-top">
-      <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> - <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span><svg class="jd-counter-chevron" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+      <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> - <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span><svg aria-hidden="true" class="jd-counter-chevron" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
     </div>
     <div id="jd-counter-place" class="jd-counter-place"></div>
   </div>
@@ -2235,7 +2100,7 @@ function canonicalPath(path: string) {
 
 
   <!-- Custom cursor -->
-  <div id="jd-cursor-custom">
+  <div id="jd-cursor-custom" aria-hidden="true">
     <div id="jd-cursor-text">{catLabel} — 1 / {galleryData.length}</div>
     <div id="jd-cursor-arrow"></div>
   </div>
@@ -2247,35 +2112,35 @@ function canonicalPath(path: string) {
   <!-- Index hover preview for desktop (Dual Layer Smooth Crossfade) -->
   <div id="jd-index-preview-container" aria-hidden="true">
     <div id="jd-index-preview-wrapper">
-      <img id="jd-index-preview-img-a" class="jd-preview-layer" src="" alt="" loading="eager" draggable="false">
-      <img id="jd-index-preview-img-b" class="jd-preview-layer" src="" alt="" loading="eager" draggable="false">
+      <img id="jd-index-preview-img-a" class="jd-preview-layer" alt="" decoding="async" fetchpriority="low" draggable="false">
+      <img id="jd-index-preview-img-b" class="jd-preview-layer" alt="" decoding="async" fetchpriority="low" draggable="false">
     </div>
   </div>
 
   <!-- Index panel -->
   <div id="jd-index-overlay"></div>
-  <nav id="jd-index-panel">
+  <nav id="jd-index-panel" aria-label={lang === 'fi' ? 'Päävalikko' : 'Primary'}>
 
     <div class="jd-top-nav">
       <div class="jd-top-nav-links">
-        <a href={lang === 'en' ? '/en/recent' : '/recent'} style="text-decoration: underline; text-underline-offset: 4px; font-weight: 500;">
+        <a href={lang === 'en' ? '/en/recent/' : '/recent/'} style="text-decoration: underline; text-underline-offset: 4px; font-weight: 500;">
           {lang === 'en' ? 'Works' : 'Kategoriat'}
         </a>
-        <a href="#" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
+        <a href="#" role="button" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
           {lang === 'en' ? 'About' : 'Minusta'}
         </a>
         <a href={switchLangUrl} class="jd-lang-toggle" onclick={`try { localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}'); } catch (e) {} this.href = this.pathname + window.location.search + window.location.hash;`}>
           {lang === 'fi' ? 'In English' : 'Suomeksi'}
         </a>
-        <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener" aria-label="Instagram" class="jd-social-icon-link">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <a href="https://www.instagram.com/teeaatu/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="jd-social-icon-link">
+          <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
           </svg>
         </a>
-        <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener" aria-label="LinkedIn" class="jd-social-icon-link">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <a href="https://www.linkedin.com/in/aatu-alatalo-b67274304/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="jd-social-icon-link">
+          <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
             <rect x="2" y="9" width="4" height="12"></rect>
             <circle cx="4" cy="4" r="2"></circle>
@@ -2289,9 +2154,9 @@ function canonicalPath(path: string) {
     <ul class="jd-index-list">
       {navItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.fi] || ''}>
-            <span>{item.label}</span>
-            <span class="jd-count">{indexCounts[item.fi]}</span>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.key] || ''}>
+            <span>{item.label(activeLang)}</span>
+            <span class="jd-count">{indexCounts[item.key]}</span>
           </a>
         </li>
       ))}
@@ -2300,9 +2165,9 @@ function canonicalPath(path: string) {
     <ul class="jd-index-list">
       {catNavItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.fi] || ''}>
-            <span>{item.label}</span>
-            <span class="jd-count">{indexCounts[item.fi]}</span>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.key] || ''}>
+            <span>{item.label(activeLang)}</span>
+            <span class="jd-count">{indexCounts[item.key]}</span>
           </a>
         </li>
       ))}
@@ -2311,8 +2176,8 @@ function canonicalPath(path: string) {
     <ul class="jd-index-list">
       {projectNavItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.fi] || ''}>
-            <span>{item.label}</span>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.key] || ''}>
+            <span>{item.label(activeLang)}</span>
           </a>
         </li>
       ))}
@@ -2320,8 +2185,8 @@ function canonicalPath(path: string) {
   </nav>
 
   <!-- Floating close button for Valikko (Index) -->
-  <button id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'}>
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+  <button type="button" id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'}>
+    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
@@ -2380,7 +2245,7 @@ function canonicalPath(path: string) {
               <span class="jd-about-badge-title">Hasselblad Masters 2026</span>
               <span class="jd-about-badge-sub">
                 Project//21 Finalist
-                <svg class="jd-badge-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg aria-hidden="true" class="jd-badge-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="7" y1="17" x2="17" y2="7"></line>
                   <polyline points="7 7 17 7 17 17"></polyline>
                 </svg>
@@ -2410,8 +2275,8 @@ function canonicalPath(path: string) {
   </div>
 
   <!-- Floating close button for About -->
-  <button id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+  <button type="button" id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>
+    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
@@ -2433,56 +2298,41 @@ function canonicalPath(path: string) {
   <!-- Global thumbs panel (all categories) -->
   <div id="jd-thumbs-panel">
     <div class="jd-thumbs-inner">
-      {allCats.map(({ key, data }) => {
-        const catUrl = getCatUrl(key, lang);
+      {CATEGORIES.map(cat => {
+        const { key, data } = cat;
+        const catUrl = getCategoryUrl(key, activeLang);
+        const sectionLabel = cat.label(activeLang);
         return data && data.length > 0 ? (
           <div class="jd-thumbs-section" id={`jd-thumbs-section-${key}`}>
-            <div class="jd-thumbs-section-title">{catLabels[key] || key}</div>
+            <div class="jd-thumbs-section-title">{sectionLabel}</div>
             <div class="jd-thumbs-grid">
               {data.filter((item: any) => key === 'work1' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
                 const itemKey = item.kuva || (item.layout === 'diptych' && item.images ? item.images.map((i: any) => i.kuva).join('|') : (item.otsikko ? `text_${item.otsikko}` : `item_${idx}`));
                 if (item.tyyppi === 'teksti') {
-                  const titleVal = item.otsikko || '';
-                  const parseField = (val: any) => {
-                    if (val === undefined || val === null || val === '') return '';
-                    const str = String(val);
-                    if (str.includes(' / ')) {
-                      const parts = str.split(' / ');
-                      return lang === 'fi' ? parts[0]?.trim() : parts.slice(1).join(' / ').trim();
-                    }
-                    return str;
-                  };
-                  const tStr = parseField(titleVal);
+                  const tStr = parseLocalizedField(item.otsikko || '', activeLang);
                   return (
-                    <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={catLabels[key] || key} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                    <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <div class="jd-thumb-text-inner">
                         <h3>{tStr}</h3>
                       </div>
                     </div>
                   );
                 }
-                if (item.layout === 'diptych' && item.images) {
-                  const sub = item.images[0];
-                  if (!sub) return null;
-                  const fn = sub.kuva.split('/').pop().split('.')[0];
-                  const mob = `${fn}_mobile.webp`;
-                  const srcMob = sub.kuva.includes('http')
-                    ? sub.kuva
-                    : `/assets/thumbnails/${mob}`;
-                  return (
-                    <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
-                      <img src={srcMob} loading="lazy" alt={sub.alt_text || ''}>
-                    </div>
-                  );
-                }
-                const fn = item.kuva.split('/').pop().split('.')[0];
-                const mob = `${fn}_mobile.webp`;
-                const srcMob = item.kuva.includes('http')
-                  ? item.kuva
-                  : `/assets/thumbnails/${mob}`;
+                const mediaItem = item.layout === 'diptych' && item.images ? item.images[0] : item;
+                if (!mediaItem?.kuva) return null;
+                const paths = resolveImagePaths(mediaItem.kuva);
                 return (
-                  <div class="jd-thumb-global" data-cat={key} data-cat-label={catLabels[key] || key} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
-                    <img src={srcMob} loading="lazy" alt={item.alt_text || ''}>
+                  <div class="jd-thumb-global" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                    <img
+                      src={paths.srcMob}
+                      srcset={`${paths.srcMob} 600w, ${paths.src} 1600w`}
+                      sizes="(max-width: 800px) 50vw, 25vw"
+                      width={mediaItem.width || undefined}
+                      height={mediaItem.height || undefined}
+                      loading="lazy"
+                      decoding="async"
+                      alt={mediaItem.alt_text || ''}
+                    >
                   </div>
                 );
               })}
@@ -2494,8 +2344,8 @@ function canonicalPath(path: string) {
   </div>
 
   <!-- Floating close button for Kuvasto (Thumbs) -->
-  <button id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'}>
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+  <button type="button" id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'}>
+    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
@@ -2508,17 +2358,41 @@ function canonicalPath(path: string) {
     const { signal } = galleryEvents;
     const listen = (target, type, handler, options) => target.addEventListener(type, handler, { ...options, signal });
     const observers = [];
+    const getSession = (key) => { try { return sessionStorage.getItem(key); } catch { return null; } };
+    const setSession = (key, value) => { try { sessionStorage.setItem(key, String(value)); } catch {} };
+    let tintFrame = 0;
+    let splashAutoTimer = 0;
+    let splashRemovalTimer = 0;
+    let previewSwitchTimeout = null;
+    let previewHideTimeout = null;
+    let lastMouseX = null;
+    let lastMouseY = null;
+    const persistCursorPos = () => {
+      if (lastMouseX !== null && lastMouseY !== null) {
+        setSession('jdLastMouseX', lastMouseX);
+        setSession('jdLastMouseY', lastMouseY);
+      }
+    };
+    listen(window, 'pagehide', persistCursorPos);
     listen(document, 'astro:before-swap', () => {
+      persistCursorPos();
       galleryEvents.abort();
       observers.forEach(observer => observer.disconnect());
       cancelWheelMotion();
+      cancelAnimationFrame(tintFrame);
+      cancelAnimationFrame(wheelRestoreFrame);
+      cancelAnimationFrame(mobileGeometryFrame);
+      cancelAnimationFrame(mobileScrollFrame);
       clearTimeout(mobileSettleTimer);
       cancelAnimationFrame(mobileSettleFrame);
+      clearTimeout(splashAutoTimer);
+      clearTimeout(splashRemovalTimer);
+      clearTimeout(previewSwitchTimeout);
+      clearTimeout(previewHideTimeout);
     }, { once: true });
     // Invalidate Safari's cached edge colour after navigation, viewport changes,
     // and overlays. A two-frame geometry pulse paints no pixels and never scrolls.
     if (CSS.supports('-webkit-touch-callout', 'none')) {
-      let tintFrame = 0;
       const refreshTint = () => {
         cancelAnimationFrame(tintFrame);
         if (!matchMedia('(max-width: 800px)').matches) {
@@ -2558,16 +2432,16 @@ function canonicalPath(path: string) {
       if (splashRoot.classList.contains('jd-no-splash')) {
         finishSplash();
       } else {
-        try { sessionStorage.setItem('jd_splash_seen', 'true'); } catch (e) {}
+        setSession('jd_splash_seen', 'true');
         let splashDismissed = false;
-        let removalTimer;
         function dismissSplash() {
           if (splashDismissed) return;
           splashDismissed = true;
-          clearTimeout(autoTimer);
+          clearTimeout(splashAutoTimer);
           if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
           splashEl.classList.add('jd-splash-text-exit');
           setTimeout(() => {
+            if (signal.aborted) return;
             // Reveal a fully light gallery, including its edge masks. The black
             // curtain alone travels upward; no black bars remain beneath it.
             splashRoot.classList.add('jd-splash-revealing');
@@ -2577,40 +2451,49 @@ function canonicalPath(path: string) {
           // Prefer completion of the actual curtain; timer covers interrupted transitions.
           splashEl.addEventListener('transitionend', event => {
             if (event.target !== splashEl || event.propertyName !== 'transform') return;
-            clearTimeout(removalTimer);
+            clearTimeout(splashRemovalTimer);
             finishSplash();
           });
-          removalTimer = setTimeout(finishSplash, 1150);
+          splashRemovalTimer = setTimeout(finishSplash, 1150);
         }
-        const autoTimer = setTimeout(dismissSplash, 2400);
+        splashAutoTimer = setTimeout(dismissSplash, 2400);
         splashEl.addEventListener('click', dismissSplash);
         listen(window, 'keydown', dismissSplash, { once: true });
       }
     }
 
     const metaEl = document.getElementById('jd-meta');
-    const meta = metaEl ? JSON.parse(metaEl.textContent) : {};
+    const meta = metaEl ? JSON.parse(metaEl.textContent || '{}') : {};
     const { catLabel, categorySlug, isEventsCategory } = meta;
 
-    const data = JSON.parse(document.getElementById('jd-data').textContent);
+    const dataEl = document.getElementById('jd-data');
+    const data = dataEl ? JSON.parse(dataEl.textContent || '[]') : [];
     const total = data.length;
 
     const mastersInfo = document.getElementById('jd-masters-info');
     const mastersInfoButton = document.getElementById('jd-masters-info-button');
-    document.querySelectorAll('.jd-masters-info-trigger').forEach(button => {
-      button.addEventListener('click', event => {
-        event.stopPropagation();
-        mastersInfo?.showModal();
-      });
-    });
-    document.getElementById('jd-masters-info-close')?.addEventListener('click', () => mastersInfo.close());
-    mastersInfo?.addEventListener('click', event => {
-      event.stopPropagation();
-      const bounds = mastersInfo.getBoundingClientRect();
-      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) mastersInfo.close();
-    });
-    mastersInfo?.addEventListener('keydown', event => event.stopPropagation());
-    mastersInfo?.addEventListener('wheel', event => event.stopPropagation());
+    if (mastersInfo) {
+      if (!('commandForElement' in HTMLButtonElement.prototype)) {
+        document.querySelectorAll('.jd-masters-info-trigger').forEach(button => {
+          button.addEventListener('click', () => mastersInfo.showModal());
+        });
+        document.getElementById('jd-masters-info-close')?.addEventListener('click', () => mastersInfo.close());
+      }
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        const outsideDialog = event => {
+          const bounds = mastersInfo.getBoundingClientRect();
+          return event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+        };
+        let pressedOutside = false;
+        mastersInfo.addEventListener('pointerdown', event => { pressedOutside = outsideDialog(event); });
+        mastersInfo.addEventListener('pointerup', event => {
+          if (pressedOutside && outsideDialog(event)) mastersInfo.close();
+        });
+      }
+      mastersInfo.addEventListener('click', event => event.stopPropagation());
+      mastersInfo.addEventListener('keydown', event => event.stopPropagation());
+      mastersInfo.addEventListener('wheel', event => event.stopPropagation());
+    }
 
     const slideshow = document.getElementById('jd-slideshow');
     const thumbsPanel = document.getElementById('jd-thumbs-panel');
@@ -2714,74 +2597,10 @@ function canonicalPath(path: string) {
       } else if (item.layout === 'diptych' && item.images) {
         slide.className += ' jd-diptych-slide';
         item.images.forEach(imgData => {
-          const picture = document.createElement('picture');
-          
-          // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
-          // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
-          const retinaSrc = document.createElement('source');
-          retinaSrc.type = (imgData.full && imgData.full.endsWith('.webp')) ? 'image/webp' : 'image/jpeg';
-          retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
-          retinaSrc.srcset = imgData.full;
-          picture.appendChild(retinaSrc);
-
-          // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) ladataan uusi nopea 1600px AVIF
-          if (imgData.srcAvif) {
-            const avifSrc = document.createElement('source');
-            avifSrc.type = 'image/avif';
-            avifSrc.media = '(min-width: 801px)';
-            avifSrc.srcset = imgData.srcAvif;
-            picture.appendChild(avifSrc);
-          }
-          
-          // 3. Fallback & mobiililaitteet: selaimen automaattisesti valitsema koko 
-          const webpSrc = document.createElement('source');
-          webpSrc.type = 'image/webp';
-          webpSrc.srcset = imgData.srcset;
-          webpSrc.sizes = '(max-width: 768px) 100vw, 50vw';
-          picture.appendChild(webpSrc);
-          
-          const img = document.createElement('img');
-          img.src = imgData.src;
-          img.alt = imgData.alt || '';
-          img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
-          img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = imgData.full; };
-          picture.appendChild(img);
-          slide.appendChild(picture);
+          slide.appendChild(buildSlidePicture(imgData, i, '(max-width: 768px) 100vw, 50vw'));
         });
-
       } else {
-        const picture = document.createElement('picture');
-        
-        // 1. Retina-näytöille & giganttisille näytöille ladataan alkuperäinen Master (WebP) 
-        // jotta kuva on absoluuttisen terävä (esim. MacBook M2 Pro).
-        const retinaSrc = document.createElement('source');
-        retinaSrc.type = 'image/webp';
-        retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
-        retinaSrc.srcset = item.full;
-        picture.appendChild(retinaSrc);
-
-        // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) ladataan uusi nopea 1600px AVIF
-        if (item.srcAvif) {
-          const avifSrc = document.createElement('source');
-          avifSrc.type = 'image/avif';
-          avifSrc.media = '(min-width: 801px)';
-          avifSrc.srcset = item.srcAvif;
-          picture.appendChild(avifSrc);
-        }
-        
-        // 3. Fallback & mobiililaitteet: selaimen automaattisesti valitsema koko 
-        const webpSrc = document.createElement('source');
-        webpSrc.type = 'image/webp';
-        webpSrc.srcset = item.srcset;
-        webpSrc.sizes = '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px';
-        picture.appendChild(webpSrc);
-        
-        const img = document.createElement('img');
-        img.src = item.src;
-        img.alt = item.alt || '';
-        img.loading = (i === current || i === current + 1) ? 'eager' : 'lazy';
-        img.onerror = () => { picture.querySelectorAll('source').forEach(s => s.remove()); img.src = item.full; };
-        picture.appendChild(img);
+        const picture = buildSlidePicture(item, i, '(max-width: 600px) 800px, (max-width: 1400px) 1600px, 3000px');
         if (categorySlug === 'masters-2026' && i === 0) {
           const frame = document.createElement('div');
           frame.className = 'jd-masters-image-frame';
@@ -2791,10 +2610,63 @@ function canonicalPath(path: string) {
         } else {
           slide.appendChild(picture);
         }
-
-
       }
       return slide;
+    }
+
+    function getImageMimeType(url) {
+      if (!url) return 'image/jpeg';
+      const clean = url.split(/[?#]/)[0].toLowerCase();
+      if (clean.endsWith('.webp')) return 'image/webp';
+      if (clean.endsWith('.avif')) return 'image/avif';
+      if (clean.endsWith('.png')) return 'image/png';
+      return 'image/jpeg';
+    }
+
+    function buildSlidePicture(imgData, slideIndex, sizes) {
+      const picture = document.createElement('picture');
+
+      // 1. Retina-näytöille & suurille näytöille alkuperäinen master-tiedosto.
+      const retinaSrc = document.createElement('source');
+      retinaSrc.type = getImageMimeType(imgData.full);
+      retinaSrc.media = '(min-width: 1600px), (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 801px)';
+      retinaSrc.srcset = imgData.full;
+      picture.appendChild(retinaSrc);
+
+      // 2. Tavallisille desktop-näytöille (ei-retina, 801-1599px) 1600px AVIF.
+      if (imgData.srcAvif) {
+        const avifSrc = document.createElement('source');
+        avifSrc.type = 'image/avif';
+        avifSrc.media = '(min-width: 801px)';
+        avifSrc.srcset = imgData.srcAvif;
+        picture.appendChild(avifSrc);
+      }
+
+      // 3. Fallback & mobiililaitteet: selaimen valitsema WebP-koko.
+      const webpSrc = document.createElement('source');
+      webpSrc.type = 'image/webp';
+      webpSrc.srcset = imgData.srcset;
+      webpSrc.sizes = sizes;
+      picture.appendChild(webpSrc);
+
+      const img = document.createElement('img');
+      img.src = imgData.src;
+      img.alt = imgData.alt || '';
+      if (imgData.width) img.width = imgData.width;
+      if (imgData.height) img.height = imgData.height;
+      const isLcp = slideIndex === current;
+      const isAdjacent = slideIndex === current + 1;
+      img.loading = (isLcp || isAdjacent) ? 'eager' : 'lazy';
+      img.decoding = isLcp ? 'sync' : 'async';
+      if (isLcp) img.fetchPriority = 'high';
+      else if (!isAdjacent) img.fetchPriority = 'low';
+      img.onerror = () => {
+        img.onerror = null;
+        picture.querySelectorAll('source').forEach(s => s.remove());
+        img.src = imgData.full;
+      };
+      picture.appendChild(img);
+      return picture;
     }
 
     const desktopLocation = document.createElement('div');
@@ -2969,7 +2841,6 @@ function canonicalPath(path: string) {
       const n = vi + 1;
       const place = data[index]?.place || '';
       const caption = place;
-      const mastersInfoButton = document.getElementById('jd-masters-info-button');
       if (mastersInfoButton) mastersInfoButton.hidden = index !== 0;
       const signature = `${index}|${visibleTotal}|${currentFilter}`;
       if (signature === counterSignature) return;
@@ -3727,7 +3598,7 @@ function canonicalPath(path: string) {
 
     slideshow.addEventListener('click', e => {
       if (hasSwiped) { hasSwiped = false; return; }
-      if (e.target.closest('.jd-postcard-map')) return;
+      if (e.target instanceof Element && e.target.closest('.jd-postcard-map, .jd-masters-info-trigger')) return;
       
       // Napautuksen aikaraja 450ms: sormen lepuutus ruudulla (> 450ms) ei vaihda kuvaa
       if (touchStartTime && (Date.now() - touchStartTime > 450)) {
@@ -3750,20 +3621,25 @@ function canonicalPath(path: string) {
       }
     });
 
-    document.querySelectorAll('.jd-hint-arrow.left').forEach(el => {
-      el.addEventListener('click', e => {
-        e.stopPropagation();
-        if ('vibrate' in navigator) navigator.vibrate(10);
-        goToRelative(-1);
+    function bindHintArrow(selector, delta) {
+      document.querySelectorAll(selector).forEach(el => {
+        const trigger = e => {
+          e.stopPropagation();
+          if ('vibrate' in navigator) navigator.vibrate(10);
+          goToRelative(delta);
+        };
+        el.addEventListener('click', trigger);
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter') { e.preventDefault(); trigger(e); }
+          else if (e.key === ' ') { e.preventDefault(); }
+        });
+        el.addEventListener('keyup', e => {
+          if (e.key === ' ') trigger(e);
+        });
       });
-    });
-    document.querySelectorAll('.jd-hint-arrow.right').forEach(el => {
-      el.addEventListener('click', e => {
-        e.stopPropagation();
-        if ('vibrate' in navigator) navigator.vibrate(10);
-        goToRelative(1);
-      });
-    });
+    }
+    bindHintArrow('.jd-hint-arrow.left', -1);
+    bindHintArrow('.jd-hint-arrow.right', 1);
 
     listen(document, 'keydown', e => {
       if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
@@ -3796,14 +3672,15 @@ function canonicalPath(path: string) {
     /* Wheel to open/close index feature removed */
 
     /* Cursor Physics (Instant) */
+    const cursorArrow = document.getElementById('jd-cursor-arrow');
     if ('ontouchstart' in window) { if (cursor) cursor.style.display = 'none'; document.body.style.cursor = 'auto'; }
     if (!window.matchMedia('(pointer: coarse)').matches) {
       document.body.style.cursor = 'none';
       
       listen(document, 'mousemove', e => {
         setWheelCounterVisible(false);
-        sessionStorage.setItem('jdLastMouseX', e.clientX);
-        sessionStorage.setItem('jdLastMouseY', e.clientY);
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
         if (window.jdCursorFrozen) return;
 
         if (document.body.classList.contains('index-is-open') || document.body.classList.contains('about-is-open') || thumbsOpen) { 
@@ -3812,25 +3689,30 @@ function canonicalPath(path: string) {
           return; 
         }
         
-        const target = e.target;
-        const isNav = target.closest('#jd-bottom-nav') || target.closest('#jd-index-panel') || target.closest('#jd-thumbs-close') || target.closest('#jd-thumbs-header');
+        const target = e.target instanceof Element ? e.target : null;
+        const isNav = Boolean(target?.closest('#jd-bottom-nav, #jd-index-panel, #jd-thumbs-close, #jd-thumbs-header'));
         const nearBottom = e.clientY > window.innerHeight - 100;
         
         if (isNav || nearBottom) { 
-          cursor.style.opacity = '0'; 
+          if (cursor) cursor.style.opacity = '0'; 
           document.body.style.cursor = 'auto'; 
         } else {
-          cursor.style.left = e.clientX + 'px';
-          cursor.style.top = e.clientY + 'px';
-          cursor.style.opacity = '1'; 
+          if (cursor) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursor.style.opacity = '1';
+          }
           document.body.style.cursor = 'none';
-          const arrowEl = document.getElementById('jd-cursor-arrow');
-          if (arrowEl) arrowEl.textContent = e.clientX > window.innerWidth / 2 ? '→' : '←';
+          if (cursorArrow) cursorArrow.textContent = e.clientX > window.innerWidth / 2 ? '→' : '←';
         }
       });
       
-      listen(document, 'mouseleave', () => { cursor.style.opacity = '0'; });
+      listen(document, 'mouseleave', () => { if (cursor) cursor.style.opacity = '0'; });
     }
+
+    const indexBtnBottom = document.getElementById('jd-index-btn-bottom');
+    const thumbsBtn = document.getElementById('jd-thumbs-btn');
+    const counterEl = document.getElementById('jd-counter');
 
     /* Thumbs view */
     function openThumbsView() {
@@ -3838,7 +3720,8 @@ function canonicalPath(path: string) {
       mobileTouch = null;
       if (thumbsOpen) return;
       
-      thumbsOpen = true; 
+      thumbsOpen = true;
+      thumbsBtn?.setAttribute('aria-expanded', 'true');
       document.body.classList.add('thumbs-is-open');
       if (cursor) cursor.style.display = 'none';
       document.body.style.cursor = 'auto';
@@ -3868,7 +3751,8 @@ function canonicalPath(path: string) {
     function closeThumbsView() {
       if (!thumbsOpen) return;
       
-      thumbsOpen = false; 
+      thumbsOpen = false;
+      thumbsBtn?.setAttribute('aria-expanded', 'false');
       document.body.classList.remove('thumbs-is-open');
       if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
         if (cursor) cursor.style.display = '';
@@ -3883,13 +3767,12 @@ function canonicalPath(path: string) {
       const thumbsHeader = document.getElementById('jd-thumbs-header');
       if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'true');
     }
-    document.getElementById('jd-thumbs-btn')?.addEventListener('click', openThumbsView);
+    thumbsBtn?.addEventListener('click', openThumbsView);
     document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
     document.getElementById('jd-thumbs-close-btn')?.addEventListener('click', closeThumbsView);
-    document.getElementById('jd-thumbs-close-top')?.addEventListener('click', closeThumbsView);
 
     /* Index button */
-    document.getElementById('jd-index-btn-bottom')?.addEventListener('click', e => {
+    indexBtnBottom?.addEventListener('click', e => {
       e.stopPropagation();
       if (typeof window.openIndexPanel === 'function') {
         const panel = document.getElementById('jd-index-panel');
@@ -3898,7 +3781,6 @@ function canonicalPath(path: string) {
     });
 
     /* Mobile counter click/tap to open menu */
-    const counterEl = document.getElementById('jd-counter');
     counterEl?.addEventListener('click', e => {
       e.stopPropagation();
       if (typeof window.openIndexPanel === 'function') {
@@ -3907,10 +3789,15 @@ function canonicalPath(path: string) {
       }
     });
     counterEl?.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
+      if (e.key === 'Enter') {
         e.preventDefault();
         if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+      } else if (e.key === ' ') {
+        e.preventDefault();
       }
+    });
+    counterEl?.addEventListener('keyup', e => {
+      if (e.key === ' ' && typeof window.openIndexPanel === 'function') window.openIndexPanel();
     });
 
     /* Page entrance animation */
@@ -3935,8 +3822,8 @@ function canonicalPath(path: string) {
       }
       const revealDelay = reducedMotion.matches ? 0 : curtainRevealMs;
       if (window.innerWidth > 800) {
-        const lastX = sessionStorage.getItem('jdLastMouseX');
-        const lastY = sessionStorage.getItem('jdLastMouseY');
+        const lastX = getSession('jdLastMouseX');
+        const lastY = getSession('jdLastMouseY');
         if (lastX && lastY && cursor) {
           cursor.style.left = lastX + 'px';
           cursor.style.top = lastY + 'px';
@@ -3944,6 +3831,7 @@ function canonicalPath(path: string) {
           document.body.style.cursor = 'none';
           window.jdCursorFrozen = true;
           setTimeout(() => {
+            if (signal.aborted) return;
             window.jdCursorFrozen = false;
             cursor.style.opacity = '1';
           }, revealDelay);
@@ -3953,6 +3841,7 @@ function canonicalPath(path: string) {
         const counterRest = document.getElementById('jd-counter-rest');
         if (catSpan && counterRest) {
           setTimeout(() => {
+            if (signal.aborted) return;
             catSpan.style.transition = 'opacity 0.6s ease';
             counterRest.style.transition = 'opacity 0.6s ease';
             catSpan.style.opacity = '1';
@@ -3974,10 +3863,10 @@ function canonicalPath(path: string) {
           }, 1100);
         }
         document.body.classList.add('is-entering-ready');
-        if (!sessionStorage.getItem('jd-hints-seen')) {
+        if (!getSession('jd-hints-seen')) {
           const hintArrows = document.getElementById('jd-hint-arrows');
           if (hintArrows) hintArrows.classList.add('show-hints');
-          sessionStorage.setItem('jd-hints-seen', 'true');
+          setSession('jd-hints-seen', 'true');
         }
       }, 50);
     }
@@ -4007,53 +3896,56 @@ function canonicalPath(path: string) {
     const imgA = document.getElementById('jd-index-preview-img-a');
     const imgB = document.getElementById('jd-index-preview-img-b');
     const indexLinks = document.querySelectorAll('.jd-index-link');
+    const prefetchedUrls = window.__jdPrefetchedUrls || (window.__jdPrefetchedUrls = new Set());
+    let currentLayer = 'a'; // 'a' or 'b'
+    let activeSrc = '';
+    let coverPreloaded = false;
 
-    if (imgA && imgB && indexLinks.length > 0) {
-      let currentLayer = 'a'; // 'a' or 'b'
-      let activeSrc = '';
-      let switchTimeout = null;
-      let hideTimeout = null;
+    function setPreviewImage(src) {
+      if (!imgA || !imgB || !src || src === activeSrc) return;
+      activeSrc = src;
 
-      function setPreviewImage(src) {
-        if (!src || src === activeSrc) return;
-        activeSrc = src;
+      const nextImg = currentLayer === 'a' ? imgB : imgA;
+      const currentImg = currentLayer === 'a' ? imgA : imgB;
 
-        const nextImg = currentLayer === 'a' ? imgB : imgA;
-        const currentImg = currentLayer === 'a' ? imgA : imgB;
+      nextImg.src = src;
+      requestAnimationFrame(() => {
+        nextImg.classList.add('is-active');
+        currentImg.classList.remove('is-active');
+        currentLayer = currentLayer === 'a' ? 'b' : 'a';
+      });
+    }
 
-        nextImg.src = src;
-        requestAnimationFrame(() => {
-          nextImg.classList.add('is-active');
-          currentImg.classList.remove('is-active');
-          currentLayer = currentLayer === 'a' ? 'b' : 'a';
-        });
-      }
-
-      // Ennakkolataus: fetch() toimii kaikissa selaimissa, myös Safarissa
-      // (link rel="prefetch" ei tue Safari – käytetään fetch()-pohjaista ratkaisua)
-      function prefetchPage(url) {
-        if (!url || url.startsWith('#')) return;
-        if (document.querySelector(`link[data-prefetched="${CSS.escape(url)}"]`)) return;
-        const marker = document.createElement('link');
-        marker.dataset.prefetched = url;
-        document.head.appendChild(marker);
-        fetch(url, { priority: 'low' }).catch(() => {});
-      }
-
+    function preloadCoverImages() {
+      if (coverPreloaded || window.innerWidth <= 768) return;
+      coverPreloaded = true;
       indexLinks.forEach(link => {
         const src = link.getAttribute('data-preview-src');
         if (src) {
           const preloader = new Image();
+          preloader.decoding = 'async';
           preloader.src = src;
         }
+      });
+    }
 
+    if (imgA && imgB && indexLinks.length > 0) {
+      // Ennakkolataus: fetch() toimii kaikissa selaimissa, myös Safarissa
+      // (link rel="prefetch" ei tue Safari – käytetään fetch()-pohjaista ratkaisua)
+      function prefetchPage(url) {
+        if (!url || url.startsWith('#') || prefetchedUrls.has(url)) return;
+        prefetchedUrls.add(url);
+        fetch(url, { priority: 'low' }).catch(() => { prefetchedUrls.delete(url); });
+      }
+
+      indexLinks.forEach(link => {
         link.addEventListener('mouseenter', () => {
           if (window.innerWidth <= 768) return;
-          if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+          if (previewHideTimeout) { clearTimeout(previewHideTimeout); previewHideTimeout = null; }
           const targetSrc = link.getAttribute('data-preview-src');
           if (targetSrc && targetSrc !== activeSrc) {
-            if (switchTimeout) clearTimeout(switchTimeout);
-            switchTimeout = setTimeout(() => {
+            if (previewSwitchTimeout) clearTimeout(previewSwitchTimeout);
+            previewSwitchTimeout = setTimeout(() => {
               setPreviewImage(targetSrc);
             }, 80);
           }
@@ -4070,7 +3962,7 @@ function canonicalPath(path: string) {
       });
 
       indexPanel?.addEventListener('mouseleave', () => {
-        hideTimeout = setTimeout(() => {
+        previewHideTimeout = setTimeout(() => {
           imgA.classList.remove('is-active');
           imgB.classList.remove('is-active');
           activeSrc = '';
@@ -4084,27 +3976,30 @@ function canonicalPath(path: string) {
       if (typeof closeThumbsView === 'function') closeThumbsView();
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
+      indexBtnBottom?.setAttribute('aria-expanded', 'true');
+      counterEl?.setAttribute('aria-expanded', 'true');
       if (cursor) cursor.style.display = 'none';
       document.body.style.cursor = 'auto';
       if (indexPanel) indexPanel.scrollTop = 0;
 
-      // Autoselect active category preview if available on desktop
+      // Autoselect active category preview and warm desktop covers only when menu opens.
       if (window.innerWidth > 768 && imgA) {
         const activeLink = document.querySelector('.jd-index-link.active');
-        const activeSrc = activeLink?.getAttribute('data-preview-src');
-        if (activeSrc) {
-          imgA.src = activeSrc;
-          requestAnimationFrame(() => {
-            imgA.classList.add('is-active');
-          });
-        }
+        const activeCover = activeLink?.getAttribute('data-preview-src');
+        if (activeCover) setPreviewImage(activeCover);
+        preloadCoverImages();
       }
     };
     window.closeIndexPanel = function() {
+      clearTimeout(previewSwitchTimeout);
+      clearTimeout(previewHideTimeout);
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
       indexOverlay?.classList.remove('is-open'); document.body.classList.remove('index-is-open');
+      indexBtnBottom?.setAttribute('aria-expanded', 'false');
+      counterEl?.setAttribute('aria-expanded', 'false');
       if (imgA) imgA.classList.remove('is-active');
       if (imgB) imgB.classList.remove('is-active');
+      activeSrc = '';
       if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
         if (cursor) cursor.style.display = '';
         document.body.style.cursor = 'none';

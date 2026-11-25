@@ -1,10 +1,17 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { exec } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { readYaml, writeYaml, restoreLatestBackup, getAvailableBackups } from './creative-yaml.js';
+import { readYaml, writeYaml, restoreLatestBackup } from './creative-yaml.js';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
+
+function getItemKey(item) {
+  if (item.kuva) return item.kuva;
+  if (item.layout === 'diptych' && item.images && item.images[0]?.kuva) {
+    return item.images.map(i => i.kuva).join('|');
+  }
+  if (item.otsikko) return `text_${item.otsikko}`;
+  return JSON.stringify(item);
+}
 
 export function creativeDevPlugin() {
   return {
@@ -48,14 +55,6 @@ export function creativeDevPlugin() {
             if (!currentData || !Array.isArray(currentData)) {
               return sendJson(404, { error: `Kategorian dataa ei löytynyt: ${category}` });
             }
-            const getItemKey = (item) => {
-              if (item.kuva) return item.kuva;
-              if (item.layout === 'diptych' && item.images && item.images[0]?.kuva) {
-                return item.images.map(i => i.kuva).join('|');
-              }
-              if (item.otsikko) return `text_${item.otsikko}`;
-              return JSON.stringify(item);
-            };
             const itemMap = new Map();
             currentData.forEach(item => {
               itemMap.set(getItemKey(item), item);
@@ -113,14 +112,6 @@ export function creativeDevPlugin() {
             if (!currentData || !Array.isArray(currentData)) {
               return sendJson(404, { error: `Kategoriaa ei löytynyt: ${category}` });
             }
-            const getItemKey = (item) => {
-              if (item.kuva) return item.kuva;
-              if (item.layout === 'diptych' && item.images && item.images[0]?.kuva) {
-                return item.images.map(i => i.kuva).join('|');
-              }
-              if (item.otsikko) return `text_${item.otsikko}`;
-              return JSON.stringify(item);
-            };
             const initialLength = currentData.length;
             const filteredData = currentData.filter(item => getItemKey(item) !== imageKey);
             if (filteredData.length === initialLength) {
@@ -172,16 +163,16 @@ export function creativeDevPlugin() {
 
           if (pathname === '/api/creative/publish' && req.method === 'POST') {
             const body = await readBody();
-            const commitMsg = body.message || 'Creative Mode: Päivitetty kuvat ja järjestys';
-            await execAsync('npm run build', { cwd: process.cwd() });
-            await execAsync('git add src/data/', { cwd: process.cwd() });
-            const { stdout: statusOut } = await execAsync('git status --porcelain src/data/', { cwd: process.cwd() });
+            const commitMsg = String(body.message || 'Creative Mode: Päivitetty kuvat ja järjestys').trim();
+            await execFileAsync('npm', ['run', 'build'], { cwd: process.cwd() });
+            await execFileAsync('git', ['add', 'src/data/'], { cwd: process.cwd() });
+            const { stdout: statusOut } = await execFileAsync('git', ['status', '--porcelain', 'src/data/'], { cwd: process.cwd() });
             if (statusOut.trim().length > 0) {
-              await execAsync(`git commit -m "${commitMsg.replace(/"/g, '\\"')}"`, { cwd: process.cwd() });
+              await execFileAsync('git', ['commit', '-m', commitMsg], { cwd: process.cwd() });
             }
             let pushOutput = '';
             try {
-              const { stdout: pushOut, stderr: pushErr } = await execAsync('git push', { cwd: process.cwd() });
+              const { stdout: pushOut, stderr: pushErr } = await execFileAsync('git', ['push'], { cwd: process.cwd() });
               pushOutput = pushOut + (pushErr ? `\n${pushErr}` : '');
             } catch (pushError) {
               pushOutput = `Git push huomautus: ${pushError?.message || pushError}`;

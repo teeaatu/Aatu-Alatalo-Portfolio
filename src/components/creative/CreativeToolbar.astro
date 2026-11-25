@@ -1,7 +1,6 @@
 ---
 import './creative.css';
 import categoriesData from '../../data/categories.yml';
-import tData from '../../data/t.yml';
 
 const { categorySlug = 'recent', lang = 'fi' } = Astro.props;
 
@@ -174,23 +173,35 @@ const catLabels = {
 <script>
   import Sortable from 'sortablejs';
 
+  let creativeAbortController: AbortController | null = null;
+
   function initCreativeMode() {
+    creativeAbortController?.abort();
+    creativeAbortController = new AbortController();
+    const { signal } = creativeAbortController;
+
     const root = document.getElementById('creative-root');
     if (!root) return;
 
     const currentCat = root.dataset.currentCat || 'recent';
-    let isCreativeMode = localStorage.getItem('creative_mode_active') === 'true';
+    let selectedAddCat = currentCat;
+    let isCreativeMode = false;
+    try { isCreativeMode = localStorage.getItem('creative_mode_active') === 'true'; } catch {}
 
     const toggleBtn = document.getElementById('creative-toggle-btn');
     const toastContainer = document.getElementById('creative-toast-container');
-    const thumbsPanel = document.getElementById('jd-thumbs-panel');
 
-    function showToast(message, type = 'success') {
+    function showToast(message: string, type = 'success') {
       if (!toastContainer) return;
       const toast = document.createElement('div');
       toast.className = 'creative-toast';
       const icon = type === 'success' ? '✓' : (type === 'error' ? '✕' : 'ℹ');
-      toast.innerHTML = `<strong style="color:${type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6')};">${icon}</strong> <span>${message}</span>`;
+      const strong = document.createElement('strong');
+      strong.style.color = type === 'success' ? '#10b981' : (type === 'error' ? '#ef4444' : '#3b82f6');
+      strong.textContent = icon;
+      const span = document.createElement('span');
+      span.textContent = ` ${message}`;
+      toast.append(strong, span);
       toastContainer.appendChild(toast);
       setTimeout(() => {
         toast.style.opacity = '0';
@@ -461,11 +472,11 @@ const catLabels = {
 
       if ((e.metaKey && e.shiftKey && e.key.toLowerCase() === 'e') || (e.key === 'e' && !e.metaKey && !e.ctrlKey && !e.altKey)) {
         isCreativeMode = !isCreativeMode;
-        localStorage.setItem('creative_mode_active', String(isCreativeMode));
+        try { localStorage.setItem('creative_mode_active', String(isCreativeMode)); } catch {}
         updateModeUI();
         showToast(isCreativeMode ? 'Creative Mode: PÄÄLLÄ (Paina E poistuaksesi)' : 'Normaali esikatselutila (Paina E avataksesi Creative Mode)', 'info');
       }
-    });
+    }, { signal });
 
     // Categories Modal Sortable
     const catsModal = document.getElementById('creative-cats-modal');
@@ -509,6 +520,7 @@ const catLabels = {
 
     // Add Image Modal Helper
     function openAddModalAtPosition(catKey: string, pos: string | number) {
+      selectedAddCat = catKey || currentCat;
       const addModal = document.getElementById('creative-add-modal');
       const modalCatName = document.getElementById('creative-add-cat-name');
       const posLabel = document.getElementById('creative-add-pos-label');
@@ -516,7 +528,7 @@ const catLabels = {
       const posContainer = document.getElementById('creative-img-pos-container');
       const urlInput = document.getElementById('creative-img-url') as HTMLInputElement;
 
-      if (modalCatName) modalCatName.textContent = catKey;
+      if (modalCatName) modalCatName.textContent = selectedAddCat;
 
       if (typeof pos === 'number') {
         if (exactPosInput) exactPosInput.value = String(pos);
@@ -572,7 +584,7 @@ const catLabels = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            category: currentCat,
+            category: selectedAddCat,
             kuva: kuvaVal,
             otsikko: titleInput.value,
             paikka: placeInput.value,
@@ -663,11 +675,6 @@ const catLabels = {
     updateModeUI();
   }
 
-  // Initialize on load and on Astro page swaps
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCreativeMode);
-  } else {
-    initCreativeMode();
-  }
+  // Astro ClientRouter dispatches astro:page-load on initial load and after every swap.
   document.addEventListener('astro:page-load', initCreativeMode);
 </script>
