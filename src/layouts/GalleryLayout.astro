@@ -871,7 +871,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     @media (prefers-reduced-motion: reduce) {
       #jd-shutter-container, .jd-shutter-title { display: none; }
       .jd-slide, body.is-leaving #jd-cursor-custom,
-      #jd-index-panel, #jd-index-overlay, #jd-thumbs-panel, #jd-about-panel,
+      #jd-index-panel, #jd-index-overlay, #jd-thumbs-panel, .jd-thumbs-inner, .jd-thumbs-header, #jd-about-panel,
       .jd-about-content, .jd-preview-layer, .jd-floating-close-btn,
       .jd-splash-screen, .jd-splash-inner, .jd-splash-title, .jd-splash-subtitle {
         transition: none !important;
@@ -1069,6 +1069,16 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       pointer-events: auto !important;
       transform: scale(1) !important;
     }
+    @media (prefers-reduced-motion: no-preference) {
+      body.thumbs-is-open #jd-thumbs-close-btn,
+      #jd-thumbs-panel.is-open #jd-thumbs-close-btn {
+        transition-delay: 0.08s !important;
+      }
+      body.thumbs-is-open #jd-thumbs-close-btn:hover,
+      body.thumbs-is-open #jd-thumbs-close-btn:active {
+        transition-delay: 0s !important;
+      }
+    }
     body.about-is-open #jd-about-close-btn,
     #jd-about-panel.is-open #jd-about-close-btn {
       opacity: 1 !important;
@@ -1236,11 +1246,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       z-index: 300; overflow-y: auto; overscroll-behavior: contain;
       padding: 4rem 1.5rem 2rem; pointer-events: none;
       opacity: 0; visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 1, 1), visibility 0s linear 0.3s;
     }
     #jd-thumbs-panel.is-open {
       opacity: 1; visibility: visible; pointer-events: auto;
-      transition: opacity 0.3s ease, visibility 0s linear 0s;
+      transition: opacity 0.46s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
     }
     .jd-thumbs-inner { max-width: 1600px; margin: 0 auto; }
     .jd-thumbs-section { margin-bottom: 5rem; scroll-margin-top: 6rem; }
@@ -1258,9 +1268,36 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .jd-thumb-global.thumb-animate {
-      opacity: 0;
-      animation: slideUpFade 0.4s ease forwards;
+    @keyframes jd-thumb-reveal {
+      from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.988); }
+      to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .jd-thumbs-inner {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0) scale(0.994);
+        transform-origin: center top;
+        transition:
+          transform 0.28s cubic-bezier(0.4, 0, 1, 1),
+          opacity 0.26s ease-out;
+      }
+      #jd-thumbs-panel.is-open .jd-thumbs-inner {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        transition:
+          transform 0.58s cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 0.44s ease-out;
+      }
+      .jd-thumb-global {
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .jd-thumb-global:active {
+        transform: scale(0.985);
+        transition-duration: 0.06s;
+      }
+      .jd-thumb-global.thumb-animate {
+        animation: jd-thumb-reveal 0.54s cubic-bezier(0.16, 1, 0.3, 1) var(--thumb-delay, 0ms) both;
+      }
     }
     #jd-thumbs-nav { 
       display: none; align-items: center; justify-content: center; gap: 0; 
@@ -1863,12 +1900,29 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.25s ease, visibility 0.25s ease;
+        transition: opacity 0.26s ease, visibility 0s linear 0.26s;
       }
       body.thumbs-is-open .jd-thumbs-header {
         opacity: 1 !important;
         visibility: visible !important;
         pointer-events: auto !important;
+        transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .jd-thumbs-header {
+          transform: translate3d(0, -8px, 0);
+          transition:
+            opacity 0.26s ease,
+            transform 0.26s cubic-bezier(0.4, 0, 1, 1),
+            visibility 0s linear 0.26s;
+        }
+        body.thumbs-is-open .jd-thumbs-header {
+          transform: translate3d(0, 0, 0);
+          transition:
+            opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+            transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+            visibility 0s linear 0s;
+        }
       }
       .jd-thumbs-header-inner {
         width: 100%;
@@ -2419,6 +2473,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     let splashAutoTimer = 0;
     let splashExitTimer = 0;
     let splashRemovalTimer = 0;
+    let thumbAnimCleanupTimer = 0;
+    let animatedThumbs = [];
     let previewSwitchTimeout = null;
     let previewHideTimeout = null;
     let lastMouseX = null;
@@ -2444,6 +2500,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       clearTimeout(splashAutoTimer);
       clearTimeout(splashExitTimer);
       clearTimeout(splashRemovalTimer);
+      clearTimeout(thumbAnimCleanupTimer);
       clearTimeout(previewSwitchTimeout);
       clearTimeout(previewHideTimeout);
     }, { once: true });
@@ -3899,6 +3956,41 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     syncOverlayInert();
 
     /* Thumbs view */
+    function clearThumbAnimations() {
+      clearTimeout(thumbAnimCleanupTimer);
+      thumbAnimCleanupTimer = 0;
+      if (!animatedThumbs.length) return;
+      animatedThumbs.forEach(el => {
+        el.classList.remove('thumb-animate');
+        el.style.removeProperty('--thumb-delay');
+      });
+      animatedThumbs = [];
+    }
+
+    function animateVisibleThumbs() {
+      clearThumbAnimations();
+      if (reducedMotion.matches || !thumbsPanel) return;
+      const viewportH = window.innerHeight || document.documentElement.clientHeight || 900;
+      const visible = [];
+      const thumbs = thumbsPanel.querySelectorAll('.jd-thumb-global');
+      for (let i = 0; i < thumbs.length; i++) {
+        const thumb = thumbs[i];
+        const rect = thumb.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < viewportH + 40) {
+          visible.push(thumb);
+          if (visible.length >= 12) break;
+        }
+      }
+      if (!visible.length) return;
+      const stepMs = 30;
+      visible.forEach((thumb, i) => {
+        thumb.style.setProperty('--thumb-delay', `${i * stepMs}ms`);
+        thumb.classList.add('thumb-animate');
+      });
+      animatedThumbs = visible;
+      thumbAnimCleanupTimer = setTimeout(clearThumbAnimations, (visible.length - 1) * stepMs + 620);
+    }
+
     function openThumbsView() {
       cancelWheelMotion();
       mobileTouch = null;
@@ -3928,6 +4020,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
         currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
       }
+      animateVisibleThumbs();
       if (hintArrowsEl) hintArrowsEl.style.opacity = '0';
       const thumbsHeader = document.getElementById('jd-thumbs-header');
       if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'false');
@@ -3936,6 +4029,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     
     function closeThumbsView(options = {}) {
       if (!thumbsOpen) return;
+      clearThumbAnimations();
       
       thumbsOpen = false;
       thumbsBtn?.setAttribute('aria-expanded', 'false');
