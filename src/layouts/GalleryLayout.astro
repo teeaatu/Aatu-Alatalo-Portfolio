@@ -178,7 +178,20 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     // Establish the canvas and Safari tint before the first paint.
     (function () {
       var SPLASH_KEY = 'jd_splash_last_active';
-      var SPLASH_COOLDOWN_MS = 15 * 60 * 1000;
+      var SPLASH_COOLDOWN_MS = 5 * 60 * 1000;
+      window.jdGetSplashLastActive = function () {
+        var stored = null;
+        try { stored = localStorage.getItem(SPLASH_KEY); } catch (e) {}
+        if (!stored) {
+          try { stored = sessionStorage.getItem(SPLASH_KEY); } catch (e) {}
+        }
+        var parsed = stored ? Number(stored) : 0;
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+      };
+      window.jdIsSplashExpired = function () {
+        var lastActive = window.jdGetSplashLastActive();
+        return !lastActive || (Date.now() - lastActive) >= SPLASH_COOLDOWN_MS;
+      };
       window.jdMarkSplashActive = function () {
         if (window.__jdLangRedirecting) return;
         var now = String(Date.now());
@@ -188,13 +201,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       var skip = false;
       try {
         var forceSplash = new URLSearchParams(location.search).has('splash');
-        var stored = null;
-        try { stored = localStorage.getItem(SPLASH_KEY); } catch (e) {}
-        if (!stored) {
-          try { stored = sessionStorage.getItem(SPLASH_KEY); } catch (e) {}
-        }
-        var lastActive = stored ? Number(stored) : 0;
-        skip = !forceSplash && lastActive > 0 && (Date.now() - lastActive) < SPLASH_COOLDOWN_MS;
+        skip = !forceSplash && !window.jdIsSplashExpired();
         var navigation = JSON.parse(sessionStorage.getItem('jd-category-arrival') || 'null');
         sessionStorage.removeItem('jd-category-arrival');
         if (skip && navigation
@@ -869,6 +876,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       .jd-splash-screen, .jd-splash-inner, .jd-splash-title, .jd-splash-subtitle {
         transition: none !important;
         animation: none !important;
+      }
+      .jd-splash-title, .jd-splash-subtitle {
+        opacity: 1 !important;
+        filter: none !important;
+        transform: none !important;
       }
     }
 
@@ -2396,6 +2408,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   <script is:inline data-astro-rerun>
   (() => {
   function initializeGallery() {
+    if (window.__jdLangRedirecting) return;
     const galleryEvents = new AbortController();
     const { signal } = galleryEvents;
     const listen = (target, type, handler, options) => target.addEventListener(type, handler, { ...options, signal });
@@ -2404,6 +2417,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     const setSession = (key, value) => { try { sessionStorage.setItem(key, String(value)); } catch {} };
     let tintFrame = 0;
     let splashAutoTimer = 0;
+    let splashExitTimer = 0;
     let splashRemovalTimer = 0;
     let previewSwitchTimeout = null;
     let previewHideTimeout = null;
@@ -2428,6 +2442,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       clearTimeout(mobileSettleTimer);
       cancelAnimationFrame(mobileSettleFrame);
       clearTimeout(splashAutoTimer);
+      clearTimeout(splashExitTimer);
       clearTimeout(splashRemovalTimer);
       clearTimeout(previewSwitchTimeout);
       clearTimeout(previewHideTimeout);
@@ -2458,10 +2473,104 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       refreshTint();
     }
     // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
-    const splashEl = document.getElementById('jd-splash');
+    const initialSplashEl = document.getElementById('jd-splash');
+    const splashSubtitleText = initialSplashEl?.querySelector('#jd-splash-subtitle')?.textContent
+      || (document.documentElement.lang === 'en' ? 'PHOTOGRAPHER' : 'VALOKUVAAJA');
     const splashRoot = document.documentElement;
+    let activeSplashEl = initialSplashEl;
+    let splashRunning = false;
     let lastSplashTouch = 0;
+    function restoreGalleryTheme() {
+      if (typeof window.jdSyncBrowserTheme === 'function') window.jdSyncBrowserTheme();
+    }
+    function finishSplash(el = activeSplashEl) {
+      clearTimeout(splashAutoTimer);
+      clearTimeout(splashExitTimer);
+      clearTimeout(splashRemovalTimer);
+      el?.remove();
+      if (activeSplashEl === el) activeSplashEl = null;
+      splashRunning = false;
+      splashRoot.classList.remove('jd-splash-active', 'jd-splash-revealing');
+      splashRoot.classList.add('jd-no-splash');
+      restoreGalleryTheme();
+      window.dispatchEvent(new Event('jd:splash-dismissed'));
+    }
+    function createSplashElement() {
+      const el = document.createElement('div');
+      el.id = 'jd-splash';
+      el.className = 'jd-splash-screen';
+      el.setAttribute('aria-hidden', 'true');
+      const inner = document.createElement('div');
+      inner.className = 'jd-splash-inner';
+      const titleWrap = document.createElement('div');
+      titleWrap.className = 'jd-splash-title-wrap';
+      const title = document.createElement('div');
+      title.className = 'jd-splash-title';
+      title.textContent = 'AATU ALATALO';
+      titleWrap.appendChild(title);
+      const subWrap = document.createElement('div');
+      subWrap.className = 'jd-splash-subtitle-wrap';
+      const sub = document.createElement('span');
+      sub.className = 'jd-splash-subtitle';
+      sub.id = 'jd-splash-subtitle';
+      sub.textContent = splashSubtitleText;
+      subWrap.appendChild(sub);
+      inner.append(titleWrap, subWrap);
+      el.appendChild(inner);
+      return el;
+    }
+    function playSplash(el) {
+      if (!el) return;
+      activeSplashEl = el;
+      splashRunning = true;
+      touchSplashActivity(true);
+      let splashDismissed = false;
+      function dismissSplash() {
+        if (splashDismissed) return;
+        splashDismissed = true;
+        clearTimeout(splashAutoTimer);
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(el); return; }
+        el.classList.add('jd-splash-text-exit');
+        splashExitTimer = setTimeout(() => {
+          if (signal.aborted) return;
+          // Reveal a fully light gallery, including its edge masks. The black
+          // curtain alone travels upward; no black bars remain beneath it.
+          splashRoot.classList.add('jd-splash-revealing');
+          restoreGalleryTheme();
+          el.classList.add('jd-splash-dismissed');
+        }, 100);
+        // Prefer completion of the actual curtain; timer covers interrupted transitions.
+        el.addEventListener('transitionend', event => {
+          if (event.target !== el || event.propertyName !== 'transform') return;
+          clearTimeout(splashRemovalTimer);
+          finishSplash(el);
+        });
+        splashRemovalTimer = setTimeout(() => finishSplash(el), 1150);
+      }
+      splashAutoTimer = setTimeout(dismissSplash, 2400);
+      el.addEventListener('click', dismissSplash);
+      listen(window, 'keydown', dismissSplash, { once: true });
+    }
+    function replaySplashIfExpired() {
+      if (splashRunning || signal.aborted || document.visibilityState !== 'visible') return;
+      if (typeof window.jdIsSplashExpired !== 'function' || !window.jdIsSplashExpired()) return;
+      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel({ restoreFocus: false });
+      if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel({ restoreFocus: false });
+      if (typeof closeThumbsView === 'function') closeThumbsView({ restoreFocus: false });
+      document.getElementById('jd-splash')?.remove();
+      const el = createSplashElement();
+      document.body.prepend(el);
+      splashRoot.classList.remove('jd-no-splash', 'jd-splash-revealing');
+      splashRoot.classList.add('jd-splash-active');
+      restoreGalleryTheme();
+      playSplash(el);
+    }
     function touchSplashActivity(force = false) {
+      if (!force && document.visibilityState !== 'visible') return;
+      if (!force && !splashRunning && typeof window.jdIsSplashExpired === 'function' && window.jdIsSplashExpired()) {
+        replaySplashIfExpired();
+        return;
+      }
       const now = Date.now();
       if (!force && now - lastSplashTouch < 30000) return;
       lastSplashTouch = now;
@@ -2470,48 +2579,17 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     listen(document, 'pointerdown', () => touchSplashActivity(), { passive: true });
     listen(document, 'keydown', () => touchSplashActivity());
     listen(window, 'wheel', () => touchSplashActivity(), { passive: true });
-    listen(window, 'scroll', () => touchSplashActivity(), { passive: true });
-    function restoreGalleryTheme() {
-      window.jdSyncBrowserTheme();
-    }
-    function finishSplash() {
-      splashEl?.remove();
-      splashRoot.classList.remove('jd-splash-active', 'jd-splash-revealing');
-      splashRoot.classList.add('jd-no-splash');
-      restoreGalleryTheme();
-      window.dispatchEvent(new Event('jd:splash-dismissed'));
-    }
-    if (splashEl) {
+    listen(document, 'visibilitychange', () => {
+      if (document.visibilityState === 'visible') replaySplashIfExpired();
+    });
+    listen(window, 'pageshow', event => {
+      if (event.persisted) replaySplashIfExpired();
+    });
+    if (initialSplashEl) {
       if (splashRoot.classList.contains('jd-no-splash')) {
-        finishSplash();
+        finishSplash(initialSplashEl);
       } else {
-        touchSplashActivity(true);
-        let splashDismissed = false;
-        function dismissSplash() {
-          if (splashDismissed) return;
-          splashDismissed = true;
-          clearTimeout(splashAutoTimer);
-          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finishSplash(); return; }
-          splashEl.classList.add('jd-splash-text-exit');
-          setTimeout(() => {
-            if (signal.aborted) return;
-            // Reveal a fully light gallery, including its edge masks. The black
-            // curtain alone travels upward; no black bars remain beneath it.
-            splashRoot.classList.add('jd-splash-revealing');
-            restoreGalleryTheme();
-            splashEl.classList.add('jd-splash-dismissed');
-          }, 100);
-          // Prefer completion of the actual curtain; timer covers interrupted transitions.
-          splashEl.addEventListener('transitionend', event => {
-            if (event.target !== splashEl || event.propertyName !== 'transform') return;
-            clearTimeout(splashRemovalTimer);
-            finishSplash();
-          });
-          splashRemovalTimer = setTimeout(finishSplash, 1150);
-        }
-        splashAutoTimer = setTimeout(dismissSplash, 2400);
-        splashEl.addEventListener('click', dismissSplash);
-        listen(window, 'keydown', dismissSplash, { once: true });
+        playSplash(initialSplashEl);
       }
     }
 
