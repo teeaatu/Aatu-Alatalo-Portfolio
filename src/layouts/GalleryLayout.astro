@@ -4,6 +4,7 @@ import CreativeToolbar from '../components/creative/CreativeToolbar.astro';
 import {
   CATEGORIES,
   canonicalPath,
+  getCategoryDescription,
   getCategoryLabel,
   getCategoryUrl,
   parseLocalizedField,
@@ -27,9 +28,7 @@ const {
 const activeLang: Lang = lang === 'en' ? 'en' : 'fi';
 const siteUrl = 'https://aatualatalo.com';
 const pageTitle = title || (categoryTitle ? `${categoryTitle} — Aatu Alatalo` : 'Aatu Alatalo | Valokuvaaja');
-const mainDesc = description || (activeLang === 'fi'
-  ? 'Aatu Alatalo (s. 25. tammikuuta 2005, Tyrnävä) on Oulussa asuva valokuvaaja ja Hasselblad Masters 2026 -finalisti.'
-  : 'Aatu Alatalo is a photographer from Tyrnävä, based in Oulu, Finland, and a Hasselblad Masters 2026 finalist.');
+const mainDesc = description || getCategoryDescription(categorySlug, activeLang);
 
 let jdIdx = 0;
 const galleryData: any[] = [];
@@ -171,15 +170,31 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       const browserChoice = primaryLanguage === 'fi' ? 'fi' : 'en';
       const language = userChoice === 'fi' || userChoice === 'en' ? userChoice : browserChoice;
       if (language === 'en') {
+        window.__jdLangRedirecting = true;
         window.location.replace('/en/' + window.location.search + window.location.hash);
       }
     })();
 
     // Establish the canvas and Safari tint before the first paint.
     (function () {
+      var SPLASH_KEY = 'jd_splash_last_active';
+      var SPLASH_COOLDOWN_MS = 15 * 60 * 1000;
+      window.jdMarkSplashActive = function () {
+        if (window.__jdLangRedirecting) return;
+        var now = String(Date.now());
+        try { localStorage.setItem(SPLASH_KEY, now); } catch (e) {}
+        try { sessionStorage.setItem(SPLASH_KEY, now); } catch (e) {}
+      };
       var skip = false;
       try {
-        skip = !!sessionStorage.getItem('jd_splash_seen') && !new URLSearchParams(location.search).has('splash');
+        var forceSplash = new URLSearchParams(location.search).has('splash');
+        var stored = null;
+        try { stored = localStorage.getItem(SPLASH_KEY); } catch (e) {}
+        if (!stored) {
+          try { stored = sessionStorage.getItem(SPLASH_KEY); } catch (e) {}
+        }
+        var lastActive = stored ? Number(stored) : 0;
+        skip = !forceSplash && lastActive > 0 && (Date.now() - lastActive) < SPLASH_COOLDOWN_MS;
         var navigation = JSON.parse(sessionStorage.getItem('jd-category-arrival') || 'null');
         sessionStorage.removeItem('jd-category-arrival');
         if (skip && navigation
@@ -220,6 +235,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       event.viewTransition.skipTransition();
       const root = event.newDocument.documentElement;
       root.classList.add('jd-no-splash');
+      const markActive = Reflect.get(window, 'jdMarkSplashActive');
+      if (typeof markActive === 'function') markActive();
       const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const nextTitle = event.info?.title
         || event.newDocument.querySelector('.jd-shutter-title')?.textContent
@@ -376,6 +393,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-bottom-btn:active, .jd-index-link:active {
       transform: scale(0.985) !important; opacity: 0.6 !important;
       transition: transform 0.05s ease, opacity 0.05s ease !important;
+    }
+    :where(.jd-bottom-btn, .jd-index-link, .jd-top-nav a, .jd-index-contact, .jd-floating-close-btn, .jd-thumb-global, #jd-counter, .jd-hint-arrow, .jd-filter-btn, #jd-about-panel a, #jd-masters-info-close, #jd-masters-info a):focus-visible {
+      outline: 2px solid #1a1a18 !important;
+      outline-offset: 3px;
     }
 
     /* ─── MAIN ───────────────────────────────────────── */
@@ -842,7 +863,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
     @media (prefers-reduced-motion: reduce) {
       #jd-shutter-container, .jd-shutter-title { display: none; }
-      .jd-slide, body.is-leaving #jd-cursor-custom {
+      .jd-slide, body.is-leaving #jd-cursor-custom,
+      #jd-index-panel, #jd-index-overlay, #jd-thumbs-panel, #jd-about-panel,
+      .jd-about-content, .jd-preview-layer, .jd-floating-close-btn,
+      .jd-splash-screen, .jd-splash-inner, .jd-splash-title, .jd-splash-subtitle {
         transition: none !important;
         animation: none !important;
       }
@@ -869,14 +893,17 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       color: var(--jd-text);
       z-index: 500; padding: 4rem 2.5rem 2.5rem;
       overflow-y: auto; overscroll-behavior-y: contain; cursor: auto;
-      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
-      transform: translateX(100%); opacity: 0;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease, visibility 0s linear 0.6s;
+      transform: translateX(100%); opacity: 0; visibility: hidden;
       border-left: 1px solid rgba(0, 0, 0, 0.06);
     }
     @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
       #jd-index-panel { background: var(--jd-bg); }
     }
-    #jd-index-panel.is-open { transform: translateX(0); opacity: 1; }
+    #jd-index-panel.is-open {
+      transform: translateX(0); opacity: 1; visibility: visible;
+      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease, visibility 0s linear 0s;
+    }
     #jd-index-panel a, #jd-index-panel div, #jd-index-panel span { color: var(--jd-text) !important; }
 
     /* ─── INDEX HOVER PREVIEW (DESKTOP) ───────────────── */
@@ -1001,7 +1028,12 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-index-close-btn,
       #jd-about-close-btn {
         top: calc(16px + env(safe-area-inset-top, 0px)) !important;
-        right: 20px !important;
+        right: calc(20px + env(safe-area-inset-right, 0px)) !important;
+        bottom: auto !important;
+      }
+      #jd-thumbs-close-btn {
+        top: calc(8px + env(safe-area-inset-top, 0px)) !important;
+        right: calc(16px + env(safe-area-inset-right, 0px)) !important;
         bottom: auto !important;
       }
     }
@@ -1086,7 +1118,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       background: none !important;
       border-radius: 0 !important;
       box-shadow: none !important;
-      outline: none !important;
       white-space: nowrap !important;
       transition: opacity 0.2s ease !important;
     }
@@ -1181,7 +1212,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       font-family: var(--jd-font-serif);
       font-style: italic;
       color: #1a1a18 !important;
-      opacity: 0.55;
+      opacity: 0.62;
     }
 
     /* ─── THUMBS PANEL ───────────────────────────────── */
@@ -1190,12 +1221,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      z-index: 300; overflow-y: auto;
+      z-index: 300; overflow-y: auto; overscroll-behavior: contain;
       padding: 4rem 1.5rem 2rem; pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
     }
-    #jd-thumbs-panel.is-open { opacity: 1; pointer-events: auto; }
+    #jd-thumbs-panel.is-open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity 0.3s ease, visibility 0s linear 0s;
+    }
     .jd-thumbs-inner { max-width: 1600px; margin: 0 auto; }
     .jd-thumbs-section { margin-bottom: 5rem; scroll-margin-top: 6rem; }
     .jd-thumbs-section-title {
@@ -1312,12 +1346,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-about-panel {
       position: fixed; inset: 0;
       background: rgba(255, 255, 255, 0.98); z-index: 350;
-      overflow-y: auto; opacity: 0; pointer-events: none;
-      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1);
+      overflow-y: auto; overscroll-behavior: contain; opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), visibility 0s linear 0.6s;
       display: flex; flex-direction: column;
       cursor: auto !important;
     }
-    #jd-about-panel.is-open { opacity: 1; pointer-events: auto; }
+    #jd-about-panel.is-open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), visibility 0s linear 0s;
+    }
     .jd-about-content {
       display: flex; flex-direction: row; max-width: 1260px; margin: auto;
       padding: 5rem 3rem 5rem; gap: 4.5rem; align-items: center;
@@ -1784,7 +1821,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         display: none !important;
       }
       .jd-postcard-map { height: 300px; }
-      .jd-about-content { flex-direction: column; padding-top: 4.5rem; gap: 2.5rem; }
+      .jd-about-content {
+        flex-direction: column;
+        padding: calc(4.5rem + env(safe-area-inset-top, 0px)) calc(1.75rem + env(safe-area-inset-right, 0px)) calc(3.5rem + env(safe-area-inset-bottom, 0px)) calc(1.75rem + env(safe-area-inset-left, 0px));
+        gap: 2.5rem;
+      }
       .jd-about-text h1 { font-size: 2.2rem; }
 
       body.thumbs-is-open #jd-bottom-nav { display: none !important; }
@@ -1795,10 +1836,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         left: 0;
         right: 0;
         width: 100%;
-        height: calc(52px + env(safe-area-inset-top, 0px));
+        height: calc(64px + env(safe-area-inset-top, 0px));
         padding-top: env(safe-area-inset-top, 0px);
-        padding-left: 1.5rem;
-        padding-right: 1rem;
+        padding-left: calc(1.5rem + env(safe-area-inset-left, 0px));
+        padding-right: calc(72px + env(safe-area-inset-right, 0px));
         box-sizing: border-box;
         align-items: center;
         justify-content: space-between;
@@ -1836,8 +1877,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         pointer-events: none !important;
       }
       #jd-thumbs-panel {
-        padding-top: calc(52px + env(safe-area-inset-top, 0px) + 2rem) !important;
-        padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+        padding-top: calc(64px + env(safe-area-inset-top, 0px) + 1.5rem) !important;
+        padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)) !important;
+        scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
       }
     }
 
@@ -2119,14 +2161,14 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
   <!-- Index panel -->
   <div id="jd-index-overlay"></div>
-  <nav id="jd-index-panel" aria-label={lang === 'fi' ? 'Päävalikko' : 'Primary'}>
+  <nav id="jd-index-panel" aria-label={lang === 'fi' ? 'Päävalikko' : 'Primary'} tabindex="-1" inert>
 
     <div class="jd-top-nav">
       <div class="jd-top-nav-links">
         <a href={lang === 'en' ? '/en/recent/' : '/recent/'} style="text-decoration: underline; text-underline-offset: 4px; font-weight: 500;">
           {lang === 'en' ? 'Works' : 'Kategoriat'}
         </a>
-        <a href="#" role="button" onclick="window.closeIndexPanel(); window.openAboutPanel(); return false;">
+        <a href="#" role="button" id="jd-about-trigger" onclick="window.closeIndexPanel({ restoreFocus: false }); window.openAboutPanel(); return false;">
           {lang === 'en' ? 'About' : 'Minusta'}
         </a>
         <a href={switchLangUrl} class="jd-lang-toggle" onclick={`try { localStorage.setItem('userLangChoice','${lang === 'fi' ? 'en' : 'fi'}'); } catch (e) {} this.href = this.pathname + window.location.search + window.location.hash;`}>
@@ -2154,7 +2196,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     <ul class="jd-index-list">
       {navItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.key] || ''}>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} aria-current={isActive(item) ? 'page' : undefined} data-preview-src={catCoverImages[item.key] || ''}>
             <span>{item.label(activeLang)}</span>
             <span class="jd-count">{indexCounts[item.key]}</span>
           </a>
@@ -2165,7 +2207,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     <ul class="jd-index-list">
       {catNavItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.key] || ''}>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} aria-current={isActive(item) ? 'page' : undefined} data-preview-src={catCoverImages[item.key] || ''}>
             <span>{item.label(activeLang)}</span>
             <span class="jd-count">{indexCounts[item.key]}</span>
           </a>
@@ -2176,7 +2218,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     <ul class="jd-index-list">
       {projectNavItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} data-preview-src={catCoverImages[item.key] || ''}>
+          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} aria-current={isActive(item) ? 'page' : undefined} data-preview-src={catCoverImages[item.key] || ''}>
             <span>{item.label(activeLang)}</span>
           </a>
         </li>
@@ -2185,7 +2227,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   </nav>
 
   <!-- Floating close button for Valikko (Index) -->
-  <button type="button" id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'}>
+  <button type="button" id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'} inert>
     <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -2193,7 +2235,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   </button>
 
   <!-- About panel -->
-  <div id="jd-about-panel">
+  <div id="jd-about-panel" role="dialog" aria-modal="true" aria-label={lang === 'fi' ? 'Minusta' : 'About'} tabindex="-1" inert>
     <div class="jd-about-content">
       <div class="jd-about-image">
         <picture>
@@ -2275,7 +2317,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   </div>
 
   <!-- Floating close button for About -->
-  <button type="button" id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>
+  <button type="button" id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'} inert>
     <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -2296,7 +2338,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   </div>
 
   <!-- Global thumbs panel (all categories) -->
-  <div id="jd-thumbs-panel">
+  <div id="jd-thumbs-panel" role="dialog" aria-modal="true" aria-label={lang === 'en' ? 'Thumbs' : 'Kuvasto'} tabindex="-1" inert>
     <div class="jd-thumbs-inner">
       {CATEGORIES.map(cat => {
         const { key, data } = cat;
@@ -2311,7 +2353,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
                 if (item.tyyppi === 'teksti') {
                   const tStr = parseLocalizedField(item.otsikko || '', activeLang);
                   return (
-                    <div class="jd-thumb-global jd-thumb-text" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                    <div class="jd-thumb-global jd-thumb-text" role="button" tabindex="0" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                       <div class="jd-thumb-text-inner">
                         <h3>{tStr}</h3>
                       </div>
@@ -2322,7 +2364,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
                 if (!mediaItem?.kuva) return null;
                 const paths = resolveImagePaths(mediaItem.kuva);
                 return (
-                  <div class="jd-thumb-global" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
+                  <div class="jd-thumb-global" role="button" tabindex="0" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
                     <img
                       src={paths.srcMob}
                       srcset={`${paths.srcMob} 600w, ${paths.src} 1600w`}
@@ -2344,7 +2386,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   </div>
 
   <!-- Floating close button for Kuvasto (Thumbs) -->
-  <button type="button" id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'}>
+  <button type="button" id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'} inert>
     <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -2418,6 +2460,17 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     // ─── SPLASH SCREEN CONTROLLER ───────────────────────────
     const splashEl = document.getElementById('jd-splash');
     const splashRoot = document.documentElement;
+    let lastSplashTouch = 0;
+    function touchSplashActivity(force = false) {
+      const now = Date.now();
+      if (!force && now - lastSplashTouch < 30000) return;
+      lastSplashTouch = now;
+      if (typeof window.jdMarkSplashActive === 'function') window.jdMarkSplashActive();
+    }
+    listen(document, 'pointerdown', () => touchSplashActivity(), { passive: true });
+    listen(document, 'keydown', () => touchSplashActivity());
+    listen(window, 'wheel', () => touchSplashActivity(), { passive: true });
+    listen(window, 'scroll', () => touchSplashActivity(), { passive: true });
     function restoreGalleryTheme() {
       window.jdSyncBrowserTheme();
     }
@@ -2432,7 +2485,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (splashRoot.classList.contains('jd-no-splash')) {
         finishSplash();
       } else {
-        setSession('jd_splash_seen', 'true');
+        touchSplashActivity(true);
         let splashDismissed = false;
         function dismissSplash() {
           if (splashDismissed) return;
@@ -2824,15 +2877,22 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       goToAbsolute(newCurrent, true);
     }
 
-    /* Thumbs listeners */
+    /* Thumbs listeners (click + keyboard Enter/Space) */
+    function activateThumb(thumb) {
+      const cat = thumb.getAttribute('data-cat');
+      const idx = parseInt(thumb.getAttribute('data-idx'), 10);
+      const url = thumb.getAttribute('data-url');
+      const label = thumb.getAttribute('data-cat-label') || '';
+      if (cat === categorySlug) { goToAbsolute(idx); closeThumbsView(); }
+      else goToCategory(url, label);
+    }
     document.querySelectorAll('.jd-thumb-global').forEach(thumb => {
-      thumb.addEventListener('click', () => {
-        const cat = thumb.getAttribute('data-cat');
-        const idx = parseInt(thumb.getAttribute('data-idx'), 10);
-        const url = thumb.getAttribute('data-url');
-        const catLabel = thumb.getAttribute('data-cat-label') || '';
-        if (cat === categorySlug) { goToAbsolute(idx); closeThumbsView(); }
-        else goToCategory(url, catLabel);
+      thumb.addEventListener('click', () => activateThumb(thumb));
+      thumb.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') e.preventDefault();
+      });
+      thumb.addEventListener('keyup', e => {
+        if (e.key === 'Enter' || e.key === ' ') activateThumb(thumb);
       });
     });
 
@@ -2882,9 +2942,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     };
     if (reducedMotion.matches) { visit(); return; }
 
-      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
-      if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel();
-      if (typeof closeThumbsView === 'function') closeThumbsView();
+      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel({ restoreFocus: false });
+      if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel({ restoreFocus: false });
+      if (typeof closeThumbsView === 'function') closeThumbsView({ restoreFocus: false });
 
       if (titleText && shutterTitle) {
         shutterTitle.textContent = titleText;
@@ -3713,12 +3773,59 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     const indexBtnBottom = document.getElementById('jd-index-btn-bottom');
     const thumbsBtn = document.getElementById('jd-thumbs-btn');
     const counterEl = document.getElementById('jd-counter');
+    const indexPanel = document.getElementById('jd-index-panel');
+    const indexOverlay = document.getElementById('jd-index-overlay');
+    const indexCloseBtn = document.getElementById('jd-index-close-btn');
+    const aboutPanel = document.getElementById('jd-about-panel');
+    const aboutCloseBtn = document.getElementById('jd-about-close-btn');
+    const thumbsCloseBtn = document.getElementById('jd-thumbs-close-btn');
+    const jdMain = document.getElementById('jd-main');
+    const hintArrowsEl = document.getElementById('jd-hint-arrows');
+    let panelReturnFocus = null;
+
+    function capturePanelReturnFocus() {
+      if (!panelReturnFocus && document.activeElement instanceof HTMLElement && document.activeElement !== document.body) {
+        panelReturnFocus = document.activeElement;
+      }
+    }
+
+    function syncOverlayInert() {
+      const indexOpen = Boolean(indexPanel?.classList.contains('is-open'));
+      const aboutOpen = Boolean(aboutPanel?.classList.contains('is-open'));
+      const anyOpen = indexOpen || aboutOpen || thumbsOpen;
+      if (indexPanel) indexPanel.inert = !indexOpen;
+      if (indexCloseBtn) indexCloseBtn.inert = !indexOpen;
+      if (aboutPanel) aboutPanel.inert = !aboutOpen;
+      if (aboutCloseBtn) aboutCloseBtn.inert = !aboutOpen;
+      if (thumbsPanel) thumbsPanel.inert = !thumbsOpen;
+      if (thumbsCloseBtn) thumbsCloseBtn.inert = !thumbsOpen;
+      if (jdMain) jdMain.inert = anyOpen;
+      if (counterEl) counterEl.inert = anyOpen;
+      if (hintArrowsEl) hintArrowsEl.inert = anyOpen;
+      return anyOpen;
+    }
+
+    function restorePanelFocusIfNoneOpen() {
+      const anyOpen = syncOverlayInert();
+      if (!anyOpen && panelReturnFocus) {
+        const target = panelReturnFocus;
+        panelReturnFocus = null;
+        requestAnimationFrame(() => {
+          if (signal.aborted || syncOverlayInert()) return;
+          if (target.isConnected && !target.closest('[inert]')) {
+            target.focus({ preventScroll: true });
+          }
+        });
+      }
+    }
+    syncOverlayInert();
 
     /* Thumbs view */
     function openThumbsView() {
       cancelWheelMotion();
       mobileTouch = null;
       if (thumbsOpen) return;
+      capturePanelReturnFocus();
       
       thumbsOpen = true;
       thumbsBtn?.setAttribute('aria-expanded', 'true');
@@ -3734,7 +3841,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       thumbsNav.classList.add('is-open');
       thumbsNav.style.animation = '';
       
-      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel();
+      if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel({ restoreFocus: false });
+      syncOverlayInert();
       const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
       if (currentCatSection) {
         const selected = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
@@ -3742,13 +3850,13 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
         currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
       }
-      const hintArrows = document.getElementById('jd-hint-arrows');
-      if (hintArrows) hintArrows.style.opacity = '0';
+      if (hintArrowsEl) hintArrowsEl.style.opacity = '0';
       const thumbsHeader = document.getElementById('jd-thumbs-header');
       if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'false');
+      thumbsPanel?.focus({ preventScroll: true });
     }
     
-    function closeThumbsView() {
+    function closeThumbsView(options = {}) {
       if (!thumbsOpen) return;
       
       thumbsOpen = false;
@@ -3762,14 +3870,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       document.getElementById('jd-normal-nav').style.display = 'flex';
       document.getElementById('jd-thumbs-nav').classList.remove('is-open');
       
-      const hintArrows = document.getElementById('jd-hint-arrows');
-      if (hintArrows) hintArrows.style.opacity = '1';
+      if (hintArrowsEl) hintArrowsEl.style.opacity = '1';
       const thumbsHeader = document.getElementById('jd-thumbs-header');
       if (thumbsHeader) thumbsHeader.setAttribute('aria-hidden', 'true');
+      if (options.restoreFocus === false) syncOverlayInert();
+      else restorePanelFocusIfNoneOpen();
     }
     thumbsBtn?.addEventListener('click', openThumbsView);
-    document.getElementById('jd-thumbs-close')?.addEventListener('click', closeThumbsView);
-    document.getElementById('jd-thumbs-close-btn')?.addEventListener('click', closeThumbsView);
+    document.getElementById('jd-thumbs-close')?.addEventListener('click', () => closeThumbsView());
+    thumbsCloseBtn?.addEventListener('click', () => closeThumbsView());
 
     /* Index button */
     indexBtnBottom?.addEventListener('click', e => {
@@ -3888,10 +3997,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     setTimeout(tryOpen, 1000);
 
     /* Index panel open/close (global) */
-    const indexPanel = document.getElementById('jd-index-panel');
-    const indexOverlay = document.getElementById('jd-index-overlay');
-    const jdMain = document.getElementById('jd-main');
-
     // Index desktop hover preview logic (Dual Layer Smooth Crossfade)
     const imgA = document.getElementById('jd-index-preview-img-a');
     const imgB = document.getElementById('jd-index-preview-img-b');
@@ -3938,21 +4043,23 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         fetch(url, { priority: 'low' }).catch(() => { prefetchedUrls.delete(url); });
       }
 
+      function previewIndexLink(link) {
+        if (window.innerWidth <= 768) return;
+        if (previewHideTimeout) { clearTimeout(previewHideTimeout); previewHideTimeout = null; }
+        const targetSrc = link.getAttribute('data-preview-src');
+        if (targetSrc && targetSrc !== activeSrc) {
+          if (previewSwitchTimeout) clearTimeout(previewSwitchTimeout);
+          previewSwitchTimeout = setTimeout(() => {
+            setPreviewImage(targetSrc);
+          }, 80);
+        }
+        const href = link.getAttribute('href');
+        if (href) prefetchPage(href);
+      }
+
       indexLinks.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-          if (window.innerWidth <= 768) return;
-          if (previewHideTimeout) { clearTimeout(previewHideTimeout); previewHideTimeout = null; }
-          const targetSrc = link.getAttribute('data-preview-src');
-          if (targetSrc && targetSrc !== activeSrc) {
-            if (previewSwitchTimeout) clearTimeout(previewSwitchTimeout);
-            previewSwitchTimeout = setTimeout(() => {
-              setPreviewImage(targetSrc);
-            }, 80);
-          }
-          // HTML-sivun ennakkolataus hover-hetkellä
-          const href = link.getAttribute('href');
-          if (href) prefetchPage(href);
-        });
+        link.addEventListener('mouseenter', () => previewIndexLink(link));
+        link.addEventListener('focus', () => previewIndexLink(link));
 
         // Mobiili: touchstart – sormi osuu linkkiin
         link.addEventListener('touchstart', () => {
@@ -3970,10 +4077,22 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       });
     }
 
+    const aboutTrigger = document.getElementById('jd-about-trigger');
+    aboutTrigger?.addEventListener('keydown', e => {
+      if (e.key === ' ') e.preventDefault();
+    });
+    aboutTrigger?.addEventListener('keyup', e => {
+      if (e.key === ' ') {
+        window.closeIndexPanel({ restoreFocus: false });
+        window.openAboutPanel();
+      }
+    });
+
     window.openIndexPanel = function() {
       cancelWheelMotion();
       mobileTouch = null;
-      if (typeof closeThumbsView === 'function') closeThumbsView();
+      capturePanelReturnFocus();
+      if (typeof closeThumbsView === 'function') closeThumbsView({ restoreFocus: false });
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
       indexBtnBottom?.setAttribute('aria-expanded', 'true');
@@ -3981,6 +4100,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (cursor) cursor.style.display = 'none';
       document.body.style.cursor = 'auto';
       if (indexPanel) indexPanel.scrollTop = 0;
+      syncOverlayInert();
 
       // Autoselect active category preview and warm desktop covers only when menu opens.
       if (window.innerWidth > 768 && imgA) {
@@ -3989,8 +4109,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         if (activeCover) setPreviewImage(activeCover);
         preloadCoverImages();
       }
+      indexPanel?.focus({ preventScroll: true });
     };
-    window.closeIndexPanel = function() {
+    window.closeIndexPanel = function(options = {}) {
+      if (!indexPanel?.classList.contains('is-open')) return;
       clearTimeout(previewSwitchTimeout);
       clearTimeout(previewHideTimeout);
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
@@ -4004,35 +4126,40 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         if (cursor) cursor.style.display = '';
         document.body.style.cursor = 'none';
       }
+      if (options.restoreFocus === false) syncOverlayInert();
+      else restorePanelFocusIfNoneOpen();
     };
 
     window.openAboutPanel = function() {
       cancelWheelMotion();
       mobileTouch = null;
-      const p = document.getElementById('jd-about-panel'); 
-      if (p) { 
-        p.classList.add('is-open'); 
-        document.body.classList.add('about-is-open'); 
+      capturePanelReturnFocus();
+      if (aboutPanel) {
+        aboutPanel.classList.add('is-open');
+        document.body.classList.add('about-is-open');
         if (cursor) cursor.style.opacity = '0';
         document.body.style.cursor = 'auto';
-        const n = document.getElementById('jd-normal-nav'); 
-        if (n) n.style.display = 'none'; 
-      } 
+        const n = document.getElementById('jd-normal-nav');
+        if (n) n.style.display = 'none';
+        syncOverlayInert();
+        aboutPanel.focus({ preventScroll: true });
+      }
     };
-    window.closeAboutPanel = function() { 
-      const p = document.getElementById('jd-about-panel'); 
-      if (p) { 
-        p.classList.remove('is-open'); 
-        document.body.classList.remove('about-is-open'); 
-        const n = document.getElementById('jd-normal-nav'); 
-        const tp = document.getElementById('jd-thumbs-panel'); 
-        if (n && (!tp || !tp.classList.contains('is-open'))) n.style.display = 'flex'; 
+    window.closeAboutPanel = function(options = {}) {
+      if (!aboutPanel?.classList.contains('is-open')) return;
+      if (aboutPanel) {
+        aboutPanel.classList.remove('is-open');
+        document.body.classList.remove('about-is-open');
+        const n = document.getElementById('jd-normal-nav');
+        if (n && (!thumbsPanel || !thumbsPanel.classList.contains('is-open'))) n.style.display = 'flex';
         if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
           if (cursor && !document.body.classList.contains('index-is-open') && !thumbsOpen) {
             document.body.style.cursor = 'none';
           }
         }
-      } 
+        if (options.restoreFocus === false) syncOverlayInert();
+        else restorePanelFocusIfNoneOpen();
+      }
     };
 
     if (window.location.hash === '#jd-about-panel') window.openAboutPanel();
