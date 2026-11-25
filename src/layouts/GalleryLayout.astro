@@ -2877,7 +2877,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     let counterSignature = '';
     const preparedImages = new WeakMap();
     const photoFocusAnimations = new WeakMap();
-    const desktopPhotoMotion = { blur: 1.04625, brightness: 0.979075, offset: 6.045, rotation: 1.04625, scale: 0.9941875, duration: 360 };
+    const desktopPhotoMotion = { blur: 1.04625, brightness: 0.86, offset: 6.045, rotation: 1.04625, scale: 0.9941875, duration: 360 };
 
     function animatePhotoFocus(slide, direction, entering, motion) {
       if (!slide || slide.classList.contains('jd-text-slide') || reducedMotion.matches) return;
@@ -3580,7 +3580,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         // including at zero, so the browser can interpolate without switching
         // between a filtered layer and `none` at the sharp boundary.
         const transform = `scale(${1 - progress * 0.015})`;
-        const filter = `blur(${progress * 3.4}px)`;
+        const filter = `blur(${progress * 3.4}px) brightness(${1 - progress * 0.14})`;
         slideImages[item.index].forEach(img => {
           if (img.style.getPropertyValue('--jd-mobile-photo-transform') !== transform) {
             img.style.setProperty('--jd-mobile-photo-transform', transform);
