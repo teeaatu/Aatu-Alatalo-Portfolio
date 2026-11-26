@@ -339,6 +339,7 @@ const catLabels = {
               const catUrl = it.getAttribute('data-url')?.split('#')[0] || '';
               if (catUrl) it.setAttribute('data-url', `${catUrl}#img-${idx}`);
             });
+            (window as any).jdLayoutThumbsGrid?.();
 
             // Mark unsaved and show Save button
             hasUnsavedChanges = true;

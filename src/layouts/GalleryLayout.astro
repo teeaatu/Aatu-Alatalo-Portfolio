@@ -93,6 +93,10 @@ for (const item of dataset) {
 const hasMap = galleryData.some(item => item.type === 'text' && item.kartta);
 const catLabel = getCategoryLabel(categorySlug, activeLang, categoryTitle);
 const isEventsCategory = categorySlug === 'tapahtumat';
+const currentCatUrl = getCategoryUrl(categorySlug, activeLang);
+const currentSeriesItems = dataset
+  .filter((item: any) => categorySlug === 'work1' || item.tyyppi !== 'teksti')
+  .map((item: any, idx: number) => ({ item, idx }));
 
 const indexCounts: Record<string, number> = {};
 const catCoverImages: Record<string, string> = {};
@@ -401,7 +405,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transform: scale(0.985) !important; opacity: 0.6 !important;
       transition: transform 0.05s ease, opacity 0.05s ease !important;
     }
-    :where(.jd-bottom-btn, .jd-index-link, .jd-top-nav a, .jd-index-contact, .jd-floating-close-btn, .jd-thumb-global, #jd-counter, .jd-hint-arrow, .jd-filter-btn, #jd-about-panel a, #jd-masters-info-close, #jd-masters-info a):focus-visible {
+    :where(.jd-bottom-btn, .jd-index-link, .jd-top-nav a, .jd-index-contact, .jd-floating-close-btn, .jd-thumb-global, .jd-thumbs-footer-link, #jd-counter, .jd-hint-arrow, .jd-filter-btn, #jd-about-panel a, #jd-masters-info-close, #jd-masters-info a):focus-visible {
       outline: 2px solid #1a1a18 !important;
       outline-offset: 3px;
     }
@@ -728,6 +732,21 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-bottom-btn:hover {
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       opacity: 1 !important;
+    }
+    .jd-index-trigger,
+    .jd-thumbs-trigger {
+      gap: 0.42rem;
+    }
+    .jd-menu-icon,
+    .jd-grid-icon {
+      flex-shrink: 0;
+      opacity: 0.78;
+      transform: translateY(-0.5px);
+      transition: opacity 0.2s ease;
+    }
+    .jd-index-trigger:hover .jd-menu-icon,
+    .jd-thumbs-trigger:hover .jd-grid-icon {
+      opacity: 1;
     }
     #jd-counter { display: none; }
 
@@ -1244,7 +1263,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       z-index: 300; overflow-y: auto; overscroll-behavior: contain;
-      padding: 4rem 1.5rem 2rem; pointer-events: none;
+      padding: 4.25rem 2.5rem 3.5rem; pointer-events: none;
+      box-sizing: border-box;
       opacity: 0; visibility: hidden;
       transition: opacity 0.3s cubic-bezier(0.4, 0, 1, 1), visibility 0s linear 0.3s;
     }
@@ -1252,24 +1272,50 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 1; visibility: visible; pointer-events: auto;
       transition: opacity 0.46s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0s;
     }
-    .jd-thumbs-inner { max-width: 1600px; margin: 0 auto; }
-    .jd-thumbs-section { margin-bottom: 5rem; scroll-margin-top: 6rem; }
+    .jd-thumbs-inner { max-width: 1440px; margin: 0 auto; }
+    .jd-thumbs-section { margin-bottom: 0; scroll-margin-top: 6rem; }
     .jd-thumbs-section-title {
-      font-family: var(--jd-font); font-size: 1.2rem; letter-spacing: 0.02em;
-      text-transform: none; color: rgba(26,26,24,0.7);
-      margin-bottom: 2rem; text-align: center;
+      display: flex; align-items: baseline; justify-content: center; gap: 0.7rem;
+      font-family: var(--jd-font); font-size: 1.05rem; font-weight: 500; letter-spacing: 0.03em;
+      text-transform: none; color: #1a1a18;
+      margin-bottom: 2.25rem; text-align: center;
     }
-    .jd-thumbs-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; }
-    .jd-thumb-global { cursor: pointer; position: relative; width: calc(25% - 2rem); }
-    .jd-thumb-global img { width: 100%; height: auto; display: block; transition: opacity 0.15s ease-out; }
-    .jd-thumb-global:hover img { opacity: 0.7; }
-    .jd-thumb-global.is-active img { outline: 2px solid #1a1a18; outline-offset: 6px; }
+    .jd-thumbs-grid {
+      display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: flex-start;
+      gap: 18px; width: 100%;
+    }
+    .jd-thumb-global {
+      cursor: pointer; position: relative;
+      flex: 0 0 auto; box-sizing: border-box;
+      width: calc(var(--ar, 1.5) * 240px);
+      height: 240px;
+      max-width: 100%;
+    }
+    .jd-thumb-global img {
+      width: 100%; height: 100%; object-fit: contain; display: block;
+      transition: opacity 0.15s ease-out;
+    }
+    .jd-thumb-global:hover img { opacity: 0.72; }
+    .jd-thumb-global.is-active img { outline: 2px solid #1a1a18; outline-offset: 4px; }
+    .jd-thumbs-footer {
+      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+      margin-top: 3rem; padding-top: 1.25rem;
+      border-top: 1px solid rgba(26, 26, 24, 0.08);
+    }
+    .jd-thumbs-footer-link {
+      background: none; border: none; padding: 8px 0; min-height: 44px;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-family: var(--jd-font); font-size: 0.92rem; letter-spacing: 0.03em;
+      color: rgba(26, 26, 24, 0.72); cursor: pointer; text-decoration: none;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+    .jd-thumbs-footer-link:hover { color: #1a1a18; }
     @keyframes slideUpFade {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes jd-thumb-reveal {
-      from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.988); }
+      from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.985); }
       to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
     }
     @media (prefers-reduced-motion: no-preference) {
@@ -1296,7 +1342,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         transition-duration: 0.06s;
       }
       .jd-thumb-global.thumb-animate {
-        animation: jd-thumb-reveal 0.54s cubic-bezier(0.16, 1, 0.3, 1) var(--thumb-delay, 0ms) both;
+        animation: jd-thumb-reveal 1.35s cubic-bezier(0.16, 1, 0.3, 1) var(--thumb-delay, 0ms) both;
       }
     }
     #jd-thumbs-nav { 
@@ -1848,8 +1894,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         line-height: 1.6 !important;
       }
 
-      .jd-thumb-global { width: calc(50% - 1rem); }
-      .jd-thumbs-grid { gap: 1rem; }
+      .jd-thumbs-section-title { display: none; }
+      .jd-thumbs-grid { gap: 10px; }
       .jd-text-content {
         width: 100%;
         min-height: auto;
@@ -1931,11 +1977,26 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         justify-content: space-between;
       }
       .jd-thumbs-header-title {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.55rem;
         font-family: var(--jd-font);
         font-size: 1.02rem;
         letter-spacing: 0.03em;
         color: #1a1a18;
         font-weight: 500;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .jd-thumbs-header-count {
+        font-size: 0.88rem;
+        font-family: var(--jd-font-serif);
+        font-style: italic;
+        color: #1a1a18;
+        opacity: 0.62;
+        font-weight: 400;
       }
       body.thumbs-is-open .jd-filter-dropdown-container {
         display: none !important;
@@ -1943,9 +2004,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         pointer-events: none !important;
       }
       #jd-thumbs-panel {
-        padding-top: calc(64px + env(safe-area-inset-top, 0px) + 1.5rem) !important;
-        padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)) !important;
+        padding-top: calc(64px + env(safe-area-inset-top, 0px) + 1rem) !important;
+        padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)) !important;
+        padding-left: calc(16px + env(safe-area-inset-left, 0px)) !important;
+        padding-right: calc(16px + env(safe-area-inset-right, 0px)) !important;
         scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px));
+      }
+      .jd-thumbs-footer {
+        margin-top: 2rem;
+        padding-top: 1rem;
       }
     }
 
@@ -2177,8 +2244,23 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   <!-- Bottom nav -->
   <div id="jd-bottom-nav">
     <div id="jd-normal-nav">
-      <button type="button" class="jd-bottom-btn" id="jd-index-btn-bottom" aria-controls="jd-index-panel" aria-expanded="false">{lang === 'en' ? 'Index' : 'Valikko'}</button>
-      <button type="button" class="jd-bottom-btn" id="jd-thumbs-btn" aria-controls="jd-thumbs-panel" aria-expanded="false">{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</button>
+      <button type="button" class="jd-bottom-btn jd-index-trigger" id="jd-index-btn-bottom" aria-controls="jd-index-panel" aria-expanded="false">
+        <svg class="jd-menu-icon" aria-hidden="true" width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round">
+          <line x1="1.25" y1="2.75" x2="12.75" y2="2.75"></line>
+          <line x1="1.25" y1="7" x2="12.75" y2="7"></line>
+          <line x1="1.25" y1="11.25" x2="12.75" y2="11.25"></line>
+        </svg>
+        <span>{lang === 'en' ? 'Index' : 'Valikko'}</span>
+      </button>
+      <button type="button" class="jd-bottom-btn jd-thumbs-trigger" id="jd-thumbs-btn" aria-controls="jd-thumbs-panel" aria-expanded="false">
+        <svg class="jd-grid-icon" aria-hidden="true" width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.35">
+          <rect x="1" y="1" width="4.5" height="4.5" rx="0.5"></rect>
+          <rect x="8.5" y="1" width="4.5" height="4.5" rx="0.5"></rect>
+          <rect x="1" y="8.5" width="4.5" height="4.5" rx="0.5"></rect>
+          <rect x="8.5" y="8.5" width="4.5" height="4.5" rx="0.5"></rect>
+        </svg>
+        <span>{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</span>
+      </button>
     </div>
     <div id="jd-thumbs-nav">
       <button type="button" class="jd-bottom-btn" id="jd-thumbs-close">{lang === 'en' ? 'Close' : 'Sulje'}</button>
@@ -2399,55 +2481,68 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
   <!-- Mobile thumbs top bar -->
   <div id="jd-thumbs-header" class="jd-thumbs-header" aria-hidden="true">
     <div class="jd-thumbs-header-inner">
-      <span class="jd-thumbs-header-title">{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</span>
+      <span class="jd-thumbs-header-title">
+        <span>{catLabel}</span>
+        <span class="jd-thumbs-header-count">{currentSeriesItems.length}</span>
+      </span>
     </div>
   </div>
 
-  <!-- Global thumbs panel (all categories) -->
-  <div id="jd-thumbs-panel" role="dialog" aria-modal="true" aria-label={lang === 'en' ? 'Thumbs' : 'Kuvasto'} tabindex="-1" inert>
+  <!-- Current series overview (justified contact sheet) -->
+  <div id="jd-thumbs-panel" role="dialog" aria-modal="true" aria-label={catLabel || (lang === 'en' ? 'Thumbs' : 'Kuvasto')} tabindex="-1" inert>
     <div class="jd-thumbs-inner">
-      {CATEGORIES.map(cat => {
-        const { key, data } = cat;
-        const catUrl = getCategoryUrl(key, activeLang);
-        const sectionLabel = cat.label(activeLang);
-        return data && data.length > 0 ? (
-          <div class="jd-thumbs-section" id={`jd-thumbs-section-${key}`}>
-            <div class="jd-thumbs-section-title">{sectionLabel}</div>
-            <div class="jd-thumbs-grid">
-              {data.filter((item: any) => key === 'work1' || item.tyyppi !== 'teksti').map((item: any, idx: number) => {
-                const itemKey = item.kuva || (item.layout === 'diptych' && item.images ? item.images.map((i: any) => i.kuva).join('|') : (item.otsikko ? `text_${item.otsikko}` : `item_${idx}`));
-                if (item.tyyppi === 'teksti') {
-                  const tStr = parseLocalizedField(item.otsikko || '', activeLang);
-                  return (
-                    <div class="jd-thumb-global jd-thumb-text" role="button" tabindex="0" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
-                      <div class="jd-thumb-text-inner">
-                        <h3>{tStr}</h3>
-                      </div>
-                    </div>
-                  );
-                }
-                const mediaItem = item.layout === 'diptych' && item.images ? item.images[0] : item;
-                if (!mediaItem?.kuva) return null;
-                const paths = resolveImagePaths(mediaItem.kuva);
-                return (
-                  <div class="jd-thumb-global" role="button" tabindex="0" data-cat={key} data-cat-label={sectionLabel} data-key={itemKey} data-idx={idx} data-url={`${catUrl}#img-${idx}`}>
-                    <img
-                      src={paths.srcMob}
-                      srcset={`${paths.srcMob} 600w, ${paths.src} 1600w`}
-                      sizes="(max-width: 800px) 50vw, 25vw"
-                      width={mediaItem.width || undefined}
-                      height={mediaItem.height || undefined}
-                      loading="lazy"
-                      decoding="async"
-                      alt={mediaItem.alt_text || ''}
-                    >
+      <div class="jd-thumbs-section" id={`jd-thumbs-section-${categorySlug}`}>
+        <div class="jd-thumbs-section-title">
+          <span>{catLabel}</span>
+          <span class="jd-count">{currentSeriesItems.length}</span>
+        </div>
+        <div class="jd-thumbs-grid" id="jd-thumbs-grid-current">
+          {currentSeriesItems.map(({ item, idx }) => {
+            const itemKey = item.kuva || (item.layout === 'diptych' && item.images ? item.images.map((i: any) => i.kuva).join('|') : (item.otsikko ? `text_${item.otsikko}` : `item_${idx}`));
+            if (item.tyyppi === 'teksti') {
+              const tStr = parseLocalizedField(item.otsikko || '', activeLang);
+              return (
+                <div class="jd-thumb-global jd-thumb-text" role="button" tabindex="0" data-cat={categorySlug} data-cat-label={catLabel} data-key={itemKey} data-idx={idx} data-ar="0.6667" style="--ar:0.6667" data-url={`${currentCatUrl}#img-${idx}`}>
+                  <div class="jd-thumb-text-inner">
+                    <h3>{tStr}</h3>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        ) : null;
-      })}
+                </div>
+              );
+            }
+            const mediaItem = item.layout === 'diptych' && item.images ? item.images[0] : item;
+            if (!mediaItem?.kuva) return null;
+            const paths = resolveImagePaths(mediaItem.kuva);
+            const ar = (mediaItem.width && mediaItem.height) ? (mediaItem.width / mediaItem.height) : 1.5;
+            const arStr = ar.toFixed(4);
+            return (
+              <div class="jd-thumb-global" role="button" tabindex="0" data-cat={categorySlug} data-cat-label={catLabel} data-key={itemKey} data-idx={idx} data-ar={arStr} style={`--ar:${arStr}`} data-url={`${currentCatUrl}#img-${idx}`}>
+                <img
+                  src={paths.srcMob}
+                  srcset={`${paths.srcMob} 600w, ${paths.src} 1600w`}
+                  sizes="(max-width: 800px) 50vw, 25vw"
+                  width={mediaItem.width || undefined}
+                  height={mediaItem.height || undefined}
+                  loading="lazy"
+                  decoding="async"
+                  alt={mediaItem.alt_text || ''}
+                >
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div class="jd-thumbs-footer">
+        <button type="button" class="jd-thumbs-footer-link" id="jd-thumbs-open-index">
+          {lang === 'en' ? 'All series' : 'Kaikki sarjat'}
+        </button>
+        {computedNextUrl && computedNextLabel && (
+          <a href={computedNextUrl} class="jd-thumbs-footer-link jd-thumbs-next-link" data-cat-label={computedNextLabel}>
+            <span>{lang === 'en' ? `Next: ${computedNextLabel}` : `Seuraava: ${computedNextLabel}`}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
+      </div>
     </div>
   </div>
 
@@ -2474,6 +2569,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     let splashExitTimer = 0;
     let splashRemovalTimer = 0;
     let thumbAnimCleanupTimer = 0;
+    let thumbsLayoutFrame = 0;
+    let lastThumbsGridW = 0;
     let animatedThumbs = [];
     let previewSwitchTimeout = null;
     let previewHideTimeout = null;
@@ -2501,6 +2598,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       clearTimeout(splashExitTimer);
       clearTimeout(splashRemovalTimer);
       clearTimeout(thumbAnimCleanupTimer);
+      cancelAnimationFrame(thumbsLayoutFrame);
       clearTimeout(previewSwitchTimeout);
       clearTimeout(previewHideTimeout);
     }, { once: true });
@@ -3956,6 +4054,100 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     syncOverlayInert();
 
     /* Thumbs view */
+    function layoutThumbsGrid(force = false) {
+      const grid = document.getElementById('jd-thumbs-grid-current');
+      if (!grid) return;
+      const items = Array.from(grid.querySelectorAll('.jd-thumb-global'));
+      if (!items.length) return;
+      const containerW = grid.clientWidth;
+      if (containerW <= 0) return;
+      if (!force && Math.abs(containerW - lastThumbsGridW) < 0.5) return;
+      lastThumbsGridW = containerW;
+
+      const isCompact = window.innerWidth <= 800;
+      const gap = containerW >= 1100 ? 18 : containerW >= 760 ? 15 : isCompact ? 10 : 12;
+      const targetH = containerW >= 1180 ? 270 : containerW >= 820 ? 225 : containerW >= 520 ? 185 : 155;
+      const safeW = Math.max(120, containerW - 0.5);
+
+      grid.style.gap = `${gap}px`;
+
+      const ratios = items.map(el => {
+        const parsed = parseFloat(el.getAttribute('data-ar') || '');
+        return Number.isFinite(parsed) && parsed > 0.2 ? parsed : 1.5;
+      });
+
+      const rows = [];
+      let row = [];
+      let arSum = 0;
+
+      for (let i = 0; i < items.length; i++) {
+        const ar = ratios[i];
+        const nextCount = row.length + 1;
+        const nextArSum = arSum + ar;
+        const nextNaturalW = nextArSum * targetH + (nextCount - 1) * gap;
+
+        if (row.length > 0 && nextNaturalW >= safeW) {
+          const heightWith = (safeW - (nextCount - 1) * gap) / nextArSum;
+          const heightWithout = (safeW - (row.length - 1) * gap) / arSum;
+          const canBreakBefore = heightWithout <= targetH * 1.42;
+          const preferBreakBefore = canBreakBefore
+            && Math.abs(heightWithout - targetH) <= Math.abs(heightWith - targetH);
+
+          if (preferBreakBefore) {
+            rows.push({ indices: row, arSum, justified: true });
+            row = [i];
+            arSum = ar;
+          } else {
+            row.push(i);
+            rows.push({ indices: row, arSum: nextArSum, justified: true });
+            row = [];
+            arSum = 0;
+          }
+        } else {
+          row.push(i);
+          arSum = nextArSum;
+        }
+      }
+
+      if (row.length > 0) {
+        const fillRatio = (arSum * targetH + (row.length - 1) * gap) / safeW;
+        rows.push({ indices: row, arSum, justified: fillRatio >= 0.78 });
+      }
+
+      grid.style.justifyContent = (rows.length === 1 && !rows[0].justified) ? 'center' : 'flex-start';
+
+      for (const r of rows) {
+        const totalGap = (r.indices.length - 1) * gap;
+        const availW = Math.max(60, safeW - totalGap);
+        const rawH = availW / r.arSum;
+        const rowH = r.justified
+          ? Math.min(rawH, targetH * 1.45)
+          : Math.min(targetH, rawH);
+
+        for (const idx of r.indices) {
+          const el = items[idx];
+          const w = rowH * ratios[idx];
+          el.style.width = `${w.toFixed(2)}px`;
+          el.style.height = `${rowH.toFixed(2)}px`;
+        }
+      }
+    }
+    window.jdLayoutThumbsGrid = () => layoutThumbsGrid(true);
+    const scheduleThumbsLayout = () => {
+      if (thumbsLayoutFrame) return;
+      thumbsLayoutFrame = requestAnimationFrame(() => {
+        thumbsLayoutFrame = 0;
+        layoutThumbsGrid(false);
+      });
+    };
+    if (thumbsPanel && typeof ResizeObserver === 'function') {
+      const thumbsResizeObserver = new ResizeObserver(scheduleThumbsLayout);
+      thumbsResizeObserver.observe(thumbsPanel);
+      observers.push(thumbsResizeObserver);
+    }
+    listen(window, 'resize', scheduleThumbsLayout);
+    layoutThumbsGrid(true);
+
     function clearThumbAnimations() {
       clearTimeout(thumbAnimCleanupTimer);
       thumbAnimCleanupTimer = 0;
@@ -3978,17 +4170,23 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         const rect = thumb.getBoundingClientRect();
         if (rect.bottom > 0 && rect.top < viewportH + 40) {
           visible.push(thumb);
-          if (visible.length >= 12) break;
+          if (visible.length >= 16) break;
         }
       }
       if (!visible.length) return;
-      const stepMs = 30;
-      visible.forEach((thumb, i) => {
-        thumb.style.setProperty('--thumb-delay', `${i * stepMs}ms`);
+      const order = visible.slice();
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      const baseDelayMs = 140;
+      const stepMs = 125;
+      order.forEach((thumb, i) => {
+        thumb.style.setProperty('--thumb-delay', `${baseDelayMs + i * stepMs}ms`);
         thumb.classList.add('thumb-animate');
       });
-      animatedThumbs = visible;
-      thumbAnimCleanupTimer = setTimeout(clearThumbAnimations, (visible.length - 1) * stepMs + 620);
+      animatedThumbs = order;
+      thumbAnimCleanupTimer = setTimeout(clearThumbAnimations, baseDelayMs + (order.length - 1) * stepMs + 1420);
     }
 
     function openThumbsView() {
@@ -4013,12 +4211,17 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       
       if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel({ restoreFocus: false });
       syncOverlayInert();
+      layoutThumbsGrid(true);
+      thumbsPanel.scrollTop = 0;
       const currentCatSection = document.getElementById(`jd-thumbs-section-${categorySlug}`);
       if (currentCatSection) {
         const selected = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
         const currentThumb = currentCatSection.querySelectorAll('.jd-thumb-global')[selected];
-        if (currentThumb) { document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active')); currentThumb.classList.add('is-active'); }
-        currentCatSection.scrollIntoView({ block: 'start', behavior: 'auto' });
+        if (currentThumb) {
+          document.querySelectorAll('.jd-thumb-global.is-active').forEach(el => el.classList.remove('is-active'));
+          currentThumb.classList.add('is-active');
+          if (selected > 0) currentThumb.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+        }
       }
       animateVisibleThumbs();
       if (hintArrowsEl) hintArrowsEl.style.opacity = '0';
@@ -4051,6 +4254,17 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     thumbsBtn?.addEventListener('click', openThumbsView);
     document.getElementById('jd-thumbs-close')?.addEventListener('click', () => closeThumbsView());
     thumbsCloseBtn?.addEventListener('click', () => closeThumbsView());
+    document.getElementById('jd-thumbs-open-index')?.addEventListener('click', () => {
+      closeThumbsView({ restoreFocus: false });
+      if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+    });
+    document.querySelector('.jd-thumbs-next-link')?.addEventListener('click', e => {
+      e.preventDefault();
+      const link = e.currentTarget;
+      const href = link.getAttribute('href');
+      const label = link.getAttribute('data-cat-label') || '';
+      if (href) goToCategory(href, label);
+    });
 
     /* Index button */
     indexBtnBottom?.addEventListener('click', e => {
