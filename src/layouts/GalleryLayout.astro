@@ -416,7 +416,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transform: scale(0.985) !important; opacity: 0.6 !important;
       transition: transform 0.05s ease, opacity 0.05s ease !important;
     }
-    :where(.jd-bottom-btn, .jd-index-link, .jd-top-nav a, .jd-index-contact, .jd-floating-close-btn, .jd-thumb-global, .jd-thumbs-footer-link, #jd-counter, .jd-hint-arrow, .jd-filter-btn, #jd-about-panel a, #jd-masters-info-close, #jd-masters-info a):focus-visible {
+    :where(.jd-bottom-btn, .jd-brand-link, .jd-series-indicator, .jd-index-grid-link, .jd-index-link, .jd-top-nav a, .jd-index-contact, .jd-floating-close-btn, .jd-menu-close-btn, .jd-thumb-global, .jd-thumbs-footer-link, #jd-counter, .jd-hint-arrow, .jd-filter-btn, #jd-about-panel a, #jd-masters-info-close, #jd-masters-info a):focus-visible {
       outline: 2px solid #1a1a18 !important;
       outline-offset: 3px;
     }
@@ -559,7 +559,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-masters-info .jd-masters-eyebrow { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #666; }
     #jd-masters-info a { color: inherit; font-size: .85rem; text-underline-offset: 4px; }
     .jd-external-link-arrow { width: .8em; height: .8em; margin-inline-start: .28em; vertical-align: -.08em; }
-    #jd-masters-info-close { position: absolute; right: 8px; top: 8px; width: 44px; height: 44px; border: 0; background: transparent; color: inherit; font-size: 26px; cursor: pointer; }
+    #jd-masters-info-close { position: absolute; right: 8px; top: 8px; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; background: transparent; color: #1a1a18; opacity: 1; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    @media (hover: hover) { #jd-masters-info-close:hover { opacity: 0.62; } }
+    #jd-masters-info-close:active { transform: scale(0.92); opacity: 0.65; }
     @media (max-width: 800px) {
       .jd-masters-image-frame { max-width: calc(100vw - 20px); max-height: calc(100svh - 154px); }
       .jd-masters-image-frame img { max-width: calc(100vw - 20px) !important; max-height: calc(100svh - 154px) !important; }
@@ -577,7 +579,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       font-family: var(--jd-font);
       font-size: 0.95rem;
       letter-spacing: 0.04em;
-      color: rgba(26, 26, 24, 0.76);
+      color: #1a1a18;
+      -webkit-text-fill-color: #1a1a18;
       pointer-events: none;
       user-select: none;
       white-space: nowrap;
@@ -614,7 +617,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       font-size: clamp(2.2rem, 5vw, 3.4rem);
       font-weight: 300;
       line-height: 1.15;
-      color: #111111;
+      color: #1a1a18;
       letter-spacing: -0.01em;
       margin: 0;
       opacity: 0;
@@ -625,7 +628,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       font-family: var(--jd-font);
       font-size: 1.15rem;
       line-height: 1.6;
-      color: rgba(26, 26, 24, 0.8);
+      color: #1a1a18;
       margin: 0;
       opacity: 0;
       transform: translateY(28px);
@@ -699,28 +702,229 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-thumb-text-inner h3 { font-family: var(--jd-font-serif); font-size: 1.1rem; margin-bottom: 1rem; font-weight: normal; color: #1a1a18; line-height: 1.2; z-index: 2; }
     .jd-thumb-text-inner p { font-family: var(--jd-font); font-size: 0.85rem; color: #555; z-index: 2; }
 
-    /* ─── NAV BUTTONS (Desktop: Top / Mobile: Top) ──── */
+    /* ─── TOP SITE HEADER (3-zone Desktop / 2-zone Mobile) ─ */
     #jd-bottom-nav {
-      position: fixed; top: 15px; bottom: auto; left: 50%; right: auto; transform: translateX(-50%); height: auto; padding: 0;
+      position: fixed; top: 15px; bottom: auto; left: 0; right: 0; width: 100%; height: auto;
+      padding: 0 32px; box-sizing: border-box;
       display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: center !important;
-      z-index: 100000; pointer-events: auto; cursor: auto;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100000; pointer-events: none; cursor: auto;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease;
       white-space: nowrap;
     }
     #jd-normal-nav {
-      display: flex !important;
+      width: 100%;
+      display: grid !important;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center !important;
-      justify-content: center !important;
-      gap: 1.45rem !important;
-      pointer-events: auto !important;
+      gap: 1.5rem !important;
+      pointer-events: none !important;
     }
-    .jd-nav-sep {
-      width: 1px;
-      height: 11px;
-      background: rgba(26, 26, 24, 0.16);
+    .jd-header-left {
+      justify-self: start;
+      display: flex;
+      align-items: center;
+      pointer-events: auto;
+    }
+    .jd-brand-link {
+      font-size: 1.08rem !important;
+      font-weight: 500;
+      letter-spacing: 0.07em !important;
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+      text-decoration: none;
+    }
+    .jd-header-center {
+      justify-self: center;
+      display: flex;
+      align-items: center;
+      pointer-events: auto;
+    }
+    .jd-series-indicator {
+      gap: 0.48rem;
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+    }
+    .jd-series-sep {
+      opacity: 0.45;
+      font-weight: 400;
+    }
+    .jd-series-count {
+      font-variant-numeric: tabular-nums;
+    }
+    .jd-header-right {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      pointer-events: auto;
+    }
+    .jd-index-trigger {
+      width: 44px;
+      height: 44px;
+      padding: 0 !important;
+      margin-right: -10px;
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+    }
+    .jd-menu-icon {
+      display: block;
+      opacity: 1;
+      transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .jd-menu-line {
+      transform-box: fill-box;
+      transform-origin: right center;
+      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      @media (hover: hover) {
+        .jd-index-trigger:hover .jd-menu-icon,
+        .jd-menu-close-btn:hover .jd-menu-icon {
+          opacity: 1;
+        }
+        .jd-index-trigger:hover .jd-menu-line-1,
+        .jd-menu-close-btn:hover .jd-menu-line-1 {
+          transform: scaleX(0.78);
+        }
+        .jd-index-trigger:hover .jd-menu-line-2,
+        .jd-menu-close-btn:hover .jd-menu-line-2 {
+          transform: scaleX(1.32);
+        }
+        .jd-index-trigger:hover .jd-menu-line-3,
+        .jd-menu-close-btn:hover .jd-menu-line-3 {
+          transform: translateX(-2px) scaleX(0.86);
+        }
+      }
+      .jd-index-trigger:active .jd-menu-icon,
+      .jd-menu-close-btn:active .jd-menu-icon {
+        transform: scale(0.9);
+      }
+      .jd-menu-close-btn .jd-menu-line-1 { transform: scaleX(0.72); }
+      .jd-menu-close-btn .jd-menu-line-2 { transform: scaleX(1.25); transition-delay: 0.04s; }
+      .jd-menu-close-btn .jd-menu-line-3 { transform: scaleX(0.8); transition-delay: 0.08s; }
+      body.index-is-open .jd-menu-close-btn .jd-menu-line,
+      #jd-index-panel.is-open + .jd-menu-close-btn .jd-menu-line {
+        transform: none;
+      }
+    }
+    .jd-series-grid-icon {
       flex-shrink: 0;
-      transform: translateY(0.5px);
-      pointer-events: none;
+      margin-left: 0.22rem;
+      opacity: 0.62;
+      overflow: visible;
+      position: relative;
+      top: 0.5px;
+      transition: opacity 0.2s ease;
+    }
+    .jd-grid-cell {
+      transform-box: fill-box;
+      transform-origin: center;
+      will-change: transform;
+    }
+    .jd-series-grid-icon .jd-grid-cell {
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .jd-series-grid-icon .jd-grid-cell-2 { transition-delay: 0.03s; }
+    .jd-series-grid-icon .jd-grid-cell-3 { transition-delay: 0.06s; }
+    .jd-series-grid-icon .jd-grid-cell-4 { transition-delay: 0.09s; }
+    @keyframes jdCounterToneWave {
+      0%, 16% { background-position: 100% 0; }
+      52%, 100% { background-position: 0% 0; }
+    }
+    @keyframes jdCounterDotWave {
+      0%, 26%, 60%, 100% { opacity: 0.45; }
+      42% { opacity: 0.22; }
+    }
+    @keyframes jdGridOpenOpacity {
+      0%, 38%, 88%, 100% { opacity: 0.62; }
+      54%, 72% { opacity: 0.98; }
+    }
+    @keyframes jdGridOpenTL {
+      0%, 38%, 84%, 100% { transform: translate(0, 0) scale(1); }
+      46% { transform: translate(0.45px, 0.45px) scale(0.92); }
+      60%, 66% { transform: translate(-1.3px, -1.3px) scale(1.06); }
+    }
+    @keyframes jdGridOpenTR {
+      0%, 38%, 84%, 100% { transform: translate(0, 0) scale(1); }
+      46% { transform: translate(-0.45px, 0.45px) scale(0.92); }
+      60%, 66% { transform: translate(1.3px, -1.3px) scale(1.06); }
+    }
+    @keyframes jdGridOpenBL {
+      0%, 38%, 84%, 100% { transform: translate(0, 0) scale(1); }
+      46% { transform: translate(0.45px, -0.45px) scale(0.92); }
+      60%, 66% { transform: translate(-1.3px, 1.3px) scale(1.06); }
+    }
+    @keyframes jdGridOpenBR {
+      0%, 38%, 84%, 100% { transform: translate(0, 0) scale(1); }
+      46% { transform: translate(-0.45px, -0.45px) scale(0.92); }
+      60%, 66% { transform: translate(1.3px, 1.3px) scale(1.06); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      #jd-series-name,
+      .jd-series-count,
+      #jd-counter-cat,
+      .jd-counter-nums {
+        background-image: linear-gradient(105deg, #1a1a18 0%, #1a1a18 34%, #9a9a92 50%, #1a1a18 66%, #1a1a18 100%);
+        background-size: 300% 100%;
+        background-position: 100% 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent !important;
+      }
+      #jd-series-name,
+      #jd-counter-cat {
+        animation: jdCounterToneWave 3.4s cubic-bezier(0.37, 0, 0.63, 1) 0s infinite;
+      }
+      .jd-series-count,
+      .jd-counter-nums {
+        animation: jdCounterToneWave 3.4s cubic-bezier(0.37, 0, 0.63, 1) 0.16s infinite;
+      }
+      .jd-series-sep,
+      .jd-counter-dot {
+        animation: jdCounterDotWave 3.4s cubic-bezier(0.37, 0, 0.63, 1) 0s infinite;
+      }
+      .jd-series-grid-icon,
+      .jd-counter-grid {
+        animation: jdGridOpenOpacity 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      }
+      .jd-series-grid-icon .jd-grid-cell-1,
+      .jd-counter-grid .jd-grid-cell-1 {
+        animation: jdGridOpenTL 3.4s cubic-bezier(0.22, 1, 0.36, 1) 0s infinite;
+      }
+      .jd-series-grid-icon .jd-grid-cell-2,
+      .jd-counter-grid .jd-grid-cell-2 {
+        animation: jdGridOpenTR 3.4s cubic-bezier(0.22, 1, 0.36, 1) 0.05s infinite;
+      }
+      .jd-series-grid-icon .jd-grid-cell-3,
+      .jd-counter-grid .jd-grid-cell-3 {
+        animation: jdGridOpenBL 3.4s cubic-bezier(0.22, 1, 0.36, 1) 0.1s infinite;
+      }
+      .jd-series-grid-icon .jd-grid-cell-4,
+      .jd-counter-grid .jd-grid-cell-4 {
+        animation: jdGridOpenBR 3.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s infinite;
+      }
+    }
+    @media (hover: hover) {
+      .jd-series-indicator:hover .jd-series-grid-icon {
+        animation: none;
+        opacity: 0.98;
+      }
+    }
+    @media (prefers-reduced-motion: no-preference) and (hover: hover) {
+      .jd-series-indicator:hover #jd-series-name,
+      .jd-series-indicator:hover .jd-series-count {
+        animation: none;
+        background-image: none;
+        -webkit-text-fill-color: #1a1a18 !important;
+      }
+      .jd-series-indicator:hover .jd-series-sep {
+        animation: none;
+        opacity: 0.45;
+      }
+      .jd-series-indicator:hover .jd-series-grid-icon .jd-grid-cell { animation: none; }
+      .jd-series-indicator:hover .jd-series-grid-icon .jd-grid-cell-1 { transform: translate(-1.25px, -1.25px) scale(1.06); }
+      .jd-series-indicator:hover .jd-series-grid-icon .jd-grid-cell-2 { transform: translate(1.25px, -1.25px) scale(1.06); }
+      .jd-series-indicator:hover .jd-series-grid-icon .jd-grid-cell-3 { transform: translate(-1.25px, 1.25px) scale(1.06); }
+      .jd-series-indicator:hover .jd-series-grid-icon .jd-grid-cell-4 { transform: translate(1.25px, 1.25px) scale(1.06); }
     }
     body.index-is-open #jd-bottom-nav,
     body.index-is-open #jd-counter,
@@ -729,18 +933,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    @media (min-width: 801px) {
-      body.index-is-open #jd-bottom-nav {
-        left: calc((100vw - var(--jd-panel-w)) / 2) !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-        transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease;
-      }
-    }
     .jd-bottom-btn {
       background: none; border: none;
-      color: rgba(26, 26, 24, 0.72) !important; -webkit-text-fill-color: rgba(26, 26, 24, 0.72) !important;
+      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       font-family: var(--jd-font);
       font-size: 0.95rem; font-weight: 500; letter-spacing: 0.04em; text-transform: none !important;
       cursor: pointer !important; pointer-events: auto;
@@ -753,55 +948,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
       opacity: 1 !important;
     }
-    .jd-index-trigger,
-    .jd-thumbs-trigger {
+    .jd-index-trigger {
       gap: 0.4rem;
     }
-    .jd-menu-icon,
-    .jd-grid-icon {
-      flex-shrink: 0;
-      opacity: 0.76;
-      transform: translateY(0.5px);
-      transition: opacity 0.2s ease;
-    }
-    .jd-index-trigger:hover .jd-menu-icon,
-    .jd-thumbs-trigger:hover .jd-grid-icon {
+    .jd-index-trigger:hover .jd-menu-icon {
       opacity: 1;
     }
     #jd-counter { display: none; }
 
-    #jd-wheel-counter { display: none; }
-    @media (min-width: 801px) {
-      #jd-wheel-counter {
-        position: fixed;
-        top: 24px;
-        right: 60px;
-        height: 44px;
-        display: inline-flex;
-        align-items: center;
-        font-family: var(--jd-font);
-        font-size: 0.95rem;
-        font-variant-numeric: tabular-nums;
-        letter-spacing: 0.04em;
-        color: rgba(26, 26, 24, 0.72);
-        white-space: nowrap;
-        pointer-events: none;
-        user-select: none;
-        z-index: 100000;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-4px);
-        transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
-      }
-      body.is-wheel-browsing:not(.index-is-open):not(.thumbs-is-open):not(.about-is-open):not(.is-leaving) #jd-wheel-counter {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      #jd-wheel-counter { transition: none; transform: none; }
-    }
+    #jd-wheel-counter { display: none !important; }
 
     /* ─── SHUTTER / CURTAIN ─────────────────────────── */
     #jd-shutter-container,
@@ -841,6 +996,16 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       color: #fff; z-index: 99999999;
       font-family: var(--jd-font); font-size: 2rem; letter-spacing: 0.02em;
       opacity: 1; filter: blur(0); pointer-events: none; white-space: nowrap;
+    }
+    /* Only show the black category curtain during real in-site category transitions;
+       direct visits / reloads within the 5-minute splash cooldown open straight into the gallery. */
+    html:not(.jd-category-arrival) body:not(.is-entering-ready):not(.prepare-leave):not(.is-leaving) .jd-curtain-primary {
+      transition: none;
+      transform: translateY(calc(100% + var(--jd-curtain-edge)));
+    }
+    html:not(.jd-category-arrival) body:not(.is-entering-ready):not(.prepare-leave):not(.is-leaving) .jd-shutter-title {
+      opacity: 0;
+      transition: none;
     }
     body.is-entering-ready .jd-curtain-primary {
       transition: transform 760ms cubic-bezier(0.42, 0, 0.42, 1) 100ms;
@@ -1034,21 +1199,21 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     }
 
     /* Index panel inner styles */
-    /* ─── FLOATING CLOSE BUTTON (THUMB ZONE - VALIKKO & KUVASTO) ─── */
+    /* ─── TOP-RIGHT CLOSE BUTTONS (ABOUT & KUVASTO) ─────────── */
     .jd-floating-close-btn {
       position: fixed !important;
-      bottom: calc(22px + env(safe-area-inset-bottom, 0px)) !important;
-      right: 20px !important;
-      top: auto !important;
+      top: 15px !important;
+      right: 22px !important;
+      bottom: auto !important;
       left: auto !important;
-      width: 48px !important;
-      height: 48px !important;
-      border-radius: 50% !important;
-      background: rgba(255, 255, 255, 0.94) !important;
-      backdrop-filter: blur(16px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-      border: 1px solid rgba(26, 26, 24, 0.1) !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      box-shadow: none !important;
       color: #1a1a18 !important;
       display: flex !important;
       align-items: center !important;
@@ -1060,40 +1225,76 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transform: scale(0.85);
+      transform: none;
       transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  visibility 0.25s ease,
-                  background-color 0.2s ease,
-                  box-shadow 0.2s ease !important;
+                  transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.25s ease !important;
       -webkit-tap-highlight-color: transparent !important;
+    }
+    .jd-floating-close-btn svg {
+      display: block;
+      opacity: 1;
+      transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
     body.index-is-open #jd-index-close-btn,
     #jd-index-panel.is-open #jd-index-close-btn {
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: auto !important;
-      transform: scale(1) !important;
+    }
+    .jd-menu-close-btn {
+      position: fixed !important;
+      top: 15px !important;
+      right: 22px !important;
+      width: 44px !important;
+      height: 44px !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      color: #1a1a18 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      z-index: 100002 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.25s ease !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+    @media (hover: hover) {
+      .jd-menu-close-btn:hover .jd-menu-icon {
+        opacity: 1;
+      }
+    }
+    .jd-menu-close-btn:active {
+      transform: scale(0.92) !important;
+      opacity: 0.65 !important;
+      transition: transform 0.05s ease, opacity 0.05s ease !important;
     }
     @media (max-width: 800px) {
       #jd-index-close-btn,
       #jd-about-close-btn {
-        top: calc(16px + env(safe-area-inset-top, 0px)) !important;
-        right: calc(20px + env(safe-area-inset-right, 0px)) !important;
+        top: calc(22px + env(safe-area-inset-top, 0px)) !important;
+        right: calc(10px + env(safe-area-inset-right, 0px)) !important;
         bottom: auto !important;
       }
       #jd-thumbs-close-btn {
-        top: calc(8px + env(safe-area-inset-top, 0px)) !important;
-        right: calc(16px + env(safe-area-inset-right, 0px)) !important;
+        top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+        right: calc(10px + env(safe-area-inset-right, 0px)) !important;
         bottom: auto !important;
       }
     }
     @media (min-width: 801px) {
-      #jd-index-close-btn,
       #jd-thumbs-close-btn,
       #jd-about-close-btn {
-        top: 24px !important;
-        right: 24px !important;
+        top: 15px !important;
+        right: 22px !important;
         bottom: auto !important;
         left: auto !important;
       }
@@ -1106,7 +1307,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: auto !important;
-      transform: scale(1) !important;
     }
     @media (prefers-reduced-motion: no-preference) {
       body.thumbs-is-open #jd-thumbs-close-btn,
@@ -1123,20 +1323,20 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: auto !important;
-      transform: scale(1) !important;
     }
     @media (hover: hover) {
-      .jd-floating-close-btn:hover {
-        background: #ffffff !important;
-        color: #000000 !important;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16) !important;
-        transform: scale(1.06) !important;
+      .jd-floating-close-btn:hover svg {
+        opacity: 1;
+        transform: scale(1.06);
       }
     }
     .jd-floating-close-btn:active {
       transform: scale(0.92) !important;
       opacity: 0.65 !important;
       transition: transform 0.05s ease, opacity 0.05s ease !important;
+    }
+    .jd-floating-close-btn:active svg {
+      transform: scale(0.9);
     }
     .jd-top-nav {
       display: flex !important;
@@ -1168,6 +1368,33 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       text-decoration: underline;
       text-underline-offset: 4px;
     }
+    .jd-index-grid-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      border-bottom: 1px solid rgba(26, 26, 24, 0.14);
+      padding: 0.7rem 0;
+      margin: 0 0 1.6rem 0;
+      min-height: 44px;
+      font-family: var(--jd-font);
+      font-size: 0.96rem;
+      letter-spacing: 0.02em;
+      color: #1a1a18 !important;
+      -webkit-text-fill-color: #1a1a18 !important;
+      cursor: pointer;
+      text-align: left;
+      transition: opacity 0.2s ease;
+    }
+    .jd-index-grid-link svg {
+      flex-shrink: 0;
+      opacity: 1;
+    }
+    @media (hover: hover) {
+      .jd-index-grid-link:hover { opacity: 0.6; }
+    }
     .jd-top-nav a {
       color: #1a1a18 !important;
       text-decoration: none !important;
@@ -1190,7 +1417,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       align-items: center !important;
       justify-content: center !important;
       color: #1a1a18 !important;
-      opacity: 0.75 !important;
+      opacity: 1 !important;
       padding: 0 !important;
       margin: 0 !important;
       line-height: 1 !important;
@@ -1201,7 +1428,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transition: opacity 0.2s ease, transform 0.2s ease !important;
     }
     .jd-social-icon-link:hover {
-      opacity: 1 !important;
+      opacity: 0.6 !important;
       transform: translateY(-1px) !important;
     }
     .jd-social-icon-link svg {
@@ -1212,7 +1439,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-lang-toggle {
       font-style: normal !important;
       color: #1a1a18 !important;
-      opacity: 0.75 !important;
+      opacity: 1 !important;
       border: none !important;
       background: none !important;
       border-radius: 0 !important;
@@ -1225,7 +1452,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transition: opacity 0.2s ease !important;
     }
     .jd-lang-toggle:hover {
-      opacity: 1 !important;
+      opacity: 0.6 !important;
       border: none !important;
       background: none !important;
     }
@@ -1302,7 +1529,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     }
     .jd-thumbs-grid {
       display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: flex-start;
-      gap: 18px; width: 100%;
+      gap: 28px; width: 100%;
     }
     .jd-thumb-global {
       cursor: pointer; position: relative;
@@ -1326,10 +1553,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       background: none; border: none; padding: 8px 0; min-height: 44px;
       display: inline-flex; align-items: center; gap: 0.45rem;
       font-family: var(--jd-font); font-size: 0.92rem; letter-spacing: 0.03em;
-      color: rgba(26, 26, 24, 0.72); cursor: pointer; text-decoration: none;
+      color: #1a1a18; cursor: pointer; text-decoration: none;
       transition: color 0.2s ease, opacity 0.2s ease;
     }
-    .jd-thumbs-footer-link:hover { color: #1a1a18; }
+    .jd-thumbs-footer-link:hover { opacity: 0.62; }
     @keyframes slideUpFade {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -1365,27 +1592,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         animation: jd-thumb-reveal 1.35s cubic-bezier(0.16, 1, 0.3, 1) var(--thumb-delay, 0ms) both;
       }
     }
-    #jd-thumbs-nav { 
-      display: none; align-items: center; justify-content: center; gap: 0; 
-      background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      height: 44px; padding: 0 22px;
-    }
-    #jd-thumbs-nav .jd-bottom-btn { 
-      color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important;
-      font-family: var(--jd-font);
-      font-size: 0.95rem; font-weight: 500; letter-spacing: 0.04em;
-      padding: 0; min-height: auto;
-    }
-    #jd-thumbs-nav .jd-bottom-btn:hover {
-      opacity: 0.6 !important;
-    }
-    #jd-thumbs-nav.is-open { display: flex; animation: slideUpFade 0.4s ease forwards; }
     body.thumbs-is-open #jd-normal-nav { display: none !important; }
-    body.thumbs-is-open #jd-bottom-nav {
-      top: auto !important;
-      bottom: 24px !important;
-    }
     body.thumbs-is-open #jd-counter {
       display: none !important;
       opacity: 0 !important;
@@ -1421,21 +1628,20 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-cursor-custom {
       position: fixed; pointer-events: none; z-index: 9999;
       transform: translate(-50%, -50%);
-      font-family: var(--jd-font); font-size: 0.88rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-family: var(--jd-font);
       color: white; mix-blend-mode: difference; white-space: nowrap;
       opacity: 0; user-select: none;
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      display: flex; align-items: center; justify-content: center;
       left: 50%; top: 50%; /* Start at center */
       will-change: left, top, opacity, transform;
       transition: transform 0.2s ease, opacity 0.4s ease;
     }
-    #jd-cursor-text { transition: opacity .12s ease; }
-    body:has(.jd-masters-info-trigger:hover) #jd-cursor-text { opacity: 0; }
+    body:has(.jd-masters-info-trigger:hover) #jd-cursor-custom { opacity: 0 !important; }
     body.is-leaving #jd-cursor-custom {
       transform: translate(-50%, calc(-50% - 60px));
       transition: transform 600ms 0ms cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease;
     }
-    #jd-cursor-arrow { font-size: 14px; letter-spacing: 0; line-height: 1; margin-top: -2px; }
+    #jd-cursor-arrow { font-size: 18px; letter-spacing: 0; line-height: 1; font-weight: 400; }
 
     /* ─── HINT ARROWS ───────────────────────────────── */
     #jd-hint-arrows {
@@ -1460,7 +1666,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     /* ─── ABOUT PANEL ────────────────────────────────── */
     #jd-about-panel {
       position: fixed; inset: 0;
-      background: rgba(255, 255, 255, 0.98); z-index: 350;
+      background: #ffffff; z-index: 350;
       overflow-y: auto; overscroll-behavior: contain; opacity: 0; visibility: hidden; pointer-events: none;
       transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), visibility 0s linear 0.6s;
       display: flex; flex-direction: column;
@@ -1478,7 +1684,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     #jd-about-panel.is-open .jd-about-content { transform: translateY(0); opacity: 1; transition-delay: 0.1s; }
     .jd-about-image { flex: 1.25; max-width: 580px; width: 100%; }
     .jd-about-image img { width: 100%; height: auto; display: block; border-radius: 1px; }
-    .jd-about-text { flex: 1.2; color: #1a1a1a; font-family: var(--jd-font); }
+    .jd-about-text { flex: 1.2; color: #1a1a18; font-family: var(--jd-font); }
     .jd-about-text header { margin-bottom: 2.2rem; }
     .jd-about-text h1 { font-family: var(--jd-font-serif); font-size: 2.6rem; font-weight: 400; margin: 0 0 0.5rem 0; letter-spacing: 0.02em; }
     .jd-about-subtitle { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.72; }
@@ -1770,11 +1976,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         max-height: calc((100svh - 214px) / 2) !important; 
         object-fit: contain !important; 
       }
-      #jd-bottom-nav { bottom: auto; top: 25px; left: 50%; right: auto; transform: translateX(-50%); height: auto; min-height: auto; width: max-content; max-width: 95vw; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
-      #jd-normal-nav { gap: 1.15rem !important; }
+      #jd-bottom-nav { bottom: auto; top: 22px; left: 0; right: 0; transform: none; height: auto; min-height: auto; width: 100%; max-width: none; padding: 0 calc(18px + env(safe-area-inset-right, 0px)) 0 calc(18px + env(safe-area-inset-left, 0px)); box-sizing: border-box; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
+      #jd-normal-nav { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 0.75rem !important; width: 100%; }
+      .jd-header-center { display: none !important; }
+      .jd-index-trigger { margin-right: -8px; }
       #jd-bottom-nav .jd-bottom-btn { padding: 8px 0 !important; font-size: 0.92rem !important; font-weight: 500 !important; letter-spacing: 0.04em !important; color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important; white-space: nowrap; }
-      .jd-filter-dropdown-container { bottom: auto; top: 25px; right: 25px; }
-      .jd-filter-menu { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 15px; }
+      #jd-bottom-nav .jd-brand-link { font-size: 1.05rem !important; letter-spacing: 0.07em !important; }
+      #jd-bottom-nav .jd-index-trigger { padding: 0 !important; }
+      .jd-filter-dropdown-container { top: auto; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); right: calc(18px + env(safe-area-inset-right, 0px)); }
+      .jd-filter-menu { bottom: 100%; top: auto; margin-bottom: 12px; margin-top: 0; }
       #jd-hint-arrows { transition: opacity 450ms ease-out; }
       body.mobile-has-scrolled #jd-hint-arrows { opacity: 0 !important; }
       body.mobile-has-scrolled #jd-hint-arrows .jd-hint-arrow { pointer-events: none; }
@@ -1872,26 +2082,39 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         line-height: 1.3 !important;
         white-space: nowrap !important;
       }
-      .jd-counter-chevron {
-        display: inline-block !important;
-        margin-left: 5px !important;
-        vertical-align: middle !important;
-        opacity: 0.45 !important;
-        position: relative !important;
-        top: -1px !important;
-        transition: transform 0.2s ease, opacity 0.2s ease !important;
+      #jd-counter-rest {
+        display: inline-flex !important;
+        align-items: center !important;
       }
-      #jd-counter:active .jd-counter-chevron {
-        transform: translateY(1.5px) !important;
-        opacity: 0.8 !important;
+      .jd-counter-nums {
+        font-variant-numeric: tabular-nums;
+      }
+      .jd-counter-dot {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 0.4rem;
+        opacity: 0.45;
+      }
+      .jd-counter-grid {
+        display: block !important;
+        flex-shrink: 0 !important;
+        margin-left: 7px !important;
+        overflow: visible !important;
+        position: relative !important;
+        top: 1px !important;
+        opacity: 0.62;
+        transition: opacity 0.2s ease !important;
+      }
+      #jd-counter:active .jd-counter-grid {
+        opacity: 0.96 !important;
       }
       .jd-counter-place {
         display: block !important;
         font-size: 0.76rem !important;
         font-weight: 400 !important;
         letter-spacing: 0.03em !important;
-        color: rgba(26, 26, 24, 0.65) !important;
-        -webkit-text-fill-color: rgba(26, 26, 24, 0.65) !important;
+        color: #1a1a18 !important;
+        -webkit-text-fill-color: #1a1a18 !important;
         margin-top: 5px !important;
         line-height: 1.2 !important;
         max-width: calc(100vw - 100px) !important;
@@ -1916,7 +2139,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       }
 
       .jd-thumbs-section-title { display: none; }
-      .jd-thumbs-grid { gap: 10px; }
+      .jd-thumbs-grid { gap: 16px; }
       .jd-text-content {
         width: 100%;
         min-height: auto;
@@ -2138,6 +2361,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     html.jd-splash-active #jd-index-overlay,
     html.jd-splash-active #jd-thumbs-panel,
     html.jd-splash-active .jd-floating-close-btn,
+    html.jd-splash-active .jd-menu-close-btn,
     html.jd-splash-active .jd-thumbs-header {
       display: none !important;
     }
@@ -2230,7 +2454,12 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       <span aria-hidden="true">?</span>
     </button>
     <dialog id="jd-masters-info" closedby="any" aria-labelledby="jd-masters-info-title">
-      <button id="jd-masters-info-close" type="button" commandfor="jd-masters-info" command="close" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>×</button>
+      <button id="jd-masters-info-close" type="button" commandfor="jd-masters-info" command="close" aria-label={lang === 'fi' ? 'Sulje' : 'Close'}>
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square">
+          <line x1="2" y1="2" x2="16" y2="16"></line>
+          <line x1="16" y1="2" x2="2" y2="16"></line>
+        </svg>
+      </button>
       <p class="jd-masters-eyebrow">Hasselblad Masters 2026</p>
       <h2 id="jd-masters-info-title">{lang === 'fi' ? 'Mikä tämä kilpailu on?' : 'What is the competition?'}</h2>
       <p>{lang === 'fi'
@@ -2262,37 +2491,49 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     </div>
   </div>
 
-  <!-- Bottom nav -->
-  <div id="jd-bottom-nav">
-    <div id="jd-normal-nav">
-      <button type="button" class="jd-bottom-btn jd-index-trigger" id="jd-index-btn-bottom" aria-controls="jd-index-panel" aria-expanded="false">
-        <svg class="jd-menu-icon" aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-          <line x1="1" y1="2.5" x2="11" y2="2.5"></line>
-          <line x1="1" y1="6" x2="11" y2="6"></line>
-          <line x1="1" y1="9.5" x2="7.5" y2="9.5"></line>
-        </svg>
-        <span>{lang === 'en' ? 'Index' : 'Valikko'}</span>
-      </button>
-      <span class="jd-nav-sep" aria-hidden="true"></span>
-      <button type="button" class="jd-bottom-btn jd-thumbs-trigger" id="jd-thumbs-btn" aria-controls="jd-thumbs-panel" aria-expanded="false">
-        <svg class="jd-grid-icon" aria-hidden="true" width="11.5" height="11.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1">
-          <rect x="1" y="1" width="3.75" height="3.75"></rect>
-          <rect x="7.25" y="1" width="3.75" height="3.75"></rect>
-          <rect x="1" y="7.25" width="3.75" height="3.75"></rect>
-          <rect x="7.25" y="7.25" width="3.75" height="3.75"></rect>
-        </svg>
-        <span>{lang === 'en' ? 'Thumbs' : 'Kuvasto'}</span>
-      </button>
-    </div>
-    <div id="jd-thumbs-nav">
-      <button type="button" class="jd-bottom-btn" id="jd-thumbs-close">{lang === 'en' ? 'Close' : 'Sulje'}</button>
-    </div>
-  </div>
+  <!-- Top site header (Left: Brand · Center: Series · Right: Thumbs + Menu) -->
+  <header id="jd-bottom-nav" class="jd-site-header">
+    <nav id="jd-normal-nav" aria-label={lang === 'en' ? 'Primary navigation' : 'Päänavigaatio'}>
+      <div class="jd-header-left">
+        <a
+          href={lang === 'en' ? '/en/' : '/'}
+          class="jd-bottom-btn jd-brand-link"
+          id="jd-brand-link"
+          data-cat-label={getCategoryLabel('recent', activeLang)}
+          aria-current={categorySlug === 'recent' ? 'page' : undefined}
+        >Aatu Alatalo</a>
+      </div>
+
+      <div class="jd-header-center">
+        <button type="button" class="jd-bottom-btn jd-series-indicator" id="jd-series-indicator" aria-controls="jd-thumbs-panel" aria-expanded="false" aria-label={lang === 'en' ? `${catLabel}, open overview` : `${catLabel}, avaa kuvasto`}>
+          <span id="jd-series-name">{catLabel}</span>
+          <span class="jd-series-sep" aria-hidden="true">·</span>
+          <span id="jd-series-count" class="jd-series-count">1 / {galleryData.length}</span>
+          <svg class="jd-series-grid-icon" aria-hidden="true" width="10.5" height="10.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.15">
+            <rect class="jd-grid-cell jd-grid-cell-1" x="1" y="1" width="3.75" height="3.75"></rect>
+            <rect class="jd-grid-cell jd-grid-cell-2" x="7.25" y="1" width="3.75" height="3.75"></rect>
+            <rect class="jd-grid-cell jd-grid-cell-3" x="1" y="7.25" width="3.75" height="3.75"></rect>
+            <rect class="jd-grid-cell jd-grid-cell-4" x="7.25" y="7.25" width="3.75" height="3.75"></rect>
+          </svg>
+        </button>
+      </div>
+
+      <div class="jd-header-right">
+        <button type="button" class="jd-bottom-btn jd-index-trigger" id="jd-index-btn-bottom" aria-controls="jd-index-panel" aria-expanded="false" aria-label={lang === 'en' ? 'Menu' : 'Valikko'} title={lang === 'en' ? 'Menu' : 'Valikko'}>
+          <svg class="jd-menu-icon" aria-hidden="true" width="20" height="15" viewBox="0 0 20 15" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square">
+            <line class="jd-menu-line jd-menu-line-1" x1="1" y1="1.5" x2="19" y2="1.5"></line>
+            <line class="jd-menu-line jd-menu-line-2" x1="6" y1="7.5" x2="19" y2="7.5"></line>
+            <line class="jd-menu-line jd-menu-line-3" x1="3.5" y1="13.5" x2="19" y2="13.5"></line>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
 
   { (categorySlug === 'tapahtumat' || categorySlug === 'events') && (
     <div id="jd-filter-dropdown-container" class="jd-filter-dropdown-container">
       <button type="button" id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display:flex;align-items:center;justify-content:center;height:100%;cursor:pointer;">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(26,26,24,0.35)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
       </button>
       <div id="jd-filter-menu" class="jd-filter-menu"></div>
     </div>
@@ -2300,10 +2541,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
   <span id="jd-wheel-counter" aria-hidden="true">1 / {galleryData.length}</span>
 
-  <!-- Mobile counter -->
-  <div id="jd-counter" role="button" tabindex="0" aria-controls="jd-index-panel" aria-expanded="false" aria-label={lang === 'fi' ? 'Avaa valikko' : 'Open menu'}>
+  <!-- Mobile counter (also opens series grid) -->
+  <div id="jd-counter" role="button" tabindex="0" aria-controls="jd-thumbs-panel" aria-expanded="false" aria-label={lang === 'fi' ? `${catLabel}, avaa kuvasto` : `${catLabel}, open overview`}>
     <div class="jd-counter-top">
-      <span id="jd-counter-cat" style="opacity:0;">{catLabel}</span><span id="jd-counter-rest" style="opacity:0;"> - <span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span><svg aria-hidden="true" class="jd-counter-chevron" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+      <span id="jd-counter-cat">{catLabel}</span><span id="jd-counter-rest"><span class="jd-counter-dot" aria-hidden="true">·</span><span class="jd-counter-nums"><span id="jd-counter-num">1</span> / <span id="jd-counter-tot">{galleryData.length}</span></span><svg aria-hidden="true" class="jd-counter-grid" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.15"><rect class="jd-grid-cell jd-grid-cell-1" x="1" y="1" width="3.75" height="3.75"></rect><rect class="jd-grid-cell jd-grid-cell-2" x="7.25" y="1" width="3.75" height="3.75"></rect><rect class="jd-grid-cell jd-grid-cell-3" x="1" y="7.25" width="3.75" height="3.75"></rect><rect class="jd-grid-cell jd-grid-cell-4" x="7.25" y="7.25" width="3.75" height="3.75"></rect></svg></span>
     </div>
     <div id="jd-counter-place" class="jd-counter-place"></div>
   </div>
@@ -2311,10 +2552,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
 
 
-  <!-- Custom cursor -->
+  <!-- Custom cursor (directional arrow only) -->
   <div id="jd-cursor-custom" aria-hidden="true">
-    <div id="jd-cursor-text">{catLabel} — 1 / {galleryData.length}</div>
-    <div id="jd-cursor-arrow"></div>
+    <div id="jd-cursor-arrow">→</div>
   </div>
 
   <!-- Next/prev urls for gallery-to-gallery navigation -->
@@ -2363,6 +2603,16 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
     <a class="jd-index-contact" href="mailto:info@aatualatalo.com">info@aatualatalo.com</a>
 
+    <button type="button" class="jd-index-grid-link" id="jd-thumbs-btn" aria-controls="jd-thumbs-panel" aria-expanded="false">
+      <span>{lang === 'en' ? `View ${catLabel} as grid` : `Selaa sarjaa kuvastona`}</span>
+      <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.15">
+        <rect x="1" y="1" width="3.75" height="3.75"></rect>
+        <rect x="7.25" y="1" width="3.75" height="3.75"></rect>
+        <rect x="1" y="7.25" width="3.75" height="3.75"></rect>
+        <rect x="7.25" y="7.25" width="3.75" height="3.75"></rect>
+      </svg>
+    </button>
+
     <ul class="jd-index-list">
       {navItems.map(item => (
         <li>
@@ -2396,11 +2646,12 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     </ul>
   </nav>
 
-  <!-- Floating close button for Valikko (Index) -->
-  <button type="button" id="jd-index-close-btn" class="jd-floating-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'} inert>
-    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
+  <!-- Hamburger toggle close button for Valikko (Index) -->
+  <button type="button" id="jd-index-close-btn" class="jd-menu-close-btn" onclick="window.closeIndexPanel();" aria-label={lang === 'fi' ? 'Sulje valikko' : 'Close menu'} title={lang === 'fi' ? 'Sulje valikko' : 'Close menu'} inert>
+    <svg class="jd-menu-icon" aria-hidden="true" width="20" height="15" viewBox="0 0 20 15" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square">
+      <line class="jd-menu-line jd-menu-line-1" x1="1" y1="1.5" x2="19" y2="1.5"></line>
+      <line class="jd-menu-line jd-menu-line-2" x1="6" y1="7.5" x2="19" y2="7.5"></line>
+      <line class="jd-menu-line jd-menu-line-3" x1="3.5" y1="13.5" x2="19" y2="13.5"></line>
     </svg>
   </button>
 
@@ -2486,11 +2737,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     </div>
   </div>
 
-  <!-- Floating close button for About -->
-  <button type="button" id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'} inert>
-    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
+  <!-- Top-right close button for About -->
+  <button type="button" id="jd-about-close-btn" class="jd-floating-close-btn" onclick="window.closeAboutPanel();" aria-label={lang === 'fi' ? 'Sulje' : 'Close'} title={lang === 'fi' ? 'Sulje' : 'Close'} inert>
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square">
+      <line x1="2" y1="2" x2="16" y2="16"></line>
+      <line x1="16" y1="2" x2="2" y2="16"></line>
     </svg>
   </button>
 
@@ -2568,11 +2819,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     </div>
   </div>
 
-  <!-- Floating close button for Kuvasto (Thumbs) -->
-  <button type="button" id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'} inert>
-    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
+  <!-- Top-right close button for Kuvasto (Thumbs) -->
+  <button type="button" id="jd-thumbs-close-btn" class="jd-floating-close-btn" onclick="if(typeof closeThumbsView==='function')closeThumbsView();" aria-label={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'} title={lang === 'fi' ? 'Sulje kuvasto' : 'Close overview'} inert>
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square">
+      <line x1="2" y1="2" x2="16" y2="16"></line>
+      <line x1="16" y1="2" x2="2" y2="16"></line>
     </svg>
   </button>
 
@@ -2991,8 +3242,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     // Cache gallery references; scrolling only updates changed text and nearby slides.
     const localThumbs = Array.from(document.querySelectorAll(`.jd-thumb-global[data-cat="${categorySlug}"]`));
     const slideImages = slides.map(slide => Array.from(slide.querySelectorAll('img')));
-    const counterUI = Object.fromEntries(['jd-wheel-counter', 'jd-counter-cat', 'jd-counter-num',
-      'jd-counter-tot', 'jd-counter-rest', 'jd-counter-place', 'jd-cursor-text']
+    const counterUI = Object.fromEntries(['jd-wheel-counter', 'jd-series-count', 'jd-counter-cat', 'jd-counter-num',
+      'jd-counter-tot', 'jd-counter-rest', 'jd-counter-place']
       .map(id => [id, document.getElementById(id)]));
     let displayedIndex = current;
     let counterSignature = '';
@@ -3168,11 +3419,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         if (element && element.textContent !== String(text)) element.textContent = text;
       };
       setText('jd-wheel-counter', `${n} / ${visibleTotal}`);
+      setText('jd-series-count', `${n} / ${visibleTotal}`);
       setText('jd-counter-cat', catLabel);
       setText('jd-counter-num', n);
       setText('jd-counter-tot', visibleTotal);
       setText('jd-counter-place', caption);
-      setText('jd-cursor-text', `${catLabel} — ${n} / ${visibleTotal}`);
       if (counterUI['jd-counter-place']) counterUI['jd-counter-place'].style.display = caption ? 'block' : 'none';
     }
     updateCounter();
@@ -4049,16 +4300,17 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (thumbsOpen && e.key === 'Escape') { closeThumbsView(); return; }
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey
         || document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
-      if (e.target instanceof Element && e.target.closest('dialog[open], input, textarea, select, [contenteditable], a, button')) return;
+      if (e.target instanceof Element && e.target.closest('dialog[open], input, textarea, select, [contenteditable]')) return;
 
       const desktop = window.innerWidth > 800;
       const forward = e.key === 'ArrowRight' || (desktop && e.key === 'ArrowDown');
       const backward = e.key === 'ArrowLeft' || (desktop && e.key === 'ArrowUp');
       const space = e.key === ' ';
+      if (space && e.target instanceof Element && e.target.closest('a, button, [role="button"]')) return;
       if (!forward && !backward && !space) return;
       e.preventDefault();
       document.body.classList.add('user-has-interacted');
-      goToRelative(backward ? -1 : 1, space);
+      goToRelative(backward ? -1 : 1);
     });
 
     listen(window, 'hashchange', () => {
@@ -4094,7 +4346,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         }
         
         const target = e.target instanceof Element ? e.target : null;
-        const isNav = Boolean(target?.closest('#jd-bottom-nav, #jd-index-panel, #jd-thumbs-close, #jd-thumbs-header'));
+        const isNav = Boolean(target?.closest('#jd-bottom-nav, #jd-index-panel, #jd-thumbs-close-btn, #jd-about-close-btn, #jd-index-close-btn, #jd-thumbs-header, .jd-masters-info-trigger, #jd-masters-info, .jd-filter-dropdown-container, .jd-postcard-map'));
         const nearBottom = e.clientY > window.innerHeight - 100;
         
         if (isNav || nearBottom) { 
@@ -4116,6 +4368,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
     const indexBtnBottom = document.getElementById('jd-index-btn-bottom');
     const thumbsBtn = document.getElementById('jd-thumbs-btn');
+    const seriesIndicatorBtn = document.getElementById('jd-series-indicator');
+    const brandLink = document.getElementById('jd-brand-link');
     const counterEl = document.getElementById('jd-counter');
     const indexPanel = document.getElementById('jd-index-panel');
     const indexOverlay = document.getElementById('jd-index-overlay');
@@ -4123,6 +4377,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     const aboutPanel = document.getElementById('jd-about-panel');
     const aboutCloseBtn = document.getElementById('jd-about-close-btn');
     const thumbsCloseBtn = document.getElementById('jd-thumbs-close-btn');
+    const bottomNavEl = document.getElementById('jd-bottom-nav');
     const jdMain = document.getElementById('jd-main');
     const hintArrowsEl = document.getElementById('jd-hint-arrows');
     let panelReturnFocus = null;
@@ -4143,6 +4398,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (aboutCloseBtn) aboutCloseBtn.inert = !aboutOpen;
       if (thumbsPanel) thumbsPanel.inert = !thumbsOpen;
       if (thumbsCloseBtn) thumbsCloseBtn.inert = !thumbsOpen;
+      if (bottomNavEl) bottomNavEl.inert = anyOpen;
       if (jdMain) jdMain.inert = anyOpen;
       if (counterEl) counterEl.inert = anyOpen;
       if (hintArrowsEl) hintArrowsEl.inert = anyOpen;
@@ -4176,7 +4432,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       lastThumbsGridW = containerW;
 
       const isCompact = window.innerWidth <= 800;
-      const gap = containerW >= 1100 ? 18 : containerW >= 760 ? 15 : isCompact ? 10 : 12;
+      const gap = containerW >= 1100 ? 28 : containerW >= 760 ? 22 : isCompact ? 16 : 18;
       const targetH = containerW >= 1180 ? 270 : containerW >= 820 ? 225 : containerW >= 520 ? 185 : 155;
       const safeW = Math.max(120, containerW - 0.5);
 
@@ -4308,17 +4564,13 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       
       thumbsOpen = true;
       thumbsBtn?.setAttribute('aria-expanded', 'true');
+      seriesIndicatorBtn?.setAttribute('aria-expanded', 'true');
+      counterEl?.setAttribute('aria-expanded', 'true');
       document.body.classList.add('thumbs-is-open');
       if (cursor) cursor.style.display = 'none';
       document.body.style.cursor = 'auto';
       thumbsPanel.classList.add('is-open');
       document.getElementById('jd-normal-nav').style.display = 'none';
-      
-      const thumbsNav = document.getElementById('jd-thumbs-nav');
-      thumbsNav.style.animation = 'none';
-      void thumbsNav.offsetWidth;
-      thumbsNav.classList.add('is-open');
-      thumbsNav.style.animation = '';
       
       if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel({ restoreFocus: false });
       syncOverlayInert();
@@ -4347,14 +4599,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       
       thumbsOpen = false;
       thumbsBtn?.setAttribute('aria-expanded', 'false');
+      seriesIndicatorBtn?.setAttribute('aria-expanded', 'false');
+      counterEl?.setAttribute('aria-expanded', 'false');
       document.body.classList.remove('thumbs-is-open');
       if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
         if (cursor) cursor.style.display = '';
         document.body.style.cursor = 'none';
       }
       thumbsPanel.classList.remove('is-open');
-      document.getElementById('jd-normal-nav').style.display = 'flex';
-      document.getElementById('jd-thumbs-nav').classList.remove('is-open');
+      document.getElementById('jd-normal-nav').style.display = '';
       
       if (hintArrowsEl) hintArrowsEl.style.opacity = '1';
       const thumbsHeader = document.getElementById('jd-thumbs-header');
@@ -4363,7 +4616,16 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       else restorePanelFocusIfNoneOpen();
     }
     thumbsBtn?.addEventListener('click', openThumbsView);
-    document.getElementById('jd-thumbs-close')?.addEventListener('click', () => closeThumbsView());
+    seriesIndicatorBtn?.addEventListener('click', openThumbsView);
+    brandLink?.addEventListener('click', e => {
+      if (categorySlug === 'recent') {
+        e.preventDefault();
+        if (typeof window.closeIndexPanel === 'function') window.closeIndexPanel({ restoreFocus: false });
+        if (typeof window.closeAboutPanel === 'function') window.closeAboutPanel({ restoreFocus: false });
+        if (thumbsOpen) closeThumbsView({ restoreFocus: false });
+        goToAbsolute(0);
+      }
+    });
     thumbsCloseBtn?.addEventListener('click', () => closeThumbsView());
     document.getElementById('jd-thumbs-open-index')?.addEventListener('click', () => {
       closeThumbsView({ restoreFocus: false });
@@ -4386,24 +4648,21 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       }
     });
 
-    /* Mobile counter click/tap to open menu */
+    /* Mobile counter click/tap to open series overview */
     counterEl?.addEventListener('click', e => {
       e.stopPropagation();
-      if (typeof window.openIndexPanel === 'function') {
-        const panel = document.getElementById('jd-index-panel');
-        panel?.classList.contains('is-open') ? window.closeIndexPanel() : window.openIndexPanel();
-      }
+      thumbsOpen ? closeThumbsView() : openThumbsView();
     });
     counterEl?.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (typeof window.openIndexPanel === 'function') window.openIndexPanel();
+        openThumbsView();
       } else if (e.key === ' ') {
         e.preventDefault();
       }
     });
     counterEl?.addEventListener('keyup', e => {
-      if (e.key === ' ' && typeof window.openIndexPanel === 'function') window.openIndexPanel();
+      if (e.key === ' ') openThumbsView();
     });
 
     /* Page entrance animation */
@@ -4426,7 +4685,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         clearTimeout(imageWait);
         if (signal.aborted) return;
       }
-      const revealDelay = reducedMotion.matches ? 0 : curtainRevealMs;
+      const revealDelay = (!categoryArrival || reducedMotion.matches) ? 0 : curtainRevealMs;
       if (window.innerWidth > 800) {
         const lastX = getSession('jdLastMouseX');
         const lastY = getSession('jdLastMouseY');
@@ -4440,18 +4699,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
             if (signal.aborted) return;
             window.jdCursorFrozen = false;
             cursor.style.opacity = '1';
-          }, revealDelay);
-        }
-      } else {
-        const catSpan = document.getElementById('jd-counter-cat');
-        const counterRest = document.getElementById('jd-counter-rest');
-        if (catSpan && counterRest) {
-          setTimeout(() => {
-            if (signal.aborted) return;
-            catSpan.style.transition = 'opacity 0.6s ease';
-            counterRest.style.transition = 'opacity 0.6s ease';
-            catSpan.style.opacity = '1';
-            counterRest.style.opacity = '1';
           }, revealDelay);
         }
       }
@@ -4593,7 +4840,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.add('is-open'); }
       indexOverlay?.classList.add('is-open'); document.body.classList.add('index-is-open');
       indexBtnBottom?.setAttribute('aria-expanded', 'true');
-      counterEl?.setAttribute('aria-expanded', 'true');
       if (cursor) cursor.style.display = 'none';
       document.body.style.cursor = 'auto';
       if (indexPanel) indexPanel.scrollTop = 0;
@@ -4615,7 +4861,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (indexPanel) { indexPanel.style.transition = ''; indexPanel.style.transform = ''; indexPanel.classList.remove('parallax-ready'); indexPanel.classList.remove('is-open'); }
       indexOverlay?.classList.remove('is-open'); document.body.classList.remove('index-is-open');
       indexBtnBottom?.setAttribute('aria-expanded', 'false');
-      counterEl?.setAttribute('aria-expanded', 'false');
       if (imgA) imgA.classList.remove('is-active');
       if (imgB) imgB.classList.remove('is-active');
       activeSrc = '';
@@ -4648,7 +4893,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         aboutPanel.classList.remove('is-open');
         document.body.classList.remove('about-is-open');
         const n = document.getElementById('jd-normal-nav');
-        if (n && (!thumbsPanel || !thumbsPanel.classList.contains('is-open'))) n.style.display = 'flex';
+        if (n && (!thumbsPanel || !thumbsPanel.classList.contains('is-open'))) n.style.display = '';
         if ('ontouchstart' in window === false && !window.matchMedia('(pointer: coarse)').matches) {
           if (cursor && !document.body.classList.contains('index-is-open') && !thumbsOpen) {
             document.body.style.cursor = 'none';
