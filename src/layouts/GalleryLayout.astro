@@ -144,6 +144,48 @@ const navItems = CATEGORIES.filter(c => c.group === 'primary');
 const catNavItems = CATEGORIES.filter(c => c.group === 'category');
 const projectNavItems = CATEGORIES.filter(c => c.group === 'project');
 
+function formatSeriesLabel(series: string): string {
+  if (series === 'qstock26') return 'Qstock 2026';
+  return series
+    .replace(/[-_]+/g, ' ')
+    .replace(/([a-zA-Z])(\d{2})$/, '$1 20$2')
+    .replace(/\b\w/g, ch => ch.toUpperCase());
+}
+
+const eventsCat = CATEGORIES.find(c => c.key === 'tapahtumat');
+const eventsData = eventsCat?.data || [];
+const eventsBaseUrl = getCategoryUrl('tapahtumat', activeLang);
+const eventsSubMap = new Map<string, { count: number; cover: string }>();
+for (const it of eventsData) {
+  const s = it.series;
+  if (!s || s === 'all') continue;
+  const entry = eventsSubMap.get(s);
+  const k = it.kuva || (it.layout === 'diptych' ? it.images?.[0]?.kuva : '');
+  if (entry) {
+    entry.count += 1;
+  } else {
+    eventsSubMap.set(s, { count: 1, cover: k ? resolveImagePaths(k).src : '' });
+  }
+}
+const eventsSubItems = eventsSubMap.size > 1
+  ? [
+      {
+        series: 'all',
+        label: activeLang === 'fi' ? 'Kaikki' : 'All',
+        count: eventsData.length,
+        url: eventsBaseUrl,
+        cover: catCoverImages['tapahtumat'] || '',
+      },
+      ...Array.from(eventsSubMap.entries()).map(([series, info]) => ({
+        series,
+        label: formatSeriesLabel(series),
+        count: info.count,
+        url: `${eventsBaseUrl}?series=${encodeURIComponent(series)}`,
+        cover: info.cover || catCoverImages['tapahtumat'] || '',
+      })),
+    ]
+  : [];
+
 function navUrl(item: { key: string }) {
   return getCategoryUrl(item.key, activeLang);
 }
@@ -406,15 +448,15 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; pointer-events: none; }
 
     /* Tactile press feedback */
-    .jd-bottom-btn, .jd-index-link {
+    .jd-bottom-btn {
+      display: inline-block;
+      transform-origin: center;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
       will-change: transform, opacity;
     }
-    .jd-bottom-btn { display: inline-block; transform-origin: center; }
-    .jd-index-link { transform-origin: left center; }
-    .jd-bottom-btn:active, .jd-index-link:active {
-      transform: scale(0.985) !important; opacity: 0.6 !important;
-      transition: transform 0.05s ease, opacity 0.05s ease !important;
+    .jd-bottom-btn:active {
+      transform: scale(0.97) !important; opacity: 0.6 !important;
+      transition: transform 0.06s ease, opacity 0.06s ease !important;
     }
     :where(.jd-bottom-btn, .jd-brand-link, .jd-series-indicator, .jd-index-grid-link, .jd-index-link, .jd-top-nav a, .jd-index-contact, .jd-floating-close-btn, .jd-menu-close-btn, .jd-thumb-global, .jd-thumbs-footer-link, #jd-counter, .jd-hint-arrow, .jd-filter-btn, #jd-about-panel a, #jd-masters-info-close, #jd-masters-info a):focus-visible {
       outline: 2px solid #1a1a18 !important;
@@ -730,8 +772,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
     /* ─── TOP SITE HEADER (3-zone Desktop / 2-zone Mobile) ─ */
     #jd-bottom-nav {
-      position: fixed; top: 15px; bottom: auto; left: 0; right: 0; width: 100%; height: auto;
-      padding: 0 32px; box-sizing: border-box;
+      position: fixed; top: 0; bottom: auto; left: 0; right: 0; width: 100%; height: auto;
+      padding: 15px 32px 0; box-sizing: border-box;
+      background: var(--jd-bg);
       display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: center !important;
       z-index: 100000; pointer-events: none; cursor: auto;
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease;
@@ -743,6 +786,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       grid-template-columns: 1fr auto 1fr;
       align-items: center !important;
       gap: 1.5rem !important;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #e6e6e6;
       pointer-events: none !important;
     }
     .jd-header-left {
@@ -822,11 +867,26 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       }
       .jd-index-trigger:active .jd-menu-icon,
       .jd-menu-close-btn:active .jd-menu-icon {
-        transform: scale(0.9);
+        transform: scale(0.92);
       }
-      .jd-menu-close-btn .jd-menu-line-1 { transform: scaleX(0.72); }
-      .jd-menu-close-btn .jd-menu-line-2 { transform: scaleX(1.25); transition-delay: 0.04s; }
-      .jd-menu-close-btn .jd-menu-line-3 { transform: scaleX(0.8); transition-delay: 0.08s; }
+      .jd-index-trigger:active .jd-menu-line-1,
+      .jd-menu-close-btn:active .jd-menu-line-1 {
+        transform: scaleX(0.74);
+        transition-delay: 0s;
+      }
+      .jd-index-trigger:active .jd-menu-line-2,
+      .jd-menu-close-btn:active .jd-menu-line-2 {
+        transform: scaleX(1.24);
+        transition-delay: 0s;
+      }
+      .jd-index-trigger:active .jd-menu-line-3,
+      .jd-menu-close-btn:active .jd-menu-line-3 {
+        transform: translateX(-2px) scaleX(0.82);
+        transition-delay: 0s;
+      }
+      .jd-menu-close-btn .jd-menu-line-1 { transform: translateX(5px) scaleX(0.58); transition: transform 0.74s cubic-bezier(0.25, 1, 0.5, 1) 0.1s; }
+      .jd-menu-close-btn .jd-menu-line-2 { transform: translateX(7px) scaleX(1.28); transition: transform 0.74s cubic-bezier(0.25, 1, 0.5, 1) 0.18s; }
+      .jd-menu-close-btn .jd-menu-line-3 { transform: translateX(4px) scaleX(0.68); transition: transform 0.74s cubic-bezier(0.25, 1, 0.5, 1) 0.26s; }
       body.index-is-open .jd-menu-close-btn .jd-menu-line,
       #jd-index-panel.is-open + .jd-menu-close-btn .jd-menu-line {
         transform: none;
@@ -1018,10 +1078,11 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transform: rotate(180deg);
     }
     .jd-shutter-title {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      position: fixed; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0);
       color: #fff; z-index: 99999999;
       font-family: var(--jd-font); font-size: 2rem; letter-spacing: 0.02em;
       opacity: 1; filter: blur(0); pointer-events: none; white-space: nowrap;
+      will-change: transform, opacity;
     }
     /* Only show the black category curtain during real in-site category transitions;
        direct visits / reloads within the 5-minute splash cooldown open straight into the gallery. */
@@ -1038,10 +1099,12 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transform: translateY(calc(100% + var(--jd-curtain-edge)));
     }
     body.is-entering-ready .jd-shutter-title {
-      transform: translate(-50%, calc(-50% + 30px)) scale(1.08);
+      transform: translate3d(-50%, calc(-50% + 50vh + 72px), 0);
       opacity: 0;
-      filter: blur(12px);
-      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease-in, filter 300ms ease-out;
+      filter: blur(0);
+      transition:
+        transform 780ms cubic-bezier(0.55, 0, 0.28, 1),
+        opacity 260ms ease-in 500ms;
     }
     body.prepare-leave .jd-curtain-primary {
       transition: none;
@@ -1121,7 +1184,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       z-index: 499; opacity: 0; visibility: hidden; pointer-events: none;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
+      transition: opacity 0.72s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.72s ease;
     }
     #jd-index-overlay.is-open {
       opacity: 1; visibility: visible; pointer-events: auto; cursor: pointer;
@@ -1133,9 +1196,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       -webkit-backdrop-filter: saturate(180%) blur(24px);
       backdrop-filter: saturate(180%) blur(24px);
       color: var(--jd-text);
-      z-index: 500; padding: 4rem 2.5rem 2.5rem;
+      z-index: 500; padding: 0 2.5rem 2.5rem;
       overflow-y: auto; overscroll-behavior-y: contain; cursor: auto;
-      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease, visibility 0s linear 0.6s;
+      transition: transform 0.78s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.55s ease, visibility 0s linear 0.78s;
       transform: translateX(100%); opacity: 0; visibility: hidden;
       border-left: 1px solid rgba(0, 0, 0, 0.06);
     }
@@ -1144,7 +1207,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     }
     #jd-index-panel.is-open {
       transform: translateX(0); opacity: 1; visibility: visible;
-      transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease, visibility 0s linear 0s;
+      transition: transform 1.05s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.68s ease, visibility 0s linear 0s;
     }
     #jd-index-panel a, #jd-index-panel div, #jd-index-panel span { color: var(--jd-text) !important; }
 
@@ -1365,15 +1428,19 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       transform: scale(0.9);
     }
     .jd-top-nav {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 20 !important;
       display: flex !important;
       align-items: center !important;
       justify-content: flex-start !important;
       flex-wrap: nowrap !important;
       width: 100% !important;
-      margin-bottom: 2.8rem !important;
-      padding-bottom: 1.2rem !important;
-      padding-right: 50px !important;
-      border-bottom: 1px solid rgba(26, 26, 24, 0.08) !important;
+      min-height: 64px !important;
+      margin-bottom: 1.6rem !important;
+      padding: 15px 50px 4px 0 !important;
+      background: rgba(255, 255, 255, 0.98) !important;
+      border-bottom: 1px solid #e6e6e6 !important;
       font-family: var(--jd-font) !important;
       font-size: 1rem !important;
       box-sizing: border-box !important;
@@ -1381,20 +1448,28 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-top-nav-links {
       display: flex !important;
       align-items: center !important;
-      gap: 1.6rem !important;
+      gap: 1.25rem !important;
       flex-wrap: nowrap !important;
       white-space: nowrap !important;
     }
     .jd-index-contact {
       display: inline-block;
-      margin: -1.3rem 0 2.4rem;
+      margin: 0 0 2.1rem;
       color: var(--jd-text);
       font-family: var(--jd-font);
       font-size: 1rem;
       text-decoration: underline;
       text-underline-offset: 4px;
+      transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .jd-index-contact:active,
+    .jd-index-contact.is-tapped {
+      opacity: 0.5 !important;
+      transform: translate3d(3px, 0, 0) !important;
+      transition-delay: 0s !important;
     }
     .jd-index-grid-link {
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1412,14 +1487,56 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       -webkit-text-fill-color: #1a1a18 !important;
       cursor: pointer;
       text-align: left;
+      -webkit-tap-highlight-color: transparent;
       transition: opacity 0.2s ease;
+    }
+    .jd-index-grid-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: #1a1a18;
+      transform: scaleX(0);
+      transform-origin: left center;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease;
+    }
+    .jd-index-grid-link > span {
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
     }
     .jd-index-grid-link svg {
       flex-shrink: 0;
       opacity: 1;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
     }
     @media (hover: hover) {
-      .jd-index-grid-link:hover { opacity: 0.6; }
+      .jd-index-grid-link:hover::after {
+        transform: scaleX(0.32);
+        opacity: 0.45;
+      }
+      .jd-index-grid-link:hover > span {
+        transform: translate3d(4px, 0, 0);
+      }
+      .jd-index-grid-link:hover svg {
+        transform: scale(1.06);
+      }
+    }
+    .jd-index-grid-link:active::after,
+    .jd-index-grid-link.is-tapped::after {
+      transform: scaleX(1);
+      opacity: 1;
+      transition-duration: 0.22s;
+    }
+    .jd-index-grid-link:active > span,
+    .jd-index-grid-link.is-tapped > span {
+      transform: translate3d(7px, 0, 0);
+    }
+    .jd-index-grid-link:active svg,
+    .jd-index-grid-link.is-tapped svg {
+      transform: translate3d(-2px, 0, 0) scale(1.1);
     }
     .jd-top-nav a {
       color: #1a1a18 !important;
@@ -1433,10 +1550,16 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       border-radius: 0 !important;
       box-shadow: none !important;
       white-space: nowrap !important;
-      transition: opacity 0.2s ease !important;
+      -webkit-tap-highlight-color: transparent !important;
+      transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .jd-top-nav a:hover {
       opacity: 0.55 !important;
+    }
+    .jd-top-nav a:active,
+    .jd-top-nav a.is-tapped {
+      opacity: 0.48 !important;
+      transform: translateY(1px) scale(0.95) !important;
     }
     .jd-social-icon-link {
       display: inline-flex !important;
@@ -1471,7 +1594,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       border-radius: 0 !important;
       box-shadow: none !important;
       padding: 0 !important;
-      margin: 0 !important;
+      margin: 0 0.85rem !important;
       font-size: 0.95rem !important;
       letter-spacing: 0.02em !important;
       white-space: nowrap !important;
@@ -1492,6 +1615,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       padding: 0;
     }
     .jd-index-link {
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1505,20 +1629,74 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       opacity: 1 !important;
       border-bottom: 1px solid rgba(26, 26, 24, 0.06);
       text-decoration: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.22s ease;
+    }
+    .jd-index-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: #1a1a18;
+      transform: scaleX(0);
+      transform-origin: left center;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease;
     }
     .jd-index-link span {
       color: #1a1a18 !important;
       -webkit-text-fill-color: #1a1a18 !important;
       opacity: 1 !important;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
     }
     .jd-index-link.active {
       font-weight: 600;
     }
     @media (hover: hover) and (pointer: fine) {
-      .jd-index-link:hover {
-        opacity: 0.55 !important;
-        transform: translateX(4px);
+      .jd-index-link:hover::after {
+        transform: scaleX(0.28);
+        opacity: 0.38;
+      }
+      .jd-index-link:hover span:first-child {
+        transform: translate3d(5px, 0, 0);
+      }
+      .jd-index-link:hover .jd-count {
+        transform: translate3d(-2px, 0, 0);
+        opacity: 0.9 !important;
+      }
+    }
+    .jd-index-link:active::after,
+    .jd-index-link.is-tapped::after {
+      transform: scaleX(1);
+      opacity: 1;
+      transition-duration: 0.22s;
+    }
+    .jd-index-link:active span:first-child,
+    .jd-index-link.is-tapped span:first-child {
+      transform: translate3d(8px, 0, 0);
+    }
+    .jd-index-link:active .jd-count,
+    .jd-index-link.is-tapped .jd-count {
+      transform: translate3d(-3px, 0, 0);
+      opacity: 1 !important;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      #jd-index-panel .jd-menu-reveal {
+        opacity: 0;
+        transform: translate3d(18px, 0, 0);
+        transition: opacity 0.18s ease, transform 0.22s ease;
+        transition-delay: 0s;
+      }
+      #jd-index-panel.is-open .jd-menu-reveal {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        transition:
+          opacity 0.72s cubic-bezier(0.25, 1, 0.5, 1),
+          transform 0.92s cubic-bezier(0.25, 1, 0.5, 1);
+        transition-delay: calc(130ms + var(--jd-menu-i, 0) * 44ms);
       }
     }
     .jd-count {
@@ -1527,6 +1705,85 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       font-style: italic;
       color: #1a1a18 !important;
       opacity: 0.62;
+    }
+    .jd-index-expand-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      border-bottom: 1px solid rgba(26, 26, 24, 0.06);
+      cursor: pointer;
+      text-align: left;
+      transition: opacity 0.22s ease, border-color 0.35s ease;
+    }
+    .jd-index-expand-trigger[aria-expanded="true"] {
+      border-bottom-color: transparent !important;
+    }
+    .jd-index-expand-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-left: auto;
+    }
+    .jd-index-chevron {
+      display: block;
+      flex-shrink: 0;
+      opacity: 0.52;
+      transition: transform 0.54s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
+    }
+    .jd-index-expand-trigger[aria-expanded="true"] .jd-index-chevron {
+      transform: rotate(180deg);
+      opacity: 0.88;
+    }
+    .jd-index-submenu {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      border-bottom: 1px solid transparent;
+      transition:
+        grid-template-rows 0.62s cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 0.42s cubic-bezier(0.25, 1, 0.5, 1),
+        border-color 0.42s ease;
+    }
+    .jd-index-submenu.is-open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      border-bottom-color: rgba(26, 26, 24, 0.06);
+    }
+    .jd-index-submenu-inner {
+      overflow: hidden;
+      padding: 0 0 0 1.25rem;
+      transition: padding 0.54s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .jd-index-submenu.is-open .jd-index-submenu-inner {
+      padding: 0.2rem 0 0.85rem 1.25rem;
+    }
+    .jd-index-sublink {
+      font-size: 0.91rem !important;
+      padding: 0.56rem 0 !important;
+      min-height: 40px;
+      border-bottom: none !important;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .jd-index-submenu .jd-index-sublink {
+        opacity: 0 !important;
+        transform: translate3d(10px, -4px, 0);
+        transition: opacity 0.2s ease, transform 0.24s ease;
+        transition-delay: 0s;
+      }
+      .jd-index-submenu.is-open .jd-index-sublink {
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0);
+        transition:
+          opacity 0.48s cubic-bezier(0.25, 1, 0.5, 1),
+          transform 0.58s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .jd-index-submenu.is-open .jd-index-sublink:nth-child(1) { transition-delay: 70ms; }
+      .jd-index-submenu.is-open .jd-index-sublink:nth-child(2) { transition-delay: 125ms; }
+      .jd-index-submenu.is-open .jd-index-sublink:nth-child(3) { transition-delay: 180ms; }
+      .jd-index-submenu.is-open .jd-index-sublink:nth-child(4) { transition-delay: 235ms; }
+    }
+    .jd-thumb-global.is-filtered-out {
+      display: none !important;
     }
 
     /* ─── THUMBS PANEL ───────────────────────────────── */
@@ -1803,23 +2060,28 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         width: 100% !important; 
         left: 0 !important; 
         right: 0 !important; 
-        padding: 4.5rem 1.75rem calc(84px + env(safe-area-inset-bottom, 0px)) !important; 
+        padding: 0 1.75rem calc(84px + env(safe-area-inset-bottom, 0px)) !important; 
         text-align: left !important; 
       }
       .jd-top-nav { 
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 20 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important; 
-        margin-bottom: 2rem !important; 
-        padding-bottom: 1rem !important;
-        padding-right: 48px !important;
+        min-height: calc(71px + env(safe-area-inset-top, 0px)) !important;
+        margin-bottom: 1.4rem !important; 
+        padding: calc(22px + env(safe-area-inset-top, 0px)) 48px 4px 0 !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        border-bottom: 1px solid #e6e6e6 !important;
         gap: 1.1rem !important;
         flex-wrap: nowrap !important;
       }
       .jd-top-nav-links { 
         display: flex !important;
         align-items: center !important;
-        gap: 1.1rem !important; 
+        gap: 0.85rem !important; 
         font-size: 0.95rem !important; 
         flex-wrap: nowrap !important;
         white-space: nowrap !important;
@@ -1834,13 +2096,13 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         border-radius: 0 !important;
         box-shadow: none !important;
         padding: 0 !important;
-        margin: 0 !important;
+        margin: 0 0.55rem !important;
         font-size: 0.92rem !important;
       }
       .jd-index-list {
         margin-bottom: 1.8rem !important;
       }
-      .jd-index-list:hover .jd-index-link {
+      .jd-index-list:hover .jd-index-link:not(.jd-index-sublink) {
         opacity: 1 !important;
       }
       .jd-index-link { 
@@ -1852,6 +2114,19 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         -webkit-text-fill-color: #1a1a18 !important;
         opacity: 1 !important;
         border-bottom: 1px solid rgba(26, 26, 24, 0.06) !important; 
+      }
+      .jd-index-expand-trigger[aria-expanded="true"] {
+        border-bottom-color: transparent !important;
+      }
+      .jd-index-sublink {
+        font-size: 0.9rem !important;
+        padding: 0.56rem 0 !important;
+        border-bottom: none !important;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .jd-index-submenu:not(.is-open) .jd-index-sublink {
+          opacity: 0 !important;
+        }
       }
       .jd-index-link span {
         color: #1a1a18 !important;
@@ -1898,7 +2173,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         position: relative !important;
         inset: auto !important;
         height: auto !important;
-        padding: calc((100lvh - 100svh) / 2) 0 !important;
+        padding: 0 !important;
         background: var(--jd-bg) !important;
       }
       #jd-slideshow {
@@ -1911,9 +2186,9 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       #jd-slideshow > .jd-slide {
         position: relative;
         inset: auto;
-        height: 100svh !important;
+        height: 100lvh !important;
         max-height: none !important;
-        padding: 96px 0 106px !important;
+        padding: calc((100lvh - 100svh) / 2 + 96px) 0 calc((100lvh - 100svh) / 2 + 94px) !important;
         opacity: 1 !important;
         pointer-events: auto;
         transition: none;
@@ -1927,13 +2202,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         justify-content: center;
         width: 100%;
         height: 100%;
-      }
-      #jd-slideshow > .jd-slide > * {
-        transform: translate3d(0, var(--jd-mobile-center-offset, 0px), 0);
-        transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        #jd-slideshow > .jd-slide > * { transition: none; }
       }
       #jd-slideshow > .jd-slide img {
         transform: var(--jd-mobile-photo-transform, none);
@@ -1951,7 +2219,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       }
       .jd-mobile-edge-top {
         top: calc(0px - env(safe-area-inset-top, 0px));
-        height: calc(84px + env(safe-area-inset-top, 0px));
+        height: calc(71px + env(safe-area-inset-top, 0px));
       }
       .jd-mobile-edge-bottom {
         bottom: calc(0px - env(safe-area-inset-bottom, 0px));
@@ -2011,8 +2279,8 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         max-height: calc((100svh - 214px) / 2) !important; 
         object-fit: contain !important; 
       }
-      #jd-bottom-nav { bottom: auto; top: 22px; left: 0; right: 0; transform: none; height: auto; min-height: auto; width: 100%; max-width: none; padding: 0 calc(18px + env(safe-area-inset-right, 0px)) 0 calc(18px + env(safe-area-inset-left, 0px)); box-sizing: border-box; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
-      #jd-normal-nav { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 0.75rem !important; width: 100%; }
+      #jd-bottom-nav { bottom: auto; top: 0; left: 0; right: 0; transform: none; height: auto; min-height: auto; width: 100%; max-width: none; padding: calc(22px + env(safe-area-inset-top, 0px)) calc(18px + env(safe-area-inset-right, 0px)) 0 calc(18px + env(safe-area-inset-left, 0px)); box-sizing: border-box; background: var(--jd-bg); backdrop-filter: none; -webkit-backdrop-filter: none; border: none; box-shadow: none; flex-direction: row; white-space: nowrap; }
+      #jd-normal-nav { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 0.75rem !important; width: 100%; padding-bottom: 4px; border-bottom: 1px solid #e6e6e6; }
       .jd-header-center { display: none !important; }
       .jd-index-trigger { margin-right: -8px; }
       #jd-bottom-nav .jd-bottom-btn { padding: 8px 0 !important; font-size: 0.92rem !important; font-weight: 500 !important; letter-spacing: 0.04em !important; color: #1a1a18 !important; -webkit-text-fill-color: #1a1a18 !important; white-space: nowrap; }
@@ -2298,6 +2566,21 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     .jd-mobile-edge { display: none; }
     @media (max-width: 800px) { .jd-mobile-edge { display: block; } }
 
+    .jd-haptic-driver {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      opacity: 0.001;
+      overflow: hidden;
+      clip-path: inset(50%);
+      pointer-events: none;
+    }
+
     /* Safari 26 samples the frontmost fixed edge's computed background,
        not just theme-color. Keep these empty: text clipping leaves no visible
        stripe while preserving an opaque colour for WebKit's edge sampler.
@@ -2570,15 +2853,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     </nav>
   </header>
 
-  { (categorySlug === 'tapahtumat' || categorySlug === 'events') && (
-    <div id="jd-filter-dropdown-container" class="jd-filter-dropdown-container">
-      <button type="button" id="jd-filter-toggle" class="jd-bottom-btn" aria-label="Filter" style="display:flex;align-items:center;justify-content:center;height:100%;cursor:pointer;">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-      </button>
-      <div id="jd-filter-menu" class="jd-filter-menu"></div>
-    </div>
-  )}
-
   <span id="jd-wheel-counter" aria-hidden="true">1 / {galleryData.length}</span>
 
   <!-- Mobile counter (also opens series grid) -->
@@ -2644,7 +2918,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     <a class="jd-index-contact" href="mailto:info@aatualatalo.com">info@aatualatalo.com</a>
 
     <button type="button" class="jd-index-grid-link" id="jd-thumbs-btn" aria-controls="jd-thumbs-panel" aria-expanded="false">
-      <span>{lang === 'en' ? `View ${catLabel} as grid` : `Selaa sarjaa kuvastona`}</span>
+      <span>{lang === 'en' ? 'View series as grid' : 'Selaa sarjaa kuvastona'}</span>
       <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.15">
         <rect x="1" y="1" width="3.75" height="3.75"></rect>
         <rect x="7.25" y="1" width="3.75" height="3.75"></rect>
@@ -2667,10 +2941,48 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     <ul class="jd-index-list">
       {catNavItems.map(item => (
         <li>
-          <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} aria-current={isActive(item) ? 'page' : undefined} data-preview-src={catCoverImages[item.key] || ''}>
-            <span>{item.label(activeLang)}</span>
-            <span class="jd-count">{indexCounts[item.key]}</span>
-          </a>
+          {item.key === 'tapahtumat' && eventsSubItems.length > 0 ? (
+            <>
+              <button
+                type="button"
+                id="jd-events-expand-btn"
+                class={`jd-index-link jd-index-expand-trigger ${isActive(item) ? 'active' : ''}`}
+                aria-expanded={isActive(item) ? 'true' : 'false'}
+                aria-controls="jd-events-submenu"
+                data-preview-src={catCoverImages[item.key] || ''}
+              >
+                <span>{item.label(activeLang)}</span>
+                <span class="jd-index-expand-meta">
+                  <span class="jd-count">{indexCounts[item.key]}</span>
+                  <svg class="jd-index-chevron" aria-hidden="true" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="square">
+                    <path d="M2.25 4.25L6 8l3.75-3.75" />
+                  </svg>
+                </span>
+              </button>
+              <div id="jd-events-submenu" class={`jd-index-submenu ${isActive(item) ? 'is-open' : ''}`} inert={!isActive(item)}>
+                <div class="jd-index-submenu-inner">
+                  {eventsSubItems.map(sub => (
+                    <a
+                      href={sub.url}
+                      class={`jd-index-link jd-index-sublink ${isActive(item) && sub.series === 'all' ? 'active' : ''}`}
+                      data-event-series={sub.series}
+                      data-series-label={sub.series === 'all' ? item.label(activeLang) : sub.label}
+                      data-cat-label={sub.series === 'all' ? item.label(activeLang) : sub.label}
+                      data-preview-src={sub.cover}
+                    >
+                      <span>{sub.label}</span>
+                      <span class="jd-count">{sub.count}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <a href={navUrl(item)} class={`jd-index-link ${isActive(item) ? 'active' : ''}`} aria-current={isActive(item) ? 'page' : undefined} data-preview-src={catCoverImages[item.key] || ''}>
+              <span>{item.label(activeLang)}</span>
+              <span class="jd-count">{indexCounts[item.key]}</span>
+            </a>
+          )}
         </li>
       ))}
     </ul>
@@ -2866,6 +3178,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       <line x1="16" y1="2" x2="2" y2="16"></line>
     </svg>
   </button>
+
+  <!-- Hidden native switch for iOS Safari Taptic Engine haptic tap feedback -->
+  <input type="checkbox" id="jd-haptic-switch" class="jd-haptic-driver" {...{ switch: '' }} aria-hidden="true" tabindex="-1">
+  <label for="jd-haptic-switch" id="jd-haptic-label" class="jd-haptic-driver" aria-hidden="true"></label>
 
   <script is:inline data-astro-rerun>
   (() => {
@@ -3378,43 +3694,95 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       });
     }
 
-    /* Filter */
-    const filterContainer = document.getElementById('jd-filter-dropdown-container');
-    const filterToggle = document.getElementById('jd-filter-toggle');
-    const filterMenu = document.getElementById('jd-filter-menu');
-    let uniqueSeries = [...new Set(data.map(item => item.series))].filter(s => s && s !== 'all');
+    /* Filter (driven by Events submenu & ?series= query param) */
+    const uniqueSeries = [...new Set(data.map(item => item.series))].filter(s => s && s !== 'all');
     let currentFilter = 'all';
+    let activeSeriesLabel = catLabel;
     let visibleIndices = data.map((_, i) => i);
     let visibleTotal = visibleIndices.length;
 
-    if (uniqueSeries.length > 1 && filterContainer && (isEventsCategory || categorySlug === 'recent')) {
-      filterContainer.classList.add('is-visible');
-      const btnAll = document.createElement('button');
-      btnAll.className = 'jd-filter-btn active'; btnAll.textContent = meta.lang === 'fi' ? 'KAIKKI' : 'ALL';
-      btnAll.dataset.filter = 'all'; filterMenu.appendChild(btnAll);
-      uniqueSeries.forEach(s => {
-        const btn = document.createElement('button');
-        btn.className = 'jd-filter-btn'; btn.textContent = s.toUpperCase().replace(/-/g, ' ');
-        btn.dataset.filter = s; filterMenu.appendChild(btn);
-      });
-      filterToggle.addEventListener('click', e => { e.stopPropagation(); filterMenu.classList.toggle('is-open'); filterToggle.classList.toggle('is-open'); });
-      listen(document, 'click', e => { if (!filterContainer.contains(e.target)) { filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); } });
-      filterMenu.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { const f = e.target.dataset.filter; filterMenu.classList.remove('is-open'); filterToggle.classList.remove('is-open'); if (f !== currentFilter) applyFilter(f); } });
+    const eventsExpandBtn = document.getElementById('jd-events-expand-btn');
+    const eventsSubmenu = document.getElementById('jd-events-submenu');
+    const eventSubLinks = Array.from(document.querySelectorAll('#jd-events-submenu .jd-index-sublink'));
+
+    function setEventsSubmenuOpen(open) {
+      if (!eventsExpandBtn || !eventsSubmenu) return;
+      eventsExpandBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      eventsSubmenu.classList.toggle('is-open', open);
+      eventsSubmenu.inert = !open;
     }
 
-    function applyFilter(filter) {
-      currentFilter = filter;
+    eventsExpandBtn?.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const willOpen = !eventsSubmenu?.classList.contains('is-open');
+      setEventsSubmenuOpen(willOpen);
+    });
+
+    function applyFilter(filter, options = {}) {
+      const { updateUrl = true, instant = false } = options;
+      const validFilter = filter && filter !== 'all' && uniqueSeries.includes(filter) ? filter : 'all';
+      currentFilter = validFilter;
       visibleIndices = [];
-      data.forEach((item, i) => { if (filter === 'all' || item.series === filter) visibleIndices.push(i); });
+      data.forEach((item, i) => { if (validFilter === 'all' || item.series === validFilter) visibleIndices.push(i); });
       visibleTotal = visibleIndices.length;
       slides.forEach((slide, index) => slide.classList.toggle('is-filtered-out', !visibleIndices.includes(index)));
-      document.querySelectorAll('.jd-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
-      const filterBase = window.innerWidth <= 800 ? mobileNavigationIndex() : current;
+      localThumbs.forEach(thumb => {
+        const idx = parseInt(thumb.getAttribute('data-idx') || '-1', 10);
+        thumb.classList.toggle('is-filtered-out', !visibleIndices.includes(idx));
+      });
+      const matchedSub = eventSubLinks.find(el => el.dataset.eventSeries === validFilter);
+      activeSeriesLabel = validFilter === 'all'
+        ? catLabel
+        : (matchedSub?.dataset.seriesLabel || validFilter);
+      eventSubLinks.forEach(link => {
+        const isCurrent = isEventsCategory && link.dataset.eventSeries === validFilter;
+        link.classList.toggle('active', isCurrent);
+        if (isCurrent) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      const seriesNameEl = document.getElementById('jd-series-name');
+      if (seriesNameEl) seriesNameEl.textContent = activeSeriesLabel;
+      if (updateUrl && isEventsCategory && window.history && window.history.replaceState) {
+        const params = new URLSearchParams(window.location.search);
+        if (validFilter === 'all') params.delete('series');
+        else params.set('series', validFilter);
+        const query = params.toString();
+        const nextPath = window.location.pathname + (query ? `?${query}` : '');
+        window.history.replaceState(window.history.state, '', nextPath);
+      }
+      const filterBase = !instant && window.innerWidth <= 800 ? mobileNavigationIndex() : current;
       let newCurrent = visibleIndices.includes(filterBase) ? filterBase : visibleIndices[0];
       if (newCurrent === undefined) newCurrent = 0;
+      counterSignature = '';
+      if (instant) {
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === newCurrent));
+        localThumbs.forEach((thumb, i) => thumb.classList.toggle('is-active', i === newCurrent));
+        current = newCurrent;
+        displayedIndex = newCurrent;
+        updateCounter(newCurrent);
+        prepareNearbyImages(newCurrent);
+        return;
+      }
       rebuildMobileCentres();
       goToAbsolute(newCurrent, true);
+      if (thumbsOpen) layoutThumbsGrid(true);
     }
+
+    eventSubLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        const targetSeries = link.dataset.eventSeries || 'all';
+        if (isEventsCategory) {
+          e.preventDefault();
+          link.classList.add('is-tapped');
+          applyFilter(targetSeries, { updateUrl: true });
+          setTimeout(() => {
+            link.classList.remove('is-tapped');
+            window.closeIndexPanel();
+          }, reducedMotion.matches ? 0 : 140);
+        }
+      });
+    });
 
     /* Thumbs listeners (click + keyboard Enter/Space) */
     function activateThumb(thumb) {
@@ -3452,14 +3820,19 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       };
       setText('jd-wheel-counter', `${n} / ${visibleTotal}`);
       setText('jd-series-count', `${n} / ${visibleTotal}`);
-      setText('jd-counter-cat', catLabel);
+      setText('jd-counter-cat', activeSeriesLabel);
       setText('jd-counter-num', n);
       setText('jd-counter-tot', visibleTotal);
       setText('jd-counter-place', caption);
       if (counterUI['jd-counter-place']) counterUI['jd-counter-place'].style.display = caption ? 'block' : 'none';
     }
-    updateCounter();
-    prepareNearbyImages(current);
+    const initialSeriesParam = isEventsCategory ? new URLSearchParams(window.location.search).get('series') : null;
+    if (initialSeriesParam && uniqueSeries.includes(initialSeriesParam)) {
+      applyFilter(initialSeriesParam, { updateUrl: false, instant: true });
+    } else {
+      updateCounter();
+      prepareNearbyImages(current);
+    }
 
     /* Navigation */
     function goToCategory(url, titleText = '') {
@@ -3540,6 +3913,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const link = e.target.closest('a');
       if (link && link.href) {
+        if (isEventsCategory && link.classList.contains('jd-index-sublink')) return;
         const urlObj = new URL(link.href, window.location.origin);
         if (urlObj.origin === window.location.origin && !link.hasAttribute('download') && link.target !== '_blank') {
           const normalizedPath = path => path.replace(/\/$/, '');
@@ -3573,11 +3947,31 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
         goToAbsolute(visibleIndices[nvi]);
       } else if (nvi >= visibleTotal) {
         if (allowCategorySwitch) {
+          if (isEventsCategory && currentFilter !== 'all') {
+            const seriesIdx = uniqueSeries.indexOf(currentFilter);
+            if (seriesIdx >= 0 && seriesIdx < uniqueSeries.length - 1) {
+              const nextSeries = uniqueSeries[seriesIdx + 1];
+              const nextSub = eventSubLinks.find(el => el.dataset.eventSeries === nextSeries);
+              const nextLabel = nextSub?.dataset.seriesLabel || nextSeries;
+              goToCategory(`${window.location.pathname}?series=${encodeURIComponent(nextSeries)}`, nextLabel);
+              return;
+            }
+          }
           const nextUrl = document.getElementById('jd-next-url');
           if (nextUrl) goToCategory(nextUrl.textContent, nextUrl.getAttribute('data-cat-label') || '');
         }
       } else {
         if (allowCategorySwitch) {
+          if (isEventsCategory && currentFilter !== 'all') {
+            const seriesIdx = uniqueSeries.indexOf(currentFilter);
+            if (seriesIdx > 0) {
+              const prevSeries = uniqueSeries[seriesIdx - 1];
+              const prevSub = eventSubLinks.find(el => el.dataset.eventSeries === prevSeries);
+              const prevLabel = prevSub?.dataset.seriesLabel || prevSeries;
+              goToCategory(`${window.location.pathname}?series=${encodeURIComponent(prevSeries)}`, prevLabel);
+              return;
+            }
+          }
           const prevUrl = document.getElementById('jd-prev-url');
           if (prevUrl) goToCategory(prevUrl.textContent, prevUrl.getAttribute('data-cat-label') || '');
         }
@@ -4003,42 +4397,10 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     let mobileSettleFrame = 0;
     let lastMobileScrollAt = -Infinity;
     let mobileViewportActive = window.innerWidth <= 800;
-    let lastMobileCenterOffset = 0;
-
-    function syncMobileCenterOffset(force = false) {
-      if (window.innerWidth > 800) {
-        if (lastMobileCenterOffset !== 0) {
-          lastMobileCenterOffset = 0;
-          slideshow.style.removeProperty('--jd-mobile-center-offset');
-        }
-        return;
-      }
-      if (mobileFingerDown && !force) return;
-      if (document.body.matches('.index-is-open, .thumbs-is-open, .about-is-open, .is-leaving')) return;
-      const navEl = document.getElementById('jd-bottom-nav');
-      const ctrEl = document.getElementById('jd-counter');
-      const activeSlide = slides[displayedIndex] || slides[current];
-      if (!navEl || !ctrEl || !activeSlide) return;
-      const navRect = navEl.getBoundingClientRect();
-      const counterRect = ctrEl.getBoundingClientRect();
-      const slideRect = activeSlide.getBoundingClientRect();
-      if (navRect.height < 10 || counterRect.height < 10 || slideRect.height < 100) return;
-
-      const viewportMidY = (window.visualViewport?.height || window.innerHeight) / 2;
-      if (Math.abs((slideRect.top + slideRect.height / 2) - viewportMidY) > slideRect.height * 0.25) return;
-
-      const targetCenterY = (navRect.bottom + counterRect.top) / 2;
-      const contentCenterY = slideRect.top + slideRect.height / 2 - 5;
-      const clamped = Math.max(-36, Math.min(84, Math.round((targetCenterY - contentCenterY) * 2) / 2));
-      if (Math.abs(clamped - lastMobileCenterOffset) >= 0.5) {
-        lastMobileCenterOffset = clamped;
-        slideshow.style.setProperty('--jd-mobile-center-offset', `${clamped}px`);
-      }
-    }
 
     function rebuildMobileCentres() {
       mobileGeometryFrame = 0;
-      if (window.innerWidth > 800) { mobileCentres = []; syncMobileCenterOffset(true); return; }
+      if (window.innerWidth > 800) { mobileCentres = []; return; }
       const y = window.scrollY;
       mobileCentres = visibleIndices.map(index => {
         const rect = slides[index].getBoundingClientRect();
@@ -4048,7 +4410,7 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
     function scheduleMobileGeometry() {
       if (!mobileGeometryFrame) mobileGeometryFrame = requestAnimationFrame(() => {
         rebuildMobileCentres();
-        if (mobileScrollReady) { syncMobileSlide(); syncMobileCenterOffset(); scheduleMobileSettle(); }
+        if (mobileScrollReady) { syncMobileSlide(); scheduleMobileSettle(); }
       });
     }
     function nearestMobilePosition() {
@@ -4146,7 +4508,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       mobileRequestedIndex = null;
       if (index !== current) goToAbsolute(index, false, true);
       else { displayedIndex = index; updateCounter(index); }
-      syncMobileCenterOffset();
     }
     function scheduleMobileSettle() {
       clearTimeout(mobileSettleTimer);
@@ -4188,7 +4549,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       if (mobilePanelOpen && !open) requestAnimationFrame(() => {
         rebuildMobileCentres();
         alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
-        syncMobileCenterOffset(true);
       });
       mobilePanelOpen = open;
     });
@@ -4199,7 +4559,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       requestAnimationFrame(() => {
         rebuildMobileCentres();
         alignMobileSlide(mobileRequestedIndex ?? current, 'instant');
-        syncMobileCenterOffset(true);
       });
     });
     const galleryResizeObserver = new ResizeObserver(scheduleMobileGeometry);
@@ -4226,7 +4585,6 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       requestAnimationFrame(() => {
         mobileScrollReady = true;
         syncMobileSlide();
-        syncMobileCenterOffset(true);
         scheduleMobileSettle();
       });
     });
@@ -4347,11 +4705,33 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
       }
     });
 
+    /* Subtle tactile haptic feedback on touch devices (Android Vibration API + iOS Safari switch Taptic Engine) */
+    const hapticLabel = document.getElementById('jd-haptic-label');
+    const hapticSwitch = document.getElementById('jd-haptic-switch');
+    if (hapticLabel) listen(hapticLabel, 'click', e => e.stopPropagation());
+    if (hapticSwitch) listen(hapticSwitch, 'click', e => e.stopPropagation());
+    const HAPTIC_TARGETS = '#jd-index-btn-bottom, #jd-index-close-btn, #jd-counter, #jd-thumbs-btn, #jd-thumbs-close-btn, .jd-thumb-global, .jd-index-link, #jd-about-trigger, #jd-about-close-btn, .jd-lang-toggle, .jd-top-nav a, .jd-index-contact, .jd-thumbs-footer-link, #jd-masters-info-button, #jd-masters-info-close, #jd-filter-toggle, .jd-filter-btn, #jd-brand-link';
+    function triggerHaptic() {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window);
+      if (!isTouchDevice) return;
+      if (typeof navigator.vibrate === 'function') {
+        try { navigator.vibrate(10); } catch {}
+        return;
+      }
+      if (hapticLabel) {
+        try { hapticLabel.click(); } catch {}
+      }
+    }
+    listen(document, 'click', e => {
+      if (!e.isTrusted || !(e.target instanceof Element)) return;
+      if (e.target.closest(HAPTIC_TARGETS)) triggerHaptic();
+    }, { capture: true });
+
     function bindHintArrow(selector, delta) {
       document.querySelectorAll(selector).forEach(el => {
         const trigger = e => {
           e.stopPropagation();
-          if ('vibrate' in navigator) navigator.vibrate(10);
+          triggerHaptic();
           goToRelative(delta);
         };
         el.addEventListener('click', trigger);
@@ -4980,7 +5360,48 @@ const switchLangUrl = activeLang === 'fi' ? enTransUrl : fiTransUrl;
 
     indexOverlay?.addEventListener('click', () => window.closeIndexPanel());
     jdMain?.addEventListener('click', e => { if (e.target.closest('#jd-bottom-nav')) return; if (document.body.classList.contains('index-is-open')) window.closeIndexPanel(); });
-    document.querySelectorAll('#jd-index-panel .jd-index-link.active').forEach(link => { link.addEventListener('click', e => { e.preventDefault(); window.closeIndexPanel(); }); });
+
+    /* Staggered menu entrance & tactile in-menu tap feedback */
+    if (indexPanel) {
+      const menuRevealItems = indexPanel.querySelectorAll('.jd-top-nav-links, .jd-index-contact, .jd-index-grid-link, .jd-index-list > li');
+      menuRevealItems.forEach((el, idx) => {
+        el.classList.add('jd-menu-reveal');
+        el.style.setProperty('--jd-menu-i', String(Math.min(idx, 14)));
+      });
+      const MENU_TAP_SELECTOR = '.jd-index-link, .jd-index-grid-link, .jd-top-nav a, .jd-index-contact';
+      const tapTimers = new WeakMap();
+      function flashMenuTap(el) {
+        if (!el) return;
+        const prev = tapTimers.get(el);
+        if (prev) clearTimeout(prev);
+        el.classList.add('is-tapped');
+        tapTimers.set(el, setTimeout(() => {
+          el.classList.remove('is-tapped');
+          tapTimers.delete(el);
+        }, 280));
+      }
+      indexPanel.addEventListener('pointerdown', e => {
+        if (!(e.target instanceof Element)) return;
+        const item = e.target.closest(MENU_TAP_SELECTOR);
+        if (item) flashMenuTap(item);
+      }, { passive: true });
+      indexPanel.addEventListener('click', e => {
+        if (!(e.target instanceof Element)) return;
+        const item = e.target.closest(MENU_TAP_SELECTOR);
+        if (item) flashMenuTap(item);
+      });
+    }
+
+    document.querySelectorAll('#jd-index-panel .jd-index-link.active:not(.jd-index-expand-trigger):not(.jd-index-sublink)').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        link.classList.add('is-tapped');
+        setTimeout(() => {
+          link.classList.remove('is-tapped');
+          window.closeIndexPanel();
+        }, reducedMotion.matches ? 0 : 140);
+      });
+    });
     listen(document, 'keydown', e => { if (e.key === 'Escape') { window.closeIndexPanel(); window.closeAboutPanel(); closeThumbsView(); } });
   }
   if (document.readyState === 'loading') {
